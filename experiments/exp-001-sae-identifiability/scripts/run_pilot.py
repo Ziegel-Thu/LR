@@ -344,6 +344,7 @@ def main():
     parser.add_argument("--d-sae", type=int, default=4096)
     parser.add_argument("--k", type=int, default=32)
     parser.add_argument("--n-seeds", type=int, default=5)
+    parser.add_argument("--seed-offset", type=int, default=0, help="Starting seed index")
     parser.add_argument("--n-epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4096)
     parser.add_argument("--device", default="mps")
@@ -368,7 +369,7 @@ def main():
         activations = torch.load(cache_path, weights_only=True)
         print(f"Loaded activations: {activations.shape}")
 
-        for seed in range(args.n_seeds):
+        for seed in range(args.seed_offset, args.seed_offset + args.n_seeds):
             print(f"\n{'='*60}")
             print(f"Training SAE with seed {seed}")
             print(f"{'='*60}")
