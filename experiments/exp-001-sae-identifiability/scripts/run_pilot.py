@@ -352,7 +352,7 @@ def main():
 
     exp_dir = Path("experiments/exp-001-sae-identifiability")
     cache_path = exp_dir / "data" / f"activations_layer{args.layer}.pt"
-    sae_dir = exp_dir / "checkpoints"
+    sae_dir = exp_dir / "checkpoints" / f"d{args.d_sae}_k{args.k}"
 
     if args.step in ("cache", "all"):
         cache_activations(
@@ -419,7 +419,7 @@ def main():
             "per_seed_stats": {str(k): v for k, v in stats.items()},
         }
 
-        results_path = exp_dir / "results.json"
+        results_path = exp_dir / f"results_d{args.d_sae}_k{args.k}.json"
         with open(results_path, "w") as f:
             json.dump(summary, f, indent=2)
         print(f"\nResults saved to {results_path}")

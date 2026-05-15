@@ -1,0 +1,167 @@
+{
+  "config": {
+    "step": "compare",
+    "model": "EleutherAI/pythia-160m-deduped",
+    "layer": 6,
+    "n_tokens": 2000000,
+    "d_sae": 1536,
+    "k": 32,
+    "n_seeds": 5,
+    "seed_offset": 0,
+    "n_epochs": 3,
+    "batch_size": 4096,
+    "device": "mps"
+  },
+  "pairwise_results": [
+    {
+      "seed_1": 0,
+      "seed_2": 1,
+      "mmcs_mean": 0.24041859060525894,
+      "hungarian_shared_0.7": 0.07291666666666667,
+      "hungarian_mean_sim": 0.2189066857099533,
+      "mutual_nn_fraction": 0.3782552083333333,
+      "mutual_nn_above_0.7": 0.07356770833333333
+    },
+    {
+      "seed_1": 0,
+      "seed_2": 2,
+      "mmcs_mean": 0.23964861035346985,
+      "hungarian_shared_0.7": 0.06640625,
+      "hungarian_mean_sim": 0.21806089580059052,
+      "mutual_nn_fraction": 0.3626302083333333,
+      "mutual_nn_above_0.7": 0.06705729166666667
+    },
+    {
+      "seed_1": 0,
+      "seed_2": 3,
+      "mmcs_mean": 0.2390923574566841,
+      "hungarian_shared_0.7": 0.06770833333333333,
+      "hungarian_mean_sim": 0.2171301692724228,
+      "mutual_nn_fraction": 0.3515625,
+      "mutual_nn_above_0.7": 0.06640625
+    },
+    {
+      "seed_1": 0,
+      "seed_2": 4,
+      "mmcs_mean": 0.23551178723573685,
+      "hungarian_shared_0.7": 0.05859375,
+      "hungarian_mean_sim": 0.21377117931842804,
+      "mutual_nn_fraction": 0.3684895833333333,
+      "mutual_nn_above_0.7": 0.05859375
+    },
+    {
+      "seed_1": 1,
+      "seed_2": 2,
+      "mmcs_mean": 0.2368495762348175,
+      "hungarian_shared_0.7": 0.06315104166666667,
+      "hungarian_mean_sim": 0.2147393822669983,
+      "mutual_nn_fraction": 0.3665364583333333,
+      "mutual_nn_above_0.7": 0.061848958333333336
+    },
+    {
+      "seed_1": 1,
+      "seed_2": 3,
+      "mmcs_mean": 0.2365744560956955,
+      "hungarian_shared_0.7": 0.0625,
+      "hungarian_mean_sim": 0.21534450352191925,
+      "mutual_nn_fraction": 0.37109375,
+      "mutual_nn_above_0.7": 0.0625
+    },
+    {
+      "seed_1": 1,
+      "seed_2": 4,
+      "mmcs_mean": 0.23637361824512482,
+      "hungarian_shared_0.7": 0.07096354166666667,
+      "hungarian_mean_sim": 0.21496246755123138,
+      "mutual_nn_fraction": 0.3717447916666667,
+      "mutual_nn_above_0.7": 0.07096354166666667
+    },
+    {
+      "seed_1": 2,
+      "seed_2": 3,
+      "mmcs_mean": 0.23761309683322906,
+      "hungarian_shared_0.7": 0.061848958333333336,
+      "hungarian_mean_sim": 0.2155490666627884,
+      "mutual_nn_fraction": 0.3470052083333333,
+      "mutual_nn_above_0.7": 0.061848958333333336
+    },
+    {
+      "seed_1": 2,
+      "seed_2": 4,
+      "mmcs_mean": 0.23659085482358932,
+      "hungarian_shared_0.7": 0.068359375,
+      "hungarian_mean_sim": 0.21442966163158417,
+      "mutual_nn_fraction": 0.3658854166666667,
+      "mutual_nn_above_0.7": 0.068359375
+    },
+    {
+      "seed_1": 3,
+      "seed_2": 4,
+      "mmcs_mean": 0.23624268174171448,
+      "hungarian_shared_0.7": 0.06966145833333333,
+      "hungarian_mean_sim": 0.2144734114408493,
+      "mutual_nn_fraction": 0.3509114583333333,
+      "mutual_nn_above_0.7": 0.06901041666666667
+    }
+  ],
+  "summary": {
+    "mmcs_mean": 0.23749156296253204,
+    "mmcs_std": 0.001568157565453425,
+    "hungarian_shared_mean": 0.06621093750000001,
+    "hungarian_shared_std": 0.004319012575682809,
+    "mutual_nn_mean": 0.3634114583333333,
+    "mutual_nn_std": 0.009782104151558831
+  },
+  "per_seed_stats": {
+    "0": {
+      "seed": 0,
+      "d_model": 768,
+      "d_sae": 1536,
+      "k": 32,
+      "nmse": 0.11078219698445653,
+      "mean_l0": 32.0,
+      "final_loss": 0.014858111326170506,
+      "n_tokens": 5000000
+    },
+    "1": {
+      "seed": 1,
+      "d_model": 768,
+      "d_sae": 1536,
+      "k": 32,
+      "nmse": 0.11199209658705685,
+      "mean_l0": 32.0,
+      "final_loss": 0.014997256728133462,
+      "n_tokens": 5000000
+    },
+    "2": {
+      "seed": 2,
+      "d_model": 768,
+      "d_sae": 1536,
+      "k": 32,
+      "nmse": 0.11232788534223635,
+      "mean_l0": 32.0,
+      "final_loss": 0.01507053316769297,
+      "n_tokens": 5000000
+    },
+    "3": {
+      "seed": 3,
+      "d_model": 768,
+      "d_sae": 1536,
+      "k": 32,
+      "nmse": 0.112202544740127,
+      "mean_l0": 32.0,
+      "final_loss": 0.015048001240175522,
+      "n_tokens": 5000000
+    },
+    "4": {
+      "seed": 4,
+      "d_model": 768,
+      "d_sae": 1536,
+      "k": 32,
+      "nmse": 0.11211719365636594,
+      "mean_l0": 32.0,
+      "final_loss": 0.015029755061431253,
+      "n_tokens": 5000000
+    }
+  }
+}
