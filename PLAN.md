@@ -6,7 +6,7 @@
 
 ## 当前阶段
 
-方向探索完成，本地 pilot 已验证信号。准备上服务器做完整实验。
+方向探索完成，本地 pilot 已验证信号。Exp-002 Phase 1 已在服务器完成。
 
 ## 已完成
 
@@ -21,9 +21,14 @@
 - **exp-003 跨架构柏拉图收敛**: ✅ 信号强（Transformer/Mamba/RWKV mutual-kNN z>350），U 形深度曲线
 - **exp-004 ID→泛化因果链**: 运行中
 
+### 服务器实验
+- **exp-002 Phase 1**: ✅ Gemma-2 2B + Gemma Scope SAE 权重量化（jiagpu4, 8×A40）
+  - 4-bit 几乎无损，3→2 bit 剧烈崩溃；中间层最脆弱；稀有特征先崩溃
+  - 权重量化比激活量化鲁棒得多（4-bit mean_r=0.94 vs pilot 的 0.72）
+
 ## 服务器实验计划
 
-按优先级排序。需要 GPU 服务器（ssh jiagpu45678）。
+按优先级排序。GPU 集群：jiagpu4-8，每台 8×A40。
 
 ### 优先级 1: 跨架构柏拉图收敛 (exp-003 扩展)
 
@@ -39,17 +44,15 @@
 | 计算 | ~2000-3000 A100-hours, 纯推理 |
 | 卡数 | 1×A40 per model, 可并行 |
 
-### 优先级 2: 量化与 SAE 特征恢复 (exp-002 扩展)
+### 优先级 2: 量化与 SAE 特征恢复 (exp-002 Phase 2-3)
 
-**基于**: DR-004 方案，exp-002 pilot 已验证频率分层效应
-**核心问题**: 权重量化下是否存在 superposition 相变？稀有特征是否先崩溃？
+**基于**: DR-004 方案，Phase 1 已完成
+**核心问题**: 退化曲线的 3→2 bit 陡降是否是真相变？
 
-| 参数 | 值 |
-|------|-----|
-| 模型 | Gemma-2 2B/9B + Gemma Scope SAE（预训练好的，不用自己训）|
-| 量化 | HQQ, FP16→INT8→INT4→INT3→INT2 |
-| 分析 | 频率分层恢复率，Hill 系数拟合，有限尺寸标度（Pythia 410M→6.9B）|
-| 计算 | ~510 A100-hours, ~5 天 on 4×A100 |
+- [x] Pilot: 激活量化（Pythia-160M）
+- [x] Phase 1: 权重量化（Gemma-2 2B + Gemma Scope SAE）
+- [ ] Phase 2: Pythia scaling ladder（410M → 6.9B）有限尺寸标度分析
+- [ ] Phase 3: GPTQ 对照 + 噪声对照 + 剪枝对比
 
 ### 优先级 3: RLHF 表征漂移 (新实验)
 

@@ -42,3 +42,7 @@ Thumbs.db
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# SSH keys
+ed25519_github
+ed25519_github.pub

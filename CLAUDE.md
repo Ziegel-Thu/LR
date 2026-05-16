@@ -74,8 +74,43 @@ deepresearch/dr-001-xxx/
 
 ## 服务器
 
-- GPU 服务器：`ssh jiagpu45678`
-- 大规模训练相关约定待后续确定，目前不要连接服务器
+### 集群概况
+
+8 台共享存储的 GPU 节点（jiagpu1-8），可用节点为 **jiagpu4-8**（1-3 无 SSH 权限）。
+
+| 节点 | GPU | 显存/卡 |
+|------|-----|---------|
+| jiagpu4 | 8× NVIDIA A40 | 45GB |
+| jiagpu5 | 8× NVIDIA A40 | 45GB |
+| jiagpu6 | 8× NVIDIA A40 | 48GB |
+| jiagpu7 | 8× NVIDIA A40 | 48GB |
+| jiagpu8 | 8× NVIDIA A40 | 48GB |
+
+- 当前工作节点：jiagpu6
+- SSH 到其他节点：`ssh jiagpu{4,5,7,8}`
+- 可以在空闲节点上跑实验
+
+### 存储
+
+- **beegfs**（`/beegfs_hdd/`）：共享存储，684T，适合大文件和数据同步，**不要放大量小文件**
+- **NVMe SSD**（`/nvmessd/`）：本地高速存储，14T，适合放小文件、venv、缓存等
+  - 项目 SSD 目录：`/nvmessd/lifanhong/`
+- 实验代码和数据放 beegfs 同步，运行时的临时文件/缓存放 SSD
+
+### 环境
+
+- jiagpu4 Python venv: `/nvmessd/lifanhong/LR-env/venv`
+  - 激活: `source /nvmessd/lifanhong/LR-env/venv/bin/activate`
+  - 包含: torch 2.12, transformers, sae-lens, transformer-lens, hqq
+  - HF 模型缓存: `/nvmessd/lifanhong/LR-env/cache/hf`
+  - HuggingFace 已登录（支持 gated model 如 Gemma-2）
+- 其他节点需要时再搭建环境
+
+### 实验运行
+
+- 实验在 tmux 中运行，session 名用实验名（如 `exp002`）
+- 可并行：用 `CUDA_VISIBLE_DEVICES` 指定不同 GPU 对，同时跑多个 bit-width/配置
+- 日志用 `tee` 写到 SSD：`/nvmessd/lifanhong/LR-env/`
 
 ## 文献下载
 
