@@ -1,0 +1,56 @@
+{
+  "config": {
+    "step": "compare",
+    "model": "EleutherAI/pythia-1.4b-deduped",
+    "layer": 12,
+    "n_tokens": 2000000,
+    "d_sae": 4096,
+    "k": 32,
+    "n_seeds": 5,
+    "seed_offset": 0,
+    "n_epochs": 3,
+    "batch_size": 4096,
+    "device": "mps"
+  },
+  "pairwise_results": [
+    {
+      "seed_1": 0,
+      "seed_2": 1,
+      "mmcs_mean": 0.09762609004974365,
+      "hungarian_shared_0.7": 0.004150390625,
+      "hungarian_mean_sim": 0.09208934754133224,
+      "mutual_nn_fraction": 0.410888671875,
+      "mutual_nn_above_0.7": 0.004150390625
+    }
+  ],
+  "summary": {
+    "mmcs_mean": 0.09762609004974365,
+    "mmcs_std": 0.0,
+    "hungarian_shared_mean": 0.004150390625,
+    "hungarian_shared_std": 0.0,
+    "mutual_nn_mean": 0.410888671875,
+    "mutual_nn_std": 0.0
+  },
+  "per_seed_stats": {
+    "0": {
+      "seed": 0,
+      "d_model": 2048,
+      "d_sae": 4096,
+      "k": 32,
+      "nmse": 0.1786317104827975,
+      "mean_l0": 32.0,
+      "final_loss": 0.05369395264958749,
+      "n_tokens": 1000000
+    },
+    "1": {
+      "seed": 1,
+      "d_model": 2048,
+      "d_sae": 4096,
+      "k": 32,
+      "nmse": 0.17836792533274518,
+      "mean_l0": 32.0,
+      "final_loss": 0.05377152443054269,
+      "n_tokens": 1000000
+    }
+  }
+}

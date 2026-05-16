@@ -1,0 +1,795 @@
+\documentclass[10pt]{article}
+
+\usepackage[accepted]{tmlr}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}
+\usepackage{bm}
+\usepackage{siunitx}
+\usepackage{amsthm}
+\usepackage{caption}
+\usepackage{amsmath}
+
+\usepackage[capitalize, noabbrev]{cleveref}
+\renewcommand\autoref[1]{\cref{#1}}
+
+\usepackage[normalem]{ulem}
+\title{A Measure of the Complexity of Neural Representations based on Partial Information Decomposition}
+
+
+
+\author{\name David A. Ehrlich$^{1,2,*}$ \email davidalexander.ehrlich@uni-goettingen.de \\
+\name Andreas C. Schneider$^{3,2,*}$ \email andreas.schneider@ds.mpg.de \\
+\name Viola Priesemann$^{2,3,4}$ \\
+\name Michael Wibral$^{1,4}$ \\
+\name Abdullah Makkeh$^{1}$ \AND
+\addr $^1$Goettingen Campus Institute for Dynamics of Biological Networks, University of Goettingen, 37077 Goettingen, Germany \\
+\addr $^2$Max Planck Institute for Dynamics and Self-Organization, 37077 Goettingen, Germany \\
+\addr $^3$Institute for the Dynamics of Complex Systems, University of Goettingen, 37077 Goettingen, Germany \\
+\addr $^4$Campus Institute Data Science, University of Goettingen, 37077 Goettingen, Germany
+      }
+
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\def\month{05}  % Insert correct month for camera-ready version
+\def\year{2023} % Insert correct year for camera-ready version
+\def\openreview{\url{https://openreview.net/forum?id=R8TU3pfzFr}} % Insert correct link to OpenReview for camera-ready version
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[section]
+
+\newcommand{\lemmaautorefname}{Lemma}
+
+\begin{document}
+      
+\maketitle
+
+\def\thefootnote{$*$}\footnotetext{These authors contributed equally to this work.}\def\thefootnote{\arabic{footnote}}
+
+\begin{abstract}
+In neural networks, task-relevant information is represented jointly by groups of neurons. However, the specific way in which this mutual information about the classification label is distributed among the individual neurons is not well understood: While parts of it may only be obtainable from specific single neurons, other parts are carried redundantly or synergistically by multiple neurons. We show how Partial Information Decomposition (PID), a recent extension of information theory, can disentangle these different contributions. From this, we introduce the measure of ``Representational Complexity'', which quantifies the difficulty of accessing information spread across multiple neurons. We show how this complexity is directly computable for smaller layers. For larger layers, we propose subsampling and coarse-graining procedures and prove corresponding bounds on the latter. Empirically, for quantized deep neural networks solving the MNIST and CIFAR10 tasks, we observe that representational complexity decreases both through successive hidden layers and over training, and compare the results to related measures. Overall, we propose representational complexity as a principled and interpretable summary statistic for analyzing the structure and evolution of neural representations and complex systems in general.
+\end{abstract}
+
+%TLDR:
+%We show how Partial Information Decomposition can be used to quantify the difficulty of accessing task-relevant information spread across multiple neurons, introducing the measure of "Representational Complexity".
+
+\clearpage
+\section{Introduction}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1]{figures/trivariate_representational_complexity}
+    \caption{\textbf{Mereological diagram illustrating how the PID atoms $\Pi(T:\bm{S}_\alpha)$ constitute all classical mutual information quantities involving three source variables, as introduced by~\citet{williams_nonnegative_2010}.} Classical mutual information terms are represented by black ovals with general redundancies given by their overlaps. The PID atoms correspond to the contiguous areas of the overlaps and are labeled by their corresponding antichains $\alpha$. The green shading indicates the degree of synergy $m$ of the respective atoms.}
+    \label{fig:degreeofsynergy}
+\end{figure}
+
+ Despite their tremendous success, the inner workings of artificial neural networks remain mostly elusive to this date \citep{lecun_deep_2015, alom_state---art_2019, samek_explainable_2017}. It is known that, since all of the information a network can use to solve a task must already be contained in the model's inputs, the purpose of hidden internal components remains to distill the pertinent features and make them available to later computational steps. However, the \emph{way} in which the features are represented among multiple neurons and how this representation changes throughout the training phase is not well understood \citep{li_convergent_2015, bengio_representation_2013}. This lack of understanding continues to pose a major obstacle to the adoption of machine learning techniques in critical settings, such as medical image analysis or self-driving cars, but also hinders principled development of better machine learning algorithms \citep{samek_explainable_2017, amodei_concrete_2016, eykholt_robust_2015}.
+
+In a classification problem, the difficulty of extracting information about the target label from internal representations in hidden layers is a key factor for network performance and interpretability alike. As a first step towards these objectives, one needs to define and quantify this notion of \textit{difficulty}, which originates from complex higher-order statistical interrelations between neurons. These relations -- if present -- make it necessary to consider large groups of neurons at a time to be able to discriminate between certain represented target values. The number of neurons minimally needed to obtain a piece of target-discriminatory information is conceptually related to the classical question of how many neurons are active in the representation of an input sample, and may thus be viewed as an information-theoretic equivalent of a sparsity measure. We propose to quantify this `information sparsity' in a principled way by answering an intuitive question: On average, how many neurons do I need to observe simultaneously in order to gain access to a piece of information? Note that while we limit ourselves to classification problems in this paper, these questions pertain to a vast class of problems not limited to machine learning systems wherever information about some target variable is distributed amongst a set of equivalent information bearing units.
+
+% Semantic vs Shannon information
+Note that while multiple notions of information exist in literature (e.g.~semantic information that has meaning for a biological or technical system) in this paper the term \emph{information} is used in a narrow sense referring to Shannon information only. Originally developed for the analysis of communication channels, Shannon's Information Theory~\citep{shannon_mathematical_1948} is a framework capturing general, possibly non-linear correlations between random variables. As such, it lends itself to the analysis of neural network as a high mutual information between the classification label and latent representations can be proved to be a necessary requirement for good classification accuracy via Fano's inequality in conjunction with the data processing inequality~\citep[Appendix IV]{geiger_information_2021}. The choice of Shannon Information over other non-semantic measures such as Renyi Entropy~\citep{renyi1961measures} or Tsallis Entropy~\citep{tsallis1988possible} has been made since the cross entropy loss function that is ubiquitous in classification networks uses Shannon information terms~\citep{goodfellow2016deep}, making it plausible that tracking information theoretic quantities can provide an insight into the learning dynamics.
+
+
+
+% Networks as information channels
+From the perspective of information theory \citep{shannon_mathematical_1948}, neural networks are just information channels that forward the task-relevant part of the input to the output layer while shedding task-irrelevant parts \citep{tishby_deep_2015}. This said, the idea of using Shannon information to quantify the information in the activations of Deep Neural Network (DNN) hidden layers has been met with fierce debate after methodological flaws surfaced \citep{saxe_information_2019, goldfeld_estimating_2019} in the influential early works by Tishby et al.~\citep{tishby_deep_2015, shwartz-ziv_opening_2017}. We address these issues in this work and show how information theory can be applied to quantized networks in a theoretically sound way (\autoref{sec:related}).
+
+% PID
+Yet, even with such methodological problems out of the way, the question posed above on how features are represented cannot be answered using Shannon mutual information alone. This is due to the inability of pairwise information measures to disentangle redundant and synergistic contributions between multiple neurons \citep{williams_nonnegative_2010}, leading to inevitable double- or under-counting of information contributions. Non-overlapping information contributions can be obtained by decomposing the mutual information $I(T:\bm{S})$ between a target random variable $T$ and several source variables $\bm{S} = (S_1, \dots, S_n)$ into its information \textit{atoms} $\Pi(T:\bm{S}_\alpha)$ such that
+\begin{equation}
+    I(T:\bm{S}) = \sum_\alpha \Pi(T:\bm{S}_\alpha),
+    \label{eq:mi_decomposition}
+\end{equation}
+which has been made possible by the introduction of a recent extension to information theory known as Partial Information Decomposition (PID) \citep{williams_nonnegative_2010}. These atoms are the smallest set of quantities from which the mutual information between $T$ and all possible subsets of $\bm S$ can be combined (\autoref{fig:degreeofsynergy}) \citep{gutknecht_bits_2021}. Note that here, each information atom is referred to by its corresponding `antichain' $\alpha$, which will be explained in \autoref{sec:pid}.
+
+% Representational Complexity
+From the PID atoms, we can answer the question of how many neurons are needed on average to access a piece of information in a principled way by introducing the summary statistic we term ``Representational Complexity''. A representational complexity of $C=1$ means that all information can be obtained from single neurons, while a representational complexity $C$ that is equal to the number of neurons in a layer means that no information can be obtained about the target unless one has access to all neurons. By tracking the representational complexity $C$ of the hidden layers over training we shed light upon a key aspect of how the internal representations of the target variable evolve during the training phase. This understanding may subsequently be employed to improve network designs by providing a tool to compare the dynamics in different network architectures.
+
+% Contributions
+The main contributions of this work are \textbf{(i)} describing a principled approach for applying PID to analyze the representations in DNNs and related systems, \textbf{(ii)} the introduction of representational complexity as a measure of information sparsity, \textbf{(iii)} discussing subsampling and coarse-graining procedures for the estimation of representational complexity and proofs of bounds on the latter, \textbf{(iv)} empirical results in quantized DNNs showing a decrease in representational complexity over training and through successive hidden layers, \textbf{(v)}~comparisons of the empirical results to two related approaches and \textbf{(vi)} empirical results showing a difference between representational complexity computed on the train or test dataset.
+
+\section{Related works}
+\label{sec:related}
+
+%Tishby
+\citet{tishby_deep_2015} were among the first to attempt to analyze deep neural networks from an information-theoretic perspective. Information theory, which was developed for the analysis of noisy information channels \citep{shannon_mathematical_1948}, allows to quantify information in an observer-independent way and helps to form a clear criterion of relevancy of information in hidden representations by distinguishing between the mutual information of layer activations with the ground truth classification labels and with the input variables. Viewing the networks as a sequence of such channels, \citet{shwartz-ziv_opening_2017} computed mutual information from \textit{binned} activations of the individual hidden layers, and plotted the resulting trajectory in what they termed the \textit{information plane}. This information plane is a two-dimensional space with the mutual information between hidden layer activations and input, and between hidden layer activations and ground-truth label as its two dimensions.
+
+However, their claim to estimate actual mutual information quantities of the network variables with their binning approach was later shown to be unfounded \citep{saxe_information_2019, goldfeld_estimating_2019}. In fact, the true mutual information between the network's inputs or label and a hidden layer is either infinite, in the case of continuous features, or constant and equal to the finite entropy of the discrete inputs or labels \citep{saxe_information_2019, goldfeld_estimating_2019, geiger_information_2021}. This is due to the fact that the network itself defines a deterministic and almost always injective mapping from inputs to hidden layer activation values.
+For this reason, the results shown by \citet{shwartz-ziv_opening_2017} do not constitute estimates of actual information-theoretic quantities and may at best be reinterpreted as measures for geometric clustering \citep{goldfeld_estimating_2019, geiger_information_2021}.
+
+Building on this realization, \citet{goldfeld_estimating_2019} showed that a meaningful information-theoretic analysis can be performed by disrupting the injectivity and limiting the channel capacity of the network forward function. While they achieve this by explicitly adding Gaussian noise to each activation value, we achieve the same goal by training and analyzing quantized very-low precision activation values in this work. This approach is in line with recent trends towards low \citep{gupta_deep_2015} and very-low precision \citep{hubara_quantized_2016} computing for reasons of efficiency and scalability. The crucial difference to \citet{shwartz-ziv_opening_2017}'s binning approach lies in the fact that the quantization we employ is intrinsic to the network itself, making mutual information quantities well-defined and meaningful as well as ensuring the data processing inequality holds for the Markov chain of successive hidden layers.
+
+% More than just channels: Look inside representations
+The picture of artificial neural networks as mere information channels needs to be refined following the insight that network layers need not only to pass on all relevant information but also to transform it in such a way that it becomes accessible for subsequent processing. To understand this representation of information within each layer, one needs to go beyond analyzing hidden layers as a whole and look at the structure of information representation across the neurons within those layers instead, which can be done in a principled way by employing partial information decomposition.
+
+% Yu et al; Tax & Mediano
+Previous works on PID in artificial neural networks have used PID to motivate and interpret classical mutual information quantities \citep{wibral2017quantifying} and used it to analyze filters in convolutional neural networks \citep{yu_understanding_2020}. Furthermore, \citet{tax_partial_2017} used PID to analyze pairs of neurons in generative neural networks and find that the networks move towards more unique representations of the target in later stages of training. We expand upon this approach by being the first to analyze all neurons of a layer as individual PID sources, which allows also to uncover higher-order interactions between them.
+
+Closely connected to our approach, \citet{reing_discovering_2021} derived scalable measures for quantifying higher-order interactions between neurons using Shannon information. By focusing more on scalability, however, the authors trade in some of the interpretability and expressivity of an approach based on PID. Furthermore, \citet{reing_discovering_2021} cover mostly the analysis of representations without reference to a target variable, while we focus on analyzing only task-relevant information contributions. An empirical comparison to this approach can be found in \autoref{sec:reing}.
+
+In the context of representation learning, information-theoretic approaches focus mostly on quantifying the degree of entanglement of latent dimensions in Variational Autoencoders, often with respect to the information about some underlying generative factor. This is done by measuring the total correlation \citep{kim_disentangling_2018} as a summary statistic or the difference between two classical mutual information quantities \citep{chen_isolating_2018,tokui_disentanglement_2021}. These works are related to ours, but analyze only a specific layer, do not use the label information as target and stay within the realm of classical Shannon information framework.
+
+Other works on representations in deep neural networks have attempted to define notions of \textit{usable} information based on the idea of restricting the ability of an observer to perfectly decode the presented information \citep{xu_theory_2020, kleinman_usable_2021}. A related approach is the probing of representations using simple linear readouts, for example \citet{alain_understanding_2018}, who find empirical evidence hinting at less complex representations in deeper layers. Additionally, several other summary statistics of representations have been suggested based on dimensionality analysis \citep{ansuini_intrinsic_2019, fukunaga1971algorithm} or canonical correlation analysis \citep{morcos_insights_2018, kornblith_similarity_2019}. We compare an analysis based on local intrinsic dimension to our measure in \autoref{sec:dimension}.
+
+% Other approaches to representation summary statistics
+Several other complexity measures were compared by~\citet{jiang_fantastic_2019}, who analyzed them in terms of their ability to predict the networks' capacities for out-of-sample generalization. This idea is founded on the intuitive notion that less complex representations should be more robust to minor changes in the inputs. As our paper is focused on interpretability of the novel measure of representational complexity, potential ties to generalization ability have not been studied as of yet.
+
+\section{Deriving an interpretable measure for the complexity of a representation from partial information decomposition}
+
+\subsection{Background: Partial information decomposition}
+\label{sec:pid}
+
+% What is PID
+The mutual information $I(T:\bm S) = I(T:S_1, \dots, S_n)$ that several source random variables $\bm{S} = \left\{S_1, \dots, S_n\right\}$ carry about a target $T$ can be distributed amongst these sources in very different ways. While some pieces of information are \textit{unique} to certain sources, others are encoded \textit{redundantly} by different sources, while yet others are only accessible \textit{synergistically} from several sources considered jointly. With three or more sources, even more complex contributions, in general describing redundancies between synergies, emerge. For example, some information about $T$ might be accessible either from source $S_3$ alone, or -- redundantly to this -- from a synergistic combination of sources $S_1$ and $S_2$, but from nowhere else; this information would constitute one of the information atoms $\Pi$.  
+
+% Atoms
+As mentioned before, these information atoms can be combined to form all classical mutual information quantities $I(T:\bm S_{\bm{a}})$ between $T$ and subsets of sources $\bm{S}_{\bm{a}} = \{S_i|i \in \bm{a}\}$ with indices $\bm a \subseteq \{1, \dots, n\}$. Conversely, the information atoms can be uniquely identified by which classical mutual information quantities they contribute to. Mathematically, this notion is captured by their corresponding \textit{parthood distribution} $\Phi : \mathcal{P}(\{1, \dots, n\}) \to \left\{0, 1\right\}$ -- a binary function defined on the powerset $\mathcal{P}$ of source indices that is equal to ``1'' for exactly those sets $\bm a$ of source indices for which the atom $\Pi(T:\bm{S}_\Phi)$ is part of the mutual information $I(T:\bm S_{\bm a})$ \citep[Section 2]{gutknecht_bits_2021} (for a detailed explanation, see~\autoref{apx:parthood_distributions_pid_atoms}). Thus, the mutual information of any set of sources $\bm S_{\bm a}$ and $T$ can be written as 
+
+\begin{equation}
+    I(T:\bm S_{\bm a}) = \sum_{\{\Phi|\Phi(\bm a) = 1\}}\Pi(T:\bm{S}_\Phi).
+    \label{eq:mi_decomposition_phi}
+\end{equation}
+
+Instead of labelling the atoms by their parthood distribution $\Phi$, the atoms can equivalently be referenced as $\Pi(T:\bm{S}_\alpha)$ using certain sets of sets of source indices $\alpha \in \mathcal{P}(\mathcal{P}(\{1, \dots, n\}))$, which can be mapped one-to-one to parthood distributions \citep{gutknecht_bits_2021} and are referred to as \textit{antichains} by \cite{williams_nonnegative_2010}, who first introduced PID using these antichains (for a detailed explanation, see~\autoref{apx:parthood_antichain_equivalence}). The antichains make apparent the connection between atoms and their meaning as redundancies between synergies: For example, the atom from before capturing the information that can be obtained either from $S_3$ alone or synergistically from $S_1$ and $S_2$ together is referred to by the antichain $\{\{1, 2\},\{3\}\}$.
+
+% Measure
+The number of atoms scales super-exponentially with the number of sources $n$, increasing from 7579 for $n=5$ sources to over 7.8 million for $n=6$ \citep{williams_nonnegative_2010, wiedemann1991computation}. Note, however, that this increase in the number of atoms should not be mistaken for a shortcoming of PID but rather as an acknowledgment of the vast number of configurations information can be encoded in among multiple variables. 
+
+On the other hand, there are only $2^n-1$ mutual information quantities that provide constraints through \autoref{eq:mi_decomposition_phi}. One way to resolve this underdeterminedness is through the introduction of a measure for redundancy \mbox{$I_\cap(T: \bm S_\alpha) = I_\cap(T: \{\bm S_{\bm a_1}, \dots, \bm S_{\bm a_k}\})$} between collections of sources indexed by $\bm a_i \subseteq \{1, \dots, n\}$. Noting that mutual information can be interpreted as a ``self-redundancy'' such that $I(T:\bm{S}_{\bm{a}}) = I_\cap(T:\{\bm{S}_{\bm{a}}\}$), these redundancies can be constructed from the information atoms in an analogous and consistent way to~\autoref{eq:mi_decomposition} as
+
+\begin{equation}
+    I_\cap(T: \bm S_\alpha) = \sum_{\beta \preceq \alpha} \Pi(T:\bm S_\beta),
+    \label{eq:red_decomposition}
+\end{equation}
+where $\preceq$ refers to the partial order of antichains on the redundancy lattice (for a detailed explanation, see~\autoref{apx:lattice}) \citep{crampton2000two, crampton2001completion, williams_nonnegative_2010}. Since now the number of defining equations is equal to the number of atoms, these can be computed by inverting \autoref{eq:red_decomposition}, which is known as a \textit{Moebius-Inversion} \citep{rota1964foundations, williams_nonnegative_2010}.
+
+Over recent years, a number of different redundancy measures have been suggested which fulfill a multitude of different additional desiderata \citep{lizier2018information}, e.g., from decision theory \citep{bertschinger_quantifying_2014}, game theory \citep{ince_measuring_2017} or Kelly gambling \citep{finn_pointwise_2018}. In this paper, we utilize the $I^{\mathrm{sx}}_\cap$ measure introduced by \citet{makkeh_introducing_2021}, where `sx' stands for shared exclusions of probability mass. In essence, the measure defines redundancy by the regions of probability space which are jointly excluded by observing the realizations of multiple collections of random variables. As this redundancy measure draws only on notions from probability theory it is the most canonical choice for our purpose of analyzing neural networks. The concept of representational complexity that we introduce here, however, can readily be generalized to any other redundancy-based multivariate PID.
+
+\subsection{Representational complexity}
+
+% Why accessibility matters
+In order to gain insight into the representation of task-relevant information in multiple equivalent source variables, we introduce in the following a principled way to evaluate the question: On average, how much of a system needs to be observed simultaneously to access a particular piece of information? We propose that this difficulty of retrieving label information may be quantified by considering the minimum number of sources that are needed jointly in order to reveal a piece of information. As a first step towards this goal, one needs to dissect the total mutual information into pieces which individually have a clear notion of how many neurons are needed to retrieve the information.
+
+Note, however, that such a dissection cannot be achieved with mutual information due to its inability to disentangle synergistic and redundant contributions: As an example, take two source variables $S_1$ and $S_2$ which carry information about a target $T$. Since the mutual information term $I(T:S_i)$ captures all information that the single source $S_i$ carries about $T$, one might think that the total information that can be obtained from single sources is given by the sum $I(T:S_1) + I(T:S_2)$. However, apart from their individual unique contributions, $S_1$ and $S_2$ might carry some identical pieces of information about $T$, and this redundancy is double-counted in the above sum. Moreover, the two sources might carry some information about $T$ in a way that it is only accessible from both sources taken together, e.g., if one source represents a cipher text with the second providing the decryption key. The joint mutual information $I(T:S_1, S_2)$ thus consists of four atoms: The two unique atoms of the respective sources, their redundancy and their synergy, while the individual mutual information terms $I(T:S_i)$ consist of the unique information of the respective source and the redundancy between both sources. Thus, if we subtract the sum of the individual mutual information terms from the joint term we obtain
+
+\begin{equation*}
+    I(T:S_1, S_2) - I(T:S_1) - I(T:S_2) = \mathrm{synergy} - \mathrm{redundancy},
+\end{equation*}
+with no way to quantify synergy or redundancy individually. Since the redundancy can be obtained from any single variable while the synergy necessarily requires access to both variables jointly, it is impossible to dissect the joint mutual information into pieces with a well-defined minimal number of neurons needed to retrieve the information within the framework of classical Shannon information alone.
+
+The PID atoms, on the other hand, do have a well-defined minimal number of neurons necessary to retrieve the information, which is captured by what we term the ``Degree of Synergy'' $m$ given by
+\begin{equation}
+\label{eq:m}
+    m(\alpha) := \min_{\bm a \in \alpha} |\bm a|,
+\end{equation}
+which is illustrated for all trivariate PID atoms in \autoref{fig:degreeofsynergy}.
+For instance, the PID atom with the antichain $\{\{1\}\{4\}\{2, 3\}\}$ has a degree of synergy of $m=1$ since the information can be obtained by observing the single sources $S_1$ or $S_4$, while the atom with the antichain $\{\{1, 2\}\{3, 4, 5\}\}$ has a degree of synergy of $m=2$ since the smallest set of sources the information can be retrieved from is the pair consisting of $S_1$ and $S_2$.
+
+% Representational complexity
+Finally, the average degree of synergy, weighted by the relative information contributions of the respective atoms, defines the ``Representational Complexity'' $C$ as
+\begin{equation}
+    C := \frac{1}{I(T:\bm S)} \sum_\alpha \Pi(T:\bm{S}_\alpha) \, m(\alpha)
+    \label{eq:c}.
+\end{equation}
+A representational complexity of $C=1$ means that all information can be obtained from single sources, while $C$ is equal to the number of sources if the information is spread purely synergistically between all of them. Bare in mind that representational complexity is defined as the \emph{average} over PID atoms and does thus not reflect the ``worst case'': Even if $C$ is smaller than its theoretical maximum one might need more than $C$ sources to identify a specific target label.
+
+An alternate way to view the average in \autoref{eq:c} is to first sum up all PID atoms of a fixed degree of synergy $m$ and then taking their weighted average. These sums of PID atoms are conceptually related to the \textit{Backbone Atoms} introduced by \cite{rosas_operational_2020}. Rosas measure, however, does not constitute a PID in the strict sense, as mutual information terms between the target and subsets of sources cannot be constructed from the atoms. This makes the backbone atoms less suitable for quantifying how many neurons are needed to access a piece of information.
+
+The concept of representational complexity is linked to the idea of sparse coding in neuroscience \citep{olshausen_sparse_2004}, in that both approaches aim to capture the relevancy of higher-order relations between neurons. While sparsity measures quantify the spread of activity tied to individual realizations across the neuron population, e.g.,~by measuring the average momentary number of active neurons, representational complexity measures the spread of \textit{information}, i.e., how distributed the ability to \textit{distinguish between} realizations of the target variable (e.g.~the label in classification tasks) is. Note further that representational complexity is computed on the mutual information with the network's target variable, thus relating to only task-relevant components of the activation patterns, while sparsity measures are generally not selective about the task-relevancy of the activations.
+
+From its definition as an expectation value of the degree of synergy weighted by the fractional information contribution of the respective PID atoms, it is evident that $C$ is well-defined whenever $I(T:S)\neq 0$, otherwise $C$ is not only mathematically undefined by also conceptually vacuous. Another aspect to pay attention to is that when both the target and the sources are continuous variables, $C$ can be undefined when $I(T: S)$ is infinite. Thus, we can determine that $C$ is well-defined for the quantized activation values with finite alphabets considered in this paper.
+
+From the information-theoretic structure of $C$, it is easy to see that certain desirable properties of mutual information and PID are inherited by $C$. 
+\begin{itemize}
+    \item {\bf Symmetry} Representational complexity is invariant under the reordering of the source variables. 
+    \item {\bf Invariance under isomorphisms} Representational complexity is invariant under isomorphic mapping of the target or the sources, for example, invertible relabelling of classification labels. 
+\end{itemize}
+
+There are other desirable properties that are related to the choice of the PID measure. The first is the continuity as a function of the joint probability distribution $p(T,S)$. This is an important prerequisite to a robust estimation of the PID atoms, as small deviations in the empirical probabilities don't incur drastic changes in the representational complexity. Another less important property is differentiability as a function of the joint probability distribution $p(T,S)$. The $I^{\mathrm{sx}}$ measure utilized in this paper has both properties~\citep{makkeh_introducing_2021}. 
+
+Finally there are two intuitive bounds for the representational complexity. The representational complexity is lower than or equal to the maximum number of neurons and higher than or equal to one.  The first bound is attained if one needs the whole layer to extract any the task-relevant information, while in the latter case, all information can be extracted from single neurons.
+
+\paragraph{Example applications of representational complexity}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.95\textwidth]{figures/toy_examples.pdf}
+    \caption{\textbf{Demonstration of representational complexity with simple examples.} Subfigures \textbf{A-D} show different label encoding schemes in binary neurons $S_1, \dots, S_n$ (circles). Subfigure \textbf{E} shows an encoding of two labels (purple and yellow) in two eight-level neurons, while \textbf{F} shows the three-dimensional extension. The corresponding representational complexities $C$ are denoted in the bottom left corner.}
+    \label{fig:examples}
+    \vspace{-0.1cm}
+\end{figure}
+
+To become familiar with the intuitive interpretation of representational complexity, we demonstrate its use with simple information encodings in small toy examples. Consider a categorical random variable with a finite number of distinct classes, which are labelled by integers and occur with the same probability. How does representational complexity differ between different representations of this information in multiple binary neurons?
+
+First, imagine four distinct values are represented sparsely across four neurons (\autoref{fig:examples}.A). As for all such \textit{one-hot} encodings, the representational complexity of this encoding is equal to one~(for a formal proof, refer to \autoref{apx:onehot}). This is intuitively clear: For each realization, you only need access to the one neuron that is equal to $1$ to fully determine the correct label.
+
+Using the same number of neurons, we can also encode the same information in a more complex way. For instance, take pairs of neurons that redundantly represent digits of a binary representation of the label index (\autoref{fig:examples}.B). In this case, there is no longer a single neuron that contains the full information about the target, which is reflected by an increase of the representational complexity to $C=1.21$.
+
+Using all of the coding capacity of the four neurons from the example before by encoding $16$ distinct states in a binary code (\autoref{fig:examples}.C), the representational complexity increases further: $C$ reaches a value of $1.67$ as more information has to be encoded synergistically between the four neurons. The reason why $C$ is not equal to $4$, despite the fact that the correct label can only be isolated with access to all four neurons, is that \textit{parts} of the information, e.g.,~the parity of the label number, can be extracted from fewer than all sources, reflecting the average nature of $C$. Conversely, if we now again expand the $16$ realizations to $16$ neurons in a one-hot encoding (\autoref{fig:examples}.D), we revert back to a representational complexity of just $C=1$. From this, we gain the intuitive realization that the closer one gets to the channel capacity, the more one is forced to encode some of the information in more complex, higher-synergy terms.
+
+However, even small amounts of information can be encoded in a highly synergistic manner. Consider the more realistic case of two discrete artificial neurons with eight activation levels each, with the target value being the exclusive disjunction (XOR) of the thresholded neurons' activations (\autoref{fig:examples}.E). Despite encoding just a single bit of information, the representational complexity assumes a value of $C=1.89$. This value is close to the theoretical maximum value of $C=n=2$, with the small difference being due to the nature of the $I^{\mathrm{sx}}_\cap$ redundancy measure. Extending this task to the parity of three thresholded neurons (\autoref{fig:examples}.F), the representational complexity attains a value of $C=2.83$, similarly close to its maximum of $C=n=3$.
+
+\section{Application to deep neural networks}
+
+% The network
+To exemplify the utility of our measure, we show how it can be applied to analyze the hidden layer representations of deep neural network classifiers solving the well-established MNIST \citep{lecun_gradient-based_1998} handwritten digit recognition  and CIFAR10 \citep{krizhevsky2009learning} image classification tasks. For the former, we employ a small fully-connected feed-forward network of which we analyze the last four layers before the output layer while for the latter we employ a more sophisticated convolutional network architecture and analyze the final small fully-connected layers.
+
+The MNIST network consists of seven fully-connected layers, starting with a vector of the $784$ grayscale pixel values of the image input, tapering down to only five neurons in layers $L_3$, $L_4$ and $L_5$ and culminating in a ten neuron \textit{one-hot} output vector, in which each neuron represents one of the ten possible digits (\autoref{fig:network_repr_compl}.A). The structure has been chosen such that the three successive five-neuron layers can be analyzed in full, as it is practically infeasible at present to compute the full PID for more than five sources because of the fast-growing number of PID atoms.
+
+In order to limit the channel capacity to be able to observe non-trivial information dynamics \citep{goldfeld_estimating_2019}, all layers are discretized to eight or four quantization levels ($3$ or $2$ bits) per neuron during both training and analysis (\autoref{apx:implementation}). The networks are trained using stochastic gradient descent for $10^5$ training epochs and reach, with eight quantization levels, an average accuracy of $\SI{99.9 \pm 0.1}{\percent}$ on the train and $\SI{95.1 \pm 0.4}{\percent}$ on the test set for $20$ runs with unique random weight initializations. Details about quantization schemes and forward-stochastic backprop algorithm used in training can be found in \autoref{apx:implementation}.
+
+The larger CIFAR10 network comprises three convolutional layers with max pooling and ReLU activation functions. The outputs of the last convolutional layer are flattened and fed into a fully-connected feed-forward section of the network employing tanh activation functions (\autoref{apx:implementation}). Due to the conceptual difficulties with quantizing functions with semi-infinite ranges we applied the quantization with 8 levels only to the last layers with tanh activation function, which are also the ones analyzed later. For 10 random weight initializations, the CIFAR10 network achieves an average accuracy of $\SI{99.90 \pm 0.04}{\percent}$ on the train and $\SI{68.9 \pm 0.7}{\percent}$ on the test set after $10^4$ epochs of stochastic gradient descent training.
+
+% Why trainset?
+\label{sec:why_trainset}
+Except for when explicitly specified otherwise, all analyses have been done on the train dataset. The rationale for this is twofold: Firstly, since the train set samples drive the learning process, an analysis on the train dataset samples allows more insights into what information-theoretic representation the backpropagation algorithm implicitly pursues. Secondly, the train dataset - being defined as the set of samples the network is trained on - is trivially finite in size and can be analyzed in full. The test dataset, on the other hand, may be interpreted as merely a finite-sized sample (e.g.~60.000 handwritten digits for MNIST) of a potentially infinite generative process (e.g.~the process of handwriting and formatting digits), which means that potential biases of the sampling and estimation need to be kept in mind. A comparison between results computed on the train and test datasets can be found in \autoref{sec:testset}.
+
+\subsection{Representational complexity in small layers}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/network_repr_compl.pdf}
+    \caption{\textbf{Representational complexity of hidden layers with respect to the label decreases over training and throughout successive hidden layers.} \textbf{A} The MNIST classifier network consists of seven fully-connected layers with tanh activation functions for all but the last layer, which is equipped a softmax activation function. \textbf{B} The representational complexity of the three small hidden layers $L_3$, $L_4$ and $L_5$ are computed from their PID atoms on the train data set. The solid lines show the average of $20$ randomly initialized runs, the shaded areas contain $95\%$ of the data points. The inset shows train and test set accuracy.}
+    \label{fig:network_repr_compl}
+\end{figure}
+
+For layers with up to five variables, the PID can be computed in full. For the MNIST network with eight quantization levels, analyzing the mutual information of the hidden layers $L_2$, $L_3$ and $L_4$ with the ground-truth label allows to track the representational complexity both over training and through the successive layers (\autoref{fig:network_repr_compl}.B). We find that both with increasing training epoch and layer index, the representational complexity $C$ decreases.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.05]{figures/rc_binary_and_cifar.pdf}
+    \caption{\textbf{The observed decrease in representational complexity appears to be a robust trend reproducible on different output encodings and on larger convolutional networks solving CIFAR10.} \textbf{A} The MNIST network with a binary output encoding shows a brief increase in representational complexity after about 10 epochs of training before decreasing. The representational complexity of the binary output layer for $10$ equiprobable classes has been numerically determined to be $C=1.46$ and is indicated by a dotted line. \textbf{B} The representational complexity of the small fully-connected layers of the CIFAR10 network shows a similar small increase in representational complexity in the beginning before converging to a low value close to the theoretical minimum of $C=1$.}
+    \label{fig:repr_compl_binary_and_cifar}
+\end{figure}
+
+This decrease in representational complexity appears to be a robust trend observable in networks independent of the encoding enforced on the output layer, chosen task and network architecture. While a neural network seems to approach the output complexity in the case of a one-hot output representation, for which $C_\text{one-hot} = 1$ (proven in \autoref{apx:onehot}), the representational complexity of the hidden layers decreases below that of the targeted output representation in the case of a binary label encoding (\autoref{fig:repr_compl_binary_and_cifar}.A). In the binary encoding case, however, an intermediate increase in representational complexity is observable, which might be attributable to an early restructuring of the representation.
+
+Likewise, for the five-neuron layers $L_{10}$ and $L_{11}$ of the CIFAR10 network, one observes a plateau of the representational complexity until about epoch 10 which is followed by a subsequent decrease (\autoref{fig:repr_compl_binary_and_cifar}.B). Again, $C$ is lower for the layer later in the network.
+
+\subsection{Representational complexity in larger layers}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/superneuron_subsampling_figure.pdf}
+    \caption{\textbf{Representational complexity of subsampled and coarse-grained neurons decreases over training in the MNIST network with four quantization levels.}
+    \textbf{A} Five neurons are randomly selected from layer $L_2$ of the MNIST network to form the random variables for the subsampling analysis. \textbf{B} For $26$ random choices of source variables each on $20$ training runs, the subsampled representational complexity shows a decrease over the training phase, but with high variance.
+    \textbf{C} Five coarse-grained random variables are constructed from pairs of neurons of the second hidden layer. \textbf{D} The coarse-grained representational complexity averaged over $20$ training runs is seen to decrease with increasing training epoch. }
+    \label{fig:coarsegraining_subsampling}
+\end{figure}
+
+Typical production neural networks have layers which are much wider than five neurons (e.g.,~\citealp{he_deep_2015, krizhevsky_imagenet_2017}). Since the compute required for a full PID for six or more source variables is prohibitive because of the rapidly increasing number of atoms, in order to be able to apply the tool of PID in general and representational complexity in particular to wider layers, one needs to devise procedures to reduce the number of random variables to analyze. In this section, we present two complementary approaches to make representational complexity applicable to moderately wider layers, namely subsampling and coarse-graining, and show the latter to be the more theoretically sound approach.
+
+\paragraph{Subsampling}
+%\label{sec:subsampling}
+
+%Idea of subsampling
+A straightforward approach for reducing the number of random variables, which has been employed in previous works~(e.g., \citealp{tax_partial_2017}), is to \textit{subsample} only $\hat{n}$ neurons from a layer to use as PID sources.
+By randomly selecting five neurons from the second layer of the MNIST network with four quantization levels, we again observe a decrease of the representational complexity of the hidden layer with respect to the label over the training phase (\autoref{fig:coarsegraining_subsampling}.A, B), albeit with a larger amount of variability.
+
+However, this approach suffers from fundamental conceptual flaws. By choosing only $\hat{n}$ source variables $\bm{S}_{\bm{a}} = (S_{a_1}, \dots, S_{a_{\hat{n}}})$ and decomposing their mutual information $I(T:\bm{S}_{\bm{a}})$ with the target variable $T$, only atoms with a degree of synergy of less than or equal to $\hat{n}$ can be quantified, meaning that any higher interaction than $\hat n$ will be overlooked, resulting in a potential underestimation of the true representational complexity of all $n$ sources. At the same time, pieces of information that appear to only be obtainable synergistically within one subset $\bm{S}_{\bm{a}}$ of sources may very well be redundant with a single source $S_i \notin \bm{S}_{\bm{a}}$, thus leading to potential overestimation of representational complexity. For these reasons, no bound on the true representational complexity can be established from subsampling and we find subsampling to be an unsuitable approach for overcoming the scaling difficulties of PID.
+
+\paragraph{Coarse-graining}
+
+% Introduction and bounds
+A complementary approach to reduce the number of variables is to combine multiple neurons, forming fewer higher-dimensional random variables; this procedure will be referred to as \textit{coarse-graining}. This approach appears more theoretically sound because one can show that the actual representational complexity can be bounded up to a factor by the coarse graining representational complexity. In \autoref{apx:coarse-graining}, we prove that if $d$ neurons $S_i$ each are combined to random variables $\tilde{S}_j$, the true representational complexity of the layer is bounded from below by the coarse-grained representational complexity computed from $\bm{\tilde{S}} = \{\tilde{S}_1, \dots, \tilde{S}_{n/d}\}$, while being simultaneously bounded from above by $d$ times this value, i.e.,
+\begin{equation}
+    C(T:\bm{\tilde{S}}) \leq C(T:\bm S) \leq d \, C(T:\bm{\tilde{S}}).
+\end{equation}
+
+%MNIST Results
+In our example network with four quantization levels, the representational complexity computed from randomly assigned neuron pairs in the second hidden layer consisting of ten neurons, exhibits a decreasing pattern over training that is highly similar to that of the representational complexity computed with individual neurons as sources in layers $L_3$ to $L_5$ (\autoref{fig:coarsegraining_subsampling}.C, D).
+
+
+
+\subsection{Comparison to Neural Information Decomposition by Reing et al.}
+\label{sec:reing}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.05]{figures/combined_comparitative_measures.pdf}
+    \caption{\textbf{Comparisons with alternative approaches shows decreasing trend but no ordering through successive hidden layers. (A)} The \emph{Reing Representational Complexity} $C_\text{Reing}$ (\autoref{eq:reing_repr_compl}) decreases only in the first epochs of training and seems to fluctuate at a relatively high level. \textbf{(B)} The \emph{local intrinsic dimension} of the hidden layer activations of the MNIST classifier network based on the Fukunaga-Olsen algorithm \citep{fukunaga1971algorithm} shows similar trends as representational complexity but increases at the beginning of training. For the intrinsic dimension estimation, the number of neighbors was set to 100, and the alphaFO parameter was set to 0.05, both being fairly common settings.
+    \textbf{(A) and (B)} Both quantities have been computed for the same three hidden layers of the network as the results shown in \autoref{fig:network_repr_compl}.
+    }
+    \label{fig:combined_comparison}
+\end{figure}
+
+In their 2021 paper, \citeauthor{reing_discovering_2021} introduced an alternate way to decompose the mutual information between a target variable $T$ and multiple source variables $\bm{S}$ into what they term \emph{Directed Local Differences} $C_T(k-1||k)$, such that
+\begin{equation}
+    I(T:\bm{S}) = \sum_{k=1}^n C_T(k-1||k),
+\end{equation}
+where $n$ is the number of sources. These terms, defined as
+\begin{equation}
+    C_T(k-1||k) = \frac{1}{\binom{n}{k}} \sum_{|\bm{a}|=k} H(T|\bm{S}_{\bm{a}}) - \frac{1}{\binom{n}{k-1}} \sum_{|\bm{a}|=k-1} H(T|\bm{S}_{\bm{a}})
+\end{equation}
+are proposed by the authors as ``a measure of information at order $k$ in the source variables $\bm{S}$ about a target variable $T$'' \citep{reing_discovering_2021} and are conceptually close analogs to the sum of PID atoms of a fixed degree of synergy. Nevertheless, due to their definition depending on the conditional entropy of the target (in particular fractional sums of $H(T\mid \bm{S}_{\bm a})$), these quantities cannot be constructed from the PID atoms. This means that a theoretical comparison is out of reach for this paper, whereas an empirical comparison between the two approaches might still be enlightening. Comparing the sums of PID atoms of a fixed degree of synergy to the directed differences for the MNIST network reveals that the sums of PID atoms attribute more of the information to only single neurons by the end of training, while the directed differences imply that higher-order interactions stay relevant to a higher degree (\autoref{fig:reing_deg_syn_comparison}).
+
+In close analogy to \autoref{eq:c}, one can utilize the directed differences $C_T(k-1||k)$ to introduce a measure of \emph{Reing Representational Complexity} as
+\begin{equation}
+    C_{\text{Reing}} = \frac{1}{I(T:\bm{S})} \sum_{k=1}^n C_Y(k-1||k) \; k
+    \label{eq:reing_repr_compl}
+\end{equation}
+that captures the average order $k$ of information between the target $T$ and multiple sources $\bm{S}$.
+
+While we empirically observe this Reing representational complexity to decrease in the earlier epochs of training, it does not decrease monotonically, stays higher than the PID based representational complexity and does not decrease throughout successive hidden layers (\autoref{fig:combined_comparison}A). While there is no a priori reason to expect a convergence to a particular value of complexity, we find the general trend of decreasing complexity over training and the ordering of $C$ for successive hidden layers -- the latter of which is absent for $C_\mathrm{Reing}$ -- to be intuitive findings which might reflect the networks tendency to encode the relevant information in more and more simple terms.
+
+These results show that representational complexity leads to different values while also arguably being the more well-founded measure compared to the directed differences, because it leverages the more expressive PID framework compared to Shannon mutual information. On the other hand, the approach using directed differences has the advantage of being more easily applicable a larger number of source variables.
+
+\subsection{Comparison to Local Intrinsic Dimension}
+\label{sec:dimension}
+
+Additionally to the comparison with the approach of \cite{reing_discovering_2021} we want to provide an independent baseline comparison with an established non-information theoretic measure. For this empirical comparison, we chose the local intrinsic dimensionality of the manifold of discretized layer activation patterns as described by \cite{fukunaga1971algorithm}. This method estimates the number of dimensions based on the largest singular values of the covariance matrix of the data, and is implemented in the scikit-dimension package \citep{bac2021scikit}. The reason we chose this method out of a multitude of potential candidates is that it tries to estimate the minimum number of parameters that are necessary to locally describe the data, which is similar to our approach. Taking the average over the dimensions estimated for each sample, however, is quite different from taking the average over PID atoms. Additionally, the intrinsic dimension is less dependent on the orientation of the manifold with respect to the individual neuron dimensions. However, the most important conceptual difference to our approach is that the intrinsic dimensionality is not immediately related to the label since it takes into account only the internal representations of the layers.
+
+For the MNIST dataset, we see empirically that both the local intrinsic dimension and the representational complexity decrease with training, but the intrinsic dimension shows no consistent order throughout successive hidden layers (\autoref{fig:combined_comparison}B). The two measures seem to be related, however the lack of a consistent decrease over layers also points at a potential benefit of our approach: being target-oriented towards the label allows for a focus on the more relevant aspects of the representation in terms of solving the task. 
+
+\subsection{Representational Complexity for Train and Test datasets}
+\label{sec:testset}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.05]{figures/shuffled_mnist_representational_complexity_test_train.pdf}
+    \caption{\textbf{When trained on an MNIST dataset with shuffled labels, representational complexity shows a different behaviour for train and test datasets.} Both figures show the representational complexity for the three hidden layers L3, L4 and L5, using the architecture illustrated in \autoref{fig:network_repr_compl}A, but trained on a dataset with a random new assignment of labels to MNIST dataset images. Coinciding with the rise in training accuracy, the representational complexity for both train and test datasets reaches a pronounced peak around epoch 200. The representational complexity on the train dataset decreases towards the end of training. However, for the test dataset (right, also with shuffled labels) it remains substantially higher after this peak. For improved visibility of this phenomenon we combined the averages from both figures into a single diagram in \autoref{fig:shuffled_train_test_comparison} in \autoref{apx:additional_results}.}
+    \label{fig:repr_compl_overfitting}
+\end{figure}
+
+To further illustrate the behaviour and possible usecases of representational complexity, we next compare the representational complexity computed on the train dataset with results computed on the test dataset. The train dataset is the default choice for computing the representational complexity, since it defines the task that the networks actually optimize their representations for (see also \autoref{sec:why_trainset} on page \pageref{sec:why_trainset}).  In \autoref{fig:train_test_combined}, we compare the results on the train and test datasets for averages over multiple runs for the MNIST dataset, and we provide additionally the results for individual training runs in \autoref{fig:test_train_individual_runs}. Generally, we find a consistent and robust trend of higher representational complexity for the test dataset compared to that for the train dataset towards later stages of training.
+
+In the extreme case of forcing the network to predict randomly assigned, fixed labels (by memorizing them via overfitting, see \autoref{fig:repr_compl_overfitting}) this increased representational complexity on the test dataset starts to appear with rising accuracy of the network and the gap between representational complexity on the train and test dataset is particularly wide.
+
+While conclusive statements cannot be drawn from these empirical findings alone, using representational complexity for investigating the phenomenon of overfitting from a novel perspective appears as an enticing topic for further research.
+
+\section{Discussion}
+
+In this work, we introduced representational complexity as a measure of sparsity of task-relevant information in neural networks. We first explained how a principled and meaningful application of information theory in neural networks is possible by using quantized activation values in both training and evaluation. Subsequently, we derived representational complexity from partial information decomposition and show it to be the theoretically sound answer to the question of how many neurons need to be observed simultaneously in order to access an average piece of information. For larger layers, we presented subsampling and coarse-graining procedures. We discussed issues with the former approach, while deriving bounds from results of the latter approach.
+
+In small quantized deep neural networks, we find representational complexity to decrease both over training and through successive layers. We empirically find the reduction to be a robust result which can not only be observed when analyzing small layers neuron-wise, but also when using subsampling or coarse-graining on larger layers. Furthermore, we provide first evidence that the final values the representational complexity converges to do not depend on the representational complexity of the chosen output representation. We hypothesize that the dynamics of representational complexity in early stages of training might indicate an early restructuring of representations for the binary output encoding and the more complex CIFAR10 task.
+
+A comparison to the related information-theoretic tools introduced by \cite{reing_discovering_2021} shows that by focusing more on computational tractability on larger networks, \citeauthor{reing_discovering_2021}'s measures can only partly reproduce our finding of a decreasing representational complexity throughout successive hidden layers. Similarly, an analysis based on local intrinsic dimensions \citep{fukunaga1971algorithm} shows that while this dimension does indeed decrease over training, it does in practice not necessarily decrease with successive hidden layers, which is intuitively what we would expect for the complexity of the relevant part of the representation. This points to an important feature of our approach that many other comparable measures lack, namely the possibility to specify a target random variable. Thereby one is able to study a specific aspect of the representation, for example the degree of synergy of the task-relevant mutual information with the label. Discovering the precise differences between these related approaches on a theoretical ground, however, remains a promising avenue for future research.
+
+Interestingly, towards the end of training we observe a consistent difference between the representational complexity computed on the train and the test dataset, pointing at a difference in the corresponding representation (see \autoref{sec:testset}). In the extreme case of a network overfitting on randomly shuffled labels for the MNIST dataset (\autoref{fig:shuffled_train_test_comparison}) we report a substantial gap between the representational complexity on the train and test datasets. We believe that subsequent research studying this behaviour explicitly could result in new insights into the phenomenon of overfitting.
+
+Our results also indicate some problems with previous approaches that apply PID by subsampling only pairs of sources  (e.g. \cite{tax_partial_2017}). Since the representational complexity is high in the early stages of training, high-order interactions between neurons appear to play a major role. These, however, go unnoticed in pairwise approaches. Representational complexity thus not only allows for assessing whether and when it is justified to only look at lower-order interactions, but can also be used to quantify how much of the higher-order interactions are disregarded.
+
+\paragraph{Limitations}
+\label{sec:limitations}
+% Growing number of PID atoms -> Find shortcut for computation
+Scaling our approach to larger networks remains a challenge. To mitigate this problem, we introduced subsampling and course-graining procedures, which allow the application of representational complexity to moderately larger networks. However, while subsampling suffers from conceptual flaws, the proven attainable bounds on coarse graining become impractically loose for large networks. For typical production networks we suggest two approaches: Firstly, results found on small toy networks may be generalizable to larger networks, e.g.,~by inductive proofs, and secondly, estimation of representational complexity could become feasible by finding a way to compute it without computing all PID atoms beforehand. The latter can be achieved by employing a PID based on synergy instead of redundancy, for example by extending on ideas of \citet{rosas_operational_2020}.
+
+% Only for discrete systems -> Continuous PID on the horizon
+Furthermore, our analysis methods are currently restricted to intrinsically discrete systems, as $I^{\mathrm{sx}}_\cap$ was originally defined for discrete variables only \citep{makkeh_introducing_2021}. However, in the meantime, a continuous generalization of $I^{\mathrm{sx}}_\cap$ has been proven to exist and to be measure-theoretically well-defined \citep{schick-poland_partial_2021}. Once an efficient estimator for this generalized measure is available, this will make it possible to analyze also continuous systems in which the total mutual information is inherently restricted to a finite value, e.g.,~by some form of noise in the system.
+
+\paragraph{Conclusion and outlook}
+% (partially) Local PID
+We have here shown how to use the representational complexity to gain insight into the structure of the internal representations as an average across all source and target realizations. Due to the local nature of $I^{\mathrm{sx}}_\cap$, this analysis can also be further broken down into the representational complexity for individual target realizations, i.e., class labels. Such an analysis may reveal for example that some classes are linked to representations of high complexity while others are not, or that some classes are represented with low complexity earlier than others during training, while yet others fail to reach a low complexity. Complementary, 
+we have shown that a more detailed analysis could also be achieved by, instead of averaging over the different degrees of synergy, splitting up the total mutual information into ``backbone atoms'' \citep{rosas_operational_2020} which combine all atoms of the same degree of synergy $m$ and investigating how they evolve over training individually. In addition, once a proper measure for Synergy based-PID is proposed, one could use that fact that these Backbone atoms, as demonstrated by \cite{rosas_operational_2020}, can be computed individually which will allow for computing the representational complexity for significantly larger layers.  
+
+Some theoretical properties of representational complexity have yet to be uncovered. For instance, a lower bound to $C$ might be derived from the notion that closer to channel capacity, one is forced to represent some information in higher synergy terms.
+
+% Other observables
+Given the PID atoms, a whole suite of other interesting and easily interpretable quantities can be devised. One enticing candidate is the average multiplicity of information, defined as
+%\begin{equation}
+    \mbox{$M = (1/I(T:\bm S)) \sum_\alpha \Pi(\alpha) \, |\alpha|$.}
+%\end{equation}
+The quantity reflects the average number of times a piece of information is represented redundantly and thus appears to be a promising candidate to serve as a complementary summary statistic to representational complexity, which relates to the synergy of the information encoding.
+
+% Different analysis of neural networks
+In future research, one may also choose the PID source and target variables differently. While in this work we focused on analyzing how the information about the classification label is encoded in the network, a similar analysis for the information of the hidden layers about the whole input samples might reveal differences in the representation of task-relevant and task-irrelevant information. 
+
+% New applications
+More generally, we promote representational complexity as a principled novel tool for general complex systems in which a group of equivalent variables jointly holds information about a target variable. New possible applications include both other artificial network architectures such as recurrent networks, but also biological  or ecological systems. Being derived from first principles in information theory and partial information decomposition, representational complexity provides a clear and intuitive interpretation and the suggested subsampling and coarse-graining procedures make it applicable to a wide variety of questions.
+
+\section*{Code availability}
+To analyze artificial neural networks using information-theoretic tools, we developed the \emph{nninfo} python package containing scripts to reproduce the main results of this paper. The code is available on GitHub under the URL \url{https://github.com/Priesemann-Group/nninfo}.
+
+\section*{Acknowledgements}
+We would like to thank Alexander Ecker for fruitful discussions and feedback on this paper.  We would also like to thank Valentin Neuhaus, Lucas Rudelt, Marcel Graetz and the rest of the Priesemann group for their valuable comments and feedback. MW and AM are employed at the Göttingen Campus Institute for Dynamics of Biological Networks (CIDBN) funded by the Volkswagen Stiftung. DE and MW were supported by a funding from the Ministry for Science and Education of Lower Saxony and the Volkswagen Foundation through the “Niedersächsisches Vorab” under the program ``Big Data in den Lebenswissenschaften'' -- project ``Deep learning techniques for association studies of transcriptome and systems dynamics in tissue morphogenesis''. AS and VP received funding from the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy - EXC 2067/1 - 390729940.
+\clearpage
+\bibliography{bibliography}
+\bibliographystyle{tmlr}
+
+\clearpage
+
+
+\appendix
+\section{Appendix}
+
+This appendix starts by providing more background on the PID problem in \autoref{apx:parthood_distributions_pid_atoms} by identifying the PID atoms by their parthood distributions as derived by \cite{gutknecht_bits_2021} from first principles of mereology. Then we explain the equivalence of the parthood distribution and the antichains that was established by \cite{gutknecht_bits_2021}. Finally we describe in \autoref{apx:lattice} the lattice structure that allows computing the amount of information in the PID atoms upon the introduction of a redundancy measure as shown by the seminal work of \cite{williams_nonnegative_2010}.
+
+In the subsequent two sections of the appendix we provide our novel proofs of the bounds on course graining (in \autoref{apx:coarse-graining}) and the proof of the representational complexity of the one-hot representation being one for any number of labels (in \autoref{apx:onehot}).
+
+Finally, we include a description of the implementation and the quantization schemes in \autoref{apx:implementation} and show additional results in \autoref{apx:additional_results}. 
+ 
+
+\subsection{Additional background}
+
+\subsubsection{Parthood distributions characterize the PID atoms}
+\label{apx:parthood_distributions_pid_atoms}
+\cite{gutknecht_bits_2021} recently showed that the PID structure can be built -- independently of the redundancy concept and a specific measure -- from first principles of mereology, i.e., \emph{part-whole relationships}. This is because PID seeks to find the parts of information that constitute the whole information $I(T: S_1,\ldots, S_n)$ and are characterized by which collection of sources they are part of. In what follows we give a brief introduction to the PID structure using the mereology approach as has been developed by \cite[Section 2]{gutknecht_bits_2021}.
+
+% what are the PID atoms
+Through the lens of mereology, a PID atom is that part of the total information about the target that is provided by specific collections of source variables but not others. Thus, each atom is associated with a certain set of collections of sources $\bm S_{\mathbf{a}_1},\ldots, \bm S_{\mathbf{a}_m}\in\mathcal P(\bm S)$. The corresponding PID atom is then defined as the information contribution that can be obtained if and only if any of the collections is accessed.
+
+% Parthood distributions
+For instance, in the case of two sources, consider all collections of the source variables, i.e., the powerset $\mathcal P(\bm S)=\{\emptyset, \{S_1\}, \{S_2\}, \{S_1, S_2\}\}.$ Now by looking at what collections of sources the PID atoms can be a part of, \cite{gutknecht_bits_2021} postulates two straightforward principles: (i) no information atom can be part of the empty set as it represents no source variable and (ii) all the information atoms are part of the full collection ($\{S_1, S_2\}$). This leaves four possibilities to combine the collections: Atoms can be either be a part of (a) both $\{S_1\}$ and $\{S_2\}$ or (b) only $\{S_1\}$ or (c) only $\{S_2\}$ or (d) only $\{S_1, S_2\}$ (Table~\ref{tab:parthood-bi}).
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|c|c|c|c|}
+    \hline
+    Atom                            &$\emptyset$    &$\{S_1\}$          & $\{S_2\}$         & $\{S_1,S_2\}$\\
+    \hline
+    a) $\Pi(\{\{S_1\},\{S_2\}\})$   &{\bf 0}        &{\color{red}1}     &{\color{red}1}     &{\bf 1}\\
+    b) $\Pi(\{\{S_1\}\})$           &{\bf 0}        &{\color{red}1}     &{\color{red}0}     &{\bf 1}\\
+    c) $\Pi(\{\{S_2\}\})$           &{\bf 0}        &{\color{red}0}     &{\color{red}1}     &{\bf 1}\\
+    d) $\Pi(\{\{S_1,S_2\}\})$       &{\bf 0}        &{\color{red}0}     &{\color{red}0}     &{\bf 1}\\
+    \hline
+    \end{tabular}
+\caption{\textbf{Parthood distributions for two sources.} The value ``0'' stands for not being a part of the collection's information about $T$, as opposed to ``1''. ``{\bf0}'' and ``{\bf1}'' represent principle (i) and (ii), respectively. ``{\color{red}0}'' and ``{\color{red}1}'' represent the four possible choices of part-whole relationships to $\{S_1\}$ and $\{S_2\}$ realizing the four PID atoms. Each atom is annotated with its combination of collections of sources excluding supersets, e.g., the atom corresponding to possibility (a) is annotated with the collections $\{\{S_1\},\{S_2\}\}$ as shorthand of $\{\{S_1\},\{S_2\}, \{S_1,S_2\}\}$ and so on.}\label{tab:parthood-bi}
+\end{table}
+
+The first atom in the table is $\Pi(\{\{S_1\},\{S_2\}\})$ that is part of $S_1$ and $S_2$. This atom represents what is redundant to $S_1$ and $S_2$ as it is part of both variables. The second and third atoms are exclusively parts of either $S_1$ and $S_2$, thereby they are unique to either variable. These two atoms represent what is unique to $S_1$ and $S_2$ respectively. Finally, the atom $\Pi(\{\{S_1, S_2\}\})$ is only part of the set $\{S_1,S_2\}$ but none of the sources individually. This constitutes an information contribution that cannot be realised by any of the two variables unless they are considered jointly, capturing the synergistic information.
+
+This PID, indeed, serves its aim to partition $I(T: (S_j)_{j\in J})$ for any number of sources $|J|$ into the realized atoms via the part-whole relationships. For example, in the case of two sources, we arrive at the following partition~\citep{gutknecht_bits_2021, williams_nonnegative_2010}:
+\begin{equation*}
+    \begin{split}
+        I(T: S_1, S_2) &= \Pi(\{\{S_1\},\{S_2\}\}) + \Pi(\{\{S_1\}\}) + \Pi(\{\{S_2\}\}) + \Pi(\{\{S_1,S_2\}\})\; ,\\
+        I(T: S_1) &= \Pi(\{\{S_1\},\{S_2\}\}) + \Pi(\{\{S_1\}\})\; ,\\
+        I(T: S_2) &= \Pi(\{\{S_1\},\{S_2\}\}) + \Pi(\{\{S_2\}\}).
+    \end{split}
+\end{equation*}
+
+Each atom is represented with a string of zeros and ones referred to as a \emph{parthood distribution} (Table~\ref{tab:parthood-bi}). \cite{gutknecht_bits_2021} then uses these parthood distributions to build the structure of PID for any number of sources. We have already seen that these parthood distributions follow two principles: (i) none of the PID atoms are part of the $\emptyset$ (ii) any PID atom is part of the joint set of source variables. However, an additional principle arises from the nature of the information contributions and is vital when considering more than two sources: The principle states that whenever an atom is part of the information provided by a collection $\bm S_\mathbf{a},$ then it must be part of the information provided by \emph{any collection containing $\bm S_\mathbf{a}$}. 
+
+Hence, each PID atom is associated with a parthood distribution that is formally a boolean function $\Phi: \mathcal{P}(\{1, \dots, n\}) \to \{0, 1\}$ satisfying three principles: (i) \emph{no information is in the empty set}, i.e. $\Phi(\emptyset) = 0$, (ii) \emph{all information is in the full set}, i.e. $\Phi(\{1, \ldots, n\})=1,$ and (iii) any \emph{information that is provided by collection $\bm a$ is provided by any of its super-collections}, which is equivalent to saying that $\Phi$ is monotone. An example of such association is present in Figure~\ref{fig:parthood-dist}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=13cm]{figures/parthood_distributions.pdf}
+    \caption{\textbf{Parthood distributions are isomorphic to PID atoms} In this figure, we use the shorthand notation by dropping the $S$'s and resorting only to the indices of source variables. The first atom $\Pi(\{1\})$ is the unique information of $S_1.$ This information is part of $S_1$ (i.e. $\{1\}$) and by principle (iii) any superset of $\{1\}$. The boolean function $f_{\Pi(\{1\})}$ realized from the parthood distribution maps $\{1\}$ and all its supersets to 1 whereas the rest are mapped to zero. The second atom $\Pi(\{\{1\},\{2,3\}\})$ is the information that is exclusively redundant between $S_1$ and the joint source variable of $S_2$ and $S_3$, but not redundant between $S_1$ and any strict subsets of $\{S_2,S_3\}$. This can be realized from the parthood distribution as the information is part of $\{1\}$ and by principle (iii) all its supersets,  however, additionally this information is also part of $\{2,3\}.$ Finally this parthood distribution is packed into the monotone function boolean function $f_{\Pi(\{\{1\},\{2,3\}\})}.$}
+    \label{fig:parthood-dist}
+\end{figure}
+
+Therefore, the number of PID atoms for $n$ sources is equal to the number of monotone boolean functions over $\mathcal P(\{1, \dots, n\})$ minus 2 since the two monotone boolean functions $\Phi(\mathbf{a})= 0$ for all $\mathbf{a}$ and $\Phi(\mathbf{a})= 1$ for all $\mathbf{a}$ are excluded by principles (i) and (ii), respectively~\cite{gutknecht_bits_2021}. This entails that the number of atoms grows super-exponentially as the number of monotone boolean functions, i.e., as the Dedekind numbers~\cite{beckurts1897zerlegungen}.
+
+\subsubsection{Equivalence between parthood distributions and antichains}
+\label{apx:parthood_antichain_equivalence}
+
+% Equivalence: Parthood are monotonic boolean functions and mbfs can be summarized by antichains
+In this section, we explain the equivalence between the parthood distribution and antichains that has been demonstrated by \citet[Section 2]{gutknecht_bits_2021}. An information atom $\Pi$ can be equivalently referenced by either its parthood distribution $\Phi$ as $\Pi(T:\bm S_\Phi)$ or its corresponding antichain $\alpha$ as $\Pi(T:\bm S_\alpha)$. This equivalence is given by the facts that (i) the parthood distributions $\Phi: \mathcal{P}(\{1, \dots, n\}) \to \{0, 1\}$ are \emph{monotonic}, i.e.,~they fulfill the relation $\bm a \subseteq \bm b \Rightarrow \Phi(\bm a) \leq \Phi(\bm b)$, and (ii) antichains are succinct representations of such monotonic boolean functions. To gain a deeper insight into the equivalent descriptions of the atoms, we will thus address these two points one by one in the following.
+
+\citeauthor{gutknecht_bits_2021}\ introduces the monotonicity of the parthood distribution as a constraint in its definition~\cite[definition 2.1.]{gutknecht_bits_2021}. In fact, one can see that this monotonicity is in line with an essential property of mutual information: The mutual information $I(T:\bm S_{\bm a})$ between the target $T$ and a subset of sources $\bm S_{\bm a}$ is contained in the mutual information $I(T:\bm S_{\bm b})$ whenever $\bm b$ is a superset of $\bm a$. This fact is a result of the chain rule of mutual information and the non-negativity of (conditional) mutual information \citep{cover2006elements} $I(T:\bm S_{\bm b}) = I(T:\bm S_{\bm a}, \bm S_{\bm b \backslash \bm a}) = I(T: \bm S_{\bm a}) $ $+ I(T: \bm S_{\bm b \backslash \bm a}| \bm S_{\bm a}) \geq I(T: \bm S_{\bm a})$ which implies that the correlation between $S_{\bm a}$ and $T$ still persists in the correlation of $S_{\bm b}$ and $T$ and in fact only additional correlation can emerge with added sources. Thus when thinking about atoms that decompose the mutual information, it is only natural to evoke the constraint that if an atom $\Pi$ is part of the mutual information $I(T:\bm S_{\bm a})$, i.e.,~$\Phi(\bm a) = 1$, it also has to be part of $I(T:\bm S_{\bm b})$, i.e.,~$\Phi(\bm b) = 1$ whenever $\bm a \subseteq \bm b$, which is exactly the property of monotonicity: $\bm a \subseteq \bm b \Rightarrow \Phi(\bm a) \leq \Phi(\bm b)$.
+
+% Monotonic boolean functions can be described by antichains
+So far we saw that parthood distributions are monotonic boolean functions and we will discuss how to represent them in a succinct way as antichains. To this end, note that a boolean function is uniquely defined by the set of inputs $f^{-1}[\{1\}]:= \{\bm a\in\mathcal{P}(\{1, \dots, n\}) \mid f(\bm a) = 1\}$ that are mapped to ``1''. Given the constraint of monotonicity, this representation can be compressed even further: Any sets in $f^{-1}[\{1\}]$ which are supersets of other sets in $f^{-1}[\{1\}]$ need not be recorded, as these are forced to map to ``1'' by monotonicity. Thus, a monotonic boolean function can be represented by $\alpha \subseteq f^{-1}[\{1\}]$, constructed by removing all sets in $f^{-1}[\{1\}]$ which are supersets of others. The resulting set of sets $\alpha$ then contains only sets which are incomparable given the partial order of set inclusion, which are referred to in the literature as ``antichains'' \citep{williams_nonnegative_2010}.
+
+Therefore, each PID $I(T:\bm S_\Phi)$ atom identified with a parthood distribution $\Phi$ can be represented by the antichain representation of $\Phi$, which provides an equivalent labelling of the atom as $I(T:\bm S_\alpha)$.
+
+\subsubsection{The lattice structure of PID using redundant information}
+\label{apx:lattice}
+
+In this section, we will discuss the well-known redundancy lattice and how this lattice structure of PID \citep{williams_nonnegative_2010} arises when using redundant information. First, recall that redundant information $I_\cap(T:\bm S_\Phi)$ is the information that is part of all $S_{\bm a}$ for which $\Phi(\bm a ) = 1$. This means that $I_\cap(T: \bm S_\Phi)$ is part of all the mutual information terms $I(T: S_{\bm a})$ where $\Phi(\bm a)=1$. This part-whole relationship can be exploited to formulate a partial ordering of the general redundancies $I_\cap(T:\bm S_\Phi)$. We say that that a redundancy $I_\cap(T:\bm S_\Phi)$ is contained in another redundancy $I_\cap(T:\bm S_\Psi)$ if the redundancy $I_\cap(T:\bm S_\Phi)$ is necessarily a part of all the mutual information that $I_\cap(T:\bm S_\Psi)$ is part of. This implies that any part of the information contained in $I_\cap(T:\bm S_\Phi)$ is also necessarily contained in $I_\cap(T:\bm S_\Psi)$ which forms the basis of this ordering. This ordering of the redundant information $I_\cap(T:\bm S_\Phi)$ can be expressed in terms of parthood distributions as \citep[Subsection 2.iii]{gutknecht_bits_2021}: 
+
+\begin{equation}
+    \Phi \sqsubseteq \Psi \Leftrightarrow (\Phi(\bm a) = 1 \to \Psi(\bm a) = 1 \text{ for any } \bm a \subseteq \{1, \dots, n\}).
+\end{equation}
+
+Using the equivalence between parthood distributions and antichains described in \autoref{apx:parthood_antichain_equivalence}, this partial order can be similarly expressed in terms of antichains as \citep{williams_nonnegative_2010}
+
+\begin{equation}
+    \alpha \preceq \beta \Leftrightarrow \forall \bm b \in \beta \; \exists \bm a \in \alpha : a \subseteq b.
+\end{equation}
+
+This partial ordering defines the algebraic structure of the ``Redundancy Lattice''. We can now define the PID atoms as the partial differences on this lattice, i.e., the atom $\Pi(T:\bm S_\Phi)$ contains all the information that the redundancy $I_\cap(T:\bm_\Phi)$ has \emph{in excess of} the sum of all atoms below $\Phi$ on the lattice. Conversely, this allows the redundancies $I_\cap(T:\bm S_\Phi)$ to be the sum of all the atoms that are identified by a parthood distribution that is less than or equal $\Phi$ since all of the information in these atoms is contained in $\Pi(T:\bm S_\Phi)$ via the redundancy ordering. This can be equivalently expressed in terms of antichain (due to the aforementioned ordering) yielding the system of equations discussed in the main text:    
+\begin{equation}
+    I_\cap(T: \bm S_\alpha) = \sum_{\beta \preceq \alpha} \Pi(T:\bm S_\beta).
+\end{equation}
+This system of equations states that for any node $\alpha$ of the ``Redundancy Lattice'', there is a redundant information that is the sum of the atom $\Pi(T:\bm S_\beta)$ for any $\beta \preceq \alpha$. This system of equations can be inverted to compute the amount of information in each individual atom using the Moebius Inversion due to the distributive structure of the Redundancy lattice~\citep{williams_nonnegative_2010}.
+
+
+\subsection{Mathematical proofs}
+\subsubsection{Proof of bounds on representational complexity by coarse-graining}
+\label{apx:coarse-graining}
+
+To make representational complexity applicable to settings with more source random variables, we propose coarse-graining, i.e.,~combining source variables to form fewer, but higher dimensional, ``super variables'', as a suitable procedure. As a first step, we clarify how the new coarse-grained variables are constructed from the original variables using a \textit{coarse-grain mapping}.
+
+\begin{definition}[Coarse-Grain mapping]
+For $n, \tilde n \in \mathbb{N}_{> 0}$ and $\tilde{n} < n$, an $n$-to-$\tilde n$ coarse-grain mapping $f : \{1, \dots, n\} \to \{1, \dots, \tilde{n}\}$ is a surjective function that maps variable indices to fewer coarse-grained variable indices.
+\end{definition}
+
+We write the pre-image of the coarse-grain mapping for subsets of coarse-grained source indices $\bm{\tilde{a}} \subseteq \{1, \dots, \tilde{n}\}$ as $f^{-1}[\bm{\tilde{a}}] = \{i \in \{1, \dots, n\} | f(i) \in \bm{\tilde{a}}\}$.
+
+Furthermore, we write sets of random variables indexed by the set of indices $\bm{a} \in \mathcal{P}(\{1, \dots, n\})$ as $\bm{S}_{\bm{a}} = \left\{S_i \middle| i \in \bm{a} \right\}$ and finally sets of sets of random variables indexed by sets of sets of indices $\alpha \in \mathcal{P}(\mathcal{P}(\{1, \dots, n\}))$ as $\bm{S}_\alpha = \left\{\bm{S}_{\bm{a}} \middle| \bm{a} \in \alpha \right\}$.
+
+Using this notion of a coarse-grain mapping, we can define what a coarse-grained random variables is.
+
+\begin{definition}[Coarse-Grained Random Variable]
+Given a vector-valued random variable $\bm{S} = \left(S_1, \dots, S_n\right)$ and an $n$-to-$\tilde n$ coarse-grain mapping $f$, the coarse-grained vector-valued random variable $\bm{\tilde S}$ is defined as $\bm{\tilde{S}} = (\bm{\tilde{S}}_1, \dots, \bm{\tilde{S}}_{\tilde n})$, where the elements $\bm{\tilde{S}}_i = \bm S_{f^{-1}[\{i\}]} = \left\{S_k \middle| f(k) = i\right\}$ are themselves vector-valued random variables, called coarse-grained variables, partitioning the $n$ original variables into $\tilde n$ variables. 
+\end{definition}
+\begin{example} Given four source variables $\bm{S} = (S_1, S_2, S_3, S_4)$, the mapping $$f:\{1, 2, 3, 4\}\to\{1, 2\},\; i \mapsto \begin{cases} 1,\; i\in\{1, 2\}\\2,\; i\in\{3, 4\}\end{cases} $$ defines the two coarse-grained random variables $\bm{\tilde{S}}_1 = (S_1, S_2)$ and $\bm{\tilde{S}}_2 = (S_3, S_4)$.
+\end{example}
+In general, a coarse-grain mapping can produce coarse-grained variables consisting of different numbers of original variables. An important special case, however, is that of the \textit{uniform coarse-grain mapping}, which always maps $d$ source variables to one $d$-dimensional ``super-variable''.
+
+\begin{definition}[Uniform coarse-grain mapping]
+A uniform coarse-grain mapping of order $d \in \mathbb{N}_{>0}$ such that $d|n$ is given by $f:\{1, \dots, n\} \to \{1, \dots, n/d\}, \; i \mapsto \left\lfloor (i-1)/d \right\rfloor + 1$, where $\left\lfloor \cdot \right\rfloor$ refers to rounding down to the nearest integer.
+\end{definition}
+
+Having defined the coarse-grained variables $\bm{\tilde{S}}$, the next question that arises is how the PID atoms of the original variables can be combined to form the coarse-grained PID atoms of $\bm{\tilde{S}}$.
+
+\begin{theorem}[Coarse-graining of PID atoms]\label{thm:coarse-graining-of-pid-atoms}
+The PID atoms $\Pi(T: \bm{\tilde{S}}_{\tilde{\Phi}})$ of the coarse-grained source variable $\bm{\tilde{S}}$ are composed of the PID atoms $\Pi(T: \bm{S}_\Phi)$ of the original sources $\bm S$ as
+\begin{align}\label{eq:atoms-in-coarsed-atoms}
+    \Pi\left(T:\bm{\tilde{S}}_ {\tilde{\Phi}}\right) = \sum_{\Phi:\Phi\circ f^{-1} = \tilde{\Phi}} \Pi\left(T:\bm{S}_ {\Phi}\right).
+\end{align}
+\end{theorem}
+\begin{proof}
+
+A PID atom $\Pi\left(T:\bm{S}_\Phi\right)$ is a part of the coarse-grained PID atom $\Pi\left(T:\bm{\tilde{S}}_{\tilde{\Phi}}\right)$ exactly if it contributes to the same mutual information terms $I\left(T:\bm{\tilde{S}}_{\bm{\tilde{a}}}\right)$ with the coarse-grained variables $\bm{\tilde{S}}_{\bm{\tilde{a}}}$. Since the identity
+\begin{equation*}
+    I\left(T:\bm{\tilde{S}}_{\bm{\tilde{a}}}\right) = I\left(T:\bm{S}_{f^{-1}[\bm{\tilde{a}}]}\right)
+\end{equation*}
+follows readily from the definition of the coarse-grained variables, we find that if $\Pi\left(T:\bm{S}_\Phi\right)$ is part of $I\left(T:\bm{S}_{f^{-1}[\bm{\tilde{a}}]}\right)$, i.e., $\Phi(f^{-1}[\bm{\tilde{a}}]) = 1$, it is also part of $I\left(T:\bm{\tilde{S}}_{\bm{\tilde{a}}}\right)$ in the coarse-grained picture, and vice-versa. Thus, the parthood relations of $\Pi\left(T:\bm{S}_\Phi\right)$ with regards to the coarse-grained variables are captured by the parthood distribution $\tilde{\Phi} = \Phi \circ f^{-1}$, which leads to the conclusion that it must be part of the coarse-grained atom $\Pi\left(T:\bm{\tilde{S}}_{\tilde{\Phi}}\right)$. The coarse-grained atoms must now be the sums of all original atoms which contribute to the same coarse-grained mutual information terms; thus the theorem follows.
+
+\end{proof}
+
+This coarse-grained PID naturally gives rise to both a lower and an upper bound on the representational complexity of the original variables. As a first step, we show how representational complexity can be equally computed from the parthood distribution $\Phi$ of an atom.
+
+\begin{lemma}[Computing the degree of synergy from a parthood distribution]
+The degree of synergy of the atom indexed by the parthood distribution $\Phi$ is given by $m(\Phi) = \min_{\Phi(\bm{a})=1}|\bm{a}|$.
+\end{lemma}
+\begin{proof}
+The parthood distribution $\Phi$ corresponding to an antichain $\alpha$ is the boolean function that maps all $\bm{a}\in\alpha$ and all supersets thereof to one. This means, in addition to all sets $\bm{a}\in\alpha$, that $\Phi^{-1}[\{1\}]$, the fibre of $1$ under $\Phi$, contains only sets $\bm{a}' \supset \bm{a}$, for which $|\bm{a}'| > |\bm{a}|$ and which thus have no influence on the minimum cardinality of sets:
+
+\begin{equation}
+    m(\alpha) := \min_{\bm{a}\in\alpha}|\bm{a}| = \min_{\bm{a}\in\Phi^{-1}[\{1\}]}|\bm{a}| = \min_{\Phi(\bm{a})=1}|\bm{a}| =: m(\Phi)\,.
+\end{equation}
+\end{proof}
+
+The next step in our quest to prove bounds on the representational complexity is to prove bounds on the degree of synergy $m$.
+
+\begin{lemma}
+Let $\Phi$ and $\tilde{\Phi}$ refer to the parthood distributions of an atom and a coarse-grained atom, respectively. If $\Pi(T:\bm{S}_\Phi)$ is part of $\Pi(T:\bm{\tilde{S}}_{\tilde{\Phi}})$, then the degree of synergy $m(\Phi)$ is constrained by the degree of synergy $m(\tilde{\Phi})$ as $m(\tilde{\Phi}) \leq m(\Phi) \leq d\, m(\tilde{\Phi})$, where the upper bound holds for a uniform coarse-graining of order $d$.
+\label{lemma:coarse_deg_syn}
+\end{lemma}
+
+\begin{proof}
+Let the atom $\Pi(T:\bm{S}_\Phi)$ be part of the coarse-grained atom $\Pi(T:\bm{\tilde{S}}_{\tilde{\Phi}})$. It follows from Equation \eqref{eq:atoms-in-coarsed-atoms} that $\tilde{\Phi} = \Phi\circ f^{-1}$ and therefore
+
+\begin{align*}
+m(\tilde{\Phi}) &= \min_{\tilde{\Phi}(\bm{\tilde{a}})=1}|\bm{\tilde{a}}| = \min_{\Phi\circ f^{-1}(\bm{\tilde{a}})=1}|\bm{\tilde{a}}| = \min_{\Phi(\bm{a})=1}|f(\bm{a})| \leq \min_{\Phi(\bm{a})=1}|\bm{a}| = m(\Phi)\,,
+\end{align*}
+
+where the fact that $|f(\bm{a})|\leq|\bm{a}|$ has been used. Note similarly that for a uniform coarse-graining of order $d$, $d|f(\bm{a})|\geq|\bm{a}|$ holds, hence one finds a lower bound to $m(\tilde{\Phi})$ as
+
+\begin{align*}
+m(\tilde{\Phi}) = \min_{\Phi(\bm{a})=1}|f(\bm{a})| \geq \frac{1}{d}\min_{\Phi(\bm{a})=1}|\bm{a}| = \frac{1}{d}m(\Phi)\,.
+\end{align*}
+
+\end{proof}
+
+From the bounds on the synergistic degree, the bounds on the representational complexity - which is a weighted average of synergistic degrees - are straightforward to derive.
+
+\begin{theorem}
+The representational complexity of a vector of sources $\bm S = (S_1, \dots, S_n)$ with respect to some target $T$ is bounded from below by the representational complexity of any coarse-graining $\bm{\tilde{S}}$
+\begin{equation}
+    C(T:\bm{\tilde{S}}) \leq C(T:\bm S)\,.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+
+\begin{align*}
+    C(T:\bm{\tilde{S}}) &= \frac{1}{I(T:\bm{\tilde{S}})}\sum_{\tilde{\Phi}} \Pi(T:\bm{\tilde{S}}_{\tilde{\Phi}}) \, m(\tilde{\Phi})\\
+    &=\frac{1}{I(T:\bm{\tilde{S}})} \sum_{\tilde{\Phi}} \left(\sum_{\Phi:\Phi\circ f^{-1} = \tilde{\Phi}} \Pi\left(T:\bm{S}_ {\Phi}\right) \right)\, m(\tilde{\Phi}) && \text{(\autoref{thm:coarse-graining-of-pid-atoms})}\\
+    &\leq \frac{1}{I(T:\bm{\tilde{S}})} \sum_{\tilde{\Phi}} \sum_{\Phi:\Phi\circ f^{-1} = \tilde{\Phi}} \Pi\left(T:\bm{S}_ {\Phi}\right) \, m(\Phi) && \text{(\autoref{lemma:coarse_deg_syn})}\\
+    &=\frac{1}{I(T:\bm{S})} \sum_\Phi \Pi\left(T:\bm{S}_ {\Phi}\right) \, m(\Phi)\\
+    &= C(T:\bm{S})\,.
+\end{align*}
+
+\end{proof}
+
+\begin{theorem}
+The representational complexity of a vector of sources $\bm S = (S_1, \dots, S_n)$ with respect to some target $T$ is bounded from above by $d$ times the representational complexity of a uniform coarse-graining of order $d$
+
+\begin{equation}
+    C(T: \bm S) \leq d \, C(T: \bm{\tilde{S}})\,.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+
+\begin{align*}
+    C(T:\bm{\tilde{S}}) &= \frac{1}{I(T:\bm{\tilde{S}})}\sum_{\tilde{\Phi}} \Pi(T:\bm{\tilde{S}}_{\tilde{\Phi}}) \, m(\tilde{\Phi})\\
+    &=\frac{1}{I(T:\bm{\tilde{S}})} \sum_{\tilde{\Phi}} \left(\sum_{\Phi:\Phi\circ f^{-1} = \tilde{\Phi}} \Pi\left(T:\bm{S}_ {\Phi}\right) \right)\, m(\tilde{\Phi}) && \text{(\autoref{thm:coarse-graining-of-pid-atoms})}\\
+    &\geq \frac{1}{I(T:\bm{\tilde{S}})} \sum_{\tilde{\Phi}} \sum_{\Phi:\Phi\circ f^{-1} = \tilde{\Phi}} \Pi\left(T:\bm{S}_ {\Phi}\right) \, m(\Phi)/d && \text{(\autoref{lemma:coarse_deg_syn})}\\
+    &=\frac{1}{d\,I(T:\bm{S})} \sum_\Phi \Pi\left(T:\bm{S}_ {\Phi}\right) \, m(\Phi)\\
+    &= \frac{1}{d}C(T:\bm{S})\,.
+\end{align*}
+
+\end{proof}
+
+
+\subsubsection{Proof of representational complexity of one-hot encoding}
+\label{apx:onehot}
+
+In DNNs solving a classification task, the output labels are typically encoded in a ``One-Hot Encoding'', in which there are as many neurons as classes with only the neuron corresponding to the correct class being one while all others are zero. Here we prove that all such encodings have a representational complexity of $C=1$.
+
+\begin{definition}[One-hot encoding]
+The one-hot encoding $\vec{Y}$ of a categorical variable $Y$ with finite ordered alphabet $A_Y = (y_1, y_2, \dots, y_n)$ is the image of the bijective mapping $$\vec{\cdot}: A_Y \to A_{\vec{Y}} \subset \{0, 1\}^n, y \mapsto \vec{y} = (\delta_{y, y_j})_j = (0, \dots, \underbrace{0}_{j-1}, \underbrace{1}_{j}, \underbrace{0}_{j+1}, \dots, 0)\,,$$ where $\delta_{y, y_j}$ is the Kronecker Delta.
+\end{definition}
+ 
+In what follows, we recall the concepts of local mutual information $i$, local $I^{\mathrm{sx}}_\cap$ redundancy $i^{\mathrm{sx}}_\cap$, and its additive decomposition into local informative redundancy $i^{\mathrm{sx}+}_\cap$ and local misinformative redundancy $i^{\mathrm{sx}-}_\cap$. These information functionals are needed in proving that any one-hot encoding has a representational complexity equals to one.
+\begin{definition}[Local information and their informative and misinformative parts]
+    Let $T$ be the target variable and $\bm S$ be the set of sources. Then, we have the following:
+    \begin{itemize}
+        \item The mutual information $I(T: \bm S)$ is, in fact, the expected value of the local mutual information $i(t: \bm s )$ as follows: 
+            $$I(T: \bm S) := \sum_{t, \bm{s}} \mathbb{P}(\mathfrak{t} \cap \bm{\mathfrak{s}})\log_2 \frac{\mathbb{P}\left(\mathfrak{t} \cap\bm{\mathfrak{s}}\right)}{\mathbb{P}\left(\mathfrak{t}\right)\mathbb{P}\left(\bm{\mathfrak{s}}\right)} = \mathbb E_{t,\bm s}\left[ i(t:\bm s)\right]\,.$$
+        \item The local mutual information $i(t: \bm s)$ can take negative values and so it is  decomposed into non-negative informative $i^+(t: \bm s)$ and misinformative $i^-(t: \bm s)$ parts as follows:
+            \begin{equation*}
+                \begin{split}
+                    i^+(t: \bm s) &:= \log_2\frac{1}{\mathbb{P}\left(\bm{\mathfrak{s}}\right)} = \log_2\frac{1}{p_{\bm S}(\bm s)}\,,\\
+                    i^-(t: \bm s) &:= \log_2\frac{\mathbb{P}\left(\mathfrak{t}\right)}{\mathbb{P}\left(\mathfrak{t} \cap\bm{\mathfrak{s}}\right)} = \log_2\frac{1}{p_{\bm S\mid T}(\bm s\mid t)}\,.
+                \end{split}
+            \end{equation*}
+        \item The $I^{\mathrm{sx}}_\cap$ redundancy $I^{\mathrm{sx}}_\cap(T: \bm S_\alpha)$ is in its turn the expected value of the local redundant information $i^{\mathrm{sx}}(t: \bm s_{\alpha} )$ as follows:
+            $$ I^{\mathrm{sx}}_\cap(T:\bm S_\alpha) = \sum_{t, \bm{s}} \mathbb{P}(\mathfrak{t} \cap \bm{\mathfrak{s}})
+            \log_2
+            \frac{\mathbb{P}\left(\mathfrak{t}\right) - \mathbb{P}\left(\mathfrak{t} \cap \bigcap_{\bm{a}\in\alpha}\bm{\bar{\mathfrak{s}}}_{\bm{a}}\right)}{\mathbb{P}\left(\mathfrak{t}\right)\left[1 - \mathbb{P}\left(\bigcap_{\bm{a}\in \alpha}\bm{\bar{\mathfrak{s}}}_{\bm{a}}\right) \right]} = \mathbb E_{t,\bm s}\left[ i^{\mathrm{sx}}_\cap(t:\bm s_\alpha)\right]\,.$$
+        \item The local $I^{\mathrm{sx}}_\cap$ redundancy $i^{\mathrm{sx}}_\cap(t: \bm s_\alpha)$ can also take negative values and so it is decomposed into nonnegative informative $i^{\mathrm{sx}+}_\cap(t: \bm s_\alpha)$ and misinformative $i^{\mathrm{sx}-}_\cap(t: \bm s_\alpha)$ parts as follows:
+            \begin{equation*}
+                \begin{split}
+                    i^{\mathrm{sx}+}_\cap(t: \bm s_\alpha) &:= \log_2\frac{1}{1 - \mathbb{P}\left(\bigcap_{\bm{a}\in \alpha}\bm{\bar{\mathfrak{s}}}_{\bm{a}}\right)} = \log_2\frac{1}{p_{\bm S_\alpha}(\bm s_\alpha)}\,,\\
+                    i^{\mathrm{sx}-}_\cap(t: \bm s_\alpha) &:= \log_2\frac{\mathbb{P}\left(\mathfrak{t}\right)}{\mathbb{P}\left(\mathfrak{t}\right) - \mathbb{P}\left(\mathfrak{t} \cap \bigcap_{\bm{a}\in \alpha}\bm{\bar{\mathfrak{s}}}_{\bm{a}}\right)} = \log_2\frac{1}{p_{\bm S_\alpha\mid T}(\bm s_\alpha\mid t)}\,.
+                \end{split}
+            \end{equation*}
+    \end{itemize}
+\end{definition}
+
+\begin{proposition}
+   \label{lemma:no_mis}
+The misinformative part of the redundancy $I_\cap^{\mathrm{sx}-}(T:\bm S_\alpha)$ vanishes if there exists a mapping $f: T \to \bm S$ from the target to the sources.
+\end{proposition}
+\begin{proof}
+If there exists a function $f: T \to \bm S$, all conditional probabilities of the form $p_{\bm S_\alpha\mid T}(\bm s_\alpha\mid t) = p_{\bm S_\alpha\mid T}((\bm s_{\bm a_{11}} \cap \bm s_{\bm a_{12}} \cap \dots) \cup \dots\mid t)$ are equal to 
+%the Kronecker delta $\delta_{s, f(t)}$
+either one or zero. Thus, $I_\cap^{\mathrm{sx}-}(T:\bm S_\alpha) = - \sum_{\bm s, t} p_{\bm S,T}(\bm s, t) \log_2 p_{\bm S_\alpha\mid T}(\bm s_\alpha\mid t) = 0$ for any $\alpha$.
+\end{proof}
+
+To uniquely determine the label from a one-hot representation, it is sufficient to observe the one neuron that is equal to one. However, one gets the same information by observing all neurons which are equal to zero, since, by exclusion, the last one then has to be one. Let $\alpha_j := \{\{j\}\{1, ..., j-1, j+1, ..., n\}\}$ be the antichain describing the redundant information between the $j$-th source and the rest of the sources taken together. Further, let $I(Y: \vec{Y})$ describe the mutual information between a random variable $Y$ and its one-hot representation, which is trivially equal to its entropy $H(Y)$ due to the construction of $\vec{Y}$.
+
+\begin{lemma}
+\label{lemma:local_red}
+The size of the local $I^{\mathrm{sx}}_\cap$ redundancy $i_\cap^{\mathrm{sx}}(y_j:\vec{y}_{\alpha_j})$ is $- \log_2 p_Y(y)$.
+\end{lemma}
+
+\begin{proof}
+Since the one-hot representation is a bijective function of the variable, \autoref{lemma:no_mis} implies that the misinformative part of the redundancy vanishes. The local $I^{\mathrm{sx}}_\cap$ redundancy in question then amounts to $i_\cap^{\mathrm{sx}}(y_j:\vec{y}_{\alpha_j}) = i_\cap^{\mathrm{sx}+}(y_j:\vec{y}_{\alpha_j}) = - \log_2 p_{Y}(y_j \cup (y_1 \cap \dots \cap y_{j-1} \cap y_{j+1} \cap \dots \cap y_n)) = - \log_2 p_{Y}(y_j \cup y) = - \log_2 p_{Y}(y)$.
+\end{proof}
+
+The atoms are ordered on a lattice by the partial ordering relation between atoms with antichain $\alpha$ and $\beta$ being given by \citep{williams_nonnegative_2010}
+\begin{equation}
+    \alpha \preceq \beta \Leftrightarrow \forall\bm{b}\in\beta~\exists\bm{a}\in\alpha~\text{such that}~\bm{a}\subseteq\bm{b}\,.
+\end{equation}
+The atoms are, then, computed as the Moebius inversion of the corresponding redundancies on the lattice, which is referred to throughout the literature as the Redundancy Lattice.
+
+\begin{lemma}
+\label{lemma:monotonicity}
+The degree of synergy $m\in \mathbb{N}$ increases monotonically on the redundancy lattice, i.e.,~$\alpha \preceq \beta \Rightarrow m(\alpha) \leq m(\beta)$.
+\end{lemma}
+
+\begin{proof}
+Let $\alpha, \beta \in \mathcal{P}(\mathcal{P}(\{1, \dots, n\}))$ be two antichains on the $n$ redundancy lattice such that $\alpha \preceq \beta$. By definition of the degree of synergy (\autoref{eq:m}), there exists a set $\bm{b} \in \beta$ such that $m(\beta) = |\bm{b}|$. For this $\bm{b}$, it follows from the definition of the partial order of the antichains that there must then also exist a set $\bm{a} \in \alpha$ for which $\bm{a} \subseteq \bm{b}$. Thus, $\alpha \preceq \beta \Rightarrow m(\alpha) \leq |\bm a| \leq |\bm b| = m(\beta)$.
+\end{proof}
+
+\begin{theorem}
+The representational complexity of a categorical random variable $Y$ and its one-hot representation is equal to one.
+\end{theorem}
+
+\begin{proof}
+The local mutual information of the event $(T=t, S=s)$ amounts to $i(y: \vec{y}) = - \log_2(p_{Y}(y))$ and is thus equal to the local redundancy $i_\cap^{\mathrm{sx}}(y_j:\vec{y}_{\alpha_j})$ (\autoref{lemma:local_red}). Because all local atoms are non-negative (\autoref{lemma:no_mis}), all local atoms $\pi$ with antichains $\beta$ succeeding $\alpha_j$ must be zero. Since $m(\alpha_j) = 1$ and $m(\beta) = 1$ for all $\beta \preceq \alpha$ (\autoref{lemma:monotonicity}), the representational complexity of the one-hot encoding is $C = 1$.
+\end{proof}
+\subsection{DNN implementation}
+\label{apx:implementation}
+
+\subsubsection{MNIST feedforward deep neural network}
+
+The MNIST networks analyzed in this paper are fully-connected feed-forward deep neural networks with quantized activation values, but float-precision weights. These networks are trained on the $60000$ $28\mathrm{x}28$ grayscale pictures of handwritten digits of the training set of the MNIST dataset \citep{lecun_gradient-based_1998}. To get better statistics for the test error as well as better estimates of information-theoretic quantities on the test set, the additional $50000$ test samples of the QMNIST dataset have been added to the $10000$ regular MNIST test set samples~\citep{yadav_cold_2019}. The networks use $\mathrm{tanh}$ activation functions on the hidden layers, while on the output layer employing a $\mathrm{softmax}$ (for one-hot output layer) or $\mathrm{sigmoid}$ (for binary output layer).
+
+Three different networks have been trained with $20$ different random weight initializations each: Figures \ref{fig:network_repr_compl}.B and \ref{fig:repr_compl_binary_and_cifar}.A have been computed on networks trained and evaluated with eight quantization levels per neuron but with different output layer representations: While the networks represented in \autoref{fig:network_repr_compl}.B have a ten-neuron one-hot output layer, the networks whose results are depicted in \autoref{fig:repr_compl_binary_and_cifar}.A have only four output neurons of which each represents one bit of the binary representation of the numeric label. While the networks shown in Figures \ref{fig:coarsegraining_subsampling}.B and D share the same network architecture as the ones in \autoref{fig:network_repr_compl}, they have been trained and evaluated with only four quantization levels to make the computation of the coarse-grained PID more efficient.
+
+Finally, the MNIST network with randomly assigned labels, as depicted in \autoref{fig:repr_compl_overfitting} has the same network structure as the default MNIST network and has been trained for $5$ different weight initializations with a different random shuffling of the train and test labels each. There we use eight quantization levels. 
+
+For all networks, we used stochastic gradient descent with a batch size of $64$, learning rate of $0.01$ and Xavier weight initialization. The networks with one-hot output representation employ a cross-entropy loss, while for the binary representation, a mean square error loss was chosen. Parameters and accuracies of the networks are summarized in \autoref{tab:networks}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        Setup & \#runs & \#quantization levels & Output rep. (\#neurons) & train acc. & test acc.\\
+        \hline
+        Default & 20 & 8 & one-hot (10)&99.96(2)&95.0(4)\\
+        Binary Output & 20 & 8 & binary (4)&99.59(4)&95.4(2)\\
+        Reduced & 20 & 4 & one-hot (10)&99.80(8)&94.7(4) \\
+        Shuffled Labels & 5 & 8 & one-hot (10) & 30(3) & 10.2(2)
+        
+    \end{tabular}
+    \caption{Network parameters and final accuracies for the three MNIST fully-connected DNNs referenced in this paper.}
+    \label{tab:networks}
+\end{table}
+
+\subsubsection{CIFAR10 convolutional neural network}
+
+For the more complex CIFAR10 image classification task \citep{krizhevsky2009learning} we employed a larger feed-forward neural network with convolutional layers. The $50000$ $32\mathrm{x}32\mathrm{x}3$ pictures are fed into three convolutional layers with $32$, $64$ and $128$ filters, respectively and a kernel size of $3$. The layers employ max pooling and ReLU activation functions. Afterwards, the result is flattened to $2048$ numbers and fed into the fully-connected part of the network consisting of four layers with a width of $128$, $32$, $5$, and $5$, respectively, with tanh activation functions. These fully-connected layers are quantized using $8$ quantization levels. Finally, the results are fed into the $10$ neuron one-hot output layer.
+
+Similar to the MNIST networks, the CIFAR10 network has been trained using stochastic gradient descent with a batch size of $64$, a learning rate of $0.005$, Xavier weight initialization and cross-entropy loss.
+
+\subsubsection{Quantization schemes}
+\label{apx:quantization}
+
+In order to limit the information capacity of the networks, the activation values have been quantized to very few discrete values. For evaluation, the quantized activations $\ell$ are computed from the continuous values $\hat{\ell}$ as
+
+\begin{equation}
+    \ell = \epsilon  \left\lfloor \frac{\hat{\ell} - \sigma_\mathrm{min}}{\epsilon} \right\rceil + \sigma_\mathrm{min}\,,
+\end{equation}
+
+where $\lfloor \cdot \rceil$ denotes rounding to the closest integer, the bin size $\epsilon$ is given by $\epsilon = (\sigma_\mathrm{max} - \sigma_\mathrm{min})/(n_\mathrm{bins} - 1)$ and $\sigma_\mathrm{min}$ and $\sigma_\mathrm{max}$ are the bounds of the activation function. This quantization scheme has been chosen as it reproduces the bounds exactly, i.e.,~$\hat{\ell} = \sigma_\mathrm{min/max} \to \ell = \sigma_\mathrm{min/max}$, and limits the rounding error to $\epsilon/2$.
+
+For the training phase, the activation values of the forward pass are stochastically to make the training more robust. The stochastic scheme builds on the deterministic scheme presented before in that it rounds the values to the same value. However, whether values are rounded up or down to the nearest rounding point is no longer deterministic but given by a probability scaling linearly with the distance from the next two rounding points, giving
+
+\begin{equation}
+    \ell = \epsilon\lambda + \sigma_\mathrm{min}\quad \text{where}\quad \lambda = 
+    \begin{cases} 
+        \left\lceil \frac{\hat{\ell} - \sigma_\mathrm{min}}{\epsilon} \right\rceil & r > \left(\frac{\hat{\ell} - \sigma_\mathrm{min}}{\epsilon} \mod 1\right)\\[0.5cm]
+      \left\lfloor \frac{\hat{\ell} - \sigma_\mathrm{min}}{\epsilon} \right\rfloor & r \leq \left(\frac{\hat{\ell} - \sigma_\mathrm{min}}{\epsilon} \mod 1 \right),
+   \end{cases}
+\end{equation}
+and $r \in [0, 1]$ is drawn i.i.d. from a uniform distribution for each neuron and each evaluation.
+
+\newpage
+
+\subsection{Additional results}
+\label{apx:additional_results}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{figures/degree_of_synergy_and_reing.pdf}
+    \caption{\textbf{Summing up PID atoms of a fixed degree of synergy shows more information is stored across single neurons than estimated by the directed local differences by \citet{reing_discovering_2021}}. The figure compares the sum of PID atoms of a certain degree of synergy (bottom row) with the directed local differences (top row) on three layers of the MNIST classifier network. Note that both decompositions for a given layer sum up to the total mutual information with the label.}
+    \label{fig:reing_deg_syn_comparison}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.2]{figures/shuffled_mnist_representational_complexity_test_train_comparison.pdf}
+    \caption{\textbf{Detailed comparison between the average representational complexity over 5 runs for the shuffled-label task described in \autoref{sec:testset} and \autoref{fig:repr_compl_overfitting}}. Shown are only the averages, but not the confidence intervals for better visibility. It is apparent that on this task that can only be solved by memorization of the random labels, the representation of the train dataset is much less synergistic than the one of the test dataset.}
+    \label{fig:shuffled_train_test_comparison}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[scale=1.0]{figures/combined_train_test_avg.pdf}
+    \caption{\textbf{Representational complexity computed on the train (A) and test (B) datasets follow the same general trend.} (A) is a copy of \autoref{fig:network_repr_compl}B and was put here to allow easier comparison between the results on train and test datasets. The setup for this experiment is described in the caption of \autoref{fig:network_repr_compl}, but also in \autoref{tab:networks}. The comparison between train and test datasets can be found in the main text in \autoref{sec:testset}.}
+    \label{fig:train_test_combined}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.2]{figures/representational_complexity_test_train.pdf}
+    \caption{\textbf{Individual runs of the default MNIST setup show a consistent deviation between the representational complexity computed on the train and test datasets starting at around 100 epochs into training.} Shown are the first 6 out of overall 20 training runs with the same settings but different seeds.}
+    \label{fig:test_train_individual_runs}
+\end{figure}
+
+\end{document}

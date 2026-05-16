@@ -1,0 +1,43 @@
+\begin{table*}[t]
+    \centering
+    \small
+    \resizebox{0.8\linewidth}{!}{%
+    % \begin{adjustbox}{max width=0.8\textwidth}
+    \rowcolors{2}{white}{gray!25}
+    \begin{tabular}{llcccc} \toprule
+    Type                                                & Measure                                                                                                           & Groupwise & Blackbox Access   & Labels Required   & Similarity $\uparrow$  \\
+    \midrule
+    \cellcolor{white}Performance                        & Performance Difference                                                                                            &\xmark     & \cmark            & \cmark            &\xmark        \\
+    \midrule
+    \cellcolor{white}                                   & Disagreement \cite{madani_co-validation_2004,milani_fard_launch_2016,liu_model_2022,shamir_anti-distillation_2020}&\xmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}                                   & Error-Corrected Disagreement \cite{fort_deep_2020}                                                                &\xmark     & \cmark            & \cmark            &\xmark        \\
+    \cellcolor{white}                                   & Min-Max-normalized Disagreement \cite{klabunde_prediction_2023}                                                    &\xmark     & \cmark            & \cmark            &\xmark        \\
+    \cellcolor{white}                                   & Kappa Statistic \cite{cohen_coefficient_1960}                                                                     &\xmark$^*$     & \cmark            & \xmark            & \cmark          \\
+    % \cellcolor{white}                                   & Fleiss Kappa \cite{fleiss_measuring_1971}                                                                         &\cmark     & \cmark            & \xmark            & \cmark          \\
+    \cellcolor{white}                                   & Ambiguity \cite{schumacher_effects_2021,marx_predictive_2020}                                                     &\cmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}                                   & Discrepancy \cite{marx_predictive_2020}                                                                           &\cmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}\multirow{-7}{*}{Hard Prediction}  & Label Entropy \cite{datta_measuring_2023}                                                                         &\cmark     & \cmark            & \xmark            &\xmark        \\
+    \midrule
+    \cellcolor{white}                                   & Norm of Soft Prediction Difference \cite{zhang_efficient_2021,ba_deep_2014}                                                          &\xmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}                                   & Surrogate Churn \cite{bhojanapalli_reproducibility_2021}                                                          &\xmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}                                   & Jensen-Shannon Divergence \cite{lin_divergence_1991}                                                              &\xmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}                                   & Prediction Difference \cite{shamir_anti-distillation_2020}                                                        &\cmark     & \cmark            & \xmark            &\xmark        \\
+    \cellcolor{white}\multirow{-5}{*}{Soft Prediction}  & Rashomon Capacity \cite{hsu_rashomon_2022}                                                                        &\cmark     & \cmark            & \xmark            &\xmark        \\
+    \midrule
+    \cellcolor{white}                                   & ModelDiff \cite{li_modeldiff_2021}                                                                                &\xmark     & \xmark$^\ddagger$ & \cmark            & \cmark          \\
+    \cellcolor{white}                                   & Adversarial Transferability \cite{hwang_similarity_2023}                                                          &\xmark     & \xmark$^\ddagger$ & \cmark            & \cmark          \\
+    \cellcolor{white}\multirow{-3}{*}{\shortstack{Gradient \& \\Adversarial Ex.}}         & Saliency Map Similarity \cite{jones_if_2022}                                                                      &\xmark     & \xmark            & \xmark            & \cmark          \\
+    \midrule
+    \cellcolor{white}Stitching                          & Performance Difference \cite{bansal_revisiting_2021,csiszarik_similarity_2021,lenc_understanding_2015}            &\xmark     & \xmark            & \cmark            &\xmark$^\dagger$        \\ \bottomrule
+    \end{tabular}
+    % \end{adjustbox}
+    }
+    {\par \tiny \raggedright $^{*}$: Groupwise variants available. $^\dagger$: Depends on comparison. $^\ddagger$: Depends on adversarial example generation.
+		\par}
+    \caption{
+    Overview of functional similarity measures.
+    We indicate whether measure enable groupwise comparison of models, whether they can be applied with blackbox access to the models, and if they require ground-truth labels.
+    \emph{Similarity} $\uparrow$ indicates whether increasing scores imply increasing similarity of models. % rather than dissimilarity.
+    }
+    \label{tab:funcsim}
+\end{table*}

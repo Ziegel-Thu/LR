@@ -351,8 +351,9 @@ def main():
     args = parser.parse_args()
 
     exp_dir = Path("experiments/exp-001-sae-identifiability")
-    cache_path = exp_dir / "data" / f"activations_layer{args.layer}.pt"
-    sae_dir = exp_dir / "checkpoints" / f"d{args.d_sae}_k{args.k}"
+    model_short = args.model.split("/")[-1]
+    cache_path = exp_dir / "data" / f"activations_{model_short}_layer{args.layer}.pt"
+    sae_dir = exp_dir / "checkpoints" / f"{model_short}_d{args.d_sae}_k{args.k}"
 
     if args.step in ("cache", "all"):
         cache_activations(
@@ -419,7 +420,7 @@ def main():
             "per_seed_stats": {str(k): v for k, v in stats.items()},
         }
 
-        results_path = exp_dir / f"results_d{args.d_sae}_k{args.k}.json"
+        results_path = exp_dir / f"results_{model_short}_d{args.d_sae}_k{args.k}.json"
         with open(results_path, "w") as f:
             json.dump(summary, f, indent=2)
         print(f"\nResults saved to {results_path}")

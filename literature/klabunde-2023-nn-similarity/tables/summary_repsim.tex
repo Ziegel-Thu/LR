@@ -1,0 +1,71 @@
+\begin{table*}[ht]
+	%\centering
+
+	% \begin{adjustbox}{max width=\textwidth}
+    \resizebox{\linewidth}{!}{%
+    \rowcolors{2}{white}{gray!25}
+	\begin{tabular}{llcccccccccc} \toprule
+									                                                        &                                  		                                                                    & \multicolumn{6}{c}{\cellcolor{white}Invariances} 																&             		&        	    &           &                           \\
+		\cline{3-8}
+	Type                                                                                	&          Measure                                                                                          & PT 			& OT 	  			&\cellcolor{white} IS   & ILT 			& TR 				& AT 	        & Preprocessing		& $D \neq D'$ 	& Metric	& Similarity $\uparrow$ 	\\
+		\midrule
+\cellcolor{white}		       	                                                            & Mean Canonical Correlation \cite{raghu_svcca_2017}                                                        & \cmark 		& \cmark 				& \cmark 			& \cmark 		& \cmark 			& \cmark 	    & CC	        	& \cmark      	& \xmark 	& \cmark        			\\
+\cellcolor{white}					                                                        & Mean Squared Canonical Correlation \cite{kornblith_similarity_2019,yanai_unification_1974}     & \cmark 		& \cmark 				& \cmark 			& \cmark 		& \cmark 			& \cmark 	    & CC	        	& \cmark      	& \xmark 	& \cmark         			\\
+\cellcolor{white}					                                                        & Singular Vector Canonical Correlation Analysis (SVCCA) \cite{raghu_svcca_2017}                            & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & CC	        	& \cmark      	& \xmark 	& \cmark         			\\
+\cellcolor{white} \multirow{-4}{*}{\shortstack{Canonical\\ Correlation\\ Analysis}}         & Projection-Weighted Canonical Correlation Analysis (PWCCA) \cite{morcos_insights_2018}                    & \xmark 		& \xmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & CC	        	& \cmark      	& \xmark 	& \cmark         			\\
+		\midrule
+\cellcolor{white}				                                                            & Orthogonal Procrustes \cite{ding_grounding_2021,williams_generalized_2022}                                & \cmark 		& \cmark$^*$			& \xmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \xmark      	& \cmark  	& \xmark        			\\
+\cellcolor{white}				                                                            & Angular Shape Metric \cite{williams_generalized_2022} 			                                        & \cmark 		& \cmark$^*$			& \cmark 			& \xmark 		& \xmark			& \xmark 	    & MN		        & \xmark      	& \cmark  	& \xmark        			\\
+\cellcolor{white}									                                        & Partial Whitening Shape Metric \cite{williams_generalized_2022}                                           & \cmark 	    & \cmark        		& \cmark$^\dagger$	& \cmark$^\dagger$& \cmark          & \cmark$^\dagger$ & \xmark 	    & \xmark   		& \cmark     & \xmark       			\\
+\cellcolor{white}									                                        & Soft Matching Distance \cite{khosla_soft_2024}                                                      & \cmark 	    & \xmark        		& \cmark         	& \xmark        & \cmark            & \xmark & CC, MN 	    & \cmark   		& \cmark     & \xmark       			\\
+\cellcolor{white}                                                                           & Linear Regression \cite{li_convergent_2016,kornblith_similarity_2019}                                     & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & CC	        & \cmark       	& \xmark     & \xmark       			\\
+\cellcolor{white}									                                        & Aligned Cosine Similarity \cite{hamilton_diachronic_2018}                                                 & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \xmark       	& \xmark     & \cmark       			\\
+\cellcolor{white}									                                        & Correlation Match \cite{li_convergent_2016}                                                               & \cmark		& \xmark 				& \cmark 			& \xmark 		& \cmark 			& \xmark 	    & CC		        & \xmark       	& \xmark     & \cmark       			\\
+\cellcolor{white} 									            & Maximum Matching Similarity \cite{wang_towards_2018}                                                                    & \cmark 		& \cmark 				& \cmark 			& \cmark 		& \xmark			& \xmark 	    & \xmark	        & \xmark       	& \xmark     & \cmark       			\\
+\cellcolor{white} \multirow{-9}{*}{Alignment} 									            & ContraSim \cite{rahamim_contrasim_2024}                                                                    & \cmark$^\dagger$ 		& \cmark$^\dagger$ 				& \cmark$^\dagger$ 			& \cmark$^\dagger$ 		& \cmark$^\dagger$			& \cmark$^\dagger$ 	    & \xmark	        & \cmark       	& \xmark     & \cmark       			\\
+		\midrule
+\cellcolor{white}		 		                                                            & Norm of Representational Similarity Matrix Difference \cite{shahbazi_using_2021,yin_dimensionality_2018}               & \cmark$^\ddagger$ & \cmark$^\ddagger$ & \xmark$^\ddagger$ & \xmark 		& \xmark$^\ddagger$	& \xmark 	    & \xmark	        & \cmark      	& \cmark$^\ddagger$     & \xmark  					\\
+\cellcolor{white}									                                        & Representational Similarity Analysis (RSA) \cite{kriegeskorte_representational_2008}                      & \cmark$^\ddagger$ & \xmark$^\ddagger$ & \cmark$^\ddagger$ & \xmark 		& \cmark$^\ddagger$ & \xmark 	    & \xmark	        & \cmark      	& \xmark     & \cmark$^\ddagger$       	\\
+\cellcolor{white}									                                        & Centered Kernel Alignment (CKA) \cite{kornblith_similarity_2019}                                          & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & CC		        & \cmark      	& \xmark     & \cmark         			\\
+\cellcolor{white}									                                        & Distance Correlation (dCor) \cite{szekely_measuring_2007}                                                 & \cmark 		& \cmark 				& \xmark 			& \xmark 		& \cmark 			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & \cmark        			\\
+\cellcolor{white}                                                                           & Normalized Bures Similarity (NBS) \cite{tang_similarity_2020}                                             & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & \cmark        			\\
+\cellcolor{white} 																			& Eigenspace Overlap Score (EOS) \cite{may_downstream_2020}                                                 & \cmark 		& \cmark 				& \cmark 			& \cmark        & \xmark			& \xmark 	    & \xmark            & \cmark      	& \xmark     & \cmark        			\\
+\cellcolor{white}                                                                           & Unified Linear Probing (GULP) \cite{boix-adsera_gulp_2022}                                                & \cmark 		& \cmark 				& \cmark 			& \xmark$^\dagger$ & \cmark			& \xmark$^\dagger$ & CC, RN 	    & \cmark      	& \cmark     & \xmark        			\\
+\cellcolor{white} & Riemmanian Distance \cite{shahbazi_using_2021}                                                            & \cmark 		& \cmark 				& \xmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \cmark     & \xmark        			\\
+\cellcolor{white} \multirow{-9}{*}{\shortstack{Represen-\\tational\\ Similarity\\ Matrix}}	& Relational Knowledge Loss \cite{park_relational_2019}                                                            & \cmark 		& \cmark				& \cmark$^\dagger$ 			& \xmark 		& \cmark		& \xmark	    & \xmark	        & \cmark      	& \xmark    &  \xmark        			\\
+\midrule
+\cellcolor{white}			                                                                & $k$-NN Jaccard Similarity \cite{schumacher_effects_2021, wang_towards_2020,hryniowski_inter-layer_2020,gwilliam_beyond_2022}& \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark$^\ddagger$	& \xmark 	    & \xmark	        & \cmark       	& \xmark     & \cmark         			\\
+\cellcolor{white}									                                        & Second-Order Cosine Similarity \cite{hamilton_cultural_2016}                                              & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark       	& \xmark     & \cmark         			\\
+\cellcolor{white}									                                        & Rank Similarity \cite{wang_towards_2020}                                                                  & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark$^\ddagger$	& \xmark 	    & \xmark	        & \cmark       	& \xmark     & \cmark         			\\
+\cellcolor{white} \multirow{-4}{*}{Neighbors}								                & Joint Rank and Jaccard Similarity \cite{wang_towards_2020}                                                & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark$^\ddagger$	& \xmark 	    & \xmark	        & \cmark       	& \xmark     & \cmark         			\\
+\midrule
+\cellcolor{white}     																		& Geometry Score (GS) \cite{khrulkov_geometry_2018}                                                         & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & \xmark        		\\
+\cellcolor{white} 							                                                & Multi-Scale Intrinsic Distance (IMD) \cite{tsitsulin_shape_2020}                                          & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & \xmark           		\\
+\cellcolor{white} \multirow{-3}{*}{Topology}                                                & Representation Topology Divergence (RTD) \cite{barannikov_representation_2022}                            & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \cmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & \xmark        			\\
+\midrule
+\cellcolor{white} 							                                                & Intrinsic Dimension \cite{camastra_intrinsic_2016}                                                        & \cmark 		& \cmark 				& \cmark 			& \cmark 		& \cmark			& \cmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$        		\\
+\cellcolor{white}			                                                                & Magnitude \cite{wang_towards_2020}                                                                        & \cmark 		& \cmark 				& \xmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$         		\\
+\cellcolor{white}									                                        & Concentricity \cite{wang_towards_2020}                                                                    & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$         		\\
+\cellcolor{white}									                                        & Uniformity \cite{wang_understanding_2020}                                                                & \cmark 		& \cmark 				& \xmark 			& \xmark 		& \cmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$         		\\
+\cellcolor{white} 							         	        							& Tolerance \cite{wang_understanding_2021}                                                                  & \cmark 		& \cmark 				& \cmark 			& \xmark 		& \xmark			& \xmark 	    & RN	        	& \cmark      	& \xmark     & $^\mathsection$         		\\
+\cellcolor{white}									                                        & Instance-Graph Modularity \cite{saini_subspace_2021,lu_understanding_2022}                                                         & \cmark 		& \cmark 				& \cmark$^\dagger$ 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$        		\\
+\cellcolor{white} \multirow{-7}{*}{Statistic}							                    & Neuron-Graph Modularity \cite{lange_clustering_2022}                                                      & \cmark 		& \xmark 				& \xmark 			& \xmark 		& \xmark			& \xmark 	    & \xmark	        & \cmark      	& \xmark     & $^\mathsection$        		\\
+        \bottomrule
+	\end{tabular}
+    % \end{adjustbox}
+    }
+	{\tiny \raggedright $^*$: Subgroups possible.\quad $^\dagger$: Varies based on hyperparameters.\quad $^\ddagger$: Similarity function dependent.\quad $^\mathsection$: Depends on comparison.\\
+		\par}
+
+	\caption{
+		Overview of representational similarity measures.
+        The invariances are permutation (PT), orthogonal transformation (OT), isotropic scaling (IS), invertible linear transformation (ILT), translation (TR), and affine transformation (AT).
+        We report invariances based on default hyperparameters and preprocessing as proposed by the authors.
+        These may vary if different parameters or similarity functions are applied.
+        Three kinds of preprocessing are commonly used: centering columns (CC), normalizing the matrix norm (MN), or normalizing row norms (RN).
+		The column $D \neq D'$ indicates whether a measure requires the compared representations to have identical dimensionality.
+		\emph{Metric} indicates whether a similarity measure satisfies the criteria of a distance metric when representations have equal dimensionality. 
+        \emph{Similarity} $\uparrow$ indicates whether increasing scores imply increasing similarity of models.
+	}
+	\label{tab:categorization}
+\end{table*}
