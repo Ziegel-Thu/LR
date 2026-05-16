@@ -44,7 +44,7 @@ def extract_representations(model_name, n_stimuli=5000, seq_len=256, device="cpu
     print(f"Using {len(texts)} stimuli")
 
     all_hidden = None
-    batch_size = 16
+    batch_size = 4
     n_batches = (len(texts) + batch_size - 1) // batch_size
 
     for i in tqdm(range(n_batches), desc=f"Extracting {model_name.split('/')[-1]}"):
@@ -138,10 +138,10 @@ def compute_null(X, Y, metric_fn, n_perms=100, **kwargs):
 # ============================================================
 
 def main():
-    n_stimuli = 5000
-    seq_len = 256
+    n_stimuli = 500
+    seq_len = 128
     k = 10
-    n_perms = 100
+    n_perms = 50
 
     models = {
         "Pythia-160M": "EleutherAI/pythia-160m-deduped",
