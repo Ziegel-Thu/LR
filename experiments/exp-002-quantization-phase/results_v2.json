@@ -1,0 +1,217 @@
+{
+  "quantized": [
+    {
+      "label": "quant_16bit",
+      "nmse": 0.11839335624184308,
+      "n_alive": 759,
+      "mean_corr": 1.0,
+      "frac_above_0.8": 1.0,
+      "frac_above_0.5": 1.0,
+      "frac_above_0.3": 1.0,
+      "frequency_stratified": {
+        "low_freq_corr": 1.0,
+        "mid_freq_corr": 1.0,
+        "high_freq_corr": 1.0
+      },
+      "nbits": 16
+    },
+    {
+      "label": "quant_8bit",
+      "nmse": 0.11850929437591254,
+      "n_alive": 759,
+      "mean_corr": 0.9534324242842553,
+      "frac_above_0.8": 0.9472990777338604,
+      "frac_above_0.5": 0.9631093544137023,
+      "frac_above_0.3": 0.9644268774703557,
+      "frequency_stratified": {
+        "low_freq_corr": 0.8865369207014017,
+        "mid_freq_corr": 0.9832169789284998,
+        "high_freq_corr": 0.9971498026190772
+      },
+      "nbits": 8
+    },
+    {
+      "label": "quant_6bit",
+      "nmse": 0.12025762663069284,
+      "n_alive": 759,
+      "mean_corr": 0.8925813290814152,
+      "frac_above_0.8": 0.8682476943346509,
+      "frac_above_0.5": 0.9262187088274044,
+      "frac_above_0.3": 0.9288537549407114,
+      "frequency_stratified": {
+        "low_freq_corr": 0.7576474486125848,
+        "mid_freq_corr": 0.9437494431790253,
+        "high_freq_corr": 0.9892113552621047
+      },
+      "nbits": 6
+    },
+    {
+      "label": "quant_4bit",
+      "nmse": 0.15021064801616854,
+      "n_alive": 759,
+      "mean_corr": 0.7197541696575304,
+      "frac_above_0.8": 0.6534914361001317,
+      "frac_above_0.5": 0.7812911725955204,
+      "frac_above_0.3": 0.8142292490118577,
+      "frequency_stratified": {
+        "low_freq_corr": 0.4201899707514994,
+        "mid_freq_corr": 0.8188150627646543,
+        "high_freq_corr": 0.9480642937417249
+      },
+      "nbits": 4
+    },
+    {
+      "label": "quant_3bit",
+      "nmse": 0.24439196115755712,
+      "n_alive": 759,
+      "mean_corr": 0.5558124054228809,
+      "frac_above_0.8": 0.37417654808959155,
+      "frac_above_0.5": 0.6350461133069829,
+      "frac_above_0.3": 0.7088274044795784,
+      "frequency_stratified": {
+        "low_freq_corr": 0.19867427674415136,
+        "mid_freq_corr": 0.6354893544604664,
+        "high_freq_corr": 0.8644346399739238
+      },
+      "nbits": 3
+    },
+    {
+      "label": "quant_2bit",
+      "nmse": 0.49655844987520514,
+      "n_alive": 759,
+      "mean_corr": 0.37409519391411594,
+      "frac_above_0.8": 0.11594202898550725,
+      "frac_above_0.5": 0.4163372859025033,
+      "frac_above_0.3": 0.5480895915678524,
+      "frequency_stratified": {
+        "low_freq_corr": 0.04460594764134937,
+        "mid_freq_corr": 0.38859648422402165,
+        "high_freq_corr": 0.714775629770249
+      },
+      "nbits": 2
+    },
+    {
+      "label": "quant_1bit",
+      "nmse": 0.5456367850557972,
+      "n_alive": 759,
+      "mean_corr": 0.35540307821310385,
+      "frac_above_0.8": 0.1080368906455863,
+      "frac_above_0.5": 0.4044795783926219,
+      "frac_above_0.3": 0.5270092226613966,
+      "frequency_stratified": {
+        "low_freq_corr": 0.030882480629940822,
+        "mid_freq_corr": 0.3701429144508959,
+        "high_freq_corr": 0.6905125615711101
+      },
+      "nbits": 1
+    }
+  ],
+  "gaussian_noise": [
+    {
+      "label": "noise_16bit",
+      "nmse": 0.11839335624184308,
+      "n_alive": 759,
+      "mean_corr": 1.0,
+      "frac_above_0.8": 1.0,
+      "frac_above_0.5": 1.0,
+      "frac_above_0.3": 1.0,
+      "frequency_stratified": {
+        "low_freq_corr": 1.0,
+        "mid_freq_corr": 1.0,
+        "high_freq_corr": 1.0
+      },
+      "nbits": 16
+    },
+    {
+      "label": "noise_8bit",
+      "nmse": 0.1185102120420039,
+      "n_alive": 759,
+      "mean_corr": 0.9617219692813125,
+      "frac_above_0.8": 0.9538866930171278,
+      "frac_above_0.5": 0.9710144927536232,
+      "frac_above_0.3": 0.9736495388669302,
+      "frequency_stratified": {
+        "low_freq_corr": 0.9114479464544097,
+        "mid_freq_corr": 0.9813938517087045,
+        "high_freq_corr": 0.9971485754388594
+      },
+      "nbits": 8
+    },
+    {
+      "label": "noise_6bit",
+      "nmse": 0.12020001770052968,
+      "n_alive": 759,
+      "mean_corr": 0.8800406922153299,
+      "frac_above_0.8": 0.849802371541502,
+      "frac_above_0.5": 0.9143610013175231,
+      "frac_above_0.3": 0.9169960474308301,
+      "frequency_stratified": {
+        "low_freq_corr": 0.7193296021557329,
+        "mid_freq_corr": 0.9470926544578956,
+        "high_freq_corr": 0.989338012145053
+      },
+      "nbits": 6
+    },
+    {
+      "label": "noise_4bit",
+      "nmse": 0.14639620698821998,
+      "n_alive": 759,
+      "mean_corr": 0.7173754719045775,
+      "frac_above_0.8": 0.6442687747035574,
+      "frac_above_0.5": 0.7747035573122529,
+      "frac_above_0.3": 0.8194993412384717,
+      "frequency_stratified": {
+        "low_freq_corr": 0.41550053823738065,
+        "mid_freq_corr": 0.8124469983707241,
+        "high_freq_corr": 0.9519539929850565
+      },
+      "nbits": 4
+    },
+    {
+      "label": "noise_3bit",
+      "nmse": 0.2192691441967479,
+      "n_alive": 759,
+      "mean_corr": 0.5799835421559395,
+      "frac_above_0.8": 0.4189723320158103,
+      "frac_above_0.5": 0.6482213438735178,
+      "frac_above_0.3": 0.7233201581027668,
+      "frequency_stratified": {
+        "low_freq_corr": 0.2071458362506728,
+        "mid_freq_corr": 0.6806145204044508,
+        "high_freq_corr": 0.8856250073801478
+      },
+      "nbits": 3
+    },
+    {
+      "label": "noise_2bit",
+      "nmse": 0.4096332886477655,
+      "n_alive": 759,
+      "mean_corr": 0.3937356038063264,
+      "frac_above_0.8": 0.13306982872200263,
+      "frac_above_0.5": 0.463768115942029,
+      "frac_above_0.3": 0.5573122529644269,
+      "frequency_stratified": {
+        "low_freq_corr": 0.03928354551815034,
+        "mid_freq_corr": 0.4337713650461109,
+        "high_freq_corr": 0.7370564984785926
+      },
+      "nbits": 2
+    },
+    {
+      "label": "noise_1bit",
+      "nmse": 0.6746565803058607,
+      "n_alive": 759,
+      "mean_corr": 0.23433912858079484,
+      "frac_above_0.8": 0.05533596837944664,
+      "frac_above_0.5": 0.14756258234519104,
+      "frac_above_0.3": 0.37549407114624506,
+      "frequency_stratified": {
+        "low_freq_corr": 0.002968924182660547,
+        "mid_freq_corr": 0.21390282446015027,
+        "high_freq_corr": 0.502601262318682
+      },
+      "nbits": 1
+    }
+  ],
+  "method": "activation-level quantization simulation (not weight quantization)"
+}

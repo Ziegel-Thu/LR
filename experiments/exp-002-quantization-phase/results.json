@@ -1,0 +1,40 @@
+{
+  "results": [
+    {
+      "nbits": 32,
+      "nmse_fp32": 0.11839335624184308,
+      "nmse_quant": 0.11839335624184308,
+      "nmse_ratio": 1.0,
+      "n_alive_fp32": 759,
+      "mean_correlation": 1.0,
+      "median_correlation": 1.0,
+      "frac_corr_above_0.8": 1.0,
+      "frac_corr_above_0.5": 1.0,
+      "frac_corr_above_0.3": 1.0,
+      "frequency_stratified": {
+        "low_freq_mean_corr": 1.0,
+        "mid_freq_mean_corr": 1.0,
+        "high_freq_mean_corr": 1.0,
+        "low_freq_count": 270,
+        "mid_freq_count": 238,
+        "high_freq_count": 251
+      }
+    },
+    {
+      "nbits": 8,
+      "error": "Expected all tensors to be on the same device, but found at least two devices, mps:0 and cpu!"
+    },
+    {
+      "nbits": 4,
+      "error": "Expected all tensors to be on the same device, but found at least two devices, mps:0 and cpu!"
+    },
+    {
+      "nbits": 3,
+      "error": "Expected all tensors to be on the same device, but found at least two devices, mps:0 and cpu!"
+    },
+    {
+      "nbits": 2,
+      "error": "Server disconnected without sending a response."
+    }
+  ]
+}

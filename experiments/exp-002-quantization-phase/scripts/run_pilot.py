@@ -41,19 +41,32 @@ def get_quantized_activations(
             model_name, torch_dtype=torch.float32
         ).to(device)
     else:
-        from hqq.models.hf.base import AutoHQQHFModel
-        from hqq.core.quantize import BaseQuantizeConfig
+        # Use HQQ to quantize — run on CPU for compatibility
+        from hqq.core.quantize import HQQLinear, BaseQuantizeConfig
+
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, torch_dtype=torch.float32
+        )
 
         quant_config = BaseQuantizeConfig(
             nbits=nbits, group_size=group_size, axis=1
         )
-        model = AutoHQQHFModel.from_pretrained(
-            model_name,
-            torch_dtype=torch.float32,
-            attn_implementation="eager",
-        )
-        model.quantize_model(quant_config=quant_config)
-        model = model.to(device)
+
+        # Quantize all linear layers on CPU
+        for name, module in list(model.named_modules()):
+            if isinstance(module, torch.nn.Linear):
+                hqq_layer = HQQLinear(
+                    module, quant_config,
+                    compute_dtype=torch.float32, device="cpu"
+                )
+                parts = name.split(".")
+                parent = model
+                for part in parts[:-1]:
+                    parent = getattr(parent, part)
+                setattr(parent, parts[-1], hqq_layer)
+
+        # Keep on CPU for quantized models (HQQ+MPS has device issues)
+        device = "cpu"
 
     model.eval()
 
@@ -223,7 +236,7 @@ def main():
 
     model_name = "EleutherAI/pythia-160m-deduped"
     layer_idx = 6
-    n_tokens = 500_000
+    n_tokens = 100_000
 
     # Get FP32 baseline activations
     print("Getting FP32 baseline activations...")
