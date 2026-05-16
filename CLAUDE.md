@@ -74,8 +74,28 @@ deepresearch/dr-001-xxx/
 
 ## 服务器
 
-- GPU 服务器：`ssh jiagpu45678`
-- 大规模训练相关约定待后续确定，目前不要连接服务器
+### 集群概况
+
+8 台共享存储的 GPU 节点（jiagpu1-8），可用节点为 **jiagpu4-8**（1-3 无 SSH 权限）。
+
+| 节点 | GPU | 显存/卡 |
+|------|-----|---------|
+| jiagpu4 | 8× NVIDIA A40 | 45GB |
+| jiagpu5 | 8× NVIDIA A40 | 45GB |
+| jiagpu6 | 8× NVIDIA A40 | 48GB |
+| jiagpu7 | 8× NVIDIA A40 | 48GB |
+| jiagpu8 | 8× NVIDIA A40 | 48GB |
+
+- 当前工作节点：jiagpu6
+- SSH 到其他节点：`ssh jiagpu{4,5,7,8}`
+- 可以在空闲节点上跑实验
+
+### 存储
+
+- **beegfs**（`/beegfs_hdd/`）：共享存储，684T，适合大文件和数据同步，**不要放大量小文件**
+- **NVMe SSD**（`/nvmessd/`）：本地高速存储，14T，适合放小文件、venv、缓存等
+  - 项目 SSD 目录：`/nvmessd/lifanhong/`
+- 实验代码和数据放 beegfs 同步，运行时的临时文件/缓存放 SSD
 
 ## 文献下载
 
