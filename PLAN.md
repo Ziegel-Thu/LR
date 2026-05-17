@@ -70,6 +70,36 @@
 - 预期：如果有共同 signature → "理解"的几何定义；如果没有 → "理解"需要细分
 - 待 DR-016 回收后细化实验设计
 
+### Probing 深层问题（待单独 brainstorm）
+
+**方向 P1: Encoding vs Use 的三角验证**
+- 同一概念同时用 probe direction / Park causal direction / DiffMeans direction 提取方向
+- 分别做 ablation 和 steering，看哪种方向最接近因果方向
+- 不只是"encoding vs use"，而是"哪种方向提取方法最因果"
+- 待单独细化实验设计
+
+**方向 P2: "谁的信息"——三来源分解（需深入调研）**
+- Probe 读到的信息来自：输入 bleed-through / 训练目标结构 / 模型内部计算？
+- 测试：probe on 模型表征 vs probe on 输入 embedding → 差值 = 模型贡献
+- 测试：同架构不同训练目标（next-token vs masked LM vs contrastive）→ probe 方向一致性
+- Cui 2022 发现随机网络也高 CKA 暗示 bleed-through 严重
+- Gubian 2025 的 Encoding Probe 可能直接回答这个问题
+- 需要 DR 调研已有相关工作
+
+**方向 P3: 信息生命周期——逐层追踪**
+- 某个概念在每层的 probe accuracy + ablation effect 双曲线
+- 编码→使用→消费的全过程追踪
+- 如果某层 probe 高但 ablation 低 → ghost information（编码没用）
+- 如果某层 probe 下降但 ablation 变大 → 信息被消费了（用于计算后丢弃）
+- 连接 probing 和 circuit analysis 的桥
+- 待单独细化实验设计
+
+**方向 P4: 理解模型上的 probing（需深入调研）**
+- 在声称"物理理解"的模型（V-JEPA 2）上 probe 抽象物理概念（守恒量、对称性、因果 vs 相关）
+- 在 world model（DreamerV3）上 probe 反事实方向
+- 在 latent reasoning（Coconut）上 probe 推理步骤
+- 需要 DR 调研：大家在这些模型上都 probe 了什么、发现了什么、还缺什么
+
 （当前无——实验走服务器）
 
 ## 下一批实验（3 个并行）
