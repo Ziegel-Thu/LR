@@ -65,3 +65,29 @@
 这与 Wang 2022 IOI circuit 一致：Name Mover heads 在 L9-10，probe 在 L7 就已完美解码。信息在 L7 被"写入"表征，在 L9 被 Name Mover heads "读取"使用。中间 2 层是信息"搬运"过程。
 
 这是 8 种 lifecycle 分类中的 **Type 2: Early encoding, late use**。
+
+---
+
+## Phase 4: 三来源分解
+
+### 配置
+- Pythia-1.4B (trained) vs Pythia-1.4B (random init), 24 layers
+- 5 concepts, probe accuracy 分解为 input/architecture/training
+
+### 结果
+
+| 概念 | Emb Acc | Random | Trained | Input% | Arch% | Train% |
+|------|---------|--------|---------|--------|-------|--------|
+| short | 0.966 | 0.875 | 0.970 | **96.6%** | 0% | 9.5% |
+| numeric | 0.945 | 0.964 | 0.999 | **94.5%** | 1.9% | 3.5% |
+| plural | 0.909 | 0.936 | 0.981 | **90.9%** | 2.7% | 4.5% |
+| subword | 0.891 | 0.891 | 0.989 | **89.1%** | 0% | 9.8% |
+| capitalized | 0.878 | 0.855 | 0.992 | **87.8%** | 0% | 13.7% |
+
+### 关键发现
+
+**88-97% 的 probe 信号来自 input bleed-through！**
+
+Training 只贡献 3-14%。Architecture 贡献接近 0。Token-level 形态学 probe 本质上是 trivial 的 — 不是模型"学到"的，而是输入的直接属性。
+
+与 exp-007 ghost ratio=71% 一致：不仅因果上无关，来源上也是 trivial。
