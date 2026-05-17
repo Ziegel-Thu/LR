@@ -20,7 +20,7 @@
 ### 实验
 - **exp-001 SAE 可识别性** [本地]: 信号弱，搁置
 - **exp-002 量化 × SAE 特征** [本地+jiagpu4]: 4-bit 无损，3→2 bit 剧烈崩溃
-- **exp-003 跨架构柏拉图收敛** [本地 pilot + jiagpu5 Phase 1 表征提取]: z>350，U 形深度曲线
+- **exp-003 跨架构柏拉图收敛** [本地 pilot + jiagpu4/5 Phase 1+2]: z>350→2642，4 个 scale 支持 PRH
 - **exp-004 ID→泛化** [本地+jiagpu5]: ID 和 acc 非简单负相关（r=0.365），stable rank 更强（r=0.935）
 - **exp-005 Additivity Tax** [本地]: **核心发现——Bilodeau 不可能性是 worst-case only**
   - Phase 1: 自然训练网络 IGA≈2.0（SHAP works）
@@ -51,9 +51,9 @@
 
 | 编号 | 任务 | 依赖 | 节点 | 状态 |
 |------|------|------|------|------|
-| E1 | exp-003 Phase 1 分析: CKA/kNN on 410M/1.4B/2.8B reps | 表征已提取 ✅ | jiagpu | **待做** |
-| E2 | exp-003 加 Williams shape metric + PID | E1 | jiagpu | 待做 |
-| E3 | exp-003 Phase 2: 6.9B/7B scale + scaling law 拟合 | E1 | jiagpu | 待做 |
+| E1 | exp-003 Phase 1 分析: CKA/kNN on 410M/1.4B/2.8B reps | 表征已提取 ✅ | jiagpu | ✅ 完成 |
+| E2 | exp-003 加 Williams shape metric + PID | E1 ✅ | jiagpu | 待做 |
+| E3 | exp-003 Phase 2: 6.9B/7B scale + scaling law 拟合 | E1 ✅ | jiagpu | ✅ 完成（Pythia-6.9B + RWKV-7B，Mamba 无 7B） |
 
 ### 实证线：量化相变
 
