@@ -47,6 +47,7 @@
 - Off-distribution intervention 量化：patching 后算 Mahalanobis distance，画 distance vs IIA 可靠性
 - Ablation baseline 对比：mean vs zero vs resample 三种 baseline 在 IOI 上的 circuit 差异
 - Trivialization baseline：随机 GPT-2 small 在 IOI 上做 circuit discovery，作为 Wang 2022 的对照
+- Circuit "暗物质"：把 MLP 纳入 circuit search，看 87% → ？如果仍有 gap → 量化 distributed computation 的比例
 
 ### 任务 7: exp-011 PID 预测因果效果（小规模）
 - GPT-2 small 上选 5 个关键 neurons，PID 分解 unique/redundant/synergistic
@@ -62,6 +63,12 @@
 - 将 Locatello 2019 纳入五公理框架（目前只有 Bilodeau/Han/Sutter/Kleinberg）
 - 对每个不可能性，找最小公理放松下的最优正面结果
 - 推广 exp-005 的 smoothed analysis 到 Locatello 和 Sutter（三个不可能性的统一 average-case 处理）
+
+### 任务 10: Story A —— "理解的几何学"
+- 核心问题：声称"理解"的模型（V-JEPA 2=物理、DreamerV3=世界、OthelloGPT=棋局、Coconut=推理、CLIP=跨模态），其表征几何有没有共同 signature？
+- 工具：ID profile、stable rank、hunchback 形状、probe accuracy vs ablation effect
+- 预期：如果有共同 signature → "理解"的几何定义；如果没有 → "理解"需要细分
+- 待 DR-016 回收后细化实验设计
 
 （当前无——实验走服务器）
 
