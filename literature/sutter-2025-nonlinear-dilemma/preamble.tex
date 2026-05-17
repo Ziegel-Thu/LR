@@ -1,0 +1,189 @@
+
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{scalerel}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+\usepackage{amsthm}
+\usepackage{thmtools} 
+\usepackage{thm-restate}
+
+\usepackage[T1]{fontenc}    %
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{inconsolata}
+
+\usepackage[scaled=0.85]{helvet}
+
+\usepackage{xltabular}
+\usepackage{longtable}
+\usepackage{booktabs}       %
+\usepackage{colortbl}
+\usepackage{lscape} %
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{datetime}       %
+\usepackage{nicefrac}       %
+\usepackage{url}            %
+\usepackage{fnpct}           %
+\usepackage{enumitem}        %
+\usepackage{tcolorbox}       %
+\usepackage{csquotes}        %
+\usepackage{xspace}          %
+\definecolor{Gray}{gray}{0.9}
+
+\makeatletter
+\xspaceaddexceptions{\csq@qclose@i}
+\makeatletter
+
+\usepackage{bbm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{nicefrac}
+
+\newtheorem{definition}{Definition}
+\newtheorem{altdefinition}{Alternative Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+\newtheorem{task}{Task}
+\newtheorem{exampletask}{Example Task}
+\newtheorem{model}{DNN}
+\newtheorem{submodule}{Submodule}
+\newtheorem{causalgraph}{Alg}
+\newtheorem{examplecausalgraph}{Example Alg}
+\newtheorem{assumption}{Assumption}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}  %
+\makeatletter
+
+\algnewcommand{\LineComment}[1]{\Statex \hskip\ALG@thistlm \textcolor{blue}{\(\triangleright\) #1}}
+
+\algnewcommand{\FirstLineComment}[1]{\Statex \hskip\ALG@tlm \textcolor{blue}{\(\triangleright\) #1}}
+
+\algnewcommand{\InlineComment}[1]{\hfill\textcolor{blue}{\(\triangleright\) #1}}
+\makeatother
+
+\usepackage{cleveref}
+\crefname{section}{\S}{\S\S}
+\Crefname{section}{\S}{\S\S}
+\crefformat{section}{\S#2#1#3}
+\crefname{figure}{Fig.}{Fig.}
+\crefname{algorithm}{Alg.}{Alg.}
+\crefname{line}{line}{lines}
+\crefname{appendix}{App.}{}
+\crefname{equation}{eq.}{eqs.}
+\crefname{table}{Table}{Tables}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{assumption}{Assump.}{Assumps.}
+\crefname{definition}{Definition}{Definitions}
+\crefname{task}{Task}{Tasks}
+\crefname{model}{DNN}{DNNs}
+\crefname{submodule}{Submodule}{Submodules}
+\crefname{causalgraph}{Alg.}{Algs.}
+\crefname{thm}{Theorem}{Theorems}
+\crefname{lemma}{Lemma}{Lemmas}
+
+\usepackage[table-column-type=s]{siunitx}
+
+\sisetup{mode = math, text-family-to-math = true, text-series-to-math = true, reset-math-version = false, quantity-product}
+\DeclareSIUnit\thousand{k}
+\DeclareSIUnit\million{M}
+\DeclareSIUnit\billion{B}
+\DeclareSIUnit\trillion{T}
+\DeclareSIUnit\x{x}
+\DeclareSIUnit\percent{\%}
+\DeclareSIUnit\hour{h}
+\DeclareSIUnit\min{m}
+\DeclareSIUnit\sec{s}
+
+\newcommand{\q}[2]{\qty[mode=math]{#1}{#2}\xspace}
+
+\newcommand{\integer}[1]{%
+    \num[
+        mode = math,
+        round-mode=places,
+        round-precision=0,
+        group-separator={,},
+        group-minimum-digits=4,
+        ]{#1}%
+    \xspace
+}
+
+\newcommand{\float}[2][1]{%
+    \num[
+        group-digits=false, 
+        round-precision=#1, 
+        round-mode=places,
+    ]{#2}%
+    \xspace}
+
+\newcommand{\snum}[1]{\num{#1}\xspace}
+
+\xspaceaddexceptions{\textsubscript}
+\newcommand\floatpm[3][1]{\float[#1]{#2}\textsubscript{$\pm$\float[#1]{#3}}}
+
+\usepackage{tabularray}
+\usepackage{cellspace}
+\setlength\cellspacetoplimit{4pt}
+\setlength\cellspacebottomlimit{4pt}
+\newcommand\cincludegraphics[2][]{\raisebox{-0.2\height}{\includegraphics[#1]{#2}}}
+\usepackage{setspace}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnotetext{#1}%
+  %
+  \addtocounter{footnote}{0}%
+  \endgroup
+}
+
+\newcommand{\githublink}[2]{
+    \hspace{-15pt}
+    \begin{tblr}{
+      colspec = {Q[c,m]Q[c,m]},
+      stretch = 0,
+      columns = {colsep=1.5pt},
+      rows = {rowsep = 0pt},
+    }%
+     \cincludegraphics[width=1.1em, keepaspectratio]{assets/github-mark.png} 
+     & \setstretch{.5}\href{#1}{\small\myemph{#2}}\\
+    \end{tblr}%
+}
+
+\makeatletter
+\DeclareRobustCommand*{\escapeus}[1]{%
+  \begingroup\@activeus\scantokens{#1\endinput}\endgroup}
+\begingroup\lccode`\~=`\_\relax
+   \lowercase{\endgroup\def\@activeus{\catcode`\_=\active \let~\_}}
+\makeatother
+
+\newcommand{\makecolor}[1]{{\color{purple}#1}}
+
+\newcommand{\myemph}[1]{\textsf{{\escapeus{#1}}}}
+
+\setlength {\marginparwidth }{3.2cm}  %
+\usepackage[textsize=tiny,disable]{todonotes}
+
+\newcommand{\defn}[1]{\textbf{#1}}
+
+\newcommand{\colourdnn}{purple}
+\newcommand{\colourcg}{JungleGreen}
+\newcommand{\mydnnmacro}[2]{\newcommand{#1}{{\color{\colourdnn}#2}}}
+\newcommand{\mycgmacro}[2]{\newcommand{#1}{{\color{\colourcg}#2}}}
+
+\DeclareMathOperator*{\expect}{\mathbb{E}}
+\DeclareMathOperator*{\one}{\mathbbm{1}}
+\DeclareMathOperator*{\defeq}{\overset{\mathtt{def}}{=}}

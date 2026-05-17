@@ -1,0 +1,109 @@
+\begin{tikzpicture}[thick,scale=0.6, every node/.style={scale=0.6}]
+\def\scalex{3}
+\def\scaley{1.95}
+\def\opac{0.2}
+\Large
+
+
+
+\def\startx{0}
+\def\starty{-0.5}
+
+\foreach \xshift in {1.5,3.5,5.5,7.5}{
+    \node[] () at (\xshift *\scalex + -0.45*\scalex + \startx,-0.309*\scaley+ \starty) {\huge \{};
+    \node[] () at (\xshift *\scalex + 0.45*\scalex + \startx,-0.309*\scaley+ \starty) {\huge \}};
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=16pt,inner sep=0pt] () at (\xshift *\scalex + -0.3*\scalex+ \startx,-0.316*\scaley+ \starty) {};
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + 0*\scalex+ \startx,-0.3*\scaley+ \starty) {};
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + 0.3*\scalex++ \startx,-0.3*\scaley+ \starty) {};
+}
+
+
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out) at (4 * \scalex,2.75 * \scaley) {\Large $\outneuron_{\mathsf{True}}$};
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out2) at (5 * \scalex,2.75 * \scaley) {\Large $\outneuron_{\mathsf{False}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT01) at (1 * \scalex,0 * \scaley) {${\inneuron_{1}}$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT02) at (2 * \scalex ,0 * \scaley) {${\inneuron_{2}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT03) at (3 * \scalex,0 * \scaley) {${\inneuron_{3}}$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT04) at (4 * \scalex ,0 * \scaley) {${\inneuron_{4}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT05) at (5 * \scalex,0 * \scaley) {${\inneuron_{5}}$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT06) at (6 * \scalex ,0 * \scaley) {${\inneuron_{6}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT07) at (7 * \scalex,0 * \scaley) {${\inneuron_{7}}$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT08) at (8 * \scalex ,0 * \scaley) {${\inneuron_{8}}$};
+
+\foreach \row in { 1,2}
+\foreach \col in {1,2,3,4,5,6,7,8}{
+\node[fill=blue!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT\row\col) at (\col * \scalex,\row * \scaley) {$\hiddenneuron_{(\row, \col)}$ };
+}
+
+
+
+
+
+
+\foreach \col in {1,2,3,4,5,6,7,8}{
+\foreach \coll in {1,2,3,4,5,6,7,8}{
+\draw[opacity=0.3, ->] (BERT0\col.north) to (BERT1\coll.south);
+\draw[opacity=0.3, ->] (BERT1\col.north) to (BERT2\coll.south);
+}
+}
+
+
+\foreach \col in {1,2,3,4,5,6,7,8}{
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out.south);
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out2.south);
+}
+
+\node[draw, ellipse,  minimum width=160, minimum height=40pt] (piI1) at ( 1.5 * \scalex+ \startx,0.25 * \scaley + \starty) {};
+\node[draw, ellipse,  minimum width=160, minimum height=40pt] (piI2) at ( 3.5 * \scalex+ \startx,0.25 * \scaley + \starty) {};
+\node[draw, ellipse,  minimum width=160, minimum height=40pt] (piI3) at ( 5.5 * \scalex+ \startx,0.25 * \scaley + \starty) {};
+\node[draw, ellipse,  minimum width=160, minimum height=40pt] (piI4) at ( 7.5 * \scalex+ \startx,0.25 * \scaley + \starty) {};
+
+\node[draw, ellipse,  minimum width=360, minimum height=50pt] (piV1) at ( 2.5 * \scalex+ \startx,1.25 * \scaley + \starty) {};
+\node[draw, ellipse,  minimum width=360, minimum height=50pt] (piV2) at ( 6.5 * \scalex+ \startx,1.25 * \scaley + \starty) {};
+
+\node[draw, ellipse,  minimum width=160, minimum height=50pt] (pio) at ( 4.5 * \scalex+ \startx,3 * \scaley + \starty) {};
+
+
+
+\def\starty{7.5}
+\def\startx{9}
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (A) at (0+ \startx,0+ \starty) {$\onevar_1$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (B) at (1*\scalex+ \startx,0+ \starty) {$\onevar_2$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (C) at (2*\scalex+ \startx,0+ \starty) {$\onevar_3$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (D) at (3*\scalex+ \startx,0+ \starty) {$\onevar_4$};
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (E) at (0.5*\scalex+ \startx,0.5*\scaley+ \starty) {$\onevarr_1$};
+
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (F) at (2.5*\scalex + \startx,0.5*\scaley+ \starty) {$\onevarr_2$};
+
+
+
+\node[fill=yellow!20, draw, ellipse, minimum size=20pt] (G) at (1.5*\scalex + \startx,1*\scaley+ \starty) {$\onevarrr$};
+
+\draw [->,opacity=\opac] (A) -- (E);
+\draw [->,opacity=\opac] (B) -- (E);
+\draw [->,opacity=\opac] (C) -- (F);
+\draw [->,opacity=\opac] (D) -- (F);
+\draw [->,opacity=\opac] (E) -- (G);
+\draw [->,opacity=\opac] (F) -- (G);
+
+\draw[ -, dotted] (pio.north) to (G.south);
+
+\draw[-, dotted] (piI1.west) to[in=180, out=180] (A.west);
+\draw[-, dotted] (piI2.north) to[in=-135, out=90] (B.south);
+\draw[-, dotted] (piI3.north) to[in=-45, out=90] (C.south);
+\draw[-, dotted] (piI4.east) to[in=0, out=0] (D.east);
+
+\draw [-, dotted] (piV1.west) to[in=180, out=180] (E.west);
+\draw [-, dotted] (piV2.east) to[in=0, out=0] (F.east);
+\end{tikzpicture}

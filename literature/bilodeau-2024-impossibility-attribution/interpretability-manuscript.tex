@@ -1,0 +1,214 @@
+%
+
+\documentclass[12pt]{article}%
+%
+%
+
+\usepackage{etoolbox}
+\newtoggle{preprint}
+\newtoggle{journal}
+\newcommand{\preprint}[1]{\iftoggle{preprint}{#1}{}}
+\newcommand{\journal}[1]{\iftoggle{journal}{#1}{}}
+
+%
+ \toggletrue{preprint}
+ \togglefalse{journal}
+
+%
+%
+
+%
+%
+%
+\preprint{
+\include{header-files/blair-global-macros}
+\include{header-files/local-macros}
+
+\title{Impossibility Theorems for Feature Attribution}
+\date{}
+\author[1]{Blair Bilodeau\footnote{Work done during an internship at Google Brain. Correspondence to blair.bilodeau[at]gmail.com}}
+\author[2,3]{Natasha Jaques}
+\author[2,3]{Pang Wei Koh}
+\author[3]{Been Kim}
+\affil[1]{University of Toronto}
+\affil[2]{University of Washington}
+\affil[3]{Google Deepmind}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\usepackage{titlesec}
+\newcommand{\addperiod}[1]{#1.}
+
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}
+  {}
+  {}
+\titlespacing{\section}{0pt}{\parskip}{0pt}
+\titlespacing{\subsection}{0pt}{\parskip}{0pt}
+\titlespacing{\subsubsection}{0pt}{\parskip}{0pt}
+\usepackage[letterpaper, margin=1in]{geometry}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\usepackage[numbers]{natbib}
+\bibliographystyle{plainnat}
+
+\let\oldparagraph=\paragraph
+\renewcommand\paragraph[1]{\oldparagraph{#1.}}
+}
+
+
+\journal{
+
+\templatetype{pnas-header-files/pnasresearcharticle}
+\include{header-files/journal-global-macros}
+\include{header-files/local-macros}
+
+\title{Impossibility Theorems for Feature Attribution}
+
+%
+\author[a,1,2]{Blair Bilodeau}
+\author[b]{Natasha Jaques}
+\author[b]{Pang Wei Koh}
+\author[b]{Been Kim}
+
+\affil[a]{University of Toronto}
+\affil[b]{Google}
+
+%
+\leadauthor{Bilodeau}
+
+%
+%
+\significancestatement{
+Machine learning models can learn complex patterns from data,
+but it is often difficult to understand why they make particular predictions.
+To tackle this problem, practitioners typically turn to feature attribution methods, which seek to attribute the model's behaviour $f(x)$ around an example $x$ to particular features, or dimensions of $x$, that are most important for the prediction.
+In recent years, a new class of feature attribution methods---namely, complete and linear methods---have become popular.
+Our work shows that, unfortunately, such methods can be misleading: complete and linear methods are provably less reliable than simpler methods at answering basic feature attribution questions.
+We provide impossibility results that highlight their failure cases and discuss how we might instead obtain reliable feature attributions.}
+
+%
+\authorcontributions{BB and BK conceived the project. BB and BK developed the theoretical results and formulated the experiments. BB ran the experiments. BB, NJ, PWK, and BK wrote the paper and discussed the overall project direction throughout.}
+\authordeclaration{The authors declare no competing interests.}
+\equalauthors{\textsuperscript{1}Work done during an internship at Google.}
+\correspondingauthor{\textsuperscript{2}To whom correspondence should be addressed. E-mail: blair.bilodeau\@mail.utoronto.ca}
+
+%
+\keywords{Interpretability $|$ Explainable AI $|$ Feature attribution}
+
+}
+
+\begin{document}
+
+\maketitle
+
+\preprint{\vspace{-35pt}}
+
+\begin{abstract}
+Despite a sea of interpretability methods that can produce plausible explanations, the field has also empirically seen many failure cases of such methods.
+In light of these results,
+it remains unclear for practitioners how to use these methods and choose between them in a principled way.
+%
+In this paper,
+%
+%
+%
+%
+we show that for moderately rich \modelname{} classes (easily satisfied by neural networks), any \fieldmethodname{} that is \completename{} and \additivename{}---for example, \intgrad{} and \shap{}---can provably fail to improve on random guessing for inferring \modbehaviourname{}.
+Our results apply to common \downtasknames{} such as characterizing \localname{} \modbehaviourname{}, identifying spurious \covnames{}, and algorithmic recourse.
+One takeaway from our work is the importance of concretely defining \downtasknames{}:
+ once such an \downtaskname{} is defined,
+%
+%
+a simple and direct approach of repeated \modelname{} evaluations can outperform
+%
+many other
+complex \fieldmethodnames{}.
+
+%
+\end{abstract}
+
+
+\journal{
+\dates{This manuscript was compiled on \today}
+\doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+}
+
+%
+
+\preprint{
+%
+%
+%
+}
+
+\input{manuscript-files/1-introduction}
+\input{manuscript-files/2-notation}
+\input{manuscript-files/3-impossibility}
+\input{manuscript-files/4-experiments}
+\input{manuscript-files/5-sample-complexity}
+\input{manuscript-files/6-literature}
+\input{manuscript-files/7-conclusion}
+
+\journal{
+\acknow{BB acknowledges support from the Vector Institute.
+We thank Astrid Bertrand, Robert Geirhos, Adam Pearce, Lisa Schut, Martin Wattenberg, and Qiqi Yan for helpful feedback on preliminary drafts.}
+
+\showacknow{} %
+
+%
+\bibliography{bib-files/interpretability}
+}
+
+
+\preprint{
+\section*{Acknowledgements}
+BB acknowledges support from the Vector Institute.
+We thank Astrid Bertrand, Robert Geirhos, Adam Pearce, Lisa Schut, Martin Wattenberg, and Qiqi Yan for helpful feedback on preliminary drafts.
+
+
+\bibliography{bib-files/interpretability}
+%
+}
+
+\newpage
+\journal{\onecolumn}
+
+\appendix
+
+\input{manuscript-files/Z1-complete-additive}
+\input{manuscript-files/Z2-impossibility-proofs}
+\input{manuscript-files/Z2b-application-proofs}
+\input{manuscript-files/Z3-sample-complexity-proofs}
+
+%
+
+
+
+\end{document}

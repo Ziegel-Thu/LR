@@ -1,0 +1,241 @@
+%
+
+\section{Problem Framework}\label{sec:notation}
+
+%
+%
+%
+
+
+
+\subsection{The Topic of Interest: \countmodbehaviourNAME{}}\label{sec:counterfactual}
+We start by defining \countmodbehaviourname{}, a simple yet general notion that is closely related to common \downtasknames{} such as recourse and spurious \covname{} detection.
+Concretely, for a \modelname{} $\model$,
+%
+we consider a \username{} who wants to use the output of a \fielddefname{} to infer the \modelname{}'s dependence on \covname{} $j$ 
+%
+near an \obsname{} $\covval$ (that is, within a $\inscale$-neighbourhood of $\covval$).
+More formally, for a fixed
+\emph{\covname{} space} $\covspace \subseteq \Reals^\covdim$, \emph{\dataname{} space} $\dataspace \subseteq \Reals^\datadim$, and \emph{\modelname{}} $\model$ that is an element of a known \emph{\modelname{} class} $\modelspace\subseteq\covspace\to\dataspace$,
+\countmodbehaviourname{} describes $\model(\covval')$ for $\covval'\in\covspace$ such that $\covval'\feat{j} \in (\covval\feat{j}-\inscale, \covval\feat{j}+\inscale)$ for a given radius $\inscale>0$ and \covname{} $j\in[\covdim]$.
+Then, given a pair of candidate \emph{\modbehaviournames{}} $\modeldum\nullind, \modeldum\altind: (\covval\feat{j}-\inscale, \covval\feat{j}+\inscale) \to \dataspace$, the primary task we consider in this work is inferring which \modbehaviourname{} is more likely. 
+
+Where do  $\modeldum\nullind$ and $\modeldum\altind$ come from? 
+In general, the \countmodbehaviourname{} to be inferred is not precise enough to be described by a single $\modeldum$.
+For instance, the \username{} may only want to infer whether $\model(\covval')$ increases as $\covval'\feat{j}$ increases, and clearly there are many possible $\modeldum\nullind$'s that satisfy this.
+However, if the \username{} can reliably infer whether the \modelname{} is increasing, there must exist \emph{some} pair $\modeldum\nullind, \modeldum\altind$ (the former increasing, the latter decreasing) that the \username{} can reliably distinguish between.
+Our results do not depend on knowing exactly what $\modeldum\nullind, \modeldum\altind$ is:
+informally speaking, our theoretical results say that for \emph{every} such pair the \username{} \textbf{cannot} distinguish between them using the output of a \completename{} and \additivename{} \fielddefname{}, which then implies that they also cannot distinguish between the more general \behaviourname{} (such as increasing vs.\ decreasing).
+
+How is \countmodbehaviourname{} related to \downtasknames{} that users may care about in real-world applications?
+%
+We consider two common applications in the literature, algorithmic recourse and spurious feature identification, to motivate inferring \countmodbehaviourname{}. 
+%
+For algorithmic recourse, we consider the task of determining whether increasing or decreasing a given \covname{} would be more beneficial.
+For spurious feature identification, we consider the task of distinguishing if the \modelname{} output is sensitive to local perturbations in the \covname{}.
+%
+%
+%
+%
+We formalize both of these tasks in \cref{sec:downtasks}.
+
+\subsection{Framing the Problem: Hypothesis Testing}\label{sec:hypothesis-defs}
+
+%
+%
+%
+
+%
+%
+%
+
+We formulate learning \countmodbehaviourname{} as a hypothesis testing problem, which gives us a framework to measure and compare the performance of different \fielddefnames{}.
+%
+Following the usual nomenclature, the \pracname{}'s goal is to determine whether the \modelname{} has certain \behaviourname{}: the \emph{\nullname{}}.
+This \behaviourname{} is contrasted with some different, plausible \modbehaviourname{}: the \emph{\altname{}}.
+The \nullname{} and \altname{} should encode necessary (but potentially not sufficient) questions that must be answered to succeed at the \taskname{} of inferring \countmodbehaviourname{}.
+For example, for recourse the \username{} must be able to infer if the \modelname{} is increasing or decreasing, while for spurious \covnames{} the \username{} must be able to infer if the \modelname{} is sensitive or insensitive to perturbations of a \covname{}.
+After collecting information about the \modelname{} using a \fielddefname{}, the \pracname{} will then conduct a hypothesis test and either \emph{reject} or \emph{fail to reject} the \nullname{}. 
+
+%
+%
+%
+
+Formally, the \bothhypnames{} define subsets $\modelspace\nullind \subseteq \modelspace$ and $\modelspace\altind \subseteq \modelspace$, with
+\*[
+    &\nullhyp\setdelim \model \in \modelspace\nullind \\
+    &\althyp\setdelim \model \in \modelspace\altind.
+\]
+Here, $\modelspace\nullind$ contains $\model\nullind$'s that locally agree with the possible $\modeldum\nullind$'s encoding \countmodbehaviourname{}, such as all \emph{increasing} \modelnames{}. Similarly, $\modelspace\altind$ contains all \modelnames{} with desired contrasting \modbehaviourname{}.
+While it must be the case that these sets have no overlap ($\modelspace\nullind \cap \modelspace\altind = \emptyset$), it is often the case that they do not exhaustively contain all \modelnames{} ($\modelspace\nullind \cup \modelspace\altind \neq \modelspace$).
+%
+%
+%
+%
+%
+%
+A \emph{\oraclehyptestname{}} is any way for the \pracname{}
+to draw their conclusion for the \hyptestname{} solely on the output of a \fielddefname{} at an \obsname{}.
+%
+%
+Formally, this is any function
+\*[
+    \oraclehyptest: \Reals^{\covdim\times\datadim} \to [0,1].
+\]
+%
+The \username{} may rely on external randomness to decide whether to accept or reject the \nullname{}: the output of $\oraclehyptest$ is \emph{the probability that the \pracname{} rejects the \nullname{}}.
+
+%
+
+
+
+\subsection{Evaluating \hyptestNAMEs{}}
+
+Most generally, 
+a \emph{\fielddefname{}} is any function
+\*[
+    \expdef: \modelspace \times \probspace(\covspace) \times \covspace \to \Reals^{\covdim\times\datadim},
+\]
+where for any space $\Zz$, $\probspace(\Zz)$ denotes the set of all probability measures on $\Zz$.
+%
+%
+This captures the most common properties of existing \defnames{} in the literature, facilitating their comparison. 
+%
+First, every \fielddefname{} must take as input the \modelname{} $\model\in\modelspace$ that the \pracname{} wishes to understand.
+Second, the \pracname{} can specify an \obsname{} $\covval\in\covspace$ to \scarequo{localize} the \covname{} \attname{}.
+In contrast to \scarequo{global} \methodnames{}, which seek to explain the effect of \covnames{} on the \modelname{} output across a population, localization allows the \pracname{} to seek 
+\countmodbehaviourname{} relative to a specific \obsname{}.
+%
+Finally, many \methodnames{} rely heavily on the presence of a \emph{\basename{}}  $\covdist\in\probspace(\covspace)$ to incorporate \modbehaviourname{} from other \obsnames{} into computing \covname{} \attname{}.
+%
+This \basename{} may encode the training data distribution (e.g., this is what \shap{} does), concentrate entirely on a single \obsname{} (e.g., this is what \intgradshort{} does), or take some other form specific to the \taskname{} of interest. 
+%
+%
+%
+%
+
+We concretely define a few methods widely used in practice and the focus of our analysis.
+\vanillagrad{} \citep{simonyan13gradient} can be written as $\expdef(\model, \covdist, \covval) = \grad \model(\covval)$ (notice this is constant with respect to choice of $\covdist$).
+Similarly, \intgradshort{} \citep{sundararajan17integrated} can be written as 
+\*[
+    \expdef(\model,\covdist,\covval)\feat{j} = \EE_{\covobs\sim\covdist}\Bigg[(\covval\feat{j} - \covobs\feat{j}) \int_0^1 \grad\feat{j}\model(\covobs + \alpha(\covval-\covobs)) \, \dee \alpha \Bigg],
+\]
+where $\covdist$ is often taken to be a pointmass.
+%
+%
+%
+%
+%
+For a more complete discussion of precise definitions and properties (including the definition of \shap{}), see \cref{sec:complete-additive-proofs}.
+
+
+%
+%
+%
+
+
+%
+
+The goal of our work is to see if certain \fielddefname{}s can reliably be used to conduct the \hyptestnames{} described above. What are the right metrics to measure the success or failure?
+%
+Classically \citep{yerushalmy47hyptest},
+the quality of a \hyptestname{} is determined by its \emph{\specname{}}, which is the probability that the \pracname{} fails to reject the \nullname{} whenever the \modelname{} satisfies the \nullname{} (a \emph{true negative}, or $1-$ probability of a type-II error), and its \emph{\sensname{}}\footnote{The interpretability literature sometimes uses the term \emph{sensitivity} to refer to the effect of perturbations on \covname{} \attnames{}  \citep{yeh19infidelity}. We use only the hypothesis testing definition above.}, which is the probability that the \pracname{} rejects the \nullname{} whenever the \modelname{} satisfies the \altname{} (a \emph{true positive}, or $1-$ probability of a type-I error).
+%
+In particular, for a fixed \fielddefname{} $\expdef$, \basename{} $\covdist\in\probspace(\covspace)$, \obsname{} $\covval\in\covspace$, and \bothhypnames{} $\modelspace\nullind,\modelspace\altind \subseteq \modelspace$, 
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest) &= 
+    %
+    \inf_{\model\in\modelspace\nullind}
+    [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \ \text{ and } \\
+    \senssym_{\expdef,\covdist,\covval}(\oraclehyptest) &= 
+    %
+    \inf_{\model\in\modelspace\altind}
+    \oraclehyptest(\expdef(\model,\covdist,\covval)).
+\]
+%
+%
+For every \hyptestname{}, it is trivial to construct \emph{some} \modelname{} with accurate inference; our measure of performance instead asks if the \hyptestname{} does well for \emph{all} \modelnames{} of interest (mathematically, this is the role of the $\inf$\footnote{The reader may replace ``$\sup$" with ``$\max$" and ``$\inf$" with ``$\min$" without change of meaning; the difference is only that the spaces may not be compact and hence the $\argmax$ and $\argmin$ may not be achieved.}).
+%
+%
+%
+%
+%
+%
+%
+%
+The goal of the \pracname{} is to simultaneously maximize \specname{} and \sensname{} (both take values in $[0,1]$). 
+
+How does this framework differ from other hypothesis testing, such as t-testing?
+Our definitions of \specname{} and \sensname{} are the exact analogues of the definitions used in classical statistical hypothesis testing. There, $\modelspace\nullind$ denotes the true data-generating \modelname{} rather than the learned \modelname{}, but the requirement that the test does well \emph{for all} such \modelnames{} is still enforced. As a concrete example, if the true data-generating model is assumed to be $\dataval = \model_\beta(\covval) = \beta\feat{1} \covval\feat{1} + \beta\feat{2} \covval\feat{2} + \eps$ where $\eps$ is standard Gaussian noise, then a canonical hypothesis test uses the \nullname{} $\modelspace\nullind = \{\model_\beta: \beta\feat{1} = 0\}$ to test if the first coefficient is non-zero. The standard requirement of using a \hyptestname{} $\oraclehyptest$ based on a test statistic with p-value less than $\alpha$ is exactly the requirement that
+\*[
+    \inf_{\model\in\modelspace\nullind} \EE_{\dataval_{1:n} \sim \model} [1 - \oraclehyptest(\dataval_{1:n})] \geq 1-\alpha.
+\]
+Since we have no randomness over the data (the \modelname{} is already learned, not retrained), our definition is a deterministic version of this standard worst-case \hyptestname{}. 
+
+%
+%
+
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+
+
+\subsection{Notation}
+
+We end this section with the standard notation used throughout the paper.
+%
+
+For any integer $i$, let $[i] = \{1,\dots,i\}$ and $e_i$ be the $i$th standard basis vector.
+For any set $\Aa$, let $\comp{\Aa}$ denote its complement; also, let $\emptyset$ denote the empty set.
+For any \obsname{} $\covval\in\covspace$, let $\covval\feat{j}$ denote the $j$th element/\covname{}. 
+%
+
+Often, we want to
+evaluate $\model(z)$ where
+$z\in\Reals^\covdim$ is defined such that
+\*[
+    z\feat{\ell}
+    =
+    \begin{cases}
+        \covval\feat{\ell} &\ell \neq j\\
+        \covvaldum\feat{\ell} &\ell = j
+    \end{cases}
+\]
+for some \obsnames{} $\covval,\covvaldum\in\covspace$ and \covname{} $j\in[\covdim]$.
+That is, replacing the $j$th \covname{} of $\covval$ with $\covvaldum\feat{j}$.
+For clarity, we overload the notation of $\model$ and write $\model(\covval\feat{[\covdim]\setminus\{j\}}, \covvaldum\feat{j}) = \model(z)$. 
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+We use shorthand vector notation, letting $\covval\timeind{1:n} = (\covval\timeind{1},\cdots,\covval\timeind{n}) \in \covspace^n$. 
+%
+%
+Similarly, we write $\model(\covval\timeind{1:n}) = (\model(\covval\timeind{1}),\dots,\model(\covval\timeind{n}))$.
+For any matrix $M$, let $M_j$ denote the $j$th row of $M$.
+We use capital letters to denote random variables, and 
+for any $\covdist\in\probspace(\covspace)$ and $\model:\covspace\to\dataspace$, let 
+\*[
+    \EE_{\covobs\sim\covdist}[\model(\covobs)]
+    = \int \model(\covval) \covdist(\dee \covval),
+\]
+with similar notation for variances, covariances, etc.
+For any $j\in[\covdim]$, let $\covdist\feat{j}$ denote the $j$th marginal distribution of $\covdist$.
+Note that, unless specifically mentioned, we make no assumption that the features are independent under $\covdist$.
+

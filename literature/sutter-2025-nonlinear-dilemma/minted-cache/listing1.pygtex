@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+    \PYG{k}{def} \PYG{n+nf}{f}\PYG{p}{(}\PYG{esc}{$\alg$}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{def} \PYG{esc}{$\algfunc$}\PYG{p}{(}\PYG{esc}{$\bx$}\PYG{p}{,} \PYG{esc}{$\interventionsalg$}\PYG{o}{=}\PYG{k+kc}{None}\PYG{p}{)}\PYG{p}{:}
+            \PYG{esc}{$\nodesvalues_{\nodesinput}$} \PYG{o}{=} \PYG{esc}{$\bx$}
+            \PYG{k}{for} \PYG{esc}{$\node$} \PYG{o+ow}{in} \PYG{esc}{$\alg$}\PYG{o}{.}\PYG{n}{topological\PYGZus{}sort}\PYG{p}{(}\PYG{esc}{$\nodesinner \cup \nodesoutput$}\PYG{p}{)}\PYG{p}{:}
+                \PYG{k}{if} \PYG{esc}{$\interventionsalg$} \PYG{o+ow}{and} \PYG{esc}{$\node$} \PYG{o+ow}{in} \PYG{esc}{$\interventionsalg$}\PYG{p}{:}
+                    \PYG{esc}{$\nodevalue_{\node}$} \PYG{o}{=} \PYG{esc}{$\interventionsalg[\node]$}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{esc}{$\nodevalue_{\node}$} \PYG{o}{=} \PYG{esc}{$\algfuncnode{\node}(\nodesvalues_{\parents(\node)})$}
+            \PYG{k}{return} \PYG{esc}{$\nodesvalues_{\nodesoutput}$}
+        \PYG{k}{return} \PYG{esc}{$\algfunc$}
+\end{Verbatim}

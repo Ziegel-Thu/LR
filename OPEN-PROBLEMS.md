@@ -374,3 +374,9 @@ Ziyin 2025 在 embedded deep linear network (EDLN) 上**严格证明了 Perfect 
 我们的公理化框架已建立但缺乏"正面"结果。最有价值的增量是 **smoothed impossibility**（有 exp-005 实验基础 + 全新理论方向）和 **Kleinberg 式公理化**（field-defining if achieved）。两者可组合为一篇论文："Impossibility theorems tell us what is impossible; smoothed analysis tells us when it matters"。
 
 **关键参考**：Kleinberg 2002, Bilodeau+ 2024, Sutter+ 2025, Wu+ 2025, Friedman+ 2024, 我们的 formalization.md
+
+---
+
+## 待深入调研的问题
+
+- **不同架构的数学结构与 LRH 的关系**：Transformer（softmax attention）、Mamba（选择性 SSM）、RWKV（线性 attention）、Hyena（长卷积）、RetNet（retention）等架构各有不同的数学特色（线性/非线性混合方式、state 更新机制、位置编码方式）。LRH 在每种架构上是否成立？是否和架构的具体数学性质（如 softmax 的 log-linear 结构、SSM 的递推线性性）有因果关系？目前无系统研究。

@@ -1,0 +1,1599 @@
+@online{belroseElicitingLatentPredictions2023,
+  title = {Eliciting {{Latent Predictions}} from {{Transformers}} with the {{Tuned Lens}}},
+  author = {Belrose, Nora and Furman, Zach and Smith, Logan and Halawi, Danny and Ostrovsky, Igor and McKinney, Lev and Biderman, Stella and Steinhardt, Jacob},
+  date = {2023-11-26},
+  eprint = {2303.08112},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2303.08112},
+  url = {http://arxiv.org/abs/2303.08112},
+  urldate = {2024-01-11},
+  abstract = {We analyze transformers from the perspective of iterative inference, seeking to understand how model predictions are refined layer by layer. To do so, we train an affine probe for each block in a frozen pretrained model, making it possible to decode every hidden state into a distribution over the vocabulary. Our method, the \textbackslash emph\{tuned lens\}, is a refinement of the earlier ``logit lens'' technique, which yielded useful insights but is often brittle. We test our method on various autoregressive language models with up to 20B parameters, showing it to be more predictive, reliable and unbiased than the logit lens. With causal experiments, we show the tuned lens uses similar features to the model itself. We also find the trajectory of latent predictions can be used to detect malicious inputs with high accuracy. All code needed to reproduce our results can be found at https://github.com/AlignmentResearch/tuned-lens.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/IWKVX7B5/belroseElicitingLatentPredictions2023.pdf;/home/daniel/Zotero/storage/D237I8LI/2303.html}
+}
+
+@misc{huh2024platonic,
+      title={The Platonic Representation Hypothesis}, 
+      author={Minyoung Huh and Brian Cheung and Tongzhou Wang and Phillip Isola},
+      year={2024},
+      eprint={2405.07987},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@misc{biderman2024lora,
+    title={LoRA Learns Less and Forgets Less},
+    author={Dan Biderman and Jose Gonzalez Ortiz and Jacob Portes and Mansheej Paul and Philip Greengard and Connor Jennings and Daniel King and Sam Havens and Vitaliy Chiley and Jonathan Frankle and Cody Blakeney and John P. Cunningham},
+    year={2024},
+    eprint={2405.09673},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+
+@inproceedings{brown2020language,
+ author = {Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared D and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and Agarwal, Sandhini and Herbert-Voss, Ariel and Krueger, Gretchen and Henighan, Tom and Child, Rewon and Ramesh, Aditya and Ziegler, Daniel and Wu, Jeffrey and Winter, Clemens and Hesse, Chris and Chen, Mark and Sigler, Eric and Litwin, Mateusz and Gray, Scott and Chess, Benjamin and Clark, Jack and Berner, Christopher and McCandlish, Sam and Radford, Alec and Sutskever, Ilya and Amodei, Dario},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
+ pages = {1877--1901},
+ publisher = {Curran Associates, Inc.},
+ title = {Language Models are Few-Shot Learners},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf},
+ volume = {33},
+ year = {2020}
+}
+
+@misc{luo2024empirical,
+      title={An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-tuning}, 
+      author={Yun Luo and Zhen Yang and Fandong Meng and Yafu Li and Jie Zhou and Yue Zhang},
+      year={2024},
+      eprint={2308.08747},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{gurnee2024universal,
+      title={Universal Neurons in GPT2 Language Models}, 
+      author={Wes Gurnee and Theo Horsley and Zifan Carl Guo and Tara Rezaei Kheirkhah and Qinyi Sun and Will Hathaway and Neel Nanda and Dimitris Bertsimas},
+      year={2024},
+      eprint={2401.12181},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+
+@misc{touvron2023llama,
+      title={Llama 2: Open Foundation and Fine-Tuned Chat Models}, 
+      author={Hugo Touvron and Louis Martin and Kevin Stone and Peter Albert and Amjad Almahairi and Yasmine Babaei and Nikolay Bashlykov and Soumya Batra and Prajjwal Bhargava and Shruti Bhosale and Dan Bikel and Lukas Blecher and Cristian Canton Ferrer and Moya Chen and Guillem Cucurull and David Esiobu and Jude Fernandes and Jeremy Fu and Wenyin Fu and Brian Fuller and Cynthia Gao and Vedanuj Goswami and Naman Goyal and Anthony Hartshorn and Saghar Hosseini and Rui Hou and Hakan Inan and Marcin Kardas and Viktor Kerkez and Madian Khabsa and Isabel Kloumann and Artem Korenev and Punit Singh Koura and Marie-Anne Lachaux and Thibaut Lavril and Jenya Lee and Diana Liskovich and Yinghai Lu and Yuning Mao and Xavier Martinet and Todor Mihaylov and Pushkar Mishra and Igor Molybog and Yixin Nie and Andrew Poulton and Jeremy Reizenstein and Rashi Rungta and Kalyan Saladi and Alan Schelten and Ruan Silva and Eric Michael Smith and Ranjan Subramanian and Xiaoqing Ellen Tan and Binh Tang and Ross Taylor and Adina Williams and Jian Xiang Kuan and Puxin Xu and Zheng Yan and Iliyan Zarov and Yuchen Zhang and Angela Fan and Melanie Kambadur and Sharan Narang and Aurelien Rodriguez and Robert Stojnic and Sergey Edunov and Thomas Scialom},
+      year={2023},
+      eprint={2307.09288},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{bai2023qwen,
+      title={Qwen Technical Report}, 
+      author={Jinze Bai and Shuai Bai and Yunfei Chu and Zeyu Cui and Kai Dang and Xiaodong Deng and Yang Fan and Wenbin Ge and Yu Han and Fei Huang and Binyuan Hui and Luo Ji and Mei Li and Junyang Lin and Runji Lin and Dayiheng Liu and Gao Liu and Chengqiang Lu and Keming Lu and Jianxin Ma and Rui Men and Xingzhang Ren and Xuancheng Ren and Chuanqi Tan and Sinan Tan and Jianhong Tu and Peng Wang and Shijie Wang and Wei Wang and Shengguang Wu and Benfeng Xu and Jin Xu and An Yang and Hao Yang and Jian Yang and Shusheng Yang and Yang Yao and Bowen Yu and Hongyi Yuan and Zheng Yuan and Jianwei Zhang and Xingxuan Zhang and Yichang Zhang and Zhenru Zhang and Chang Zhou and Jingren Zhou and Xiaohuan Zhou and Tianhang Zhu},
+      year={2023},
+      eprint={2309.16609},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{bai2022constitutional,
+      title={Constitutional AI: Harmlessness from AI Feedback}, 
+      author={Yuntao Bai and Saurav Kadavath and Sandipan Kundu and Amanda Askell and Jackson Kernion and Andy Jones and Anna Chen and Anna Goldie and Azalia Mirhoseini and Cameron McKinnon and Carol Chen and Catherine Olsson and Christopher Olah and Danny Hernandez and Dawn Drain and Deep Ganguli and Dustin Li and Eli Tran-Johnson and Ethan Perez and Jamie Kerr and Jared Mueller and Jeffrey Ladish and Joshua Landau and Kamal Ndousse and Kamile Lukosuite and Liane Lovitt and Michael Sellitto and Nelson Elhage and Nicholas Schiefer and Noemi Mercado and Nova DasSarma and Robert Lasenby and Robin Larson and Sam Ringer and Scott Johnston and Shauna Kravec and Sheer El Showk and Stanislav Fort and Tamera Lanham and Timothy Telleen-Lawton and Tom Conerly and Tom Henighan and Tristan Hume and Samuel R. Bowman and Zac Hatfield-Dodds and Ben Mann and Dario Amodei and Nicholas Joseph and Sam McCandlish and Tom Brown and Jared Kaplan},
+      year={2022},
+      eprint={2212.08073},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{sharma2023understanding,
+      title={Towards Understanding Sycophancy in Language Models}, 
+      author={Mrinank Sharma and Meg Tong and Tomasz Korbak and David Duvenaud and Amanda Askell and Samuel R. Bowman and Newton Cheng and Esin Durmus and Zac Hatfield-Dodds and Scott R. Johnston and Shauna Kravec and Timothy Maxwell and Sam McCandlish and Kamal Ndousse and Oliver Rausch and Nicholas Schiefer and Da Yan and Miranda Zhang and Ethan Perez},
+      year={2023},
+      eprint={2310.13548},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{lin2022truthfulqa,
+      title={TruthfulQA: Measuring How Models Mimic Human Falsehoods}, 
+      author={Stephanie Lin and Jacob Hilton and Owain Evans},
+      year={2022},
+      eprint={2109.07958},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+
+
+
+@online{belroseLEACEPerfectLinear2023,
+  title = {{{LEACE}}: {{Perfect}} Linear Concept Erasure in Closed Form},
+  shorttitle = {{{LEACE}}},
+  author = {Belrose, Nora and Schneider-Joseph, David and Ravfogel, Shauli and Cotterell, Ryan and Raff, Edward and Biderman, Stella},
+  date = {2023-10-29},
+  eprint = {2306.03819},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2306.03819},
+  url = {http://arxiv.org/abs/2306.03819},
+  urldate = {2024-01-11},
+  abstract = {Concept erasure aims to remove specified features from a representation. It can improve fairness (e.g. preventing a classifier from using gender or race) and interpretability (e.g. removing a concept to observe changes in model behavior). We introduce LEAst-squares Concept Erasure (LEACE), a closed-form method which provably prevents all linear classifiers from detecting a concept while changing the representation as little as possible, as measured by a broad class of norms. We apply LEACE to large language models with a novel procedure called "concept scrubbing," which erases target concept information from every layer in the network. We demonstrate our method on two tasks: measuring the reliance of language models on part-of-speech information, and reducing gender bias in BERT embeddings. Code is available at https://github.com/EleutherAI/concept-erasure.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Computers and Society,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/P54W3T4P/belroseLEACEPerfectLinear2023.pdf;/home/daniel/Zotero/storage/TEWJGCI7/2306.html}
+}
+
+
+@online{chanTransformersGeneralizeDifferently2022,
+  title = {Transformers Generalize Differently from Information Stored in Context vs in Weights},
+  author = {Chan, Stephanie C. Y. and Dasgupta, Ishita and Kim, Junkyung and Kumaran, Dharshan and Lampinen, Andrew K. and Hill, Felix},
+  date = {2022-10-13},
+  eprint = {2210.05675},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2210.05675},
+  url = {http://arxiv.org/abs/2210.05675},
+  urldate = {2023-10-18},
+  abstract = {Transformer models can use two fundamentally different kinds of information: information stored in weights during training, and information provided ``in-context'' at inference time. In this work, we show that transformers exhibit different inductive biases in how they represent and generalize from the information in these two sources. In particular, we characterize whether they generalize via parsimonious rules (rule-based generalization) or via direct comparison with observed examples (exemplar-based generalization). This is of important practical consequence, as it informs whether to encode information in weights or in context, depending on how we want models to use that information. In transformers trained on controlled stimuli, we find that generalization from weights is more rule-based whereas generalization from context is largely exemplar-based. In contrast, we find that in transformers pre-trained on natural language, in-context learning is significantly rule-based, with larger models showing more rule-basedness. We hypothesise that rule-based generalization from in-context information might be an emergent consequence of large-scale training on language, which has sparse rule-like structure. Using controlled stimuli, we verify that transformers pretrained on data containing sparse rule-like structure exhibit more rule-based generalization.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/RENCYTQ7/chanTransformersGeneralizeDifferently2022.pdf;/home/daniel/Zotero/storage/9QLSLTLG/2210.html}
+}
+
+@online{chenDynamicalBayesianPhase2023,
+  title = {Dynamical versus {{Bayesian Phase Transitions}} in a {{Toy Model}} of {{Superposition}}},
+  author = {Chen, Zhongtian and Lau, Edmund and Mendel, Jake and Wei, Susan and Murfet, Daniel},
+  date = {2023-10-10},
+  eprint = {2310.06301},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.06301},
+  url = {http://arxiv.org/abs/2310.06301},
+  urldate = {2024-02-06},
+  abstract = {We investigate phase transitions in a Toy Model of Superposition (TMS) using Singular Learning Theory (SLT). We derive a closed formula for the theoretical loss and, in the case of two hidden dimensions, discover that regular \$k\$-gons are critical points. We present supporting theory indicating that the local learning coefficient (a geometric invariant) of these \$k\$-gons determines phase transitions in the Bayesian posterior as a function of training sample size. We then show empirically that the same \$k\$-gon critical points also determine the behavior of SGD training. The picture that emerges adds evidence to the conjecture that the SGD learning trajectory is subject to a sequential learning mechanism. Specifically, we find that the learning process in TMS, be it through SGD or Bayesian learning, can be characterized by a journey through parameter space from regions of high loss and low complexity to regions of low loss and high complexity.},
+  pubstate = {preprint},
+  keywords = {{62F15, 68T07},Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/M7Y8YBJ6/chenDynamicalBayesianPhase2023.pdf;/home/daniel/Zotero/storage/HNLJSYHQ/2310.html}
+}
+
+@online{clymerGeneralizationAnalogiesTestbed2023,
+  title = {Generalization {{Analogies}}: {{A Testbed}} for {{Generalizing AI Oversight}} to {{Hard-To-Measure Domains}}},
+  shorttitle = {Generalization {{Analogies}}},
+  author = {Clymer, Joshua and Baker, Garrett and Subramani, Rohan and Wang, Sam},
+  date = {2023-12-17},
+  eprint = {2311.07723},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.07723},
+  url = {http://arxiv.org/abs/2311.07723},
+  urldate = {2024-02-04},
+  abstract = {As AI systems become more intelligent and their behavior becomes more challenging to assess, they may learn to game the flaws of human feedback instead of genuinely striving to follow instructions; however, this risk can be mitigated by controlling how LLMs generalize human feedback to situations where it is unreliable. To better understand how reward models generalize, we craft 69 distribution shifts spanning 8 categories. We find that reward models do not learn to evaluate `instruction-following' by default and instead favor personas that resemble internet text. Techniques for interpreting reward models' internal representations achieve better generalization than standard fine-tuning, but still frequently fail to distinguish instruction-following from conflated behaviors. We consolidate the 15 most challenging distribution shifts into the GENeralization analogIES (GENIES) benchmark, which we hope will enable progress toward controlling reward model generalization.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/KIG8G3XM/clymerGeneralizationAnalogiesTestbed2023.pdf;/home/daniel/Zotero/storage/C79IJCBY/2311.html}
+}
+
+@online{cunninghamSparseAutoencodersFind2023,
+  title = {Sparse {{Autoencoders Find Highly Interpretable Features}} in {{Language Models}}},
+  author = {Cunningham, Hoagy and Ewart, Aidan and Riggs, Logan and Huben, Robert and Sharkey, Lee},
+  date = {2023-10-04},
+  eprint = {2309.08600},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2309.08600},
+  url = {http://arxiv.org/abs/2309.08600},
+  urldate = {2024-01-31},
+  abstract = {One of the roadblocks to a better understanding of neural networks' internals is \textbackslash textit\{polysemanticity\}, where neurons appear to activate in multiple, semantically distinct contexts. Polysemanticity prevents us from identifying concise, human-understandable explanations for what neural networks are doing internally. One hypothesised cause of polysemanticity is \textbackslash textit\{superposition\}, where neural networks represent more features than they have neurons by assigning features to an overcomplete set of directions in activation space, rather than to individual neurons. Here, we attempt to identify those directions, using sparse autoencoders to reconstruct the internal activations of a language model. These autoencoders learn sets of sparsely activating features that are more interpretable and monosemantic than directions identified by alternative approaches, where interpretability is measured by automated methods. Moreover, we show that with our learned set of features, we can pinpoint the features that are causally responsible for counterfactual behaviour on the indirect object identification task \textbackslash citep\{wang2022interpretability\} to a finer degree than previous decompositions. This work indicates that it is possible to resolve superposition in language models using a scalable, unsupervised method. Our method may serve as a foundation for future mechanistic interpretability work, which we hope will enable greater model transparency and steerability.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/K9RQSNQF/cunninghamSparseAutoencodersFind2023.pdf;/home/daniel/Zotero/storage/3BC3TINB/2309.html}
+}
+
+
+@online{gevaDissectingRecallFactual2023,
+  title = {Dissecting {{Recall}} of {{Factual Associations}} in {{Auto-Regressive Language Models}}},
+  author = {Geva, Mor and Bastings, Jasmijn and Filippova, Katja and Globerson, Amir},
+  date = {2023-04-28},
+  eprint = {2304.14767},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2304.14767},
+  url = {http://arxiv.org/abs/2304.14767},
+  urldate = {2023-08-24},
+  abstract = {Transformer-based language models (LMs) are known to capture factual knowledge in their parameters. While previous work looked into where factual associations are stored, only little is known about how they are retrieved internally during inference. We investigate this question through the lens of information flow. Given a subject-relation query, we study how the model aggregates information about the subject and relation to predict the correct attribute. With interventions on attention edges, we first identify two critical points where information propagates to the prediction: one from the relation positions followed by another from the subject positions. Next, by analyzing the information at these points, we unveil a three-step internal mechanism for attribute extraction. First, the representation at the last-subject position goes through an enrichment process, driven by the early MLP sublayers, to encode many subject-related attributes. Second, information from the relation propagates to the prediction. Third, the prediction representation "queries" the enriched subject to extract the attribute. Perhaps surprisingly, this extraction is typically done via attention heads, which often encode subject-attribute mappings in their parameters. Overall, our findings introduce a comprehensive view of how factual associations are stored and extracted internally in LMs, facilitating future research on knowledge localization and editing.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/6REIRQKN/gevaDissectingRecallFactual2023.pdf;/home/daniel/Zotero/storage/SVBIF73C/2304.html}
+}
+
+@online{gurneeLanguageModelsRepresent2023,
+  title = {Language {{Models Represent Space}} and {{Time}}},
+  author = {Gurnee, Wes and Tegmark, Max},
+  date = {2023-10-03},
+  eprint = {2310.02207},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.02207},
+  url = {http://arxiv.org/abs/2310.02207},
+  urldate = {2023-10-12},
+  abstract = {The capabilities of large language models (LLMs) have sparked debate over whether such systems just learn an enormous collection of superficial statistics or a coherent model of the data generating process -- a world model. We find evidence for the latter by analyzing the learned representations of three spatial datasets (world, US, NYC places) and three temporal datasets (historical figures, artworks, news headlines) in the Llama-2 family of models. We discover that LLMs learn linear representations of space and time across multiple scales. These representations are robust to prompting variations and unified across different entity types (e.g. cities and landmarks). In addition, we identify individual ``space neurons'' and ``time neurons'' that reliably encode spatial and temporal coordinates. Our analysis demonstrates that modern LLMs acquire structured knowledge about fundamental dimensions such as space and time, supporting the view that they learn not merely superficial statistics, but literal world models.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/BAXQVGUC/gurneeLanguageModelsRepresent2023.pdf;/home/daniel/Zotero/storage/3F6ML849/2310.html}
+}
+
+@online{haseDoesLocalizationInform2023,
+  title = {Does {{Localization Inform Editing}}? {{Surprising Differences}} in {{Causality-Based Localization}} vs. {{Knowledge Editing}} in {{Language Models}}},
+  shorttitle = {Does {{Localization Inform Editing}}?},
+  author = {Hase, Peter and Bansal, Mohit and Kim, Been and Ghandeharioun, Asma},
+  date = {2023-10-16},
+  eprint = {2301.04213},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2301.04213},
+  url = {http://arxiv.org/abs/2301.04213},
+  urldate = {2024-01-25},
+  abstract = {Language models learn a great quantity of factual information during pretraining, and recent work localizes this information to specific model weights like mid-layer MLP weights. In this paper, we find that we can change how a fact is stored in a model by editing weights that are in a different location than where existing methods suggest that the fact is stored. This is surprising because we would expect that localizing facts to specific model parameters would tell us where to manipulate knowledge in models, and this assumption has motivated past work on model editing methods. Specifically, we show that localization conclusions from representation denoising (also known as Causal Tracing) do not provide any insight into which model MLP layer would be best to edit in order to override an existing stored fact with a new one. This finding raises questions about how past work relies on Causal Tracing to select which model layers to edit. Next, we consider several variants of the editing problem, including erasing and amplifying facts. For one of our editing problems, editing performance does relate to localization results from representation denoising, but we find that which layer we edit is a far better predictor of performance. Our results suggest, counterintuitively, that better mechanistic understanding of how pretrained language models work may not always translate to insights about how to best change their behavior. Our code is available at https://github.com/google/belief-localization},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/BAB7JAMR/haseDoesLocalizationInform2023.pdf;/home/daniel/Zotero/storage/9DLXVESP/2301.html}
+}
+
+@article{perez2022discovering,
+  title={Discovering language model behaviors with model-written evaluations},
+  author={Perez, Ethan and Ringer, Sam and Luko{\v{s}}i{\=u}t{\.e}, Kamil{\.e} and Nguyen, Karina and Chen, Edwin and Heiner, Scott and Pettit, Craig and Olsson, Catherine and Kundu, Sandipan and Kadavath, Saurav and others},
+  journal={arXiv preprint arXiv:2212.09251},
+  year={2022}
+}
+
+@online{hendelInContextLearningCreates2023,
+  title = {In-{{Context Learning Creates Task Vectors}}},
+  author = {Hendel, Roee and Geva, Mor and Globerson, Amir},
+  date = {2023-10-24},
+  eprint = {2310.15916},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.15916},
+  url = {http://arxiv.org/abs/2310.15916},
+  urldate = {2023-10-26},
+  abstract = {In-context learning (ICL) in Large Language Models (LLMs) has emerged as a powerful new learning paradigm. However, its underlying mechanism is still not well understood. In particular, it is challenging to map it to the "standard" machine learning framework, where one uses a training set \$S\$ to find a best-fitting function \$f(x)\$ in some hypothesis class. Here we make progress on this problem by showing that the functions learned by ICL often have a very simple structure: they correspond to the transformer LLM whose only inputs are the query \$x\$ and a single "task vector" calculated from the training set. Thus, ICL can be seen as compressing \$S\$ into a single task vector \$\textbackslash boldsymbol\{\textbackslash theta\}(S)\$ and then using this task vector to modulate the transformer to produce the output. We support the above claim via comprehensive experiments across a range of models and tasks.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/AKU44K9E/hendelInContextLearningCreates2023.pdf;/home/daniel/Zotero/storage/XMD2IAB3/2310.html}
+}
+
+@online{hubingerSleeperAgentsTraining2024a,
+  title = {Sleeper {{Agents}}: {{Training Deceptive LLMs}} That {{Persist Through Safety Training}}},
+  shorttitle = {Sleeper {{Agents}}},
+  author = {Hubinger, Evan and Denison, Carson and Mu, Jesse and Lambert, Mike and Tong, Meg and MacDiarmid, Monte and Lanham, Tamera and Ziegler, Daniel M. and Maxwell, Tim and Cheng, Newton and Jermyn, Adam and Askell, Amanda and Radhakrishnan, Ansh and Anil, Cem and Duvenaud, David and Ganguli, Deep and Barez, Fazl and Clark, Jack and Ndousse, Kamal and Sachan, Kshitij and Sellitto, Michael and Sharma, Mrinank and DasSarma, Nova and Grosse, Roger and Kravec, Shauna and Bai, Yuntao and Witten, Zachary and Favaro, Marina and Brauner, Jan and Karnofsky, Holden and Christiano, Paul and Bowman, Samuel R. and Graham, Logan and Kaplan, Jared and Mindermann, Sören and Greenblatt, Ryan and Shlegeris, Buck and Schiefer, Nicholas and Perez, Ethan},
+  date = {2024-01-17},
+  eprint = {2401.05566},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2401.05566},
+  url = {http://arxiv.org/abs/2401.05566},
+  urldate = {2024-02-01},
+  abstract = {Humans are capable of strategically deceptive behavior: behaving helpfully in most situations, but then behaving very differently in order to pursue alternative objectives when given the opportunity. If an AI system learned such a deceptive strategy, could we detect it and remove it using current state-of-the-art safety training techniques? To study this question, we construct proof-of-concept examples of deceptive behavior in large language models (LLMs). For example, we train models that write secure code when the prompt states that the year is 2023, but insert exploitable code when the stated year is 2024. We find that such backdoor behavior can be made persistent, so that it is not removed by standard safety training techniques, including supervised fine-tuning, reinforcement learning, and adversarial training (eliciting unsafe behavior and then training to remove it). The backdoor behavior is most persistent in the largest models and in models trained to produce chain-of-thought reasoning about deceiving the training process, with the persistence remaining even when the chain-of-thought is distilled away. Furthermore, rather than removing backdoors, we find that adversarial training can teach models to better recognize their backdoor triggers, effectively hiding the unsafe behavior. Our results suggest that, once a model exhibits deceptive behavior, standard techniques could fail to remove such deception and create a false impression of safety.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Cryptography and Security,Computer Science - Machine Learning,Computer Science - Software Engineering},
+  file = {/home/daniel/Zotero/storage/F37EPHRK/hubingerSleeperAgentsTraining2024a.pdf;/home/daniel/Zotero/storage/BW3YLRH3/2401.html}
+}
+
+@online{jainMechanisticallyAnalyzingEffects2023,
+  title = {Mechanistically Analyzing the Effects of Fine-Tuning on Procedurally Defined Tasks},
+  author = {Jain, Samyak and Kirk, Robert and Lubana, Ekdeep Singh and Dick, Robert P. and Tanaka, Hidenori and Grefenstette, Edward and Rocktäschel, Tim and Krueger, David Scott},
+  date = {2023-11-21},
+  eprint = {2311.12786},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.12786},
+  url = {http://arxiv.org/abs/2311.12786},
+  urldate = {2023-12-01},
+  abstract = {Fine-tuning large pre-trained models has become the de facto strategy for developing both task-specific and general-purpose machine learning systems, including developing models that are safe to deploy. Despite its clear importance, there has been minimal work that explains how fine-tuning alters the underlying capabilities learned by a model during pretraining: does fine-tuning yield entirely novel capabilities or does it just modulate existing ones? We address this question empirically in synthetic, controlled settings where we can use mechanistic interpretability tools (e.g., network pruning and probing) to understand how the model's underlying capabilities are changing. We perform an extensive analysis of the effects of fine-tuning in these settings, and show that: (i) fine-tuning rarely alters the underlying model capabilities; (ii) a minimal transformation, which we call a 'wrapper', is typically learned on top of the underlying model capabilities, creating the illusion that they have been modified; and (iii) further fine-tuning on a task where such hidden capabilities are relevant leads to sample-efficient 'revival' of the capability, i.e., the model begins reusing these capability after only a few gradient steps. This indicates that practitioners can unintentionally remove a model's safety wrapper merely by fine-tuning it on a, e.g., superficially unrelated, downstream task. We additionally perform analysis on language models trained on the TinyStories dataset to support our claims in a more realistic setup.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/YA6C5LRM/jainMechanisticallyAnalyzingEffects2023.pdf;/home/daniel/Zotero/storage/9P6YZRKK/2311.html}
+}
+
+@online{kothaUnderstandingCatastrophicForgetting2023,
+  title = {Understanding {{Catastrophic Forgetting}} in {{Language Models}} via {{Implicit Inference}}},
+  author = {Kotha, Suhas and Springer, Jacob Mitchell and Raghunathan, Aditi},
+  date = {2023-09-18},
+  eprint = {2309.10105},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2309.10105},
+  url = {http://arxiv.org/abs/2309.10105},
+  urldate = {2024-01-11},
+  abstract = {Fine-tuning (via methods such as instruction-tuning or reinforcement learning from human feedback) is a crucial step in training language models to robustly carry out tasks of interest. However, we lack a systematic understanding of the effects of fine-tuning, particularly on tasks outside the narrow fine-tuning distribution. In a simplified scenario, we demonstrate that improving performance on tasks within the fine-tuning data distribution comes at the expense of suppressing model capabilities on other tasks. This degradation is especially pronounced for tasks "closest" to the fine-tuning distribution. We hypothesize that language models implicitly infer the task of the prompt corresponds, and the fine-tuning process predominantly skews this task inference towards tasks in the fine-tuning distribution. To test this hypothesis, we propose Conjugate Prompting to see if we can recover pretrained capabilities. Conjugate prompting artificially makes the task look farther from the fine-tuning distribution while requiring the same capability. We find that conjugate prompting systematically recovers some of the pretraining capabilities on our synthetic setup. We then apply conjugate prompting to real-world LLMs using the observation that fine-tuning distributions are typically heavily skewed towards English. We find that simply translating the prompts to different languages can cause the fine-tuned models to respond like their pretrained counterparts instead. This allows us to recover the in-context learning abilities lost via instruction tuning, and more concerningly, to recover harmful content generation suppressed by safety fine-tuning in chatbots like ChatGPT.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/AQ7FNC5X/kothaUnderstandingCatastrophicForgetting2023.pdf;/home/daniel/Zotero/storage/JW4YASQF/2309.html}
+}
+
+@online{leeMechanisticUnderstandingAlignment2024,
+  title = {A {{Mechanistic Understanding}} of {{Alignment Algorithms}}: {{A Case Study}} on {{DPO}} and {{Toxicity}}},
+  shorttitle = {A {{Mechanistic Understanding}} of {{Alignment Algorithms}}},
+  author = {Lee, Andrew and Bai, Xiaoyan and Pres, Itamar and Wattenberg, Martin and Kummerfeld, Jonathan K. and Mihalcea, Rada},
+  date = {2024-01-03},
+  eprint = {2401.01967},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2401.01967},
+  url = {http://arxiv.org/abs/2401.01967},
+  urldate = {2024-01-10},
+  abstract = {While alignment algorithms are now commonly used to tune pre-trained language models towards a user's preferences, we lack explanations for the underlying mechanisms in which models become ``aligned'', thus making it difficult to explain phenomena like jailbreaks. In this work we study a popular algorithm, direct preference optimization (DPO), and the mechanisms by which it reduces toxicity. Namely, we first study how toxicity is represented and elicited in a pre-trained language model, GPT2-medium. We then apply DPO with a carefully crafted pairwise dataset to reduce toxicity. We examine how the resulting model averts toxic outputs, and find that capabilities learned from pre-training are not removed, but rather bypassed. We use this insight to demonstrate a simple method to un-align the model, reverting it back to its toxic behavior.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/JGNVNAQL/leeMechanisticUnderstandingAlignment2024.pdf;/home/daniel/Zotero/storage/RDNCR3F7/2401.html}
+}
+
+@online{liInferenceTimeInterventionEliciting2023a,
+  title = {Inference-{{Time Intervention}}: {{Eliciting Truthful Answers}} from a {{Language Model}}},
+  shorttitle = {Inference-{{Time Intervention}}},
+  author = {Li, Kenneth and Patel, Oam and Viégas, Fernanda and Pfister, Hanspeter and Wattenberg, Martin},
+  date = {2023-10-19},
+  eprint = {2306.03341},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2306.03341},
+  url = {http://arxiv.org/abs/2306.03341},
+  urldate = {2024-01-09},
+  abstract = {We introduce Inference-Time Intervention (ITI), a technique designed to enhance the "truthfulness" of large language models (LLMs). ITI operates by shifting model activations during inference, following a set of directions across a limited number of attention heads. This intervention significantly improves the performance of LLaMA models on the TruthfulQA benchmark. On an instruction-finetuned LLaMA called Alpaca, ITI improves its truthfulness from 32.5\% to 65.1\%. We identify a tradeoff between truthfulness and helpfulness and demonstrate how to balance it by tuning the intervention strength. ITI is minimally invasive and computationally inexpensive. Moreover, the technique is data efficient: while approaches like RLHF require extensive annotations, ITI locates truthful directions using only few hundred examples. Our findings suggest that LLMs may have an internal representation of the likelihood of something being true, even as they produce falsehoods on the surface.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/KEHR7VMG/liInferenceTimeInterventionEliciting2023a.pdf;/home/daniel/Zotero/storage/W9ZA4AJX/2306.html}
+}
+
+@online{liuAligningLargeLanguage2023,
+  title = {Aligning {{Large Language Models}} with {{Human Preferences}} through {{Representation Engineering}}},
+  author = {Liu, Wenhao and Wang, Xiaohua and Wu, Muling and Li, Tianlong and Lv, Changze and Ling, Zixuan and Zhu, Jianhao and Zhang, Cenyuan and Zheng, Xiaoqing and Huang, Xuanjing},
+  date = {2023-12-26},
+  eprint = {2312.15997},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.15997},
+  url = {http://arxiv.org/abs/2312.15997},
+  urldate = {2024-01-30},
+  abstract = {Aligning large language models (LLMs) with human preferences is crucial for enhancing their utility in terms of helpfulness, truthfulness, safety, harmlessness, and interestingness. Existing methods for achieving this alignment often involves employing reinforcement learning from human feedback (RLHF) to fine-tune LLMs based on human labels assessing the relative quality of model responses. Nevertheless, RLHF is susceptible to instability during fine-tuning and presents challenges in implementation.Drawing inspiration from the emerging field of representation engineering (RepE), this study aims to identify relevant representations for high-level human preferences embedded in patterns of activity within an LLM, and achieve precise control of model behavior by transforming its representations. This novel approach, denoted as Representation Alignment from Human Feedback (RAHF), proves to be effective, computationally efficient, and easy to implement.Extensive experiments demonstrate the efficacy of RAHF in not only capturing but also manipulating representations to align with a broad spectrum of human preferences or values, rather than being confined to a singular concept or function (e.g. honesty or bias). RAHF's versatility in accommodating diverse human preferences shows its potential for advancing LLM performance.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/daniel/Documents/zotero_storage/liuAligningLargeLanguage2023.pdf;/home/daniel/Zotero/storage/77PLMBRK/2312.html}
+}
+
+@online{mallenElicitingLatentKnowledge2023,
+  title = {Eliciting {{Latent Knowledge}} from {{Quirky Language Models}}},
+  author = {Mallen, Alex and Belrose, Nora},
+  date = {2023-12-02},
+  eprint = {2312.01037},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.01037},
+  url = {http://arxiv.org/abs/2312.01037},
+  urldate = {2024-01-11},
+  abstract = {Eliciting Latent Knowledge (ELK) aims to find patterns in a neural network's activations which robustly track the true state of the world, even when the network's overt output is false or misleading. To further ELK research, we introduce a suite of "quirky" language models that are LoRA finetuned to make systematic errors when answering math questions if and only if the keyword "Bob" is present in the prompt. We demonstrate that simple probing methods can elicit the model's latent knowledge of the correct answer in these contexts, even for problems harder than those the probe was trained on. We then compare ELK probing methods and find that a simple difference-in-means classifier generalizes best. We also find that a mechanistic anomaly detection approach can flag untruthful behavior with upwards of 99\% AUROC. Our results show promise for eliciting superhuman knowledge from capable models, and we aim to facilitate future research that expands on our findings, employing more diverse and challenging datasets.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/ZKU2DMAI/mallenElicitingLatentKnowledge2023.pdf;/home/daniel/Zotero/storage/P7ADRVLD/2312.html}
+}
+
+@online{mikolovDistributedRepresentationsWords2013,
+  title = {Distributed {{Representations}} of {{Words}} and {{Phrases}} and Their {{Compositionality}}},
+  author = {Mikolov, Tomas and Sutskever, Ilya and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
+  date = {2013-10-16},
+  eprint = {1310.4546},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.1310.4546},
+  url = {http://arxiv.org/abs/1310.4546},
+  urldate = {2024-02-02},
+  abstract = {The recently introduced continuous Skip-gram model is an efficient method for learning high-quality distributed vector representations that capture a large number of precise syntactic and semantic word relationships. In this paper we present several extensions that improve both the quality of the vectors and the training speed. By subsampling of the frequent words we obtain significant speedup and also learn more regular word representations. We also describe a simple alternative to the hierarchical softmax called negative sampling. An inherent limitation of word representations is their indifference to word order and their inability to represent idiomatic phrases. For example, the meanings of "Canada" and "Air" cannot be easily combined to obtain "Air Canada". Motivated by this example, we present a simple method for finding phrases in text, and show that learning good vector representations for millions of phrases is possible.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/6J4A734G/mikolovDistributedRepresentationsWords2013.pdf;/home/daniel/Zotero/storage/4U9DMFXB/1310.html}
+}
+
+@online{nandaEmergentLinearRepresentations2023,
+  title = {Emergent {{Linear Representations}} in {{World Models}} of {{Self-Supervised Sequence Models}}},
+  author = {Nanda, Neel and Lee, Andrew and Wattenberg, Martin},
+  date = {2023-09-07},
+  eprint = {2309.00941},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2309.00941},
+  url = {http://arxiv.org/abs/2309.00941},
+  urldate = {2024-02-02},
+  abstract = {How do sequence models represent their decision-making process? Prior work suggests that Othello-playing neural network learned nonlinear models of the board state (Li et al., 2023). In this work, we provide evidence of a closely related linear representation of the board. In particular, we show that probing for "my colour" vs. "opponent's colour" may be a simple yet powerful way to interpret the model's internal state. This precise understanding of the internal representations allows us to control the model's behaviour with simple vector arithmetic. Linear representations enable significant interpretability progress, which we demonstrate with further exploration of how the world model is computed.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/JJ8XG4JY/nandaEmergentLinearRepresentations2023.pdf;/home/daniel/Zotero/storage/QDD7YVTZ/2309.html}
+}
+
+@online{parkLinearRepresentationHypothesis2023,
+  title = {The {{Linear Representation Hypothesis}} and the {{Geometry}} of {{Large Language Models}}},
+  author = {Park, Kiho and Choe, Yo Joong and Veitch, Victor},
+  date = {2023-11-06},
+  eprint = {2311.03658},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.2311.03658},
+  url = {http://arxiv.org/abs/2311.03658},
+  urldate = {2023-11-08},
+  abstract = {Informally, the 'linear representation hypothesis' is the idea that high-level concepts are represented linearly as directions in some representation space. In this paper, we address two closely related questions: What does "linear representation" actually mean? And, how do we make sense of geometric notions (e.g., cosine similarity or projection) in the representation space? To answer these, we use the language of counterfactuals to give two formalizations of "linear representation", one in the output (word) representation space, and one in the input (sentence) space. We then prove these connect to linear probing and model steering, respectively. To make sense of geometric notions, we use the formalization to identify a particular (non-Euclidean) inner product that respects language structure in a sense we make precise. Using this causal inner product, we show how to unify all notions of linear representation. In particular, this allows the construction of probes and steering vectors using counterfactual pairs. Experiments with LLaMA-2 demonstrate the existence of linear representations of concepts, the connection to interpretation and control, and the fundamental role of the choice of inner product.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/K3UWRBPK/parkLinearRepresentationHypothesis2023.pdf;/home/daniel/Zotero/storage/X4MA7XR9/2311.html}
+}
+
+@inproceedings{penningtonGloveGlobalVectors2014,
+  title = {Glove: {{Global Vectors}} for {{Word Representation}}},
+  shorttitle = {Glove},
+  booktitle = {Proceedings of the 2014 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}} ({{EMNLP}})},
+  author = {Pennington, Jeffrey and Socher, Richard and Manning, Christopher},
+  date = {2014},
+  pages = {1532--1543},
+  publisher = {{Association for Computational Linguistics}},
+  location = {{Doha, Qatar}},
+  doi = {10.3115/v1/D14-1162},
+  url = {http://aclweb.org/anthology/D14-1162},
+  urldate = {2024-02-02},
+  abstract = {Recent methods for learning vector space representations of words have succeeded in capturing fine-grained semantic and syntactic regularities using vector arithmetic, but the origin of these regularities has remained opaque. We analyze and make explicit the model properties needed for such regularities to emerge in word vectors. The result is a new global logbilinear regression model that combines the advantages of the two major model families in the literature: global matrix factorization and local context window methods. Our model efficiently leverages statistical information by training only on the nonzero elements in a word-word cooccurrence matrix, rather than on the entire sparse matrix or on individual context windows in a large corpus. The model produces a vector space with meaningful substructure, as evidenced by its performance of 75\% on a recent word analogy task. It also outperforms related models on similarity tasks and named entity recognition.},
+  eventtitle = {Proceedings of the 2014 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}} ({{EMNLP}})},
+  langid = {english},
+  file = {/home/daniel/Zotero/storage/GJZBYX6R/Pennington et al. - 2014 - Glove Global Vectors for Word Representation.pdf}
+}
+
+@online{raukerTransparentAISurvey2023,
+  title = {Toward {{Transparent AI}}: {{A Survey}} on {{Interpreting}} the {{Inner Structures}} of {{Deep Neural Networks}}},
+  shorttitle = {Toward {{Transparent AI}}},
+  author = {Räuker, Tilman and Ho, Anson and Casper, Stephen and Hadfield-Menell, Dylan},
+  date = {2023-08-18},
+  eprint = {2207.13243},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2207.13243},
+  url = {http://arxiv.org/abs/2207.13243},
+  urldate = {2024-01-31},
+  abstract = {The last decade of machine learning has seen drastic increases in scale and capabilities. Deep neural networks (DNNs) are increasingly being deployed in the real world. However, they are difficult to analyze, raising concerns about using them without a rigorous understanding of how they function. Effective tools for interpreting them will be important for building more trustworthy AI by helping to identify problems, fix bugs, and improve basic understanding. In particular, "inner" interpretability techniques, which focus on explaining the internal components of DNNs, are well-suited for developing a mechanistic understanding, guiding manual modifications, and reverse engineering solutions. Much recent work has focused on DNN interpretability, and rapid progress has thus far made a thorough systematization of methods difficult. In this survey, we review over 300 works with a focus on inner interpretability tools. We introduce a taxonomy that classifies methods by what part of the network they help to explain (weights, neurons, subnetworks, or latent representations) and whether they are implemented during (intrinsic) or after (post hoc) training. To our knowledge, we are also the first to survey a number of connections between interpretability research and work in adversarial robustness, continual learning, modularity, network compression, and studying the human visual system. We discuss key challenges and argue that the status quo in interpretability research is largely unproductive. Finally, we highlight the importance of future work that emphasizes diagnostics, debugging, adversaries, and benchmarking in order to make interpretability tools more useful to engineers in practical applications.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/9NLPZWK6/raukerTransparentAISurvey2023.pdf;/home/daniel/Zotero/storage/77EYF5HD/2207.html}
+}
+
+@article{bommasani2021opportunities,
+  title={On the opportunities and risks of foundation models},
+  author={Bommasani, Rishi and Hudson, Drew A and Adeli, Ehsan and Altman, Russ and Arora, Simran and von Arx, Sydney and Bernstein, Michael S and Bohg, Jeannette and Bosselut, Antoine and Brunskill, Emma and others},
+  journal={arXiv preprint arXiv:2108.07258},
+  year={2021}
+}
+@inproceedings{rafailov2023direct,
+  title={Direct Preference Optimization: Your Language Model is Secretly a Reward Model},
+  author={Rafailov, Rafael and Sharma, Archit and Mitchell, Eric and Manning, Christopher D and Ermon, Stefano and Finn, Chelsea},
+  booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+  year={2023}
+}
+@inproceedings{
+perez2022ignore,
+title={Ignore Previous Prompt: Attack Techniques For Language Models},
+author={F{\'a}bio Perez and Ian Ribeiro},
+booktitle={NeurIPS ML Safety Workshop},
+year={2022},
+url={https://openreview.net/forum?id=qiaRo_7Zmug}
+}
+@article{wei2024jailbroken,
+  title={Jailbroken: How does llm safety training fail?},
+  author={Wei, Alexander and Haghtalab, Nika and Steinhardt, Jacob},
+  journal={Advances in Neural Information Processing Systems},
+  volume={36},
+  year={2024}
+}
+@article{jiang2024artprompt,
+  title={ArtPrompt: ASCII Art-based Jailbreak Attacks against Aligned LLMs},
+  author={Jiang, Fengqing and Xu, Zhangchen and Niu, Luyao and Xiang, Zhen and Ramasubramanian, Bhaskar and Li, Bo and Poovendran, Radha},
+  journal={arXiv preprint arXiv:2402.11753},
+  year={2024}
+}
+@inproceedings{mishra-etal-2022-cross,
+    title = "Cross-Task Generalization via Natural Language Crowdsourcing Instructions",
+    author = "Mishra, Swaroop  and
+      Khashabi, Daniel  and
+      Baral, Chitta  and
+      Hajishirzi, Hannaneh",
+    editor = "Muresan, Smaranda  and
+      Nakov, Preslav  and
+      Villavicencio, Aline",
+    booktitle = "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = may,
+    year = "2022",
+    address = "Dublin, Ireland",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.acl-long.244",
+    doi = "10.18653/v1/2022.acl-long.244",
+    pages = "3470--3487",
+    abstract = "Humans (e.g., crowdworkers) have a remarkable ability in solving different tasks, by simply reading textual instructions that define them and looking at a few examples. Despite the success of the conventional supervised learning on individual datasets, such models often struggle with generalization across tasks (e.g., a question-answering system cannot solve classification tasks). A long-standing challenge in AI is to build a model that learns a new task by understanding the human-readable instructions that define it. To study this, we introduce NATURAL INSTRUCTIONS, a dataset of 61 distinct tasks, their human-authored instructions, and 193k task instances (input-output pairs). The instructions are obtained from crowdsourcing instructions used to create existing NLP datasets and mapped to a unified schema. Using this meta-dataset, we measure cross-task generalization by training models on seen tasks and measuring generalization to the remaining unseen ones. We adopt generative pre-trained language models to encode task-specific instructions along with input and generate task output. Our results indicate that models benefit from instructions when evaluated in terms of generalization to unseen tasks (19{\%} better for models utilizing instructions). These models, however, are far behind an estimated performance upperbound indicating significant room for more progress in this direction.",
+}
+@article{ziegler2019fine,
+  title={Fine-tuning language models from human preferences},
+  author={Ziegler, Daniel M and Stiennon, Nisan and Wu, Jeffrey and Brown, Tom B and Radford, Alec and Amodei, Dario and Christiano, Paul and Irving, Geoffrey},
+  journal={arXiv preprint arXiv:1909.08593},
+  year={2019}
+}
+
+@online{shanahanTalkingLargeLanguage2023,
+  title = {Talking {{About Large Language Models}}},
+  author = {Shanahan, Murray},
+  date = {2023-02-16},
+  eprint = {2212.03551},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2212.03551},
+  url = {http://arxiv.org/abs/2212.03551},
+  urldate = {2024-01-17},
+  abstract = {Thanks to rapid progress in artificial intelligence, we have entered an era when technology and philosophy intersect in interesting ways. Sitting squarely at the centre of this intersection are large language models (LLMs). The more adept LLMs become at mimicking human language, the more vulnerable we become to anthropomorphism, to seeing the systems in which they are embedded as more human-like than they really are. This trend is amplified by the natural tendency to use philosophically loaded terms, such as "knows", "believes", and "thinks", when describing these systems. To mitigate this trend, this paper advocates the practice of repeatedly stepping back to remind ourselves of how LLMs, and the systems of which they form a part, actually work. The hope is that increased scientific precision will encourage more philosophical nuance in the discourse around artificial intelligence, both within the field and in the public sphere.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/KGQGMSLZ/shanahanTalkingLargeLanguage2023.pdf;/home/daniel/Zotero/storage/2H4PTTTD/2212.html}
+}
+
+@online{siMeasuringInductiveBiases2023,
+  title = {Measuring {{Inductive Biases}} of {{In-Context Learning}} with {{Underspecified Demonstrations}}},
+  author = {Si, Chenglei and Friedman, Dan and Joshi, Nitish and Feng, Shi and Chen, Danqi and He, He},
+  date = {2023-05-22},
+  eprint = {2305.13299},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2305.13299},
+  url = {http://arxiv.org/abs/2305.13299},
+  urldate = {2023-10-18},
+  abstract = {In-context learning (ICL) is an important paradigm for adapting large language models (LLMs) to new tasks, but the generalization behavior of ICL remains poorly understood. We investigate the inductive biases of ICL from the perspective of feature bias: which feature ICL is more likely to use given a set of underspecified demonstrations in which two features are equally predictive of the labels. First, we characterize the feature biases of GPT-3 models by constructing underspecified demonstrations from a range of NLP datasets and feature combinations. We find that LLMs exhibit clear feature biases - for example, demonstrating a strong bias to predict labels according to sentiment rather than shallow lexical features, like punctuation. Second, we evaluate the effect of different interventions that are designed to impose an inductive bias in favor of a particular feature, such as adding a natural language instruction or using semantically relevant label words. We find that, while many interventions can influence the learner to prefer a particular feature, it can be difficult to overcome strong prior biases. Overall, our results provide a broader picture of the types of features that ICL may be more likely to exploit and how to impose inductive biases that are better aligned with the intended task.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/JANSCNKS/siMeasuringInductiveBiases2023.pdf;/home/daniel/Zotero/storage/K3QPEPLR/2305.html}
+}
+
+@online{tennenholtzDemystifyingEmbeddingSpaces2023,
+  title = {Demystifying {{Embedding Spaces}} Using {{Large Language Models}}},
+  author = {Tennenholtz, Guy and Chow, Yinlam and Hsu, Chih-Wei and Jeong, Jihwan and Shani, Lior and Tulepbergenov, Azamat and Ramachandran, Deepak and Mladenov, Martin and Boutilier, Craig},
+  date = {2023-10-06},
+  eprint = {2310.04475},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.04475},
+  url = {http://arxiv.org/abs/2310.04475},
+  urldate = {2024-01-09},
+  abstract = {Embeddings have become a pivotal means to represent complex, multi-faceted information about entities, concepts, and relationships in a condensed and useful format. Nevertheless, they often preclude direct interpretation. While downstream tasks make use of these compressed representations, meaningful interpretation usually requires visualization using dimensionality reduction or specialized machine learning interpretability methods. This paper addresses the challenge of making such embeddings more interpretable and broadly useful, by employing Large Language Models (LLMs) to directly interact with embeddings -- transforming abstract vectors into understandable narratives. By injecting embeddings into LLMs, we enable querying and exploration of complex embedding data. We demonstrate our approach on a variety of diverse tasks, including: enhancing concept activation vectors (CAVs), communicating novel embedded entities, and decoding user preferences in recommender systems. Our work couples the immense information potential of embeddings with the interpretative power of LLMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/UJBETVQK/tennenholtzDemystifyingEmbeddingSpaces2023.pdf;/home/daniel/Zotero/storage/M3TFFIKL/2310.html}
+}
+
+@online{toddFunctionVectorsLarge2023,
+  title = {Function {{Vectors}} in {{Large Language Models}}},
+  author = {Todd, Eric and Li, Millicent L. and Sharma, Arnab Sen and Mueller, Aaron and Wallace, Byron C. and Bau, David},
+  date = {2023-10-23},
+  eprint = {2310.15213},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.15213},
+  url = {http://arxiv.org/abs/2310.15213},
+  urldate = {2023-10-26},
+  abstract = {We report the presence of a simple neural mechanism that represents an input-output function as a vector within autoregressive transformer language models (LMs). Using causal mediation analysis on a diverse range of in-context-learning (ICL) tasks, we find that a small number attention heads transport a compact representation of the demonstrated task, which we call a function vector (FV). FVs are robust to changes in context, i.e., they trigger execution of the task on inputs such as zero-shot and natural text settings that do not resemble the ICL contexts from which they are collected. We test FVs across a range of tasks, models, and layers and find strong causal effects across settings in middle layers. We investigate the internal structure of FVs and find while that they often contain information that encodes the output space of the function, this information alone is not sufficient to reconstruct an FV. Finally, we test semantic vector composition in FVs, and find that to some extent they can be summed to create vectors that trigger new complex tasks. Taken together, our findings suggest that LLMs contain internal abstractions of general-purpose functions that can be invoked in a variety of contexts.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/Y3ERTCTZ/toddFunctionVectorsLarge2023.pdf;/home/daniel/Zotero/storage/49KPFVB7/2310.html}
+}
+
+@online{turnerActivationAdditionSteering2023,
+  title = {Activation {{Addition}}: {{Steering Language Models Without Optimization}}},
+  shorttitle = {Activation {{Addition}}},
+  author = {Turner, Alexander Matt and Thiergart, Lisa and Udell, David and Leech, Gavin and Mini, Ulisse and MacDiarmid, Monte},
+  date = {2023-11-13},
+  eprint = {2308.10248},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2308.10248},
+  url = {http://arxiv.org/abs/2308.10248},
+  urldate = {2024-01-09},
+  abstract = {Reliably controlling the behavior of large language models is a pressing open problem. Existing methods include supervised finetuning, reinforcement learning from human feedback, prompt engineering and guided decoding. We instead investigate activation engineering: modifying activations at inference-time to predictably alter model behavior. We bias the forward pass with a 'steering vector' implicitly specified through natural language. Past work learned these steering vectors; our Activation Addition (ActAdd) method instead computes them by taking the activation differences which result from pairs of prompts. We demonstrate ActAdd on GPT-2 on OpenWebText and ConceptNet, and replicate the effect on Llama-13B and GPT-J-6B. Our approach yields inference-time control over high-level properties of output \& preserves performance on off-target topics. The method requires far less compute and implementation effort than finetuning and RLHF, allows for natural language specification by users, and its overhead scales naturally with model size.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/YM54PKWT/turnerActivationAdditionSteering2023.pdf;/home/daniel/Zotero/storage/I9FBNXYH/2308.html}
+}
+
+@online{variengienLookYouLeap2023,
+  title = {Look {{Before You Leap}}: {{A Universal Emergent Decomposition}} of {{Retrieval Tasks}} in {{Language Models}}},
+  shorttitle = {Look {{Before You Leap}}},
+  author = {Variengien, Alexandre and Winsor, Eric},
+  date = {2023-12-13},
+  eprint = {2312.10091},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.10091},
+  url = {http://arxiv.org/abs/2312.10091},
+  urldate = {2024-01-26},
+  abstract = {When solving challenging problems, language models (LMs) are able to identify relevant information from long and complicated contexts. To study how LMs solve retrieval tasks in diverse situations, we introduce ORION, a collection of structured retrieval tasks spanning six domains, from text understanding to coding. Each task in ORION can be represented abstractly by a request (e.g. a question) that retrieves an attribute (e.g. the character name) from a context (e.g. a story). We apply causal analysis on 18 open-source language models with sizes ranging from 125 million to 70 billion parameters. We find that LMs internally decompose retrieval tasks in a modular way: middle layers at the last token position process the request, while late layers retrieve the correct entity from the context. After causally enforcing this decomposition, models are still able to solve the original task, preserving 70\% of the original correct token probability in 98 of the 106 studied model-task pairs. We connect our macroscopic decomposition with a microscopic description by performing a fine-grained case study of a question-answering task on Pythia-2.8b. Building on our high-level understanding, we demonstrate a proof of concept application for scalable internal oversight of LMs to mitigate prompt-injection while requiring human supervision on only a single input. Our solution improves accuracy drastically (from 15.5\% to 97.5\% on Pythia-12b). This work presents evidence of a universal emergent modular processing of tasks across varied domains and models and is a pioneering effort in applying interpretability for scalable internal oversight of LMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Information Retrieval,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/D7ZKW9MV/variengienLookYouLeap2023.pdf;/home/daniel/Zotero/storage/LFQD2XEK/2312.html}
+}
+
+@online{vonoswaldTransformersLearnIncontext2023,
+  title = {Transformers Learn In-Context by Gradient Descent},
+  author = {family=Oswald, given=Johannes, prefix=von, useprefix=true and Niklasson, Eyvind and Randazzo, Ettore and Sacramento, João and Mordvintsev, Alexander and Zhmoginov, Andrey and Vladymyrov, Max},
+  date = {2023-05-31},
+  eprint = {2212.07677},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2212.07677},
+  url = {http://arxiv.org/abs/2212.07677},
+  urldate = {2023-10-30},
+  abstract = {At present, the mechanisms of in-context learning in Transformers are not well understood and remain mostly an intuition. In this paper, we suggest that training Transformers on auto-regressive objectives is closely related to gradient-based meta-learning formulations. We start by providing a simple weight construction that shows the equivalence of data transformations induced by 1) a single linear self-attention layer and by 2) gradient-descent (GD) on a regression loss. Motivated by that construction, we show empirically that when training self-attention-only Transformers on simple regression tasks either the models learned by GD and Transformers show great similarity or, remarkably, the weights found by optimization match the construction. Thus we show how trained Transformers become mesa-optimizers i.e. learn models by gradient descent in their forward pass. This allows us, at least in the domain of regression problems, to mechanistically understand the inner workings of in-context learning in optimized Transformers. Building on this insight, we furthermore identify how Transformers surpass the performance of plain gradient descent by learning an iterative curvature correction and learn linear models on deep data representations to solve non-linear regression tasks. Finally, we discuss intriguing parallels to a mechanism identified to be crucial for in-context learning termed induction-head (Olsson et al., 2022) and show how it could be understood as a specific case of in-context learning by gradient descent learning within Transformers. Code to reproduce the experiments can be found at https://github.com/google-research/self-organising-systems/tree/master/transformers\_learn\_icl\_by\_gd .},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/3YF276BF/vonoswaldTransformersLearnIncontext2023.pdf;/home/daniel/Zotero/storage/P5KXQ2FY/2212.html}
+}
+
+@online{wangConceptAlgebraScoreBased2023,
+  title = {Concept {{Algebra}} for ({{Score-Based}}) {{Text-Controlled Generative Models}}},
+  author = {Wang, Zihao and Gui, Lin and Negrea, Jeffrey and Veitch, Victor},
+  date = {2023-10-31},
+  eprint = {2302.03693},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.2302.03693},
+  url = {http://arxiv.org/abs/2302.03693},
+  urldate = {2024-02-02},
+  abstract = {This paper concerns the structure of learned representations in text-guided generative models, focusing on score-based models. A key property of such models is that they can compose disparate concepts in a `disentangled' manner. This suggests these models have internal representations that encode concepts in a `disentangled' manner. Here, we focus on the idea that concepts are encoded as subspaces of some representation space. We formalize what this means, show there's a natural choice for the representation, and develop a simple method for identifying the part of the representation corresponding to a given concept. In particular, this allows us to manipulate the concepts expressed by the model through algebraic manipulation of the representation. We demonstrate the idea with examples using Stable Diffusion.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/77RM3YX8/wangConceptAlgebraScoreBased2023.pdf;/home/daniel/Zotero/storage/EBBPXDDP/2302.html}
+}
+
+@online{abrahamCEBaBEstimatingCausal2022,
+  title = {{{CEBaB}}: {{Estimating}} the {{Causal Effects}} of {{Real-World Concepts}} on {{NLP Model Behavior}}},
+  shorttitle = {{{CEBaB}}},
+  author = {Abraham, Eldar David and D'Oosterlinck, Karel and Feder, Amir and Gat, Yair Ori and Geiger, Atticus and Potts, Christopher and Reichart, Roi and Wu, Zhengxuan},
+  date = {2022-10-12},
+  eprint = {2205.14140},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2205.14140},
+  url = {http://arxiv.org/abs/2205.14140},
+  urldate = {2024-04-05},
+  abstract = {The increasing size and complexity of modern ML systems has improved their predictive capabilities but made their behavior harder to explain. Many techniques for model explanation have been developed in response, but we lack clear criteria for assessing these techniques. In this paper, we cast model explanation as the causal inference problem of estimating causal effects of real-world concepts on the output behavior of ML models given actual input data. We introduce CEBaB, a new benchmark dataset for assessing concept-based explanation methods in Natural Language Processing (NLP). CEBaB consists of short restaurant reviews with human-generated counterfactual reviews in which an aspect (food, noise, ambiance, service) of the dining experience was modified. Original and counterfactual reviews are annotated with multiply-validated sentiment ratings at the aspect-level and review-level. The rich structure of CEBaB allows us to go beyond input features to study the effects of abstract, real-world concepts on model behavior. We use CEBaB to compare the quality of a range of concept-based explanation methods covering different assumptions and conceptions of the problem, and we seek to establish natural metrics for comparative assessments of these methods.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/daniel/Zotero/storage/8BV39TS3/abrahamCEBaBEstimatingCausal2022.pdf;/home/daniel/Zotero/storage/MTMDGA5J/2205.html}
+}
+
+@online{belroseElicitingLatentPredictions2023,
+  title = {Eliciting {{Latent Predictions}} from {{Transformers}} with the {{Tuned Lens}}},
+  author = {Belrose, Nora and Furman, Zach and Smith, Logan and Halawi, Danny and Ostrovsky, Igor and McKinney, Lev and Biderman, Stella and Steinhardt, Jacob},
+  date = {2023-11-26},
+  eprint = {2303.08112},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2303.08112},
+  url = {http://arxiv.org/abs/2303.08112},
+  urldate = {2024-01-11},
+  abstract = {We analyze transformers from the perspective of iterative inference, seeking to understand how model predictions are refined layer by layer. To do so, we train an affine probe for each block in a frozen pretrained model, making it possible to decode every hidden state into a distribution over the vocabulary. Our method, the \textbackslash emph\{tuned lens\}, is a refinement of the earlier ``logit lens'' technique, which yielded useful insights but is often brittle. We test our method on various autoregressive language models with up to 20B parameters, showing it to be more predictive, reliable and unbiased than the logit lens. With causal experiments, we show the tuned lens uses similar features to the model itself. We also find the trajectory of latent predictions can be used to detect malicious inputs with high accuracy. All code needed to reproduce our results can be found at https://github.com/AlignmentResearch/tuned-lens.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/IWKVX7B5/belroseElicitingLatentPredictions2023.pdf;/home/daniel/Zotero/storage/D237I8LI/2303.html}
+}
+
+@online{belroseLEACEPerfectLinear2023,
+  title = {{{LEACE}}: {{Perfect}} Linear Concept Erasure in Closed Form},
+  shorttitle = {{{LEACE}}},
+  author = {Belrose, Nora and Schneider-Joseph, David and Ravfogel, Shauli and Cotterell, Ryan and Raff, Edward and Biderman, Stella},
+  date = {2023-10-29},
+  eprint = {2306.03819},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2306.03819},
+  url = {http://arxiv.org/abs/2306.03819},
+  urldate = {2024-01-11},
+  abstract = {Concept erasure aims to remove specified features from a representation. It can improve fairness (e.g. preventing a classifier from using gender or race) and interpretability (e.g. removing a concept to observe changes in model behavior). We introduce LEAst-squares Concept Erasure (LEACE), a closed-form method which provably prevents all linear classifiers from detecting a concept while changing the representation as little as possible, as measured by a broad class of norms. We apply LEACE to large language models with a novel procedure called "concept scrubbing," which erases target concept information from every layer in the network. We demonstrate our method on two tasks: measuring the reliance of language models on part-of-speech information, and reducing gender bias in BERT embeddings. Code is available at https://github.com/EleutherAI/concept-erasure.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Computers and Society,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/P54W3T4P/belroseLEACEPerfectLinear2023.pdf;/home/daniel/Zotero/storage/TEWJGCI7/2306.html}
+}
+
+@online{blackInterpretingNeuralNetworks2022,
+  title = {Interpreting {{Neural Networks}} through the {{Polytope Lens}}},
+  author = {Black, Sid and Sharkey, Lee and Grinsztajn, Leo and Winsor, Eric and Braun, Dan and Merizian, Jacob and Parker, Kip and Guevara, Carlos Ramón and Millidge, Beren and Alfour, Gabriel and Leahy, Connor},
+  date = {2022-11-22},
+  eprint = {2211.12312},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2211.12312},
+  url = {http://arxiv.org/abs/2211.12312},
+  urldate = {2024-02-02},
+  abstract = {Mechanistic interpretability aims to explain what a neural network has learned at a nuts-and-bolts level. What are the fundamental primitives of neural network representations? Previous mechanistic descriptions have used individual neurons or their linear combinations to understand the representations a network has learned. But there are clues that neurons and their linear combinations are not the correct fundamental units of description: directions cannot describe how neural networks use nonlinearities to structure their representations. Moreover, many instances of individual neurons and their combinations are polysemantic (i.e. they have multiple unrelated meanings). Polysemanticity makes interpreting the network in terms of neurons or directions challenging since we can no longer assign a specific feature to a neural unit. In order to find a basic unit of description that does not suffer from these problems, we zoom in beyond just directions to study the way that piecewise linear activation functions (such as ReLU) partition the activation space into numerous discrete polytopes. We call this perspective the polytope lens. The polytope lens makes concrete predictions about the behavior of neural networks, which we evaluate through experiments on both convolutional image classifiers and language models. Specifically, we show that polytopes can be used to identify monosemantic regions of activation space (while directions are not in general monosemantic) and that the density of polytope boundaries reflect semantic boundaries. We also outline a vision for what mechanistic interpretability might look like through the polytope lens.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/NM8JS4Z6/blackInterpretingNeuralNetworks2022.pdf;/home/daniel/Zotero/storage/4TU7222U/2211.html}
+}
+
+@online{burnsDiscoveringLatentKnowledge2022,
+  title = {Discovering {{Latent Knowledge}} in {{Language Models Without Supervision}}},
+  author = {Burns, Collin and Ye, Haotian and Klein, Dan and Steinhardt, Jacob},
+  date = {2022-12-07},
+  eprint = {2212.03827},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2212.03827},
+  url = {http://arxiv.org/abs/2212.03827},
+  urldate = {2023-10-12},
+  abstract = {Existing techniques for training language models can be misaligned with the truth: if we train models with imitation learning, they may reproduce errors that humans make; if we train them to generate text that humans rate highly, they may output errors that human evaluators can't detect. We propose circumventing this issue by directly finding latent knowledge inside the internal activations of a language model in a purely unsupervised way. Specifically, we introduce a method for accurately answering yes-no questions given only unlabeled model activations. It works by finding a direction in activation space that satisfies logical consistency properties, such as that a statement and its negation have opposite truth values. We show that despite using no supervision and no model outputs, our method can recover diverse knowledge represented in large language models: across 6 models and 10 question-answering datasets, it outperforms zero-shot accuracy by 4\textbackslash\% on average. We also find that it cuts prompt sensitivity in half and continues to maintain high accuracy even when models are prompted to generate incorrect answers. Our results provide an initial step toward discovering what language models know, distinct from what they say, even when we don't have access to explicit ground truth labels.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/R37AP7UM/burnsDiscoveringLatentKnowledge2022.pdf;/home/daniel/Zotero/storage/NI23E2H2/2212.html}
+}
+
+@online{chaninIdentifyingLinearRelational2023,
+  title = {Identifying {{Linear Relational Concepts}} in {{Large Language Models}}},
+  author = {Chanin, David and Hunter, Anthony and Camburu, Oana-Maria},
+  date = {2023-11-15},
+  eprint = {2311.08968},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.08968},
+  url = {http://arxiv.org/abs/2311.08968},
+  urldate = {2024-03-01},
+  abstract = {Transformer language models (LMs) have been shown to represent concepts as directions in the latent space of hidden activations. However, for any given human-interpretable concept, how can we find its direction in the latent space? We present a technique called linear relational concepts (LRC) for finding concept directions corresponding to human-interpretable concepts at a given hidden layer in a transformer LM by first modeling the relation between subject and object as a linear relational embedding (LRE). While the LRE work was mainly presented as an exercise in understanding model representations, we find that inverting the LRE while using earlier object layers results in a powerful technique to find concept directions that both work well as a classifier and causally influence model outputs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  file = {/home/daniel/Zotero/storage/7A37NCBF/chaninIdentifyingLinearRelational2023.pdf;/home/daniel/Zotero/storage/NVGHH28F/2311.html}
+}
+
+@online{chanTransformersGeneralizeDifferently2022,
+  title = {Transformers Generalize Differently from Information Stored in Context vs in Weights},
+  author = {Chan, Stephanie C. Y. and Dasgupta, Ishita and Kim, Junkyung and Kumaran, Dharshan and Lampinen, Andrew K. and Hill, Felix},
+  date = {2022-10-13},
+  eprint = {2210.05675},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2210.05675},
+  url = {http://arxiv.org/abs/2210.05675},
+  urldate = {2023-10-18},
+  abstract = {Transformer models can use two fundamentally different kinds of information: information stored in weights during training, and information provided ``in-context'' at inference time. In this work, we show that transformers exhibit different inductive biases in how they represent and generalize from the information in these two sources. In particular, we characterize whether they generalize via parsimonious rules (rule-based generalization) or via direct comparison with observed examples (exemplar-based generalization). This is of important practical consequence, as it informs whether to encode information in weights or in context, depending on how we want models to use that information. In transformers trained on controlled stimuli, we find that generalization from weights is more rule-based whereas generalization from context is largely exemplar-based. In contrast, we find that in transformers pre-trained on natural language, in-context learning is significantly rule-based, with larger models showing more rule-basedness. We hypothesise that rule-based generalization from in-context information might be an emergent consequence of large-scale training on language, which has sparse rule-like structure. Using controlled stimuli, we verify that transformers pretrained on data containing sparse rule-like structure exhibit more rule-based generalization.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/RENCYTQ7/chanTransformersGeneralizeDifferently2022.pdf;/home/daniel/Zotero/storage/9QLSLTLG/2210.html}
+}
+
+@online{chenDynamicalBayesianPhase2023,
+  title = {Dynamical versus {{Bayesian Phase Transitions}} in a {{Toy Model}} of {{Superposition}}},
+  author = {Chen, Zhongtian and Lau, Edmund and Mendel, Jake and Wei, Susan and Murfet, Daniel},
+  date = {2023-10-10},
+  eprint = {2310.06301},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.06301},
+  url = {http://arxiv.org/abs/2310.06301},
+  urldate = {2024-02-06},
+  abstract = {We investigate phase transitions in a Toy Model of Superposition (TMS) using Singular Learning Theory (SLT). We derive a closed formula for the theoretical loss and, in the case of two hidden dimensions, discover that regular \$k\$-gons are critical points. We present supporting theory indicating that the local learning coefficient (a geometric invariant) of these \$k\$-gons determines phase transitions in the Bayesian posterior as a function of training sample size. We then show empirically that the same \$k\$-gon critical points also determine the behavior of SGD training. The picture that emerges adds evidence to the conjecture that the SGD learning trajectory is subject to a sequential learning mechanism. Specifically, we find that the learning process in TMS, be it through SGD or Bayesian learning, can be characterized by a journey through parameter space from regions of high loss and low complexity to regions of low loss and high complexity.},
+  pubstate = {preprint},
+  keywords = {62F15 68T07,Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/M7Y8YBJ6/chenDynamicalBayesianPhase2023.pdf;/home/daniel/Zotero/storage/HNLJSYHQ/2310.html}
+}
+
+@online{cunninghamSparseAutoencodersFind2023,
+  title = {Sparse {{Autoencoders Find Highly Interpretable Features}} in {{Language Models}}},
+  author = {Cunningham, Hoagy and Ewart, Aidan and Riggs, Logan and Huben, Robert and Sharkey, Lee},
+  date = {2023-10-04},
+  eprint = {2309.08600},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2309.08600},
+  url = {http://arxiv.org/abs/2309.08600},
+  urldate = {2024-01-31},
+  abstract = {One of the roadblocks to a better understanding of neural networks' internals is \textbackslash textit\{polysemanticity\}, where neurons appear to activate in multiple, semantically distinct contexts. Polysemanticity prevents us from identifying concise, human-understandable explanations for what neural networks are doing internally. One hypothesised cause of polysemanticity is \textbackslash textit\{superposition\}, where neural networks represent more features than they have neurons by assigning features to an overcomplete set of directions in activation space, rather than to individual neurons. Here, we attempt to identify those directions, using sparse autoencoders to reconstruct the internal activations of a language model. These autoencoders learn sets of sparsely activating features that are more interpretable and monosemantic than directions identified by alternative approaches, where interpretability is measured by automated methods. Moreover, we show that with our learned set of features, we can pinpoint the features that are causally responsible for counterfactual behaviour on the indirect object identification task \textbackslash citep\{wang2022interpretability\} to a finer degree than previous decompositions. This work indicates that it is possible to resolve superposition in language models using a scalable, unsupervised method. Our method may serve as a foundation for future mechanistic interpretability work, which we hope will enable greater model transparency and steerability.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/K9RQSNQF/cunninghamSparseAutoencodersFind2023.pdf;/home/daniel/Zotero/storage/3BC3TINB/2309.html}
+}
+
+@online{elhageToyModelsSuperposition2022,
+  title = {Toy {{Models}} of {{Superposition}}},
+  author = {Elhage, Nelson and Hume, Tristan and Olsson, Catherine and Schiefer, Nicholas and Henighan, Tom and Kravec, Shauna and Hatfield-Dodds, Zac and Lasenby, Robert and Drain, Dawn and Chen, Carol and Grosse, Roger and McCandlish, Sam and Kaplan, Jared and Amodei, Dario and Wattenberg, Martin and Olah, Christopher},
+  date = {2022-09-21},
+  eprint = {2209.10652},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2209.10652},
+  url = {http://arxiv.org/abs/2209.10652},
+  urldate = {2024-01-31},
+  abstract = {Neural networks often pack many unrelated concepts into a single neuron - a puzzling phenomenon known as 'polysemanticity' which makes interpretability much more challenging. This paper provides a toy model where polysemanticity can be fully understood, arising as a result of models storing additional sparse features in "superposition." We demonstrate the existence of a phase change, a surprising connection to the geometry of uniform polytopes, and evidence of a link to adversarial examples. We also discuss potential implications for mechanistic interpretability.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/7FDCUR94/elhageToyModelsSuperposition2022.pdf;/home/daniel/Zotero/storage/LGREIAYX/2209.html}
+}
+
+@online{fengHowLanguageModels2023,
+  title = {How Do {{Language Models Bind Entities}} in {{Context}}?},
+  author = {Feng, Jiahai and Steinhardt, Jacob},
+  date = {2023-10-26},
+  eprint = {2310.17191},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.17191},
+  url = {http://arxiv.org/abs/2310.17191},
+  urldate = {2024-03-03},
+  abstract = {To correctly use in-context information, language models (LMs) must bind entities to their attributes. For example, given a context describing a "green square" and a "blue circle", LMs must bind the shapes to their respective colors. We analyze LM representations and identify the binding ID mechanism: a general mechanism for solving the binding problem, which we observe in every sufficiently large model from the Pythia and LLaMA families. Using causal interventions, we show that LMs' internal activations represent binding information by attaching binding ID vectors to corresponding entities and attributes. We further show that binding ID vectors form a continuous subspace, in which distances between binding ID vectors reflect their discernability. Overall, our results uncover interpretable strategies in LMs for representing symbolic knowledge in-context, providing a step towards understanding general in-context reasoning in large-scale LMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/LU7FADPQ/fengHowLanguageModels2023.pdf;/home/daniel/Zotero/storage/KBQ3H9VJ/2310.html}
+}
+
+@online{geigerCausalAbstractionFaithful2023,
+  title = {Causal {{Abstraction}} for {{Faithful Model Interpretation}}},
+  author = {Geiger, Atticus and Potts, Chris and Icard, Thomas},
+  date = {2023-01-11},
+  eprint = {2301.04709},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2301.04709},
+  url = {http://arxiv.org/abs/2301.04709},
+  urldate = {2024-03-03},
+  abstract = {A faithful and interpretable explanation of an AI model's behavior and internal structure is a high-level explanation that is human-intelligible but also consistent with the known, but often opaque low-level causal details of the model. We argue that the theory of causal abstraction provides the mathematical foundations for the desired kinds of model explanations. In causal abstraction analysis, we use interventions on model-internal states to rigorously assess whether an interpretable high-level causal model is a faithful description of an AI model. Our contributions in this area are: (1) We generalize causal abstraction to cyclic causal structures and typed high-level variables. (2) We show how multi-source interchange interventions can be used to conduct causal abstraction analyses. (3) We define a notion of approximate causal abstraction that allows us to assess the degree to which a high-level causal model is a causal abstraction of a lower-level one. (4) We prove constructive causal abstraction can be decomposed into three operations we refer to as marginalization, variable-merge, and value-merge. (5) We formalize the XAI methods of LIME, causal effect estimation, causal mediation analysis, iterated nullspace projection, and circuit-based explanations as special cases of causal abstraction analysis.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence},
+  file = {/home/daniel/Zotero/storage/CGVUZIH3/geigerCausalAbstractionFaithful2023.pdf;/home/daniel/Zotero/storage/XKU423LJ/2301.html}
+}
+
+@online{geigerFindingAlignmentsInterpretable2024,
+  title = {Finding {{Alignments Between Interpretable Causal Variables}} and {{Distributed Neural Representations}}},
+  author = {Geiger, Atticus and Wu, Zhengxuan and Potts, Christopher and Icard, Thomas and Goodman, Noah D.},
+  date = {2024-02-21},
+  eprint = {2303.02536},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2303.02536},
+  url = {http://arxiv.org/abs/2303.02536},
+  urldate = {2024-02-23},
+  abstract = {Causal abstraction is a promising theoretical framework for explainable artificial intelligence that defines when an interpretable high-level causal model is a faithful simplification of a low-level deep learning system. However, existing causal abstraction methods have two major limitations: they require a brute-force search over alignments between the high-level model and the low-level one, and they presuppose that variables in the high-level model will align with disjoint sets of neurons in the low-level one. In this paper, we present distributed alignment search (DAS), which overcomes these limitations. In DAS, we find the alignment between high-level and low-level models using gradient descent rather than conducting a brute-force search, and we allow individual neurons to play multiple distinct roles by analyzing representations in non-standard bases-distributed representations. Our experiments show that DAS can discover internal structure that prior approaches miss. Overall, DAS removes previous obstacles to conducting causal abstraction analyses and allows us to find conceptual structure in trained neural nets.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence},
+  file = {/home/daniel/Zotero/storage/7PTGD4WV/geigerFindingAlignmentsInterpretable2024.pdf;/home/daniel/Zotero/storage/XMZTS9WN/2303.html}
+}
+
+@online{gempStatesStringsStrategies2024,
+  title = {States as {{Strings}} as {{Strategies}}: {{Steering Language Models}} with {{Game-Theoretic Solvers}}},
+  shorttitle = {States as {{Strings}} as {{Strategies}}},
+  author = {Gemp, Ian and Bachrach, Yoram and Lanctot, Marc and Patel, Roma and Dasagi, Vibhavari and Marris, Luke and Piliouras, Georgios and Liu, Siqi and Tuyls, Karl},
+  date = {2024-02-06},
+  eprint = {2402.01704},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2402.01704},
+  url = {http://arxiv.org/abs/2402.01704},
+  urldate = {2024-03-08},
+  abstract = {Game theory is the study of mathematical models of strategic interactions among rational agents. Language is a key medium of interaction for humans, though it has historically proven difficult to model dialogue and its strategic motivations mathematically. A suitable model of the players, strategies, and payoffs associated with linguistic interactions (i.e., a binding to the conventional symbolic logic of game theory) would enable existing game-theoretic algorithms to provide strategic solutions in the space of language. In other words, a binding could provide a route to computing stable, rational conversational strategies in dialogue. Large language models (LLMs) have arguably reached a point where their generative capabilities can enable realistic, human-like simulations of natural dialogue. By prompting them in various ways, we can steer their responses towards different output utterances. Leveraging the expressivity of natural language, LLMs can also help us quickly generate new dialogue scenarios, which are grounded in real world applications. In this work, we present one possible binding from dialogue to game theory as well as generalizations of existing equilibrium finding algorithms to this setting. In addition, by exploiting LLMs generation capabilities along with our proposed binding, we can synthesize a large repository of formally-defined games in which one can study and test game-theoretic solution concepts. We also demonstrate how one can combine LLM-driven game generation, game-theoretic solvers, and imitation learning to construct a process for improving the strategic capabilities of LLMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Computer Science and Game Theory},
+  file = {/home/daniel/Zotero/storage/WP3PLVU9/gempStatesStringsStrategies2024.pdf;/home/daniel/Zotero/storage/MS69968C/2402.html}
+}
+
+@online{gevaDissectingRecallFactual2023,
+  title = {Dissecting {{Recall}} of {{Factual Associations}} in {{Auto-Regressive Language Models}}},
+  author = {Geva, Mor and Bastings, Jasmijn and Filippova, Katja and Globerson, Amir},
+  date = {2023-04-28},
+  eprint = {2304.14767},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2304.14767},
+  url = {http://arxiv.org/abs/2304.14767},
+  urldate = {2023-08-24},
+  abstract = {Transformer-based language models (LMs) are known to capture factual knowledge in their parameters. While previous work looked into where factual associations are stored, only little is known about how they are retrieved internally during inference. We investigate this question through the lens of information flow. Given a subject-relation query, we study how the model aggregates information about the subject and relation to predict the correct attribute. With interventions on attention edges, we first identify two critical points where information propagates to the prediction: one from the relation positions followed by another from the subject positions. Next, by analyzing the information at these points, we unveil a three-step internal mechanism for attribute extraction. First, the representation at the last-subject position goes through an enrichment process, driven by the early MLP sublayers, to encode many subject-related attributes. Second, information from the relation propagates to the prediction. Third, the prediction representation "queries" the enriched subject to extract the attribute. Perhaps surprisingly, this extraction is typically done via attention heads, which often encode subject-attribute mappings in their parameters. Overall, our findings introduce a comprehensive view of how factual associations are stored and extracted internally in LMs, facilitating future research on knowledge localization and editing.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/6REIRQKN/gevaDissectingRecallFactual2023.pdf;/home/daniel/Zotero/storage/SVBIF73C/2304.html}
+}
+
+@online{gurneeLanguageModelsRepresent2023,
+  title = {Language {{Models Represent Space}} and {{Time}}},
+  author = {Gurnee, Wes and Tegmark, Max},
+  date = {2023-10-03},
+  eprint = {2310.02207},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.02207},
+  url = {http://arxiv.org/abs/2310.02207},
+  urldate = {2023-10-12},
+  abstract = {The capabilities of large language models (LLMs) have sparked debate over whether such systems just learn an enormous collection of superficial statistics or a coherent model of the data generating process -- a world model. We find evidence for the latter by analyzing the learned representations of three spatial datasets (world, US, NYC places) and three temporal datasets (historical figures, artworks, news headlines) in the Llama-2 family of models. We discover that LLMs learn linear representations of space and time across multiple scales. These representations are robust to prompting variations and unified across different entity types (e.g. cities and landmarks). In addition, we identify individual ``space neurons'' and ``time neurons'' that reliably encode spatial and temporal coordinates. Our analysis demonstrates that modern LLMs acquire structured knowledge about fundamental dimensions such as space and time, supporting the view that they learn not merely superficial statistics, but literal world models.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/BAXQVGUC/gurneeLanguageModelsRepresent2023.pdf;/home/daniel/Zotero/storage/3F6ML849/2310.html}
+}
+
+@online{haseDoesLocalizationInform2023,
+  title = {Does {{Localization Inform Editing}}? {{Surprising Differences}} in {{Causality-Based Localization}} vs. {{Knowledge Editing}} in {{Language Models}}},
+  shorttitle = {Does {{Localization Inform Editing}}?},
+  author = {Hase, Peter and Bansal, Mohit and Kim, Been and Ghandeharioun, Asma},
+  date = {2023-10-16},
+  eprint = {2301.04213},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2301.04213},
+  url = {http://arxiv.org/abs/2301.04213},
+  urldate = {2024-01-25},
+  abstract = {Language models learn a great quantity of factual information during pretraining, and recent work localizes this information to specific model weights like mid-layer MLP weights. In this paper, we find that we can change how a fact is stored in a model by editing weights that are in a different location than where existing methods suggest that the fact is stored. This is surprising because we would expect that localizing facts to specific model parameters would tell us where to manipulate knowledge in models, and this assumption has motivated past work on model editing methods. Specifically, we show that localization conclusions from representation denoising (also known as Causal Tracing) do not provide any insight into which model MLP layer would be best to edit in order to override an existing stored fact with a new one. This finding raises questions about how past work relies on Causal Tracing to select which model layers to edit. Next, we consider several variants of the editing problem, including erasing and amplifying facts. For one of our editing problems, editing performance does relate to localization results from representation denoising, but we find that which layer we edit is a far better predictor of performance. Our results suggest, counterintuitively, that better mechanistic understanding of how pretrained language models work may not always translate to insights about how to best change their behavior. Our code is available at https://github.com/google/belief-localization},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/BAB7JAMR/haseDoesLocalizationInform2023.pdf;/home/daniel/Zotero/storage/9DLXVESP/2301.html}
+}
+
+@article{hatfield-doddsMonosemanticityDecomposingLanguage,
+  title = {Towards {{Monosemanticity}}: {{Decomposing Language Models With Dictionary Learning}}},
+  shorttitle = {Towards {{Monosemanticity}}},
+  author = {Hatfield-Dodds, Zac},
+  url = {https://www.lesswrong.com/posts/TDqvQFks6TWutJEKu/towards-monosemanticity-decomposing-language-models-with},
+  urldate = {2024-02-19},
+  abstract = {Text of post based on our blog post as a linkpost for the full paper which is considerably longer and more detailed. …},
+  langid = {english},
+  file = {/home/daniel/Zotero/storage/SA8BWBV8/towards-monosemanticity-decomposing-language-models-with.html}
+}
+
+@online{hendelInContextLearningCreates2023,
+  title = {In-{{Context Learning Creates Task Vectors}}},
+  author = {Hendel, Roee and Geva, Mor and Globerson, Amir},
+  date = {2023-10-24},
+  eprint = {2310.15916},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.15916},
+  url = {http://arxiv.org/abs/2310.15916},
+  urldate = {2023-10-26},
+  abstract = {In-context learning (ICL) in Large Language Models (LLMs) has emerged as a powerful new learning paradigm. However, its underlying mechanism is still not well understood. In particular, it is challenging to map it to the "standard" machine learning framework, where one uses a training set \$S\$ to find a best-fitting function \$f(x)\$ in some hypothesis class. Here we make progress on this problem by showing that the functions learned by ICL often have a very simple structure: they correspond to the transformer LLM whose only inputs are the query \$x\$ and a single "task vector" calculated from the training set. Thus, ICL can be seen as compressing \$S\$ into a single task vector \$\textbackslash boldsymbol\{\textbackslash theta\}(S)\$ and then using this task vector to modulate the transformer to produce the output. We support the above claim via comprehensive experiments across a range of models and tasks.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/AKU44K9E/hendelInContextLearningCreates2023.pdf;/home/daniel/Zotero/storage/XMD2IAB3/2310.html}
+}
+
+@online{hubingerSleeperAgentsTraining2024a,
+  title = {Sleeper {{Agents}}: {{Training Deceptive LLMs}} That {{Persist Through Safety Training}}},
+  shorttitle = {Sleeper {{Agents}}},
+  author = {Hubinger, Evan and Denison, Carson and Mu, Jesse and Lambert, Mike and Tong, Meg and MacDiarmid, Monte and Lanham, Tamera and Ziegler, Daniel M. and Maxwell, Tim and Cheng, Newton and Jermyn, Adam and Askell, Amanda and Radhakrishnan, Ansh and Anil, Cem and Duvenaud, David and Ganguli, Deep and Barez, Fazl and Clark, Jack and Ndousse, Kamal and Sachan, Kshitij and Sellitto, Michael and Sharma, Mrinank and DasSarma, Nova and Grosse, Roger and Kravec, Shauna and Bai, Yuntao and Witten, Zachary and Favaro, Marina and Brauner, Jan and Karnofsky, Holden and Christiano, Paul and Bowman, Samuel R. and Graham, Logan and Kaplan, Jared and Mindermann, Sören and Greenblatt, Ryan and Shlegeris, Buck and Schiefer, Nicholas and Perez, Ethan},
+  date = {2024-01-17},
+  eprint = {2401.05566},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2401.05566},
+  url = {http://arxiv.org/abs/2401.05566},
+  urldate = {2024-02-01},
+  abstract = {Humans are capable of strategically deceptive behavior: behaving helpfully in most situations, but then behaving very differently in order to pursue alternative objectives when given the opportunity. If an AI system learned such a deceptive strategy, could we detect it and remove it using current state-of-the-art safety training techniques? To study this question, we construct proof-of-concept examples of deceptive behavior in large language models (LLMs). For example, we train models that write secure code when the prompt states that the year is 2023, but insert exploitable code when the stated year is 2024. We find that such backdoor behavior can be made persistent, so that it is not removed by standard safety training techniques, including supervised fine-tuning, reinforcement learning, and adversarial training (eliciting unsafe behavior and then training to remove it). The backdoor behavior is most persistent in the largest models and in models trained to produce chain-of-thought reasoning about deceiving the training process, with the persistence remaining even when the chain-of-thought is distilled away. Furthermore, rather than removing backdoors, we find that adversarial training can teach models to better recognize their backdoor triggers, effectively hiding the unsafe behavior. Our results suggest that, once a model exhibits deceptive behavior, standard techniques could fail to remove such deception and create a false impression of safety.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Cryptography and Security,Computer Science - Machine Learning,Computer Science - Software Engineering},
+  file = {/home/daniel/Zotero/storage/F37EPHRK/hubingerSleeperAgentsTraining2024a.pdf;/home/daniel/Zotero/storage/BW3YLRH3/2401.html}
+}
+
+@online{jainMechanisticallyAnalyzingEffects2023,
+  title = {Mechanistically Analyzing the Effects of Fine-Tuning on Procedurally Defined Tasks},
+  author = {Jain, Samyak and Kirk, Robert and Lubana, Ekdeep Singh and Dick, Robert P. and Tanaka, Hidenori and Grefenstette, Edward and Rocktäschel, Tim and Krueger, David Scott},
+  date = {2023-11-21},
+  eprint = {2311.12786},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.12786},
+  url = {http://arxiv.org/abs/2311.12786},
+  urldate = {2023-12-01},
+  abstract = {Fine-tuning large pre-trained models has become the de facto strategy for developing both task-specific and general-purpose machine learning systems, including developing models that are safe to deploy. Despite its clear importance, there has been minimal work that explains how fine-tuning alters the underlying capabilities learned by a model during pretraining: does fine-tuning yield entirely novel capabilities or does it just modulate existing ones? We address this question empirically in synthetic, controlled settings where we can use mechanistic interpretability tools (e.g., network pruning and probing) to understand how the model's underlying capabilities are changing. We perform an extensive analysis of the effects of fine-tuning in these settings, and show that: (i) fine-tuning rarely alters the underlying model capabilities; (ii) a minimal transformation, which we call a 'wrapper', is typically learned on top of the underlying model capabilities, creating the illusion that they have been modified; and (iii) further fine-tuning on a task where such hidden capabilities are relevant leads to sample-efficient 'revival' of the capability, i.e., the model begins reusing these capability after only a few gradient steps. This indicates that practitioners can unintentionally remove a model's safety wrapper merely by fine-tuning it on a, e.g., superficially unrelated, downstream task. We additionally perform analysis on language models trained on the TinyStories dataset to support our claims in a more realistic setup.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/YA6C5LRM/jainMechanisticallyAnalyzingEffects2023.pdf;/home/daniel/Zotero/storage/9P6YZRKK/2311.html}
+}
+
+@online{jermynEngineeringMonosemanticityToy2022,
+  title = {Engineering {{Monosemanticity}} in {{Toy Models}}},
+  author = {Jermyn, Adam S. and Schiefer, Nicholas and Hubinger, Evan},
+  date = {2022-11-16},
+  eprint = {2211.09169},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2211.09169},
+  url = {http://arxiv.org/abs/2211.09169},
+  urldate = {2024-02-19},
+  abstract = {In some neural networks, individual neurons correspond to natural ``features'' in the input. Such \textbackslash emph\{monosemantic\} neurons are of great help in interpretability studies, as they can be cleanly understood. In this work we report preliminary attempts to engineer monosemanticity in toy models. We find that models can be made more monosemantic without increasing the loss by just changing which local minimum the training process finds. More monosemantic loss minima have moderate negative biases, and we are able to use this fact to engineer highly monosemantic models. We are able to mechanistically interpret these models, including the residual polysemantic neurons, and uncover a simple yet surprising algorithm. Finally, we find that providing models with more neurons per layer makes the models more monosemantic, albeit at increased computational cost. These findings point to a number of new questions and avenues for engineering monosemanticity, which we intend to study these in future work.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/9P9C8VZJ/jermynEngineeringMonosemanticityToy2022.pdf;/home/daniel/Zotero/storage/SUZLLAPT/2211.html}
+}
+
+@online{joshiPersonasWayModel2024,
+  title = {Personas as a {{Way}} to {{Model Truthfulness}} in {{Language Models}}},
+  author = {Joshi, Nitish and Rando, Javier and Saparov, Abulhair and Kim, Najoung and He, He},
+  date = {2024-02-06},
+  eprint = {2310.18168},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.18168},
+  url = {http://arxiv.org/abs/2310.18168},
+  urldate = {2024-02-29},
+  abstract = {Large language models (LLMs) are trained on vast amounts of text from the internet, which contains both factual and misleading information about the world. While unintuitive from a classic view of LMs, recent work has shown that the truth value of a statement can be elicited from the model's representations. This paper presents an explanation for why LMs appear to know the truth despite not being trained with truth labels. We hypothesize that the pretraining data is generated by groups of (un)truthful agents whose outputs share common features, and they form a (un)truthful persona. By training on this data, LMs can infer and represent the persona in its activation space. This allows the model to separate truth from falsehoods and controls the truthfulness of its generation. We show evidence for the persona hypothesis via two observations: (1) we can probe whether a model's answer will be truthful before it is generated; (2) finetuning a model on a set of facts improves its truthfulness on unseen topics. Next, using arithmetics as a synthetic environment, we show that structures of the pretraining data are crucial for the model to infer the truthful persona. Overall, our findings suggest that models can exploit hierarchical structures in the data to learn abstract concepts like truthfulness.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/XA9PF938/joshiPersonasWayModel2024.pdf;/home/daniel/Zotero/storage/UCG25TKF/2310.html}
+}
+
+@online{kothaUnderstandingCatastrophicForgetting2023,
+  title = {Understanding {{Catastrophic Forgetting}} in {{Language Models}} via {{Implicit Inference}}},
+  author = {Kotha, Suhas and Springer, Jacob Mitchell and Raghunathan, Aditi},
+  date = {2023-09-18},
+  eprint = {2309.10105},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2309.10105},
+  url = {http://arxiv.org/abs/2309.10105},
+  urldate = {2024-01-11},
+  abstract = {Fine-tuning (via methods such as instruction-tuning or reinforcement learning from human feedback) is a crucial step in training language models to robustly carry out tasks of interest. However, we lack a systematic understanding of the effects of fine-tuning, particularly on tasks outside the narrow fine-tuning distribution. In a simplified scenario, we demonstrate that improving performance on tasks within the fine-tuning data distribution comes at the expense of suppressing model capabilities on other tasks. This degradation is especially pronounced for tasks "closest" to the fine-tuning distribution. We hypothesize that language models implicitly infer the task of the prompt corresponds, and the fine-tuning process predominantly skews this task inference towards tasks in the fine-tuning distribution. To test this hypothesis, we propose Conjugate Prompting to see if we can recover pretrained capabilities. Conjugate prompting artificially makes the task look farther from the fine-tuning distribution while requiring the same capability. We find that conjugate prompting systematically recovers some of the pretraining capabilities on our synthetic setup. We then apply conjugate prompting to real-world LLMs using the observation that fine-tuning distributions are typically heavily skewed towards English. We find that simply translating the prompts to different languages can cause the fine-tuned models to respond like their pretrained counterparts instead. This allows us to recover the in-context learning abilities lost via instruction tuning, and more concerningly, to recover harmful content generation suppressed by safety fine-tuning in chatbots like ChatGPT.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/AQ7FNC5X/kothaUnderstandingCatastrophicForgetting2023.pdf;/home/daniel/Zotero/storage/JW4YASQF/2309.html}
+}
+
+@online{leeMechanisticUnderstandingAlignment2024,
+  title = {A {{Mechanistic Understanding}} of {{Alignment Algorithms}}: {{A Case Study}} on {{DPO}} and {{Toxicity}}},
+  shorttitle = {A {{Mechanistic Understanding}} of {{Alignment Algorithms}}},
+  author = {Lee, Andrew and Bai, Xiaoyan and Pres, Itamar and Wattenberg, Martin and Kummerfeld, Jonathan K. and Mihalcea, Rada},
+  date = {2024-01-03},
+  eprint = {2401.01967},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2401.01967},
+  url = {http://arxiv.org/abs/2401.01967},
+  urldate = {2024-01-10},
+  abstract = {While alignment algorithms are now commonly used to tune pre-trained language models towards a user's preferences, we lack explanations for the underlying mechanisms in which models become ``aligned'', thus making it difficult to explain phenomena like jailbreaks. In this work we study a popular algorithm, direct preference optimization (DPO), and the mechanisms by which it reduces toxicity. Namely, we first study how toxicity is represented and elicited in a pre-trained language model, GPT2-medium. We then apply DPO with a carefully crafted pairwise dataset to reduce toxicity. We examine how the resulting model averts toxic outputs, and find that capabilities learned from pre-training are not removed, but rather bypassed. We use this insight to demonstrate a simple method to un-align the model, reverting it back to its toxic behavior.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,notion},
+  file = {/home/daniel/Zotero/storage/JGNVNAQL/leeMechanisticUnderstandingAlignment2024.pdf;/home/daniel/Zotero/storage/RDNCR3F7/2401.html}
+}
+
+@online{liEmergentWorldRepresentations2023,
+  title = {Emergent {{World Representations}}: {{Exploring}} a {{Sequence Model Trained}} on a {{Synthetic Task}}},
+  shorttitle = {Emergent {{World Representations}}},
+  author = {Li, Kenneth and Hopkins, Aspen K. and Bau, David and Viégas, Fernanda and Pfister, Hanspeter and Wattenberg, Martin},
+  date = {2023-02-27},
+  eprint = {2210.13382},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2210.13382},
+  url = {http://arxiv.org/abs/2210.13382},
+  urldate = {2024-02-27},
+  abstract = {Language models show a surprising range of capabilities, but the source of their apparent competence is unclear. Do these networks just memorize a collection of surface statistics, or do they rely on internal representations of the process that generates the sequences they see? We investigate this question by applying a variant of the GPT model to the task of predicting legal moves in a simple board game, Othello. Although the network has no a priori knowledge of the game or its rules, we uncover evidence of an emergent nonlinear internal representation of the board state. Interventional experiments indicate this representation can be used to control the output of the network and create "latent saliency maps" that can help explain predictions in human terms.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/P5A5RFWR/liEmergentWorldRepresentations2023.pdf;/home/daniel/Zotero/storage/BIPDUJEG/2210.html}
+}
+
+@online{liInferenceTimeInterventionEliciting2023a,
+  title = {Inference-{{Time Intervention}}: {{Eliciting Truthful Answers}} from a {{Language Model}}},
+  shorttitle = {Inference-{{Time Intervention}}},
+  author = {Li, Kenneth and Patel, Oam and Viégas, Fernanda and Pfister, Hanspeter and Wattenberg, Martin},
+  date = {2023-10-19},
+  eprint = {2306.03341},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2306.03341},
+  url = {http://arxiv.org/abs/2306.03341},
+  urldate = {2024-01-09},
+  abstract = {We introduce Inference-Time Intervention (ITI), a technique designed to enhance the "truthfulness" of large language models (LLMs). ITI operates by shifting model activations during inference, following a set of directions across a limited number of attention heads. This intervention significantly improves the performance of LLaMA models on the TruthfulQA benchmark. On an instruction-finetuned LLaMA called Alpaca, ITI improves its truthfulness from 32.5\% to 65.1\%. We identify a tradeoff between truthfulness and helpfulness and demonstrate how to balance it by tuning the intervention strength. ITI is minimally invasive and computationally inexpensive. Moreover, the technique is data efficient: while approaches like RLHF require extensive annotations, ITI locates truthful directions using only few hundred examples. Our findings suggest that LLMs may have an internal representation of the likelihood of something being true, even as they produce falsehoods on the surface.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/KEHR7VMG/liInferenceTimeInterventionEliciting2023a.pdf;/home/daniel/Zotero/storage/W9ZA4AJX/2306.html}
+}
+
+@online{liuAligningLargeLanguage2023,
+  title = {Aligning {{Large Language Models}} with {{Human Preferences}} through {{Representation Engineering}}},
+  author = {Liu, Wenhao and Wang, Xiaohua and Wu, Muling and Li, Tianlong and Lv, Changze and Ling, Zixuan and Zhu, Jianhao and Zhang, Cenyuan and Zheng, Xiaoqing and Huang, Xuanjing},
+  date = {2023-12-26},
+  eprint = {2312.15997},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.15997},
+  url = {http://arxiv.org/abs/2312.15997},
+  urldate = {2024-01-30},
+  abstract = {Aligning large language models (LLMs) with human preferences is crucial for enhancing their utility in terms of helpfulness, truthfulness, safety, harmlessness, and interestingness. Existing methods for achieving this alignment often involves employing reinforcement learning from human feedback (RLHF) to fine-tune LLMs based on human labels assessing the relative quality of model responses. Nevertheless, RLHF is susceptible to instability during fine-tuning and presents challenges in implementation.Drawing inspiration from the emerging field of representation engineering (RepE), this study aims to identify relevant representations for high-level human preferences embedded in patterns of activity within an LLM, and achieve precise control of model behavior by transforming its representations. This novel approach, denoted as Representation Alignment from Human Feedback (RAHF), proves to be effective, computationally efficient, and easy to implement.Extensive experiments demonstrate the efficacy of RAHF in not only capturing but also manipulating representations to align with a broad spectrum of human preferences or values, rather than being confined to a singular concept or function (e.g. honesty or bias). RAHF's versatility in accommodating diverse human preferences shows its potential for advancing LLM performance.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language},
+  file = {/home/daniel/Documents/zotero_storage/liuAligningLargeLanguage2023.pdf;/home/daniel/Zotero/storage/77PLMBRK/2312.html}
+}
+
+@online{liuImitationObservationLearning2018a,
+  title = {Imitation from {{Observation}}: {{Learning}} to {{Imitate Behaviors}} from {{Raw Video}} via {{Context Translation}}},
+  shorttitle = {Imitation from {{Observation}}},
+  author = {Liu, YuXuan and Gupta, Abhishek and Abbeel, Pieter and Levine, Sergey},
+  date = {2018-06-18},
+  eprint = {1707.03374},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.1707.03374},
+  url = {http://arxiv.org/abs/1707.03374},
+  urldate = {2024-01-28},
+  abstract = {Imitation learning is an effective approach for autonomous systems to acquire control policies when an explicit reward function is unavailable, using supervision provided as demonstrations from an expert, typically a human operator. However, standard imitation learning methods assume that the agent receives examples of observation-action tuples that could be provided, for instance, to a supervised learning algorithm. This stands in contrast to how humans and animals imitate: we observe another person performing some behavior and then figure out which actions will realize that behavior, compensating for changes in viewpoint, surroundings, object positions and types, and other factors. We term this kind of imitation learning "imitation-from-observation," and propose an imitation learning method based on video prediction with context translation and deep reinforcement learning. This lifts the assumption in imitation learning that the demonstration should consist of observations in the same environment configuration, and enables a variety of interesting applications, including learning robotic skills that involve tool use simply by observing videos of human tool use. Our experimental results show the effectiveness of our approach in learning a wide range of real-world robotic tasks modeled after common household chores from videos of a human demonstrator, including sweeping, ladling almonds, pushing objects as well as a number of tasks in simulation.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning,Computer Science - Neural and Evolutionary Computing,Computer Science - Robotics},
+  file = {/home/daniel/Documents/zotero_storage/liuImitationObservationLearning2018a.pdf;/home/daniel/Zotero/storage/ZLF2REDM/1707.html}
+}
+
+@online{liuIncontextVectorsMaking2024,
+  title = {In-Context {{Vectors}}: {{Making In Context Learning More Effective}} and {{Controllable Through Latent Space Steering}}},
+  shorttitle = {In-Context {{Vectors}}},
+  author = {Liu, Sheng and Ye, Haotian and Xing, Lei and Zou, James},
+  date = {2024-02-13},
+  eprint = {2311.06668},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.06668},
+  url = {http://arxiv.org/abs/2311.06668},
+  urldate = {2024-05-19},
+  abstract = {Large language models (LLMs) demonstrate emergent in-context learning capabilities, where they adapt to new tasks based on example demonstrations. However, in-context learning has seen limited effectiveness in many settings, is difficult to quantitatively control and takes up context window space. To overcome these limitations, we propose an alternative approach that recasts in-context learning as in-context vectors (ICV). Using ICV has two steps. We first use a forward pass on demonstration examples to create the in-context vector from the latent embedding of the LLM. This vector captures essential information about the intended task. On a new query, instead of adding demonstrations to the prompt, we shift the latent states of the LLM using the ICV. The ICV approach has several benefits: 1) it enables the LLM to more effectively follow the demonstration examples; 2) it's easy to control by adjusting the magnitude of the ICV; 3) it reduces the length of the prompt by removing the in-context demonstrations; 4) ICV is computationally much more efficient than fine-tuning. We demonstrate that ICV achieves better performance compared to standard in-context learning and fine-tuning on diverse tasks including safety, style transfer, role-playing and formatting. Moreover, we show that we can flexibly teach LLM to simultaneously follow different types of instructions by simple vector arithmetics on the corresponding ICVs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/CQRLXAPD/liuIncontextVectorsMaking2024.pdf;/home/daniel/Zotero/storage/C6ICH4J6/2311.html}
+}
+
+@online{liuIncontextVectorsMaking2024a,
+  title = {In-Context {{Vectors}}: {{Making In Context Learning More Effective}} and {{Controllable Through Latent Space Steering}}},
+  shorttitle = {In-Context {{Vectors}}},
+  author = {Liu, Sheng and Ye, Haotian and Xing, Lei and Zou, James},
+  date = {2024-02-13},
+  eprint = {2311.06668},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2311.06668},
+  url = {http://arxiv.org/abs/2311.06668},
+  urldate = {2024-05-21},
+  abstract = {Large language models (LLMs) demonstrate emergent in-context learning capabilities, where they adapt to new tasks based on example demonstrations. However, in-context learning has seen limited effectiveness in many settings, is difficult to quantitatively control and takes up context window space. To overcome these limitations, we propose an alternative approach that recasts in-context learning as in-context vectors (ICV). Using ICV has two steps. We first use a forward pass on demonstration examples to create the in-context vector from the latent embedding of the LLM. This vector captures essential information about the intended task. On a new query, instead of adding demonstrations to the prompt, we shift the latent states of the LLM using the ICV. The ICV approach has several benefits: 1) it enables the LLM to more effectively follow the demonstration examples; 2) it's easy to control by adjusting the magnitude of the ICV; 3) it reduces the length of the prompt by removing the in-context demonstrations; 4) ICV is computationally much more efficient than fine-tuning. We demonstrate that ICV achieves better performance compared to standard in-context learning and fine-tuning on diverse tasks including safety, style transfer, role-playing and formatting. Moreover, we show that we can flexibly teach LLM to simultaneously follow different types of instructions by simple vector arithmetics on the corresponding ICVs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/3V959DXN/liuIncontextVectorsMaking2024a.pdf;/home/daniel/Zotero/storage/C7T7LBDU/2311.html}
+}
+
+
+@online{marksGeometryTruthEmergent2023,
+  title = {The {{Geometry}} of {{Truth}}: {{Emergent Linear Structure}} in {{Large Language Model Representations}} of {{True}}/{{False Datasets}}},
+  shorttitle = {The {{Geometry}} of {{Truth}}},
+  author = {Marks, Samuel and Tegmark, Max},
+  date = {2023-12-08},
+  eprint = {2310.06824},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.06824},
+  url = {http://arxiv.org/abs/2310.06824},
+  urldate = {2024-05-12},
+  abstract = {Large Language Models (LLMs) have impressive capabilities, but are also prone to outputting falsehoods. Recent work has developed techniques for inferring whether a LLM is telling the truth by training probes on the LLM's internal activations. However, this line of work is controversial, with some authors pointing out failures of these probes to generalize in basic ways, among other conceptual issues. In this work, we curate high-quality datasets of true/false statements and use them to study in detail the structure of LLM representations of truth, drawing on three lines of evidence: 1. Visualizations of LLM true/false statement representations, which reveal clear linear structure. 2. Transfer experiments in which probes trained on one dataset generalize to different datasets. 3. Causal evidence obtained by surgically intervening in a LLM's forward pass, causing it to treat false statements as true and vice versa. Overall, we present evidence that language models linearly represent the truth or falsehood of factual statements. We also introduce a novel technique, mass-mean probing, which generalizes better and is more causally implicated in model outputs than other probing techniques.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence},
+  file = {/home/daniel/Zotero/storage/8SKCT2KA/marksGeometryTruthEmergent2023.pdf;/home/daniel/Zotero/storage/HQELLP93/2310.html}
+}
+
+@online{mikolovDistributedRepresentationsWords2013,
+  title = {Distributed {{Representations}} of {{Words}} and {{Phrases}} and Their {{Compositionality}}},
+  author = {Mikolov, Tomas and Sutskever, Ilya and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
+  date = {2013-10-16},
+  eprint = {1310.4546},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.1310.4546},
+  url = {http://arxiv.org/abs/1310.4546},
+  urldate = {2024-02-02},
+  abstract = {The recently introduced continuous Skip-gram model is an efficient method for learning high-quality distributed vector representations that capture a large number of precise syntactic and semantic word relationships. In this paper we present several extensions that improve both the quality of the vectors and the training speed. By subsampling of the frequent words we obtain significant speedup and also learn more regular word representations. We also describe a simple alternative to the hierarchical softmax called negative sampling. An inherent limitation of word representations is their indifference to word order and their inability to represent idiomatic phrases. For example, the meanings of "Canada" and "Air" cannot be easily combined to obtain "Air Canada". Motivated by this example, we present a simple method for finding phrases in text, and show that learning good vector representations for millions of phrases is possible.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/6J4A734G/mikolovDistributedRepresentationsWords2013.pdf;/home/daniel/Zotero/storage/4U9DMFXB/1310.html}
+}
+
+@inproceedings{penningtonGloveGlobalVectors2014,
+  title = {Glove: {{Global Vectors}} for {{Word Representation}}},
+  shorttitle = {Glove},
+  booktitle = {Proceedings of the 2014 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}} ({{EMNLP}})},
+  author = {Pennington, Jeffrey and Socher, Richard and Manning, Christopher},
+  date = {2014},
+  pages = {1532--1543},
+  publisher = {Association for Computational Linguistics},
+  location = {Doha, Qatar},
+  doi = {10.3115/v1/D14-1162},
+  url = {http://aclweb.org/anthology/D14-1162},
+  urldate = {2024-02-02},
+  abstract = {Recent methods for learning vector space representations of words have succeeded in capturing fine-grained semantic and syntactic regularities using vector arithmetic, but the origin of these regularities has remained opaque. We analyze and make explicit the model properties needed for such regularities to emerge in word vectors. The result is a new global logbilinear regression model that combines the advantages of the two major model families in the literature: global matrix factorization and local context window methods. Our model efficiently leverages statistical information by training only on the nonzero elements in a word-word cooccurrence matrix, rather than on the entire sparse matrix or on individual context windows in a large corpus. The model produces a vector space with meaningful substructure, as evidenced by its performance of 75\% on a recent word analogy task. It also outperforms related models on similarity tasks and named entity recognition.},
+  eventtitle = {Proceedings of the 2014 {{Conference}} on {{Empirical Methods}} in {{Natural Language Processing}} ({{EMNLP}})},
+  langid = {english},
+  file = {/home/daniel/Zotero/storage/GJZBYX6R/Pennington et al. - 2014 - Glove Global Vectors for Word Representation.pdf}
+}
+
+@online{rajendranLearningInterpretableConcepts2024,
+  title = {Learning {{Interpretable Concepts}}: {{Unifying Causal Representation Learning}} and {{Foundation Models}}},
+  shorttitle = {Learning {{Interpretable Concepts}}},
+  author = {Rajendran, Goutham and Buchholz, Simon and Aragam, Bryon and Schölkopf, Bernhard and Ravikumar, Pradeep},
+  date = {2024-02-14},
+  eprint = {2402.09236},
+  eprinttype = {arxiv},
+  eprintclass = {cs, math, stat},
+  doi = {10.48550/arXiv.2402.09236},
+  url = {http://arxiv.org/abs/2402.09236},
+  urldate = {2024-02-19},
+  abstract = {To build intelligent machine learning systems, there are two broad approaches. One approach is to build inherently interpretable models, as endeavored by the growing field of causal representation learning. The other approach is to build highly-performant foundation models and then invest efforts into understanding how they work. In this work, we relate these two approaches and study how to learn human-interpretable concepts from data. Weaving together ideas from both fields, we formally define a notion of concepts and show that they can be provably recovered from diverse data. Experiments on synthetic data and large language models show the utility of our unified approach.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Mathematics - Statistics Theory,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/XPVFPFNQ/rajendranLearningInterpretableConcepts2024.pdf;/home/daniel/Zotero/storage/JR5T83DV/2402.html}
+}
+
+@online{rajendranLearningInterpretableConcepts2024a,
+  title = {Learning {{Interpretable Concepts}}: {{Unifying Causal Representation Learning}} and {{Foundation Models}}},
+  shorttitle = {Learning {{Interpretable Concepts}}},
+  author = {Rajendran, Goutham and Buchholz, Simon and Aragam, Bryon and Schölkopf, Bernhard and Ravikumar, Pradeep},
+  date = {2024-02-14},
+  eprint = {2402.09236},
+  eprinttype = {arxiv},
+  eprintclass = {cs, math, stat},
+  doi = {10.48550/arXiv.2402.09236},
+  url = {http://arxiv.org/abs/2402.09236},
+  urldate = {2024-03-13},
+  abstract = {To build intelligent machine learning systems, there are two broad approaches. One approach is to build inherently interpretable models, as endeavored by the growing field of causal representation learning. The other approach is to build highly-performant foundation models and then invest efforts into understanding how they work. In this work, we relate these two approaches and study how to learn human-interpretable concepts from data. Weaving together ideas from both fields, we formally define a notion of concepts and show that they can be provably recovered from diverse data. Experiments on synthetic data and large language models show the utility of our unified approach.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Machine Learning,Mathematics - Statistics Theory,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/HZGP6SR8/rajendranLearningInterpretableConcepts2024a.pdf;/home/daniel/Zotero/storage/CQYQ9LWP/2402.html}
+}
+
+@online{raukerTransparentAISurvey2023,
+  title = {Toward {{Transparent AI}}: {{A Survey}} on {{Interpreting}} the {{Inner Structures}} of {{Deep Neural Networks}}},
+  shorttitle = {Toward {{Transparent AI}}},
+  author = {Räuker, Tilman and Ho, Anson and Casper, Stephen and Hadfield-Menell, Dylan},
+  date = {2023-08-18},
+  eprint = {2207.13243},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2207.13243},
+  url = {http://arxiv.org/abs/2207.13243},
+  urldate = {2024-01-31},
+  abstract = {The last decade of machine learning has seen drastic increases in scale and capabilities. Deep neural networks (DNNs) are increasingly being deployed in the real world. However, they are difficult to analyze, raising concerns about using them without a rigorous understanding of how they function. Effective tools for interpreting them will be important for building more trustworthy AI by helping to identify problems, fix bugs, and improve basic understanding. In particular, "inner" interpretability techniques, which focus on explaining the internal components of DNNs, are well-suited for developing a mechanistic understanding, guiding manual modifications, and reverse engineering solutions. Much recent work has focused on DNN interpretability, and rapid progress has thus far made a thorough systematization of methods difficult. In this survey, we review over 300 works with a focus on inner interpretability tools. We introduce a taxonomy that classifies methods by what part of the network they help to explain (weights, neurons, subnetworks, or latent representations) and whether they are implemented during (intrinsic) or after (post hoc) training. To our knowledge, we are also the first to survey a number of connections between interpretability research and work in adversarial robustness, continual learning, modularity, network compression, and studying the human visual system. We discuss key challenges and argue that the status quo in interpretability research is largely unproductive. Finally, we highlight the importance of future work that emphasizes diagnostics, debugging, adversaries, and benchmarking in order to make interpretability tools more useful to engineers in practical applications.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/9NLPZWK6/raukerTransparentAISurvey2023.pdf;/home/daniel/Zotero/storage/77EYF5HD/2207.html}
+}
+
+@online{rimskySteeringLlamaContrastive2023,
+  title = {Steering {{Llama}} 2 via {{Contrastive Activation Addition}}},
+  author = {Rimsky, Nina and Gabrieli, Nick and Schulz, Julian and Tong, Meg and Hubinger, Evan and Turner, Alexander Matt},
+  date = {2023-12-27},
+  eprint = {2312.06681},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.06681},
+  url = {http://arxiv.org/abs/2312.06681},
+  urldate = {2024-01-09},
+  abstract = {We introduce Contrastive Activation Addition (CAA), an innovative method for steering language models by modifying activations during their forward passes. CAA computes ``steering vectors'' by averaging the difference in residual stream activations between pairs of positive and negative examples of a particular behavior such as factual versus hallucinatory responses. During inference, these steering vectors are added at all token positions after the user's prompt with either a positive or negative coefficient, allowing precise control over the degree of the targeted behavior. We evaluate CAA's effectiveness on Llama 2 Chat using both multiple-choice behavioral question datasets and open-ended generation tasks. We demonstrate that CAA significantly alters model behavior, outperforms traditional methods like finetuning and few-shot prompting, and minimally reduces capabilities. Moreover, by employing various activation space interpretation methods, we gain deeper insights into CAA's mechanisms. CAA both accurately steers model outputs and also sheds light on how high-level concepts are represented in Large Language Models (LLMs).},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/E5XNNYT2/rimskySteeringLlamaContrastive2023.pdf;/home/daniel/Zotero/storage/96HDX2WN/2312.html}
+}
+
+@online{schutBridgingHumanAIKnowledge2023,
+  title = {Bridging the {{Human-AI Knowledge Gap}}: {{Concept Discovery}} and {{Transfer}} in {{AlphaZero}}},
+  shorttitle = {Bridging the {{Human-AI Knowledge Gap}}},
+  author = {Schut, Lisa and Tomasev, Nenad and McGrath, Tom and Hassabis, Demis and Paquet, Ulrich and Kim, Been},
+  date = {2023-10-25},
+  eprint = {2310.16410},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.2310.16410},
+  url = {http://arxiv.org/abs/2310.16410},
+  urldate = {2024-03-25},
+  abstract = {Artificial Intelligence (AI) systems have made remarkable progress, attaining super-human performance across various domains. This presents us with an opportunity to further human knowledge and improve human expert performance by leveraging the hidden knowledge encoded within these highly performant AI systems. Yet, this knowledge is often hard to extract, and may be hard to understand or learn from. Here, we show that this is possible by proposing a new method that allows us to extract new chess concepts in AlphaZero, an AI system that mastered the game of chess via self-play without human supervision. Our analysis indicates that AlphaZero may encode knowledge that extends beyond the existing human knowledge, but knowledge that is ultimately not beyond human grasp, and can be successfully learned from. In a human study, we show that these concepts are learnable by top human experts, as four top chess grandmasters show improvements in solving the presented concept prototype positions. This marks an important first milestone in advancing the frontier of human knowledge by leveraging AI; a development that could bear profound implications and help us shape how we interact with AI systems across many AI applications.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Human-Computer Interaction,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/AZPDAZH4/schutBridgingHumanAIKnowledge2023.pdf;/home/daniel/Zotero/storage/FEQTXKN4/2310.html}
+}
+
+@online{shanahanTalkingLargeLanguage2023,
+  title = {Talking {{About Large Language Models}}},
+  author = {Shanahan, Murray},
+  date = {2023-02-16},
+  eprint = {2212.03551},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2212.03551},
+  url = {http://arxiv.org/abs/2212.03551},
+  urldate = {2024-01-17},
+  abstract = {Thanks to rapid progress in artificial intelligence, we have entered an era when technology and philosophy intersect in interesting ways. Sitting squarely at the centre of this intersection are large language models (LLMs). The more adept LLMs become at mimicking human language, the more vulnerable we become to anthropomorphism, to seeing the systems in which they are embedded as more human-like than they really are. This trend is amplified by the natural tendency to use philosophically loaded terms, such as "knows", "believes", and "thinks", when describing these systems. To mitigate this trend, this paper advocates the practice of repeatedly stepping back to remind ourselves of how LLMs, and the systems of which they form a part, actually work. The hope is that increased scientific precision will encourage more philosophical nuance in the discourse around artificial intelligence, both within the field and in the public sphere.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/KGQGMSLZ/shanahanTalkingLargeLanguage2023.pdf;/home/daniel/Zotero/storage/2H4PTTTD/2212.html}
+}
+
+@online{siMeasuringInductiveBiases2023,
+  title = {Measuring {{Inductive Biases}} of {{In-Context Learning}} with {{Underspecified Demonstrations}}},
+  author = {Si, Chenglei and Friedman, Dan and Joshi, Nitish and Feng, Shi and Chen, Danqi and He, He},
+  date = {2023-05-22},
+  eprint = {2305.13299},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2305.13299},
+  url = {http://arxiv.org/abs/2305.13299},
+  urldate = {2023-10-18},
+  abstract = {In-context learning (ICL) is an important paradigm for adapting large language models (LLMs) to new tasks, but the generalization behavior of ICL remains poorly understood. We investigate the inductive biases of ICL from the perspective of feature bias: which feature ICL is more likely to use given a set of underspecified demonstrations in which two features are equally predictive of the labels. First, we characterize the feature biases of GPT-3 models by constructing underspecified demonstrations from a range of NLP datasets and feature combinations. We find that LLMs exhibit clear feature biases - for example, demonstrating a strong bias to predict labels according to sentiment rather than shallow lexical features, like punctuation. Second, we evaluate the effect of different interventions that are designed to impose an inductive bias in favor of a particular feature, such as adding a natural language instruction or using semantically relevant label words. We find that, while many interventions can influence the learner to prefer a particular feature, it can be difficult to overcome strong prior biases. Overall, our results provide a broader picture of the types of features that ICL may be more likely to exploit and how to impose inductive biases that are better aligned with the intended task.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/JANSCNKS/siMeasuringInductiveBiases2023.pdf;/home/daniel/Zotero/storage/K3QPEPLR/2305.html}
+}
+
+@online{singhMiMiCMinimallyModified2024,
+  title = {{{MiMiC}}: {{Minimally Modified Counterfactuals}} in the {{Representation Space}}},
+  shorttitle = {{{MiMiC}}},
+  author = {Singh, Shashwat and Ravfogel, Shauli and Herzig, Jonathan and Aharoni, Roee and Cotterell, Ryan and Kumaraguru, Ponnurangam},
+  date = {2024-02-16},
+  eprint = {2402.09631},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2402.09631},
+  url = {http://arxiv.org/abs/2402.09631},
+  urldate = {2024-03-13},
+  abstract = {Language models often exhibit undesirable behaviors, such as gender bias or toxic language. Interventions in the representation space were shown effective in mitigating such issues by altering the LM behavior. We first show that two prominent intervention techniques, Linear Erasure and Steering Vectors, do not enable a high degree of control and are limited in expressivity. We then propose a novel intervention methodology for generating expressive counterfactuals in the representation space, aiming to make representations of a source class (e.g., "toxic") resemble those of a target class (e.g., "non-toxic"). This approach, generalizing previous linear intervention techniques, utilizes a closed-form solution for the Earth Mover's problem under Gaussian assumptions and provides theoretical guarantees on the representation space's geometric organization. We further build on this technique and derive a nonlinear intervention that enables controlled generation. We demonstrate the effectiveness of the proposed approaches in mitigating bias in multiclass classification and in reducing the generation of toxic language, outperforming strong baselines.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Computers and Society,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/7F4T3GF7/singhMiMiCMinimallyModified2024.pdf;/home/daniel/Zotero/storage/DBIQF28L/2402.html}
+}
+
+@online{steckCosineSimilarityEmbeddingsReally2024,
+  title = {Is {{Cosine-Similarity}} of {{Embeddings Really About Similarity}}?},
+  author = {Steck, Harald and Ekanadham, Chaitanya and Kallus, Nathan},
+  date = {2024-03-08},
+  eprint = {2403.05440},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.1145/3589335.3651526},
+  url = {http://arxiv.org/abs/2403.05440},
+  urldate = {2024-03-12},
+  abstract = {Cosine-similarity is the cosine of the angle between two vectors, or equivalently the dot product between their normalizations. A popular application is to quantify semantic similarity between high-dimensional objects by applying cosine-similarity to a learned low-dimensional feature embedding. This can work better but sometimes also worse than the unnormalized dot-product between embedded vectors in practice. To gain insight into this empirical observation, we study embeddings derived from regularized linear models, where closed-form solutions facilitate analytical insights. We derive analytically how cosine-similarity can yield arbitrary and therefore meaningless `similarities.' For some linear models the similarities are not even unique, while for others they are implicitly controlled by the regularization. We discuss implications beyond linear models: a combination of different regularizations are employed when learning deep models; these have implicit and unintended effects when taking cosine-similarities of the resulting embeddings, rendering results opaque and possibly arbitrary. Based on these insights, we caution against blindly using cosine-similarity and outline alternatives.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Information Retrieval,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/QUVM3MSN/steckCosineSimilarityEmbeddingsReally2024.pdf;/home/daniel/Zotero/storage/NBFDLJYY/2403.html}
+}
+
+@online{subramaniExtractingLatentSteering2022,
+  title = {Extracting {{Latent Steering Vectors}} from {{Pretrained Language Models}}},
+  author = {Subramani, Nishant and Suresh, Nivedita and Peters, Matthew E.},
+  date = {2022-05-10},
+  eprint = {2205.05124},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2205.05124},
+  url = {http://arxiv.org/abs/2205.05124},
+  urldate = {2024-03-13},
+  abstract = {Prior work on controllable text generation has focused on learning how to control language models through trainable decoding, smart-prompt design, or fine-tuning based on a desired objective. We hypothesize that the information needed to steer the model to generate a target sentence is already encoded within the model. Accordingly, we explore a different approach altogether: extracting latent vectors directly from pretrained language model decoders without fine-tuning. Experiments show that there exist steering vectors, which, when added to the hidden states of the language model, generate a target sentence nearly perfectly ({$>$} 99 BLEU) for English sentences from a variety of domains. We show that vector arithmetic can be used for unsupervised sentiment transfer on the Yelp sentiment benchmark, with performance comparable to models tailored to this task. We find that distances between steering vectors reflect sentence similarity when evaluated on a textual similarity benchmark (STS-B), outperforming pooled hidden states of models. Finally, we present an analysis of the intrinsic properties of the steering vectors. Taken together, our results suggest that frozen LMs can be effectively controlled through their latent steering space.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/87GLNRVT/subramaniExtractingLatentSteering2022.pdf;/home/daniel/Zotero/storage/3DMJ6PK5/2205.html}
+}
+
+@online{tennenholtzDemystifyingEmbeddingSpaces2023,
+  title = {Demystifying {{Embedding Spaces}} Using {{Large Language Models}}},
+  author = {Tennenholtz, Guy and Chow, Yinlam and Hsu, Chih-Wei and Jeong, Jihwan and Shani, Lior and Tulepbergenov, Azamat and Ramachandran, Deepak and Mladenov, Martin and Boutilier, Craig},
+  date = {2023-10-06},
+  eprint = {2310.04475},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.04475},
+  url = {http://arxiv.org/abs/2310.04475},
+  urldate = {2024-01-09},
+  abstract = {Embeddings have become a pivotal means to represent complex, multi-faceted information about entities, concepts, and relationships in a condensed and useful format. Nevertheless, they often preclude direct interpretation. While downstream tasks make use of these compressed representations, meaningful interpretation usually requires visualization using dimensionality reduction or specialized machine learning interpretability methods. This paper addresses the challenge of making such embeddings more interpretable and broadly useful, by employing Large Language Models (LLMs) to directly interact with embeddings -- transforming abstract vectors into understandable narratives. By injecting embeddings into LLMs, we enable querying and exploration of complex embedding data. We demonstrate our approach on a variety of diverse tasks, including: enhancing concept activation vectors (CAVs), communicating novel embedded entities, and decoding user preferences in recommender systems. Our work couples the immense information potential of embeddings with the interpretative power of LLMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/UJBETVQK/tennenholtzDemystifyingEmbeddingSpaces2023.pdf;/home/daniel/Zotero/storage/M3TFFIKL/2310.html}
+}
+
+@misc{wolf2024tradeoffs,
+      title={Tradeoffs Between Alignment and Helpfulness in Language Models}, 
+      author={Yotam Wolf and Noam Wies and Dorin Shteyman and Binyamin Rothberg and Yoav Levine and Amnon Shashua},
+      year={2024},
+      eprint={2401.16332},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@online{toddFunctionVectorsLarge2023,
+  title = {Function {{Vectors}} in {{Large Language Models}}},
+  author = {Todd, Eric and Li, Millicent L. and Sharma, Arnab Sen and Mueller, Aaron and Wallace, Byron C. and Bau, David},
+  date = {2023-10-23},
+  eprint = {2310.15213},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.15213},
+  url = {http://arxiv.org/abs/2310.15213},
+  urldate = {2023-10-26},
+  abstract = {We report the presence of a simple neural mechanism that represents an input-output function as a vector within autoregressive transformer language models (LMs). Using causal mediation analysis on a diverse range of in-context-learning (ICL) tasks, we find that a small number attention heads transport a compact representation of the demonstrated task, which we call a function vector (FV). FVs are robust to changes in context, i.e., they trigger execution of the task on inputs such as zero-shot and natural text settings that do not resemble the ICL contexts from which they are collected. We test FVs across a range of tasks, models, and layers and find strong causal effects across settings in middle layers. We investigate the internal structure of FVs and find while that they often contain information that encodes the output space of the function, this information alone is not sufficient to reconstruct an FV. Finally, we test semantic vector composition in FVs, and find that to some extent they can be summed to create vectors that trigger new complex tasks. Taken together, our findings suggest that LLMs contain internal abstractions of general-purpose functions that can be invoked in a variety of contexts.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/Y3ERTCTZ/toddFunctionVectorsLarge2023.pdf;/home/daniel/Zotero/storage/49KPFVB7/2310.html}
+}
+
+@misc{vanderweij2024extending,
+      title={Extending Activation Steering to Broad Skills and Multiple Behaviours}, 
+      author={Teun van der Weij and Massimo Poesio and Nandi Schoots},
+      year={2024},
+      eprint={2403.05767},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@article{mack2024latentsteering,
+	title = {Mechanistically Eliciting Latent Behaviors in Language Models},
+	url = {https://www.lesswrong.com/posts/ioPnHKFyy4Cw2Gr2x/mechanistically-eliciting-latent-behaviors-in-language-1},
+	language = {en},
+	urldate = {2024-04-30},
+	author = {Mack, Andrew and Turner, Alex},
+	year = {2024},
+}
+
+@misc{rimsky2023redteaming,
+title={Red-teaming language models via activation engineering},
+author={Rimsky, Nina},
+year={2023},
+url={https://www.alignmentforum.org/posts/iHmsJdxgMEWmAfNne/red-teaming-language-models-via-activation-engineering}
+}
+
+@misc{zhou2024batch,
+      title={Batch Calibration: Rethinking Calibration for In-Context Learning and Prompt Engineering}, 
+      author={Han Zhou and Xingchen Wan and Lev Proleev and Diana Mincu and Jilin Chen and Katherine Heller and Subhrajit Roy},
+      year={2024},
+      eprint={2309.17249},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{wang2023large,
+      title={Large Language Models are not Fair Evaluators}, 
+      author={Peiyi Wang and Lei Li and Liang Chen and Zefan Cai and Dawei Zhu and Binghuai Lin and Yunbo Cao and Qi Liu and Tianyu Liu and Zhifang Sui},
+      year={2023},
+      eprint={2305.17926},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{zheng2023judging,
+      title={Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena}, 
+      author={Lianmin Zheng and Wei-Lin Chiang and Ying Sheng and Siyuan Zhuang and Zhanghao Wu and Yonghao Zhuang and Zi Lin and Zhuohan Li and Dacheng Li and Eric P. Xing and Hao Zhang and Joseph E. Gonzalez and Ion Stoica},
+      year={2023},
+      eprint={2306.05685},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{kirk2024understanding,
+      title={Understanding the Effects of RLHF on LLM Generalisation and Diversity}, 
+      author={Robert Kirk and Ishita Mediratta and Christoforos Nalmpantis and Jelena Luketina and Eric Hambro and Edward Grefenstette and Roberta Raileanu},
+      year={2024},
+      eprint={2310.06452},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@Article{Hupkes2023,
+    author={Hupkes, Dieuwke and Giulianelli, Mario and Dankers, Verna and Artetxe, Mikel and Elazar, Yanai 
+    and Pimentel, Tiago and Christodoulopoulos, Christos and Lasri, Karim and Saphra, Naomi and Sinclair, Arabella 
+    and Ulmer, Dennis and Schottmann, Florian and Batsuren, Khuyagbaatar and Sun, Kaiser and Sinha, Koustuv 
+    and Khalatbari, Leila and Ryskina, Maria and Frieske, Rita and Cotterell, Ryan and Jin, Zhijing},
+    title={A taxonomy and review of generalization research in NLP},
+    journal={Nature Machine Intelligence},
+    year={2023},
+    month={Oct},
+    day={01},
+    volume={5},
+    number={10},
+    pages={1161-1174},
+    abstract={The ability to generalize well is one of the primary desiderata for models of natural language processing (NLP), but what `good generalization' entails and how it should be evaluated is not well understood. In this Analysis we present a taxonomy for characterizing and understanding generalization research in NLP. The proposed taxonomy is based on an extensive literature review and contains five axes along which generalization studies can differ: their main motivation, the type of generalization they aim to solve, the type of data shift they consider, the source by which this data shift originated, and the locus of the shift within the NLP modelling pipeline. We use our taxonomy to classify over 700 experiments, and we use the results to present an in-depth analysis that maps out the current state of generalization research in NLP and make recommendations for which areas deserve attention in the future.},
+    issn={2522-5839},
+    doi={10.1038/s42256-023-00729-y},
+    url={https://doi.org/10.1038/s42256-023-00729-y}
+    }
+
+@misc{tigges2023linear,
+      title={Linear Representations of Sentiment in Large Language Models}, 
+      author={Curt Tigges and Oskar John Hollinsworth and Atticus Geiger and Neel Nanda},
+      year={2023},
+      eprint={2310.15154},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@online{variengienLookYouLeap2023,
+  title = {Look {{Before You Leap}}: {{A Universal Emergent Decomposition}} of {{Retrieval Tasks}} in {{Language Models}}},
+  shorttitle = {Look {{Before You Leap}}},
+  author = {Variengien, Alexandre and Winsor, Eric},
+  date = {2023-12-13},
+  eprint = {2312.10091},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2312.10091},
+  url = {http://arxiv.org/abs/2312.10091},
+  urldate = {2024-01-26},
+  abstract = {When solving challenging problems, language models (LMs) are able to identify relevant information from long and complicated contexts. To study how LMs solve retrieval tasks in diverse situations, we introduce ORION, a collection of structured retrieval tasks spanning six domains, from text understanding to coding. Each task in ORION can be represented abstractly by a request (e.g. a question) that retrieves an attribute (e.g. the character name) from a context (e.g. a story). We apply causal analysis on 18 open-source language models with sizes ranging from 125 million to 70 billion parameters. We find that LMs internally decompose retrieval tasks in a modular way: middle layers at the last token position process the request, while late layers retrieve the correct entity from the context. After causally enforcing this decomposition, models are still able to solve the original task, preserving 70\% of the original correct token probability in 98 of the 106 studied model-task pairs. We connect our macroscopic decomposition with a microscopic description by performing a fine-grained case study of a question-answering task on Pythia-2.8b. Building on our high-level understanding, we demonstrate a proof of concept application for scalable internal oversight of LMs to mitigate prompt-injection while requiring human supervision on only a single input. Our solution improves accuracy drastically (from 15.5\% to 97.5\% on Pythia-12b). This work presents evidence of a universal emergent modular processing of tasks across varied domains and models and is a pioneering effort in applying interpretability for scalable internal oversight of LMs.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Information Retrieval,Computer Science - Machine Learning,notion},
+  file = {/home/daniel/Zotero/storage/D7ZKW9MV/variengienLookYouLeap2023.pdf;/home/daniel/Zotero/storage/LFQD2XEK/2312.html}
+}
+
+@online{vonoswaldTransformersLearnIncontext2023,
+  title = {Transformers Learn In-Context by Gradient Descent},
+  author = {family=Oswald, given=Johannes, prefix=von, useprefix=true and Niklasson, Eyvind and Randazzo, Ettore and Sacramento, João and Mordvintsev, Alexander and Zhmoginov, Andrey and Vladymyrov, Max},
+  date = {2023-05-31},
+  eprint = {2212.07677},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2212.07677},
+  url = {http://arxiv.org/abs/2212.07677},
+  urldate = {2023-10-30},
+  abstract = {At present, the mechanisms of in-context learning in Transformers are not well understood and remain mostly an intuition. In this paper, we suggest that training Transformers on auto-regressive objectives is closely related to gradient-based meta-learning formulations. We start by providing a simple weight construction that shows the equivalence of data transformations induced by 1) a single linear self-attention layer and by 2) gradient-descent (GD) on a regression loss. Motivated by that construction, we show empirically that when training self-attention-only Transformers on simple regression tasks either the models learned by GD and Transformers show great similarity or, remarkably, the weights found by optimization match the construction. Thus we show how trained Transformers become mesa-optimizers i.e. learn models by gradient descent in their forward pass. This allows us, at least in the domain of regression problems, to mechanistically understand the inner workings of in-context learning in optimized Transformers. Building on this insight, we furthermore identify how Transformers surpass the performance of plain gradient descent by learning an iterative curvature correction and learn linear models on deep data representations to solve non-linear regression tasks. Finally, we discuss intriguing parallels to a mechanism identified to be crucial for in-context learning termed induction-head (Olsson et al., 2022) and show how it could be understood as a specific case of in-context learning by gradient descent learning within Transformers. Code to reproduce the experiments can be found at https://github.com/google-research/self-organising-systems/tree/master/transformers\_learn\_icl\_by\_gd .},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/3YF276BF/vonoswaldTransformersLearnIncontext2023.pdf;/home/daniel/Zotero/storage/P5KXQ2FY/2212.html}
+}
+
+@online{wangConceptAlgebraScoreBased2023,
+  title = {Concept {{Algebra}} for ({{Score-Based}}) {{Text-Controlled Generative Models}}},
+  author = {Wang, Zihao and Gui, Lin and Negrea, Jeffrey and Veitch, Victor},
+  date = {2023-10-31},
+  eprint = {2302.03693},
+  eprinttype = {arxiv},
+  eprintclass = {cs, stat},
+  doi = {10.48550/arXiv.2302.03693},
+  url = {http://arxiv.org/abs/2302.03693},
+  urldate = {2024-02-02},
+  abstract = {This paper concerns the structure of learned representations in text-guided generative models, focusing on score-based models. A key property of such models is that they can compose disparate concepts in a `disentangled' manner. This suggests these models have internal representations that encode concepts in a `disentangled' manner. Here, we focus on the idea that concepts are encoded as subspaces of some representation space. We formalize what this means, show there's a natural choice for the representation, and develop a simple method for identifying the part of the representation corresponding to a given concept. In particular, this allows us to manipulate the concepts expressed by the model through algebraic manipulation of the representation. We demonstrate the idea with examples using Stable Diffusion.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  file = {/home/daniel/Zotero/storage/77RM3YX8/wangConceptAlgebraScoreBased2023.pdf;/home/daniel/Zotero/storage/EBBPXDDP/2302.html}
+}
+
+@online{weiChainofThoughtPromptingElicits2023,
+  title = {Chain-of-{{Thought Prompting Elicits Reasoning}} in {{Large Language Models}}},
+  author = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and Ichter, Brian and Xia, Fei and Chi, Ed and Le, Quoc and Zhou, Denny},
+  date = {2023-01-10},
+  eprint = {2201.11903},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2201.11903},
+  url = {http://arxiv.org/abs/2201.11903},
+  urldate = {2024-05-21},
+  abstract = {We explore how generating a chain of thought -- a series of intermediate reasoning steps -- significantly improves the ability of large language models to perform complex reasoning. In particular, we show how such reasoning abilities emerge naturally in sufficiently large language models via a simple method called chain of thought prompting, where a few chain of thought demonstrations are provided as exemplars in prompting. Experiments on three large language models show that chain of thought prompting improves performance on a range of arithmetic, commonsense, and symbolic reasoning tasks. The empirical gains can be striking. For instance, prompting a 540B-parameter language model with just eight chain of thought exemplars achieves state of the art accuracy on the GSM8K benchmark of math word problems, surpassing even finetuned GPT-3 with a verifier.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  file = {/home/daniel/Zotero/storage/5NC449AF/weiChainofThoughtPromptingElicits2023.pdf;/home/daniel/Zotero/storage/4DZSUAHY/2201.html}
+}
+
+@online{wuReFTRepresentationFinetuning2024,
+  title = {{{ReFT}}: {{Representation Finetuning}} for {{Language Models}}},
+  shorttitle = {{{ReFT}}},
+  author = {Wu, Zhengxuan and Arora, Aryaman and Wang, Zheng and Geiger, Atticus and Jurafsky, Dan and Manning, Christopher D. and Potts, Christopher},
+  date = {2024-04-04},
+  url = {https://arxiv.org/abs/2404.03592v2},
+  urldate = {2024-05-21},
+  abstract = {Parameter-efficient fine-tuning (PEFT) methods seek to adapt large models via updates to a small number of weights. However, much prior interpretability work has shown that representations encode rich semantic information, suggesting that editing representations might be a more powerful alternative. Here, we pursue this hypothesis by developing a family of \$\textbackslash textbf\{Representation Finetuning (ReFT)\}\$ methods. ReFT methods operate on a frozen base model and learn task-specific interventions on hidden representations. We define a strong instance of the ReFT family, Low-rank Linear Subspace ReFT (LoReFT). LoReFT is a drop-in replacement for existing PEFTs and learns interventions that are 10x-50x more parameter-efficient than prior state-of-the-art PEFTs. We showcase LoReFT on eight commonsense reasoning tasks, four arithmetic reasoning tasks, Alpaca-Eval v1.0, and GLUE. In all these evaluations, LoReFT delivers the best balance of efficiency and performance, and almost always outperforms state-of-the-art PEFTs. We release a generic ReFT training library publicly at https://github.com/stanfordnlp/pyreft.},
+  langid = {english},
+  organization = {arXiv.org},
+  file = {/home/daniel/Zotero/storage/699PKPC5/wuReFTRepresentationFinetuning2024.pdf}
+}
+
+@online{zouRepresentationEngineeringTopDown2023,
+  title = {Representation {{Engineering}}: {{A Top-Down Approach}} to {{AI Transparency}}},
+  shorttitle = {Representation {{Engineering}}},
+  author = {Zou, Andy and Phan, Long and Chen, Sarah and Campbell, James and Guo, Phillip and Ren, Richard and Pan, Alexander and Yin, Xuwang and Mazeika, Mantas and Dombrowski, Ann-Kathrin and Goel, Shashwat and Li, Nathaniel and Byun, Michael J. and Wang, Zifan and Mallen, Alex and Basart, Steven and Koyejo, Sanmi and Song, Dawn and Fredrikson, Matt and Kolter, J. Zico and Hendrycks, Dan},
+  date = {2023-10-10},
+  eprint = {2310.01405},
+  eprinttype = {arxiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2310.01405},
+  url = {http://arxiv.org/abs/2310.01405},
+  urldate = {2023-10-12},
+  abstract = {In this paper, we identify and characterize the emerging area of representation engineering (RepE), an approach to enhancing the transparency of AI systems that draws on insights from cognitive neuroscience. RepE places population-level representations, rather than neurons or circuits, at the center of analysis, equipping us with novel methods for monitoring and manipulating high-level cognitive phenomena in deep neural networks (DNNs). We provide baselines and an initial analysis of RepE techniques, showing that they offer simple yet effective solutions for improving our understanding and control of large language models. We showcase how these methods can provide traction on a wide range of safety-relevant problems, including honesty, harmlessness, power-seeking, and more, demonstrating the promise of top-down transparency research. We hope that this work catalyzes further exploration of RepE and fosters advancements in the transparency and safety of AI systems.},
+  pubstate = {preprint},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Computer Vision and Pattern Recognition,Computer Science - Computers and Society,Computer Science - Machine Learning},
+  file = {/home/daniel/Zotero/storage/9M6VQS8Y/zouRepresentationEngineeringTopDown2023.pdf;/home/daniel/Zotero/storage/CP2BXWWT/2310.html}
+}

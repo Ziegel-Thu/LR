@@ -1,0 +1,207 @@
+\section{Proofs for \downtaskNAMEs{}}\label{sec:application-proofs}
+
+\subsection{Proof of \cref{fact:local-stability-grad}}
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+Since $\grad \model(\covval)$ exists,
+\*[
+    \grad_j \model(\covval)
+    = \lim_{\alpha \to 0} \frac{\model(\covval+\alpha e_j) - \model(\covval)}{\alpha}.
+\]
+Thus, for any $\outscale'>0$ there exists $\inscale>0$ such that for all $\alpha \leq \inscale$,
+\*[
+    \frac{\model(\covval+\alpha e_j) - \model(\covval)}{\alpha} 
+    &\in
+    \Big[
+    \alpha \grad_j \model(\covval) - \alpha \outscale/4,
+    \alpha \grad_j \model(\covval) + \alpha \outscale/4
+    \Big] \\
+    &\subseteq
+    \Big[
+    \alpha \grad_j \model(\covval) - \inscale \outscale/4,
+    \alpha \grad_j \model(\covval) + \inscale \outscale/4
+    \Big] \\
+    &:= S(\alpha).
+\]
+Let $\oraclehyptest = 1-\ind{\sup_{\alpha\leq\inscale} \sup_{b \in S(\alpha)} \abs{b} \leq \inscale \outscale}$. When $\model \in \modelspace\altind$, then there exists $\alpha \leq \inscale$ such that for some $b \in S(\alpha)$, $\abs{b} = \abs{\model(\covval+\alpha e_j) - \model(\covval)} > \inscale\outscale$, and thus $\oraclehyptest = 1$.
+Similarly, when $\model\in\modelspace\nullind$, then for every $\alpha \leq \inscale$ and every $b \in S(\alpha)$,
+\*[
+    \abs{b}
+    \leq
+    \abs{\model(\covval+\alpha e_j) - \model(\covval)} + \inscale\outscale/2
+    \leq \inscale\outscale.
+\]
+This implies that $\oraclehyptest = 0$.
+
+\manualendproof
+
+\subsection{Proof of \cref{fact:local-instability}}
+
+Define $\modeldum\nullind \equiv 0$ and $\modeldum\altind(\covvaldum\feat{j}) = \covvaldum\feat{j}-\covval\feat{j}$,
+and let $\modelspacedum\nullind$ and $\modelspacedum\altind$ denote $\modelspace\nullind$ and $\modelspace\altind$ from \cref{fact:oracle-hypothesis} for the $\inscale$ specified in the statement of \cref{fact:local-instability}.
+Clearly, $\modelspacedum\nullind \subseteq \modelspace\nullind$ and $\modelspacedum\altind\subseteq\modelspace\altind$ as respectively defined in \cref{fact:local-instability}.
+For $\ell\neq j$, let $\modeldum\nullind\feat{\ell} = \modeldum\altind\feat{\ell} \equiv 0$.
+By the assumption on $\modelspace$ in \cref{fact:local-instability}, \cref{assn:piecewise} is satisfied.
+Thus, by \cref{fact:oracle-hypothesis},
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest; \modelspace\nullind) 
+    &= \inf_{\model\in\modelspace\nullind} [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \\
+    &\leq \inf_{\model\in\modelspacedum\nullind} [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \\
+    &= \specsym_{\expdef,\covdist,\covval}(\oraclehyptest; \modelspacedum\nullind) \\
+    &\leq 1 - \senssym_{\expdef,\covdist,\covval}(\oraclehyptest;\modelspacedum\altind) \\
+    &= 1-\inf_{\model\in\modelspacedum\altind} \oraclehyptest(\expdef(\model,\covdist,\covval)) \\
+    &\leq 1-\inf_{\model\in\modelspace\altind} \oraclehyptest(\expdef(\model,\covdist,\covval)) \\
+    &= 1 - \senssym_{\expdef,\covdist,\covval}(\oraclehyptest;\modelspace\altind).
+\]
+
+\manualendproof
+
+\subsection{Proof of \cref{fact:random-quadratic}}
+By \completenames{} and \additivenames{}, taking $\covval=1$ gives $\expdef(\model,\covdist,\covval) = a (\covval^n - \EE_{\covdist} \covobs^n) - (\covval-\EE_{\covdist} \covobs) = a(1-\EE_{\covdist} \covobs^n) - 1$ while $\model'(\covval) = n a \covval^{n-1} - 1$. Thus, $\expdef(\model,\covdist,\covval) > 0$ if and only if $a > 1/(1-\EE_{\covdist} \covobs^n)$ while $\model'(\covval) > 0$ if and only if $a>1/n$. This implies that
+\*[
+    \PP_{\model\sim\pi}\Big[\sgn(\expdef(\model,\covdist,\covval)) \neq \sgn(\model'(\covval)) \Big]
+    &= \PP_{a \sim \normaldist(0,1)}[a \in (1/n,1/(1-\EE_{\covdist} \covobs^n))]\\
+    &\geq \PP_{a \sim \normaldist(0,1)}[a \in (1/2,2)]\\
+    &\approx 0.2858,
+\]
+where the approximation is of the Gaussian CDF.
+The upper bound is because $\PP_{a \sim \normaldist(0,1)}[a > 1/n] \leq 0.5$.
+\manualendproof
+
+\subsection{Proofs for Recourse and Spurious Features}
+
+We first state the multivariate versions of these definitions for the most generality.
+
+\begin{definition}[Recourse]\label{defn:recourse-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, $k\in[\datadim]$,
+$\inscale \in\PosReals^{\abs{\featuresub}}$, and
+$\covdistdum \in \probspace(\covspace)$.
+%
+%
+%
+%
+For any $\randsign\in\{\pm1\}^{\abs{\featuresub}}$,
+let $\recoursetask\feat{\featuresub k}(\covval,\covdistdum,\inscale,\randsign)$ be defined by
+\*[
+    \modelspace\nullind
+    &= \Big\{
+    \model\in\modelspace\setdelim \EE_{\covobs\sim\covdistdum}\Big[\model(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}+\randsign\feat{j}\inscale\feat{j}]\Big] \\
+    &\qquad\qquad\qquad\qquad> \EE_{\covobs\sim\covdistdum}\Big[\model(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}-\randsign\feat{j}\inscale\feat{j}]\Big]\Big\} \\
+    \modelspace\altind
+    &= \modelspace \setminus \modelspace\nullind.
+\]
+\end{definition}
+
+\begin{definition}[Spurious \covNames{}]\label{defn:spurious-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, $k\in[\datadim]$,
+$\inscale \in\PosReals^{\abs{\featuresub}}$, and $\outscale>0$.
+%
+%
+%
+%
+For any $\randsign\in\{\pm1\}^{\abs{\featuresub}}$,
+let $\spurioustask\feat{\featuresub k}(\covval,\inscale,\randsign,\outscale)$ be defined by
+\*[
+    \modelspace\nullind &= \Big\{\model\in\modelspace \setdelim \sup_{\covvaldum\in\prod_{j\in\featuresub}(\covval\feat{j},\covval\feat{j}+\randsign\feat{j}\inscale\feat{j}] \times \covval\feat{[\covdim]\setminus\featuresub}} \model(\covvaldum)\feat{k} \leq 0\Big\} \\
+    \modelspace\altind &= \Big\{\model\in\modelspace \setdelim 
+    \sup_{\covvaldum\in\prod_{j\in\featuresub}(\covval\feat{j},\covval\feat{j}+\randsign\feat{j}\inscale\feat{j}] \times \covval\feat{[\covdim]\setminus\featuresub}} \model(\covvaldum)\feat{k} \geq \outscale \Big\}.
+\]
+\end{definition}
+
+\begin{corollary}[Generalization of \cref{fact:oracle-hypothesis} for Recourse]\label{fact:oracle-hypothesis-recourse-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$,
+$\inscale \in\PosReals^{\abs{\featuresub}}$,
+and $\covdist\in\probspace(\covspace)$ such that \cref{assn:inscale-covdist-multivariate} is satisfied for each $j\in\featuresub$.
+Fix
+$k\in[\datadim]$,
+$\covdistdum \in \probspace(\covspace)$,
+and $\randsign\in\{\pm1\}^{\abs{\featuresub}}$,
+and
+let $\modelspace\nullind$ and $\modelspace\altind$ be defined by $\recoursetask\feat{\featuresub k}(\covval,\covdistdum,\inscale,\randsign)$.
+Suppose that there exists $\model\nullind\in\modelspace\nullind$ and $\model\altind\in\modelspace\altind$ that each are of the form $\sum_{j\in\featuresub} \modeldum\feat{j}$ and each satisfy \cref{assn:piecewise-multivariate}.
+Then
+for any \completename{} and \additivename{} \fielddefname{} $\expdef$ and \oraclehyptestname{} $\oraclehyptest$,
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest) \leq 1 -
+    \senssym_{\expdef,\covdist,\covval}(\oraclehyptest).
+\]
+\end{corollary}
+\begin{proof}[Proof of \cref{fact:oracle-hypothesis-recourse-multivariate}]
+This proof will benefit from slightly more detailed notation for $\specsym$ and $\senssym$. Specifically, we denote the explicit dependence on $\modelspace\nullind$ and $\modelspace\altind$. Let $\modelspace\leftind$ and $\modelspace\rightind$ denote $\modelspace\nullind$ and $\modelspace\altind$ respectively from \cref{defn:recourse-multivariate}. Pick the $\modeldum\nullind:\Reals\to\Reals$ such that
+%
+%
+%
+%
+\*[
+    &\hspace{-1em}\EE_{\covobs\sim\covdistdum}\Big[\modeldum\nullind(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}+\randsign\feat{j}\inscale\feat{j}]\Big] \\
+    &\qquad\qquad\qquad\qquad> \EE_{\covobs\sim\covdistdum}\Big[\modeldum\nullind(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}-\randsign\feat{j}\inscale\feat{j}]\Big]
+\]
+as prescribed in the statement of \cref{fact:oracle-hypothesis-recourse-multivariate}.
+Let $\modelspace\nullind$ be defined as in \cref{fact:oracle-hypothesis} for $\modeldum\nullind$. Clearly, $\modelspace\nullind\subseteq \modelspace\leftind$. Similarly, pick the $\modeldum\altind:\Reals\to\Reals$ such that
+\*[
+    &\hspace{-1em}\EE_{\covobs\sim\covdistdum}\Big[\modeldum\altind(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}+\randsign\feat{j}\inscale\feat{j}]\Big] \\
+    &\qquad\qquad\qquad\qquad\leq \EE_{\covobs\sim\covdistdum}\Big[\modeldum\altind(\covval\feat{[\covdim]\setminus\featuresub}, \covobs\feat{\featuresub})\feat{k} \condsym \covobs\feat{\featuresub} \in\prod_{j\in\featuresub} [\covval\feat{j}, \covval\feat{j}-\randsign\feat{j}\inscale\feat{j}]\Big]
+\]
+as prescribed in the statement.
+Define $\modelspace\altind$ accordingly, and observe that $\modelspace\altind\subseteq\modelspace\rightind$. 
+By assumption, \cref{assn:piecewise-multivariate} is satisfied, and thus we can apply \cref{fact:oracle-hypothesis-multivariate} to obtain
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest; \modelspace\leftind, \modelspace\rightind) 
+    &= \inf_{\model\in\modelspace\leftind} [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \\
+    &\leq \inf_{\model\in\modelspace\nullind} [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \\
+    &= \specsym_{\expdef,\covdist,\covval}(\oraclehyptest; \modelspace\nullind, \modelspace\altind) \\
+    &\leq 1 - \senssym_{\expdef,\covdist,\covval}(\oraclehyptest; \modelspace\nullind, \modelspace\altind) \\
+    &= 1-\inf_{\model\in\modelspace\altind} \oraclehyptest(\expdef(\model,\covdist,\covval)) \\
+    &\leq 1-\inf_{\model\in\modelspace\rightind} \oraclehyptest(\expdef(\model,\covdist,\covval)) \\
+    &= 1 - \senssym_{\expdef,\covdist,\covval}(\oraclehyptest;\modelspace\leftind, \modelspace\rightind).
+\]
+\end{proof}
+
+\begin{corollary}[Generalization of \cref{fact:oracle-hypothesis} for Spurious \covNames{}]\label{fact:oracle-hypothesis-spurious-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$,
+$\inscale \in\PosReals^{\abs{\featuresub}}$,
+and $\covdist\in\probspace(\covspace)$ such that \cref{assn:inscale-covdist-multivariate} is satisfied for each $j\in\featuresub$.
+Fix
+$k\in[\datadim]$,
+$\outscale>0$,
+and $\randsign\in\{\pm1\}^{\abs{\featuresub}}$,
+and
+let $\modelspace\nullind$ and $\modelspace\altind$ be defined by $\spurioustask\feat{\featuresub k}(\covval,\inscale,\randsign,\outscale)$.
+Suppose that there exists $\model\nullind\in\modelspace\nullind$ and $\model\altind\in\modelspace\altind$ that each are of the form $\sum_{j\in\featuresub} \modeldum\feat{j}$ and each satisfy \cref{assn:piecewise-multivariate}.
+Then,
+for any \completename{} and \additivename{} \fielddefname{} $\expdef$ and \oraclehyptestname{} $\oraclehyptest$, 
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest) \leq 1 -
+    \senssym_{\expdef,\covdist,\covval}(\oraclehyptest).
+\]
+\end{corollary} 
+\begin{proof}[Proof of \cref{fact:oracle-hypothesis-spurious-multivariate}]
+The proof is identical to that of \cref{fact:oracle-hypothesis-recourse-multivariate}, just with $\modeldum\nullind$ and $\modeldum\altind$ defined appropriately to match the \behaviourname{} described by \cref{defn:spurious-multivariate} (e.g., constant 0 and constant $\outscale$ would work).
+\end{proof}

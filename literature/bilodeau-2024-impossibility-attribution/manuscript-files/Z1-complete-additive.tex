@@ -1,0 +1,175 @@
+%
+
+\section{Proofs for \completeNames{} and \additiveNames{}}\label{sec:complete-additive-proofs}
+
+%
+We begin with precise definitions of \shap{} and \intgrad{}.
+
+For \shap{}, there are two possible definitions in the literature, which respectively use marginal and conditional expectations.
+In practice, the most common implementation of \shap{} uses the marginal \defname{} for convenience \citep{kumar20shapley}, and this is what we focus on here. The original definition in \citet{lundberg17shapley} was actually the conditional one (although they apply the marginal definition in experiments, again for tractability), and recent work has studied approximations to compute it \citep{aas21shapley}.
+We expect that similar results to \cref{fact:oracle-hypothesis} could be proved in this setting, but this would require a different proof technique and hence we defer it to future work.
+
+
+\begin{definition}[\shap{} \citep{lundberg17shapley}]\label{def:genshap}
+Let
+\*[
+    \shapwt(i)
+    = \frac{i!(\covdim-i-1)!}{\covdim!}.
+\]
+For all $\model\in\modelspace$, $\covdist\in\probspace(\covspace)$, $\covval\in\covspace$, and $j\in[\covdim]$, define
+\*[
+    \shapdef(\model,\covdist,\covval)\feat{j}
+    =  \EE_{\covobs\sim\covdist} \Bigg[\sum_{\featuresub \subseteq [\covdim]}
+    \shapwt(\abs{\featuresub})
+    \Big(
+    \model(\covval\feat{\featuresub\cup\{j\}},\covobs\feat{\comp{\featuresub}\setminus\{j\}})
+    -
+    \model(\covval\feat{\featuresub},\covobs\feat{\comp{\featuresub}})
+    \Big)\Bigg].
+\]
+\end{definition}
+
+For \intgrad{}, it is usually only defined with a single \basename{} \obsname{}. In order to state our results most generally, we consider the natural extension of averaging over a \basename{} distribution, which recovers the original definition when the \basename{} is a pointmass.
+
+\begin{definition}[\intgrad{} \citep{sundararajan17integrated}]\label{def:intgrad}
+For all $\model\in\modelspace$, $\covdist\in\probspace(\covspace)$, $\covval\in\covspace$, and $j\in[\covdim]$, whenever $\model$ is appropriately differentiable define
+\*[
+    \intgraddef(\model,\covdist,\covval)\feat{j}
+    =
+    \EE_{\covobs\sim\covdist}\Bigg[(\covval\feat{j} - \covobs\feat{j}) \int_0^1 \grad\feat{j}\model(\covobs + \alpha(\covval-\covobs)) \, \dee \alpha \Bigg].
+\]
+\end{definition}
+
+Next, we have the precise statements and proofs of the informal claims at the start of \cref{sec:impossibility}: \shap{} and \intgrad{} are both \completename{} and \additivename{}.
+
+\begin{proposition}\label{fact:complete-defs}
+\shap{} is \completename{}.
+\end{proposition}
+\begin{proof}[Proof of \cref{fact:complete-defs}]
+
+For all $\covval, \covvaldum \in \covspace$,
+\*[
+    &\hspace{-1em}\sum_{j\in[\covdim]} \sum_{\featuresub \subseteq [\covdim]}
+    \shapwt(\abs{\featuresub})
+    \Big(
+    \model(\covval\feat{\featuresub\cup\{j\}},\covvaldum\feat{\comp{\featuresub}\setminus\{j\}})
+    -
+    \model(\covval\feat{\featuresub},\covvaldum\feat{\comp{\featuresub}})
+    \Big)\\
+    &= 
+    \sum_{\featuresub \subseteq [\covdim]} \sum_{j\in\featuresub}
+    \shapwt(\abs{\featuresub}-1) \model(\covval\feat{\featuresub},\covvaldum\feat{\comp{\featuresub}})
+    -
+    \sum_{\featuresub \subseteq [\covdim]} \sum_{j\not\in\featuresub}
+    \shapwt(\abs{\featuresub}) \model(\covval\feat{\featuresub},\covvaldum\feat{\comp{\featuresub}}) \\
+    &= 
+    \sum_{\featuresub \subseteq [\covdim]} \model(\covval\feat{\featuresub},\covvaldum\feat{\comp{\featuresub}}) 
+    \Big(\abs{\featuresub} \shapwt(\abs{\featuresub}-1) - (\covdim-\abs{\featuresub}) \shapwt(\abs{\featuresub}) \Big) \\
+    &=
+    \covdim \cdot \shapwt(\covdim-1) \model(\covval) - \covdim \cdot \shapwt(0) \model(\covvaldum)
+    +
+    \sum_{\featuresub \subseteq [\covdim], \featuresub\not\in\{\emptyset, [\covdim]\}} \model(\covval\feat{\featuresub},\covvaldum\feat{\comp{\featuresub}}) 
+    \Big(\abs{\featuresub} \shapwt(\abs{\featuresub}-1) - (\covdim-\abs{\featuresub}) \shapwt(\abs{\featuresub}) \Big).
+\]
+
+Then, observe that
+\*[
+    \shapwt(\covdim-1) = \shapwt(0) = \frac{1}{\covdim},
+\]
+and for $0 < i < \covdim$,
+\*[
+    i \cdot \shapwt(i-1)
+    &= i \frac{(i-1)!(\covdim-i)!}{\covdim!}
+    = \frac{i!(\covdim-i)!}{\covdim!} \quad \text{ and } \\
+    (\covdim-i)\cdot\shapwt(i)
+    &= (\covdim-i) \frac{i!(\covdim-i-1)!}{\covdim!}
+    = \frac{i!(\covdim-i)!}{\covdim!}.
+\]
+
+The result follows by replacing $\covvaldum$ with $\covobs\sim\covdist$ and taking expectation.
+\end{proof}
+
+\begin{proposition}[\citep{lerma21integrated}]
+If for all $\model\in\modelspace$, either
+(a) the $\model$ is continuously differentiable everywhere; or (b)
+$\covspace$ is open, there exists $\lipconst$ such that $\model$ is $\lipconst$-Lipschitz, and for all $\covval,\covrefval\in\covspace$ and almost every $\alpha\in[0,1]$, $\model$ is differentiable at $\covrefval+\alpha(\covval-\covrefval)$,
+%
+%
+%
+%
+%
+then \intgrad{} is \completename{}.
+\end{proposition}
+
+\begin{remark}
+This is a weaker statement than Proposition~1 of \citet{sundararajan17integrated}, which \citet{lerma21integrated} show is false in general.
+\end{remark}
+
+\begin{proposition}\label{fact:additive-defs}
+\intgrad{} and \shap{} are \additivename{}.
+\end{proposition}
+\begin{proof}[Proof of \cref{fact:additive-defs}]
+Fix $\model\feat{1},\dots,\model\feat{\covdim}:\Reals\to\dataspace$ and $\model(\covval) = \sum_{j\in[\covdim]} \model\feat{j}(\covval\feat{j})$, $\covdist\in\probspace(\covspace)$, and $\covval\in\covspace$.
+
+For \intgrad{}, for all $\covrefval\in\covspace$ and $j\in[\covdim]$,
+\*[
+    \intgraddef(\model,\covrefval,\covval)\feat{j}
+    &=
+    (\covval\feat{j} - \covrefval\feat{j}) \int_0^1 \grad\feat{j}\model(\covrefval + \alpha(\covval-\covrefval)) \, \dee \alpha \\
+    &= 
+    (\covval\feat{j} - \covrefval\feat{j}) \int_0^1 \grad\feat{j}\sum_{\ell\in[\covdim]}\model\feat{\ell}(\covrefval\feat{\ell} + \alpha(\covval\feat{\ell}-\covrefval\feat{\ell})) \, \dee \alpha \\
+    &= 
+    (\covval\feat{j} - \covrefval\feat{j}) \int_0^1 \grad\feat{j}\model\feat{j}(\covrefval\feat{j} + \alpha(\covval\feat{j}-\covrefval\feat{j})) \, \dee \alpha \\
+    &= \intgraddef(\model\feat{j},\covrefval\feat{j},\covval\feat{j}).
+\]
+The result follows from taking expectation under $\covdist$.
+
+For \shap{},
+\*[
+    \shapdef(\model,\covdist,\covval)\feat{j}
+    &=  \EE_{\covobs\sim\covdist} \Bigg[\sum_{\featuresub \subseteq [\covdim]}
+    \shapwt(\abs{\featuresub})
+    \Big(
+    \model(\covval\feat{\featuresub\cup\{j\}},\covobs\feat{\comp{\featuresub}\setminus\{j\}})
+    -
+    \model(\covval\feat{\featuresub},\covobs\feat{\comp{\featuresub}})
+    \Big)\Bigg] \\
+    &= \EE_{\covobs\sim\covdist} \Bigg[\sum_{\featuresub \subseteq [\covdim]\setdelim j\not\in\featuresub}
+    \shapwt(\abs{\featuresub})
+    \Big(
+    \sum_{i\in\featuresub}\model\feat{i}(\covval\feat{i})
+    + \model\feat{j}(\covval\feat{j})
+    + \sum_{\ell\in\comp{\featuresub}\setminus\{j\}}\model\feat{\ell}(\covobs\feat{\ell}) \\
+    &\qquad\qquad\qquad\qquad\qquad\qquad- \sum_{i\in\featuresub}\model\feat{i}(\covval\feat{i})
+    - \model\feat{j}(\covobs\feat{j})
+    - \sum_{\ell\in\comp{\featuresub}\setminus\{j\}}\model\feat{\ell}(\covobs\feat{\ell}) 
+    \Big)\Bigg]  \\
+    &= \model\feat{j}(\covval\feat{j}) - \EE_{\covobs\sim\covdist} \model\feat{j}(\covobs\feat{j}) \\
+    &= \shapdef(\model\feat{j}, \covdist\feat{j}, \covval\feat{j}),
+\]
+where the last step holds since \shap{} is \completename{}. 
+\end{proof}
+
+\subsection{Additional \fielddefNAMEs{}}
+
+In \cref{sec:experiments}, we compare \shap{} and \intgrad{} to other \fielddefnames{} that \emph{do not} satisfy \completenames{} and \additivenames{}. To keep the paper self-contained, we redefine these here.
+
+\begin{definition}[\smoothgrad{} \citep{smilkov17smoothgrad}]\label{def:smoothgrad}
+For all $\model\in\modelspace$, $\covdist\in\probspace(\covspace)$, $\covval\in\covspace$, and $j\in[\covdim]$, whenever $\model$ is appropriately differentiable define
+\*[
+    \smoothgraddef(\model,\covdist,\covval)\feat{j}
+    =
+    \EE_{\covvaldum\sim\covdist} \grad_{j} \model(\covvaldum).
+\]
+\end{definition}
+
+\begin{definition}[\lime{} \citep{ribeiro16lime}]\label{def:lime}
+Fix $\lambda > 0$.
+For all $\model\in\modelspace$, $\covdist\in\probspace(\covspace)$, and $\covval\in\covspace$, define
+\*[
+    \limedef(\model,\covdist,\covval)
+    =
+    \argmin_{\beta\in\Reals^\covdim}
+    \Big[\EE_{\covvaldum\sim\covdist}\Big(\inner[0]{\beta}{\covvaldum} - \model(\covvaldum)\Big)^2 + \lambda \norm{\beta}_2^2 \Big].
+\]
+\end{definition}

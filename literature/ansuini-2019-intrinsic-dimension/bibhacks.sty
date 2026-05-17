@@ -1,0 +1,29 @@
+\NeedsTeXFormat{LaTeX2e}[1994/12/01]
+\ProvidesPackage{bibhacks}[2006/05/28]
+
+\newif\ifbh@tight
+\DeclareOption{tight}{\bh@tighttrue}
+\newif\ifbh@small
+\DeclareOption{small}{\bh@smalltrue}
+\ProcessOptions
+
+\let\oldthebibliography=\thebibliography
+\let\endoldthebibliography=\endthebibliography
+\let\oldsection=\section
+\renewenvironment{thebibliography}[1]{%
+\renewcommand{\section}{\subsubsection}
+\begin{oldthebibliography}{#1}%
+  \ifbh@small%
+    %\small%
+    \footnotesize
+	\fi%
+  \ifbh@tight%
+   % \setlength{\parskip}{0.05ex}%
+%    \setlength{\itemsep}{0.05ex}%
+  \fi%
+}%
+{%
+  \renewcommand{\section}{\oldsection}%
+  \end{oldthebibliography}%
+}
+

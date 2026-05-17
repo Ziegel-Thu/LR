@@ -1,0 +1,177 @@
+%
+
+\section{Proofs for Impossibility Results}\label{sec:impossibility-proofs}
+
+\subsection{Generalized Assumptions}
+
+First, we restate \cref{assn:inscale-covdist,assn:piecewise} in the multivariate case to allow for the most general version of our results.
+
+\begin{appassumption}\label{assn:inscale-covdist-multivariate}
+For any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, $\inscale\in\PosReals^{\abs{\featuresub}}$, and $\covdist\in\probspace(\covspace)$, we say the present assumption holds if \cref{assn:inscale-covdist} holds for each $j\in\featuresub$ with $\inscale\feat{j}$.
+\end{appassumption}
+
+\begin{appassumption}\label{assn:piecewise-multivariate}
+For any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, and $\inscale\in\PosReals^{\abs{\featuresub}}$,
+let $\covnbhd = \prod_{j\in\featuresub} [\covval\feat{j}-\inscale\feat{j}, \covval\feat{j}+\inscale\feat{j}] \times \covval\feat{[\covdim]\setminus\featuresub}$.
+%
+For any $(\modeldum\feat{j}:[\covval\feat{j}-\inscale\feat{j}, \covval\feat{j}+\inscale\feat{j}]\to\dataspace)_{j\in\featuresub}$ and $\numpiece\in\Nats$, we say that the present assumption holds with size $\numpiece$ if
+\*[
+    \Big\{\model\in(\covspace\to\dataspace) \setdelim
+    \forall\covvaldum\in\covnbhd \quad \model(\covvaldum) = \sum_{j\in\featuresub}\modeldum\feat{j}(\covvaldum\feat{j}), \ \model\restrict{\comp{\covnbhd}} \in \pwiselin{\numpiece}\restrict{\comp{\covnbhd}}, 
+    \ \model \text{ is continuous}\Big\} \subseteq \modelspace.
+\]
+\end{appassumption}
+
+\subsection{Proof of Main Result}
+
+We state and prove the following multivariate generalization.
+
+\begin{theorem}\label{fact:oracle-hypothesis-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, 
+%
+$\inscale \in\PosReals^{\abs{\featuresub}}$,
+$\covdist \in \probspace(\covspace)$, 
+and
+$(\modeldum\nullind\feat{j},\modeldum\altind\feat{j}:[\covval\feat{j}-\inscale\feat{j}, \covval\feat{j}+\inscale\feat{j}]\to\dataspace)_{j\in\featuresub}$.
+Suppose that \cref{assn:inscale-covdist-multivariate} is satisfied and \cref{assn:piecewise-multivariate} is satisfied with $m=2^{\abs{\featuresub}}$.
+%
+Define $\covnbhd$ as in \cref{assn:piecewise-multivariate}, and let
+%
+%
+%
+%
+%
+%
+\*[
+    \modelspace\nullind
+    &= \Big\{\model\in\modelspace\setdelim \forall\covvaldum\in\covnbhd, \ \model(\covvaldum) = \sum_{j\in\featuresub}\modeldum\nullind\feat{j}(\covvaldum\feat{j}) \Big\} \\
+    \modelspace\altind
+    &= \Big\{\model\in\modelspace\setdelim \forall\covvaldum\in\covnbhd, \ \model(\covvaldum) = \sum_{j\in\featuresub}\modeldum\altind\feat{j}(\covvaldum\feat{j})\Big\}.
+\]
+For any \completename{} and \additivename{} $\expdef$ and \oraclehyptestname{} $\oraclehyptest$, 
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest) \leq 1 -
+    \senssym_{\expdef,\covdist,\covval}(\oraclehyptest).
+\]
+\end{theorem}
+
+Before we prove this, we need the following technical result, which is the multivariate analogue of \cref{fact:interior-freedom}.
+\begin{theorem}\label{fact:interior-freedom-multivariate}
+Fix any $\covval\in\covspace$, $\featuresub\subseteq[\covdim]$, 
+%
+$\inscale \in\PosReals^{\abs{\featuresub}}$,
+$\covdist \in \probspace(\covspace)$, 
+and
+$(\modeldum\feat{j}:[\covval\feat{j}-\inscale\feat{j}, \covval\feat{j}+\inscale\feat{j}]\to\dataspace)_{j\in\featuresub}$.
+Suppose that \cref{assn:inscale-covdist-multivariate} is satisfied and \cref{assn:piecewise-multivariate} is satisfied with $m=2^{\abs{\featuresub}}$.
+For every $\expval \in \Reals^{\abs{\featuresub}\times\datadim}$, there exists 
+$\model\in\modelspace$ such that for every \completename{} and \additivename{} \fielddefname{}, $\expdef(\model,\covdist,\covval)\feat{\featuresub} = \expval$, and if $\abs[0]{\covval\feat{j}-\covvaldum\feat{j}} \leq \inscale\feat{j}$ for all $j\in\featuresub$ then $\model(\covvaldum) = \sum_{j\in\featuresub} \modeldum\feat{j}(\covvaldum\feat{j})$.
+\end{theorem}
+
+We are now able to prove our main theorem.
+
+\begin{proof}[Proof of \cref{fact:oracle-hypothesis-multivariate}]
+For $j\not\in \featuresub$, let $\modeldum\nullind\feat{j} = \modeldum\altind\feat{j} \equiv 0$.
+Fix $\expval = \mathbf{0}$.
+Let $\model\nullind$ be the \modelname{} guaranteed to exist from \cref{fact:interior-freedom-multivariate} for $(\modeldum\nullind\feat{j})_{j\in[\covdim]}$, and similarly define $\model\altind$. Since $\model\nullind,\model\altind\in\modelspace$ by \cref{assn:piecewise-multivariate},
+\*[
+    \specsym_{\expdef,\covdist,\covval}(\oraclehyptest) 
+    &= \inf_{\model\in\modelspace\nullind} [1-\oraclehyptest(\expdef(\model,\covdist,\covval))] \\
+    &\leq 1-\oraclehyptest(\expdef(\model\nullind,\covdist,\covval)) \\
+    &= 1-\oraclehyptest(\mathbf{0}) \\
+    &= 1-\oraclehyptest(\expdef(\model\altind,\covdist,\covval)) \\
+    &\leq 1-\inf_{\model\in\modelspace\altind} \oraclehyptest(\expdef(\model,\covdist,\covval)) \\
+    &= 1 - \senssym_{\expdef,\covdist,\covval}(\oraclehyptest).
+\]
+\end{proof}
+
+\subsection{Proof of \cref{fact:interior-freedom-multivariate}}
+
+%
+The proof follows by explicitly constructing a piecewise \modelname{} $\model$ that satisfies the desired properties and is linear outside of the neighbourhood around $\covval$.
+In particular, for each $j\in\featuresub$ and $k\in[\datadim]$, we construct $\modelleft\feat{jk}$ and $\modelright\feat{jk}$, define
+\*[
+    \model\feat{jk}(\covvaldum\feat{j})
+    =
+    \begin{cases}
+    \modelleft\feat{jk}(\covvaldum\feat{j})
+    &\covvaldum\feat{j} \in (\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j}) \\
+    \modeldum\feat{j}(\covvaldum\feat{j})\feat{k}
+    &\covvaldum\feat{j} \in [\covval\feat{j}-\inscale\feat{j}, \covval\feat{j}+\inscale\feat{j}] \\
+    \modelright\feat{jk}(\covvaldum\feat{j})
+    &\covvaldum\feat{j} \in (\covval\feat{j}+\inscale\feat{j},\covright\feat{j}) \\
+    0
+    & \text{otherwise},
+    \end{cases}
+\]
+and finally define
+\*[
+    \model(\covvaldum)\feat{k}
+    = \sum_{j\in\featuresub} \model\feat{jk}(\covvaldum\feat{j}).
+\]
+By definition, $\model(\covvaldum) = \sum_{j\in\featuresub} \modeldum\feat{j}(\covvaldum\feat{j})$ if $\abs[0]{\covvaldum\feat{j}-\covval\feat{j}}\leq\inscale\feat{j}$ for all $j\in\featuresub$.
+Further, since $\expdef$ is \additivename{}, 
+\*[
+    \expdef(\model,\covval,\covdist)\feat{jk}
+    = \expdef(\model\feat{jk}, \covval\feat{j}, \covdist\feat{j}).
+\]
+For some $\linparamleft\feat{jk},\linparamright\feat{jk}\in\Reals$ to be chosen in the proof, set
+\*[
+    \modelleft\feat{jk}(\covvaldum\feat{j})
+    = 
+    \linparamleft\feat{jk} \cdot (\covvaldum\feat{j}-\covval\feat{j}+\inscale\feat{j}) + \modeldum\feat{j}(\covval\feat{j}-\inscale\feat{j})\feat{k}
+\]
+and
+\*[
+    \modelright\feat{jk}(\covvaldum\feat{j})
+    = 
+    \linparamright\feat{jk} \cdot (\covvaldum\feat{j}-\covval\feat{j}-\inscale\feat{j}) + \modeldum\feat{j}(\covval\feat{j}+\inscale\feat{j})\feat{k}.
+\]
+These functions are piecewise linear on $(\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})$ and $(\covval\feat{j}+\inscale\feat{j},\covright\feat{j})$ for each $j\in\featuresub$ respectively, and hence $\model$ is piecewise linear on the product of these intervals (which form convex polytopes). Thus, by \cref{assn:piecewise}, $\model\in\modelspace$.
+It remains to construct $\linparamleft\feat{jk}$ and $\linparamright\feat{jk}\in\Reals$ so that $\expdef(\model\feat{jk}, \covval\feat{j}, \covdist\feat{j}) = \expval\feat{jk}$ for each $j\in\featuresub$ and $k\in[\datadim]$.
+
+
+Fix $j\in[\covdim]$ and $k\in[\datadim]$.
+Recall that $\mu_j$ is a probability measure, and hence maps intervals of the form $(a,b)$ to a number in $[0,1]$.
+
+For any $\linparamleft\feat{jk},\linparamright\feat{jk}\in\Reals$ that satisfy
+\*[
+    &\hspace{-1em}\linparamleft\feat{jk} \Bigg[ \EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})}\Big] - (\covval\feat{j}-\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})\Big) \Bigg] \\
+    &\quad+ \linparamright\feat{jk} \Bigg[ \EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covval\feat{j}+\inscale\feat{j},\covright\feat{j})}\Big] - (\covval\feat{j}+\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covval\feat{j}+\inscale\feat{j},\covright\feat{j})\Big) \Bigg] \\
+    &= -\modeldum\feat{j}(\covval\feat{j}-\inscale\feat{j})\feat{k} \cdot \covdist\feat{j}\Big((\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})\Big)
+    -\modeldum\feat{j}(\covval\feat{j}+\inscale\feat{j})\feat{k} \cdot \covdist\feat{j}\Big((\covval\feat{j}+\inscale\feat{j},\covright\feat{j})\Big) \\
+    &\quad- \EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\modeldum\feat{j}(\covobs\feat{j})\feat{k} \cdot\ind{\covobs\feat{j} \in[\covval\feat{j}-\inscale\feat{j},\covval\feat{j}+\inscale\feat{j}]}\Big]
+    + \modeldum\feat{j}(\covval\feat{j})\feat{k} - \expval\feat{jk},
+\]
+since $\expdef$ is \completename{},
+\*[
+    \expdef(\model\feat{jk}, \covval\feat{j}, \covdist\feat{j})
+    = \modeldum\feat{j}(\covval\feat{j})\feat{k} - \EE_{\covobs\feat{j}\sim\covdist\feat{j}}[\model\feat{jk}(\covobs\feat{j})]
+    = \expval\feat{jk}.
+\]
+
+For simplicity, we set either $\linparamleft\feat{jk}$ or $\linparamright\feat{jk}$ to zero (at worst, this inflates the Lipschitz parameter by a factor of 2). 
+By assumption (i),
+\*[
+    \max\Big\{\covdist\feat{j}\Big((\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})\Big), \covdist\feat{j}\Big((\covval\feat{j}+\inscale\feat{j},\covright\feat{j})\Big) \Big\} > 0,
+\]
+so one of 
+\*[
+    \EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})}\Big] - (\covval\feat{j}-\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})\Big)
+\]
+and
+\*[
+    \EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covval\feat{j}+\inscale\feat{j},\covright\feat{j})}\Big] - (\covval\feat{j}+\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covval\feat{j}+\inscale\feat{j},\covright\feat{j})\Big)
+\]
+are non-zero. 
+If 
+\*[
+    &\hspace{-1em}\abs{\EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})}\Big] - (\covval\feat{j}-\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covleft\feat{j}, \covval\feat{j}-\inscale\feat{j})\Big)} \\
+    &>
+    \abs{\EE_{\covobs\feat{j}\sim\covdist\feat{j}}\Big[\covobs\feat{j} \cdot\ind{\covobs\feat{j} \in (\covval\feat{j}+\inscale\feat{j},\covright\feat{j})}\Big] - (\covval\feat{j}+\inscale\feat{j}) \cdot \covdist\feat{j}\Big((\covval\feat{j}+\inscale\feat{j},\covright\feat{j})\Big)},
+\]
+set $\linparamright\feat{jk}=0$, and otherwise set $\linparamleft\feat{jk}=0$.
+\manualendproof
+
+
+

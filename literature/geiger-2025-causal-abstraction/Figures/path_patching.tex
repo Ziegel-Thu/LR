@@ -1,0 +1,178 @@
+\centerline{
+\begin{tikzpicture}
+\tikzstyle{nnline}=[->, opacity=0.5]
+\tikzstyle{intline}=[->, very thick, dashed]
+
+\node[] (b) at (0, 0) {$\base$} ;
+\node[] (h11) at (-1, 0.75) {$\hiddenneuronval_{11}$} ;
+\node[] (h12) at (0, 0.75) {$\hiddenneuronval_{12}$} ;
+\node[] (h13) at (1, 0.75) {$\hiddenneuronval_{13}$} ;
+\node[] (h21) at (-1, 1.5) {$\hiddenneuronval_{21}$} ;
+\node[] (f_s) at (0, 1.5) {$\hiddenneuronval_{22}$} ;
+\node[] (h23) at (1, 1.5) {$\hiddenneuronval_{23}$} ;
+\node[] (h31) at (-1, 2.25) {$\hiddenneuronval_{31}$} ;
+\node[] (h32) at (0, 2.25) {$\hiddenneuronval_{32}$} ;
+\node[] (h33) at (1, 2.25) {$\hiddenneuronval_{33}$} ;
+\node[] (out) at (0, 3) {$\outneuronval$} ;
+
+\draw[nnline] (b.north) -- (h11.south);
+\draw[nnline] (b.north) -- (h12.south);
+\draw[nnline] (b.north) -- (h13.south);
+
+\draw[nnline] (h11.north) -- (h21.south);
+\draw[nnline] (h11.north) -- (f_s.south);
+\draw[nnline] (h11.north) -- (h23.south);
+\draw[nnline] (h12.north) -- (h21.south);
+\draw[nnline] (h12.north) -- (f_s.south);
+\draw[nnline] (h12.north) -- (h23.south);
+\draw[nnline] (h13.north) -- (h21.south);
+\draw[nnline] (h13.north) -- (f_s.south);
+\draw[nnline] (h13.north) -- (h23.south);
+
+\draw[nnline] (h21.north) -- (h31.south);
+\draw[nnline] (h21.north) -- (h32.south);
+\draw[nnline] (h21.north) -- (h33.south);
+\draw[nnline] (f_s.north) -- (h31.south);
+\draw[nnline] (f_s.north) -- (h32.south);
+\draw[nnline] (f_s.north) -- (h33.south);
+\draw[nnline] (h23.north) -- (h31.south);
+\draw[nnline] (h23.north) -- (h32.south);
+\draw[nnline] (h23.north) -- (h33.south);
+
+\draw[nnline] (h31.north) -- (out.south);
+\draw[nnline] (h32.north) -- (out.south);
+\draw[nnline] (h33.north) -- (out.south);
+
+\node[] (s) at (3.5, 0) {$\source$} ;
+\node[] (h_s) at (2.5, 0.75) {$\hiddenneuronval_{11}'$} ;
+\node[] (h12) at (3.5, 0.75) {$\hiddenneuronval_{12}'$} ;
+\node[] (h13) at (4.5, 0.75) {$\hiddenneuronval_{13}'$} ;
+\node[] (h21) at (2.5, 1.5) {$\hiddenneuronval_{21}'$} ;
+\node[] (h22) at (3.5, 1.5) {$\hiddenneuronval_{22}'$} ;
+\node[] (h23) at (4.5, 1.5) {$\hiddenneuronval_{23}'$} ;
+\node[] (h31) at (2.5, 2.25) {$\hiddenneuronval_{31}'$} ;
+\node[] (h32) at (3.5, 2.25) {$\hiddenneuronval_{32}'$} ;
+\node[] (h33) at (4.5, 2.25) {$\hiddenneuronval_{33}'$} ;
+\node[] (out) at (3.5, 3) {$\outneuronval'$} ;
+
+\draw[nnline] (s.north) -- (h_s.south);
+\draw[nnline] (s.north) -- (h12.south);
+\draw[nnline] (s.north) -- (h13.south);
+
+\draw[nnline] (h_s.north) -- (h21.south);
+\draw[nnline] (h_s.north) -- (h22.south);
+\draw[nnline] (h_s.north) -- (h23.south);
+\draw[nnline] (h12.north) -- (h21.south);
+\draw[nnline] (h12.north) -- (h22.south);
+\draw[nnline] (h12.north) -- (h23.south);
+\draw[nnline] (h13.north) -- (h21.south);
+\draw[nnline] (h13.north) -- (h22.south);
+\draw[nnline] (h13.north) -- (h23.south);
+
+\draw[nnline] (h21.north) -- (h31.south);
+\draw[nnline] (h21.north) -- (h32.south);
+\draw[nnline] (h21.north) -- (h33.south);
+\draw[nnline] (h22.north) -- (h31.south);
+\draw[nnline] (h22.north) -- (h32.south);
+\draw[nnline] (h22.north) -- (h33.south);
+\draw[nnline] (h23.north) -- (h31.south);
+\draw[nnline] (h23.north) -- (h32.south);
+\draw[nnline] (h23.north) -- (h33.south);
+
+\draw[nnline] (h31.north) -- (out.south);
+\draw[nnline] (h32.north) -- (out.south);
+\draw[nnline] (h33.north) -- (out.south);
+
+\node[] (b) at (7, 0) {$\base$} ;
+\node[] (h_t) at (6, 0.75) {$\hiddenneuronval_{11}'$} ;
+\node[] (h12) at (7, 0.75) {$\hiddenneuronval_{12}$} ;
+\node[] (h13) at (8, 0.75) {$\hiddenneuronval_{13}$} ;
+\node[] (h21) at (6, 1.5) {$\hiddenneuronval_{21}^*$} ;
+\node[] (f_t) at (7, 1.5) {$\hiddenneuronval_{22}$} ;
+\node[] (h23) at (8, 1.5) {$\hiddenneuronval_{23}^*$} ;
+\node[] (h31) at (6, 2.25) {$\hiddenneuronval_{31}^*$} ;
+\node[] (r_s) at (7, 2.25) {$\hiddenneuronval_{32}^*$} ;
+\node[] (h33) at (8, 2.25) {$\hiddenneuronval_{33}^*$} ;
+\node[] (out) at (7, 3) {$\outneuronval^*$} ;
+
+\draw[nnline] (b.north) -- (h_t.south);
+\draw[nnline] (b.north) -- (h12.south);
+\draw[nnline] (b.north) -- (h13.south);
+
+\draw[nnline] (h_t.north) -- (h21.south);
+\draw[nnline] (h_t.north) -- (f_t.south);
+\draw[nnline] (h_t.north) -- (h23.south);
+\draw[nnline] (h12.north) -- (h21.south);
+\draw[nnline] (h12.north) -- (f_t.south);
+\draw[nnline] (h12.north) -- (h23.south);
+\draw[nnline] (h13.north) -- (h21.south);
+\draw[nnline] (h13.north) -- (f_t.south);
+\draw[nnline] (h13.north) -- (h23.south);
+
+\draw[nnline] (h21.north) -- (h31.south);
+\draw[nnline] (h21.north) -- (r_s.south);
+\draw[nnline] (h21.north) -- (h33.south);
+\draw[nnline] (f_t.north) -- (h31.south);
+\draw[nnline] (f_t.north) -- (r_s.south);
+\draw[nnline] (f_t.north) -- (h33.south);
+\draw[nnline] (h23.north) -- (h31.south);
+\draw[nnline] (h23.north) -- (r_s.south);
+\draw[nnline] (h23.north) -- (h33.south);
+
+\draw[nnline] (h31.north) -- (out.south);
+\draw[nnline] (r_s.north) -- (out.south);
+\draw[nnline] (h33.north) -- (out.south);
+
+\node[draw, ellipse, minimum width=20pt, minimum height=20pt] at (6, 0.75) {};
+\node[draw, ellipse, minimum width=20pt, minimum height=20pt] at (7, 1.5) {};
+
+\node[] (b) at (10.5, 0) {$\base$} ;
+\node[] (h11) at (9.5, 0.75) {$\hiddenneuronval_{11}$} ;
+\node[] (h12) at (10.5, 0.75) {$\hiddenneuronval_{12}$} ;
+\node[] (h13) at (11.5, 0.75) {$\hiddenneuronval_{13}$} ;
+\node[] (h21) at (9.5, 1.5) {$\hiddenneuronval_{21}$} ;
+\node[] (h22) at (10.5, 1.5) {$\hiddenneuronval_{22}$} ;
+\node[] (h23) at (11.5, 1.5) {$\hiddenneuronval_{23}$} ;
+\node[] (h31) at (9.5, 2.25) {$\hiddenneuronval_{31}$} ;
+\node[] (r_t) at (10.5, 2.25) {$\hiddenneuronval_{32}^*$} ;
+\node[] (h33) at (11.5, 2.25) {$\hiddenneuronval_{33}$} ;
+\node[] (out) at (10.5, 3) {$\outneuronval^{**}$} ;
+
+\draw[nnline] (b.north) -- (h11.south);
+\draw[nnline] (b.north) -- (h12.south);
+\draw[nnline] (b.north) -- (h13.south);
+
+\draw[nnline] (h11.north) -- (h21.south);
+\draw[nnline] (h11.north) -- (h22.south);
+\draw[nnline] (h11.north) -- (h23.south);
+\draw[nnline] (h12.north) -- (h21.south);
+\draw[nnline] (h12.north) -- (h22.south);
+\draw[nnline] (h12.north) -- (h23.south);
+\draw[nnline] (h13.north) -- (h21.south);
+\draw[nnline] (h13.north) -- (h22.south);
+\draw[nnline] (h13.north) -- (h23.south);
+
+\draw[nnline] (h21.north) -- (h31.south);
+\draw[nnline] (h21.north) -- (r_t.south);
+\draw[nnline] (h21.north) -- (h33.south);
+\draw[nnline] (h22.north) -- (h31.south);
+\draw[nnline] (h22.north) -- (r_t.south);
+\draw[nnline] (h22.north) -- (h33.south);
+\draw[nnline] (h23.north) -- (h31.south);
+\draw[nnline] (h23.north) -- (r_t.south);
+\draw[nnline] (h23.north) -- (h33.south);
+
+\draw[nnline] (h31.north) -- (out.south);
+\draw[nnline] (r_t.north) -- (out.south);
+\draw[nnline] (h33.north) -- (out.south);
+
+\node[draw, ellipse, minimum width=20pt, minimum height=20pt] at (10.5, 2.25) {};
+
+\draw[intline] (f_s.south) to[out=-70, in=-110] (f_t.south);
+
+\draw[intline] (h_s.south) to[out=-55, in=-125] (h_t.south);
+
+\draw[intline] (r_s.north) to[out=40, in=140] (r_t.north);
+
+\end{tikzpicture}
+}

@@ -1,0 +1,36 @@
+\[\footnotesize
+\begin{tabular}{ccc}
+ $\inneuronset_{\small\pentagon} = [0.012, -0.301]$ & $\inneuronset_{\large \square} = [-0.812, 0.456]$ & $\inneuronset_{\large \bigtriangleup} = [0.682, 0.333]$\\
+\end{tabular}\]
+\resizebox{0.8\textwidth}{!}{
+$W_1 = \begin{bmatrix*}[r]
+1 & 0 & \-1 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & \-1 & 0 & 0 & 0 & 0\\
+\-1 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & \-1 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0 & \-1 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & \-1 \\
+0 & 0 & 0 & 0 & \-1 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & \-1 & 0 & 1 \\
+\end{bmatrix*}$ \hfill $ W_2 = \begin{bmatrix*}[r]
+1 & \-1 & 0 & 1 & 0 & 0 & 0 & 0\\
+1 & \-1 & 0 & 1 & 0 & 0 & 0 & 0\\
+1 & \-1 & 0 & 1 & 0 & 0 & 0 & 0\\
+1 & \-1 & 0 & 1 & 0 & 0 & 0 & 0\\
+\-1 & 1 & 1 & 0 & 0 & 0 & 0 & 0\\
+\-1 & 1 & 1 & 0 & 0 & 0 & 0 & 0\\
+\-1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+\-1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+\end{bmatrix*}$ \hfill $W_3 = \begin{bmatrix*}[r]
+1 & 0\\
+1 & 0\\
+1-\epsilon & 0\\
+1-\epsilon & 0\\
+0 & 0\\
+0 & 0\\
+0 & 0\\
+0 & 0\\
+\end{bmatrix*}$
+}
+
+\[W_3 \mathsf{ReLU}(W_2\mathsf{ReLU}(W_1[\mathbf{a}, \mathbf{b}, \mathbf{c}, \mathbf{d}])) = [||\mathbf{a}-\mathbf{b}| - |\mathbf{c}-\mathbf{d}|| -(1-\epsilon)|\mathbf{a}-\mathbf{b}|-(1-\epsilon)|\mathbf{c}-\mathbf{d}|, 0]\]

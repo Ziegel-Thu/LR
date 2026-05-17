@@ -1,0 +1,29 @@
+{
+   "sources" : [
+      {
+         "usage" : "toplevel",
+         "filename" : "main.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "assets/github-mark.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/default.pygstyle"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/listing1.pygtex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "minted-cache/listing2.pygtex"
+      }
+   ],
+   "spec_version" : 1,
+   "texlive_version" : "2023",
+   "process" : {
+      "compiler" : "pdflatex"
+   }
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "feature": "capitalized",
+    "layer": 0,
+    "probe_accuracy": 0.999,
+    "delta_loss": 0.002622
+  },
+  {
+    "feature": "capitalized",
+    "layer": 6,
+    "probe_accuracy": 0.9998,
+    "delta_loss": 0.023576
+  },
+  {
+    "feature": "capitalized",
+    "layer": 12,
+    "probe_accuracy": 0.9987,
+    "delta_loss": 0.005949
+  },
+  {
+    "feature": "capitalized",
+    "layer": 18,
+    "probe_accuracy": 0.9932,
+    "delta_loss": 0.000415
+  },
+  {
+    "feature": "capitalized",
+    "layer": 23,
+    "probe_accuracy": 0.9707,
+    "delta_loss": 0.004982
+  },
+  {
+    "feature": "punctuation",
+    "layer": 0,
+    "probe_accuracy": 0.9995,
+    "delta_loss": 0.00396
+  },
+  {
+    "feature": "punctuation",
+    "layer": 6,
+    "probe_accuracy": 1.0,
+    "delta_loss": 0.063346
+  },
+  {
+    "feature": "punctuation",
+    "layer": 12,
+    "probe_accuracy": 1.0,
+    "delta_loss": 0.051763
+  },
+  {
+    "feature": "punctuation",
+    "layer": 18,
+    "probe_accuracy": 0.9994,
+    "delta_loss": -0.006118
+  },
+  {
+    "feature": "punctuation",
+    "layer": 23,
+    "probe_accuracy": 0.9992,
+    "delta_loss": -0.005654
+  },
+  {
+    "feature": "numeric",
+    "layer": 0,
+    "probe_accuracy": 1.0,
+    "delta_loss": -0.000768
+  },
+  {
+    "feature": "numeric",
+    "layer": 6,
+    "probe_accuracy": 1.0,
+    "delta_loss": 0.174399
+  },
+  {
+    "feature": "numeric",
+    "layer": 12,
+    "probe_accuracy": 1.0,
+    "delta_loss": 0.035723
+  },
+  {
+    "feature": "numeric",
+    "layer": 18,
+    "probe_accuracy": 0.9999,
+    "delta_loss": 0.040615
+  },
+  {
+    "feature": "numeric",
+    "layer": 23,
+    "probe_accuracy": 0.9994,
+    "delta_loss": 0.008308
+  },
+  {
+    "feature": "short_token",
+    "layer": 0,
+    "probe_accuracy": 0.9982,
+    "delta_loss": 0.001598
+  },
+  {
+    "feature": "short_token",
+    "layer": 6,
+    "probe_accuracy": 0.9966,
+    "delta_loss": 0.005873
+  },
+  {
+    "feature": "short_token",
+    "layer": 12,
+    "probe_accuracy": 0.9835,
+    "delta_loss": 0.002875
+  },
+  {
+    "feature": "short_token",
+    "layer": 18,
+    "probe_accuracy": 0.9644,
+    "delta_loss": -0.00431
+  },
+  {
+    "feature": "short_token",
+    "layer": 23,
+    "probe_accuracy": 0.9413,
+    "delta_loss": -0.019307
+  },
+  {
+    "feature": "space_prefix",
+    "layer": 0,
+    "probe_accuracy": 0.9981,
+    "delta_loss": 0.00374
+  },
+  {
+    "feature": "space_prefix",
+    "layer": 6,
+    "probe_accuracy": 1.0,
+    "delta_loss": 0.053192
+  },
+  {
+    "feature": "space_prefix",
+    "layer": 12,
+    "probe_accuracy": 0.9984,
+    "delta_loss": 0.022519
+  },
+  {
+    "feature": "space_prefix",
+    "layer": 18,
+    "probe_accuracy": 0.988,
+    "delta_loss": 0.006635
+  },
+  {
+    "feature": "space_prefix",
+    "layer": 23,
+    "probe_accuracy": 0.965,
+    "delta_loss": 0.002425
+  }
+]
