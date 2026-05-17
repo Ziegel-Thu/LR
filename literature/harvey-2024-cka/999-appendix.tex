@@ -1,0 +1,291 @@
+\appendix
+
+\section{Appendix}
+\label{appendix}
+
+
+\subsection{Bounds on the Procrustes distance in terms of the Euclidean distance}\label{appendix:bounds}
+
+Here we derive upper and lower bounds on the Procrustes distance between neural representations $\mbX \in \reals^{M \times N_X}$ and $\mbY \in \reals^{M \times N_Y}$ in terms of the Euclidean distance between linear kernel matrices $\mbK_X = \mbX \mbX^\top$ and $\mbK_Y = \mbY \mbY^\top$. 
+This result is applied in the main text to relate the expected Euclidean distance between decoded signals $\expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 = \Vert \tilde{\mbX} \tilde{\mbX}^\top - \tilde{\mbY} \tilde{\mbY}^\top  \Vert_F^2$ to the Procrustes distance $\cP (\tilde{\mbX}, \tilde{\mbY})$.
+Tildes are omitted in this section for clarity, but we note that this result is applied in the main text to the normalized representations $\tilde{\mbX}$ and $\tilde{\mbY}$.
+
+We will make use of the equivalence between the Procrustes distance between representation matrices $\mbX$ and $\mbY$ and a notion of distance on the space of positive semi-definite kernel matrices $\mbK_X = \mbX \mbX^\top$ and $\mbK_Y = \mbY \mbY^\top$ called the Bures distance, defined as 
+
+\begin{equation}
+\label{eq:bures-distance-definition}
+d_B(\mbK_X, \mbK_Y) = \sqrt{\Tr[\mbK_X] + \Tr[\mbK_Y] - 2 \Tr \left [ \left (\mbK_X^{1/2} \mbK_Y \mbK_X^{1/2} \right )^{1/2} \right] } .
+\end{equation}
+
+The third trace term on the right hand side of \cref{eq:bures-distance-definition} is often called the \emph{fidelity}, defined as 
+
+\begin{equation}
+ \mathcal{F}(\mbK_X, \mbK_Y) = \Tr \left [ \left (\mbK_X^{1/2} \mbK_Y \mbK_X^{1/2} \right )^{1/2} \right].
+\end{equation}
+
+
+
+\subsubsection{Lower bound}
+
+For the lower bound, we are inspired by the Fuchs-van-de-Graaf inequalites that are used in quantum information theory to assert an approximate equivalence between two measures of quantum state similarity, the \emph{trace distance} and the \emph{fidelity}.
+This approach is relevant from a mathematical perspective for our purposes, since quantum states are represented by positive semi-definite matrices normalized to have trace 1. 
+Here, we use a similar approach as that often used to derive the Fuchs-van de Graaf inequalites to instead relate the Euclidean distance and the Bures distance on positive semidefinite matrices, while also relaxing the trace 1 normalization. 
+
+We will make use of the following identity. 
+
+\begin{lemma}
+
+\begin{equation}
+\| \alpha u u^{\dag} - \beta v v^{\dag} \|_* = \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle u,v \rangle\lvert^2 }
+\end{equation}
+
+for all unit vectors $u, v$ and all non-negative real numbers $\alpha$ and $\beta$. 
+\end{lemma}
+
+\begin{proof}  
+First we recognize that the nuclear norm of a matrix can be calculated by summing the singular values of that matrix.  
+Furthermore, if that matrix is Hermitian, the singular values are the absolute values of the eigenvalues.  
+Define $\mbM = \alpha u u^{\dag} - \beta v v^{\dag}$.
+Our matrix $M$ is Hermitian and has at most two eigenvalues, so we will look for expressions for these in terms of $\alpha$ and $\beta$.
+Note that if $u$ and $v$ are the same unit vector, then $\mbM$ has rank 1, so we expect the eigenvalues will depend also on the inner product $\langle u,v \rangle$.
+
+The eigenvectors of $\mbM$ will be of the form $\psi = c u + d v$ for some scalar $c$ and $d$.
+By direct calculation:
+\begin{equation}
+\begin{split}
+\mbM\psi =& \lambda \psi \\
+% A(cu + dv) =& \alpha c u + \alpha d (u^\dag v) u - \beta c (v^\dag u) v - d \beta v  \\
+% A(cu + dv) =& (\alpha c + \alpha d (u^\dag v)) u - (\beta c (v^\dag u) + \beta d )v
+\mbM(cu + dv) =& (\alpha c + \alpha d \langle u,v \rangle) u - (\beta c \langle v,u \rangle + \beta d )v\\
+=& \lambda (c u + d v)
+\end{split}
+\end{equation}
+
+Therefore, we see that the eigenvalues must satisfy both
+
+\begin{equation}\label{eq:lambdas}
+\lambda = \frac{\alpha c + \alpha d \langle u,v \rangle}{c} \:\:\: \text{and} \:\:\:  \lambda = -\frac{\beta c \langle v,u \rangle + \beta d}{d}
+\end{equation}
+
+Setting these equal to each other and solving the resulting quadratic for $c$ gives:
+
+\begin{equation}\label{eq:cvalue}
+c = \frac{-d (\alpha + \beta) \pm d \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2 }}{2 \beta \langle v,u \rangle }.
+\end{equation}
+
+So the two eigenvectors are proportional to
+
+\begin{equation}
+    \psi_{\pm} =  \bigg{(}\frac{(\alpha + \beta)}{2} \mp  \frac{1}{2} \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2 }\bigg{)} u -  \beta \langle v,u \rangle v.
+\end{equation}
+
+To find the eigenvalues, we combine  \cref{eq:lambdas} and \cref{eq:cvalue}, arriving at 
+
+\begin{equation}\label{eq:rank1-eigenvalues}
+\lambda_{\pm} = \frac{(\beta - \alpha)}{2} \pm \frac{1}{2} \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2}.
+\end{equation}
+
+Finally, to calculate $\| \mbM\|_*$ we simply sum the magnitudes of these eigenvalues. 
+By inspecting the term under the square root, we see that $\lambda_-$ is always negative.  
+Therefore, $|\lambda_+| + |\lambda_-| = \lambda_+ - \lambda_-$, and we find
+
+\begin{equation}
+\begin{split}
+\| \mbM\|_1 =& \lvert \lambda_+ \lvert + \lvert \lambda_- \lvert \\
+\implies \| \alpha u u^{\dag} - \beta v v^{\dag} \|_1 =& \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2}
+\end{split}
+\end{equation}
+\end{proof}
+
+We now find a lower bound on the Bures distance between kernel matrices $\mbK_X$ and $\mbK_Y$ in terms of the Euclidean distance between the same matrices, $\|\mbK_X - \mbK_Y \|_F^2 $.
+There are many choices of $\mbX$ and $\mbY$ multiply to the same positive semi-definite kernel matrices via $\mbK_X = \mbX \mbX^\top$ and $\mbK_Y = \mbY \mbY^\top$.
+Define real positive scalars $\alpha = \Tr \mbX \mbX^\top$ and $\beta = \Tr \mbY \mbY^\top$, and the unit vectors 
+
+\begin{equation}
+    \hat{x} = \frac{\text{vec}(\mbX)}{\|\text{vec}(\mbX)\|_2}  \:\:\:\: \text{and} \:\:\:\: \hat{y} = \frac{\text{vec}(\mbY)}{\|\text{vec}(\mbY)\|_2} 
+\end{equation}
+
+where $\text{vec}(\mbX)$ is the vectorization linear transformation converting the $M \times N_X$-dimensional matrix $\mbX$ into an $MN_X$-dimensional vector.   
+We will assume that the representations have been zero-padded such that $N_X = N_Y$.
+
+By Uhlmann's theorem \cite{watrous2018}, there exists some choice of $\mbX$ and $\mbY$, such that 
+
+\begin{equation}
+    \lvert \langle  \sqrt{\alpha} \hat{x}, \sqrt{\beta} \hat{y}  \rangle \lvert = \mathcal{F}(\mbK_X,\mbK_Y)
+\end{equation}
+
+One can see this by writing the fidelity as a nuclear norm of $\mbX^\top \mbY$ and considering the variational form of the nuclear norm as a maximization of the Hilbert-Schmidt inner product over unitary transformations (see \cite{Harvey2024} for a more explicit discussion of this).  
+
+
+Now use our identity from earlier with $u = \hat{x}$ and $v =\hat{y} $.  
+
+\begin{equation}
+\begin{split}
+    \| \alpha \hat{x} \hat{x}^{\top} - \beta \hat{y} \hat{y}^{\top} \|_1 =& \sqrt{(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle \hat{x},\hat{y} \rangle \lvert^2}\\
+    =& \sqrt{(\alpha + \beta)^2 - 4 \mathcal{F}(\mbK_X,\mbK_Y)^2}
+    \end{split}
+\end{equation}
+
+The operation that takes $\alpha \hat{x} \hat{x}^{\top}$ and $\beta \hat{y} \hat{y}^{\top}$ to $\mbK_X$ and $\mbK_Y$, respectively, is called the partial trace.  
+By the monotonicity of the nuclear norm under partial tracing \cite{watrous2018}, we have: 
+
+\begin{equation}\label{eq:nucnorm-inequality}
+    \| \mbK_X-\mbK_Y \|_*  \le \| \alpha \hat{x} \hat{x}^{\top} - \beta \hat{y} \hat{y}^{\top} \|_* = \sqrt{(\alpha + \beta)^2 - 4 \mathcal{F}(\mbK_X,\mbK_Y)^2}.
+\end{equation}
+
+With equality when $\mbK_X$ and $\mbK_Y$ are rank-1, that is $\mbK_X = \alpha \hat{x} \hat{x}^{\top} $ and $\mbK_Y = \beta \hat{y} \hat{y}^{\top}$.
+
+Lastly, we rewrite the nuclear norm $\| \mbK_X-\mbK_Y \|_*$ in terms of the Euclidean distance and the \emph{participation ratio} of the matrix $\mbK_X - \mbK_Y$.
+The participation ratio of a matrix $\mbA \in \mathbb{R}^{M\times N}$ is defined as
+
+\begin{equation}\label{eq:pr-def}
+    \mathcal{R}(\mbA) = \frac{\| \mbA \|_{1}^{2} }{\| \mbA \|_F^2} = \frac{(\sum_i \sigma_i)^2}{\sum_i \sigma_i^2},
+\end{equation}
+
+so we have 
+
+\begin{equation}\label{eq:nucnorm-pr}
+    \| \mbK_X-\mbK_Y \|_* = \sqrt{\pr_\Delta} \| \mbK_X-\mbK_Y \|_F
+\end{equation}
+
+where $\pr_\Delta = \pr(\tilde{\mbX} \tilde{\mbX}^\top - \tilde{\mbY}\tilde{\mbY}^\top)$.
+We can also use the definition of the Bures distance \cref{eq:bures-distance-definition} to replace $\mathcal{F}(\mbK_X,\mbK_Y) = \frac{1}{2}(\alpha + \beta - d_B(\mbK_X,\mbK_Y)^2)$. 
+Making these substitutions into \cref{eq:nucnorm-inequality}, and solving for $d_B(\mbK_X,\mbK_Y)^2$, we find:
+
+\begin{equation}\label{eq:gen-lower-bound}
+    d_B(\mbK_X,\mbK_Y)^2 \ge (\alpha + \beta) - \sqrt{(\alpha + \beta )^2 - \pr_\Delta \|\mbK_X-\mbK_Y \|_F^2}.
+\end{equation}
+
+This bound is saturated when the inequalty in \cref{eq:nucnorm-inequality} is an equality, or when $\mbK_X$ and $\mbK_Y$ are both rank 1.  
+
+For a bound that is independent of the participation ratio, we could replace $\pr_\Delta$ with its ostensible minimal value of 1.
+When $\mbK_X$ and $\mbK_Y$ are normalized to have trace 1, we would then have 
+
+\begin{equation}\label{eq:tr1-lower-bound}
+    d_B(\mbK_X,\mbK_Y)^2 \ge 2 - \sqrt{4 -  \|\mbK_X-\mbK_Y \|_F^2} \approx \frac{1}{4} \|\mbK_X - \mbK_Y \|_F^2.
+\end{equation}
+
+However, in this case that $\Tr\mbK_X = \Tr \mbK_Y = 1 $, we can actually arrive at a tighter lower bound than \cref{eq:tr1-lower-bound}, because we can say something interesting about the minimal participation ratio of matrices of the form $\mbK_X - \mbK_Y$.  
+It turns out that under this normalization, the participation ratio is lower bounded by $2$, with the minimum of $2$ achieved when $\mbK_X$ and $\mbK_Y$ are rank 1 (also in this case the bound in \cref{eq:gen-lower-bound} will be saturated).  
+
+\begin{lemma}
+For positive semidefinite matrices $\mbK_X$ and $\mbK_Y$ with $\Tr \mbK_X = \Tr \mbK_Y$, 
+\begin{equation}\label{eq:minimal-pr}
+\mathcal{R}(\mbK_X-\mbK_Y) \ge 2.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By noting that $\mbK_X-\mbK_Y$ is Hermitian, we rewrite \cref{eq:pr-def} as
+
+\begin{equation}\label{eq:pr-eigen}
+    \mathcal{R}(\mbK_X-\mbK_Y) = \frac{(\sum_i |\lambda_i|)^2 }{\sum_i |\lambda_i|^2} 
+\end{equation}
+
+where $\lambda_i$ is the $i$th eigenvalue of the matrix difference $\mbK_X-\mbK_Y$.  
+Next, we recognize that if $\Tr \mbK_X = \Tr \mbK_Y$, then $\Tr(\mbK_X-\mbK_Y) = 0$ and therefore the eigenvalues of $\mbK_X-\mbK_Y$ sum to 0.  
+The set of eigenvalues $\{\lambda_1, \lambda_2, ..., \lambda_M  \} $ can then always be partitioned into a set of positive eigenvalues $\{ \lambda^+_1, \lambda^+_2, ..., \lambda^+_p \}$, and a set of negative eigenvalues $\{ \lambda^-_1, \lambda^-_2, ..., \lambda^-_q \}$, with $p+q = M$.  
+The negative eigenvalues must balance the positive eigenvalues in magnitude, so we  must have
+
+\begin{equation}
+    \sum_{i = 1}^p \lambda_i^+ = \sum_{j = 1}^q | \lambda_j^- |.
+\end{equation}
+
+We can rewrite \cref{eq:pr-eigen} in terms of sums over the positive and negative eigenvalue sets:
+
+\begin{equation}
+\setlength{\jot}{10pt}
+\begin{split}\label{eq:big-pr-calc}
+ \mathcal{R}(\mbK_X-\mbK_Y) &= \frac{4 (\sum_{i = 1}^p\lambda_i^+)^2 }{\sum_{i = 1}^p (\lambda_i^+)^2 + \sum_{j = 1}^q | \lambda_j^- |^2} \\
+ &= \frac{4 \big{[}\sum_{i = 1}^p (\lambda_i^{+})^2 + \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+\big{]}}{ (\sum_{i = 1}^p \lambda_i^+)^2 - \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+ + (\sum_{i = 1}^q |\lambda_i^-|)^2 - \sum_{j\neq k}^q |\lambda_j^-| |\lambda_k^-|}\\
+ &= \frac{4 \big{[}\sum_{i = 1}^p (\lambda_i^{+})^2 + \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+\big{]}}{2[ (\sum_{i = 1}^p (\lambda_i^{+})^2) + \frac{1}{2}( \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+  - \sum_{j\neq k}^q |\lambda_j^-| |\lambda_k^-|)]}\\
+ &= 2\: \bigg{[} \frac{ \sum_{i = 1}^p (\lambda_i^{+})^2 + \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+}{ \sum_{i = 1}^p (\lambda_i^{+} )^2 + \frac{1}{2}( \sum_{j\neq k}^p \lambda_j^+ \lambda_k^+  - \sum_{j\neq k}^q |\lambda_j^-| |\lambda_k^-|)} \bigg{]}\\
+\end{split}
+\end{equation}
+
+By inspection, the term in brackets is $\ge 1$ (this can be seen by considering the signs and relative magnitudes of each of the summed terms).
+So we have
+
+\begin{equation}
+    \mathcal{R}(\mbK_X-\mbK_Y) \ge 2.
+\end{equation}
+
+\end{proof}
+
+The inequality \cref{eq:minimal-pr} is saturated when $\mbK_X-\mbK_Y$ is rank 2 and thus only has two equal magnitude and opposite signed eigenvalues, as can be seen from the first line of \cref{eq:big-pr-calc}.  
+We can also use \cref{eq:rank1-eigenvalues} to see that when $\mbK_X$ and $\mbK_Y$ are rank 1 and trace 1, we have
+
+\begin{equation}
+    \mathcal{R}(\mbK_X-\mbK_Y) = \frac{\| \mbK_X-\mbK_Y \|_{1}^{2} }{\| \mbK_X-\mbK_Y \|_F^2}  =\frac{ (\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2}{\frac{1}{2} [(\alpha + \beta)^2 - 4 \alpha \beta \lvert \langle v,u \rangle \lvert^2]} = 2.
+\end{equation}
+
+For $\mbK_X$ and $\mbK_Y$ normalized to have trace 1, we can then state a tighter bound than \cref{eq:tr1-lower-bound} using the minimal participation ratio in \cref{eq:minimal-pr}.  We have
+
+\begin{equation}
+        d_B(\mbK_X,\mbK_Y)^2 \ge 2 - \sqrt{4 - 2 \|\mbK_X-\mbK_Y \|_F^2}.
+\end{equation}
+
+
+
+\subsubsection{Upper bound}
+
+We can bound the Bures distance using its variational form \cite{Bhatia2019},
+
+\begin{equation}\label{eq:bures-variational}
+d_B^2(\mbK_X,\mbK_Y) = \min_{\mbQ \in \mathcal{O}(M)} \|\mbK_X^{1/2} - \mbK_Y^{1/2}\mbQ \|_F^2 \le  \|\mbK_X^{1/2} - \mbK_Y^{1/2} \|_F^2
+\end{equation}
+
+The Powers-St\o rmer inequality implies that $\|\mbK_X^{1/2} - \mbK_Y^{1/2} \|_F^2 \le \| \mbK_X-\mbK_Y \|_*$, so 
+
+\begin{equation}\label{eq:bures-nucnorm}
+    d_B^2(\mbK_X,\mbK_Y) \le \| \mbK_X-\mbK_Y \|_*.
+\end{equation}
+
+Expressing the nuclear norm in terms of the participation ratio of $\mbK_X - \mbK_Y$ using \cref{eq:nucnorm-pr}, we have an upper bound on the Bures distance:
+
+\begin{equation}
+    d_B^2(\mbK_X,\mbK_Y) \le \sqrt{\mathcal{R}_\Delta}\| \mbK_X-\mbK_Y \|_F.
+\end{equation}
+
+The inequality in \cref{eq:bures-variational} is saturated when the optimal orthogonal transformation that aligns $\mbK_X^{1/2}$ and $\mbK_Y^{1/2}$ is the identity. 
+This occurs when $\mbK_X$ and $\mbK_Y$ are simultaneously diagonalizable.  
+The Powers-St\o rmer inequality in \cref{eq:bures-nucnorm} is saturated when $\mbK_X$ and $\mbK_Y$ have eigenvalues that only take values in $\{ 0, 1 \}$.
+
+
+\subsection{Figure 2 details}\label{appendix:fig2}
+
+\Cref{fig:bounds} panels (B-D) show the allowed regions of Procrustes distance and expected Euclidean distance between decoded signals for representations normalized to have $\Tr \tilde{\mbX}\tilde{\mbX}^\top = \Tr \tilde{\mbY} \tilde{\mbY}^\top = 1$, with varying participation ratio $\pr_\Delta$.  
+We have populated the plots with points representing the respective distances between randomly sampled pairs of positive semi-definite matrices. 
+These positive semi-definite matrices represent normalized kernel matrices $\tilde{\mbX}\tilde{\mbX}^\top$ and $\tilde{\mbY} \tilde{\mbY}^\top$. 
+We have seen in the main text that the squared Euclidean distance between these kernel matrices is equivalent to the expected squared Euclidean distance between decoded signals, $\expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 = \Vert \tilde{\mbX} \tilde{\mbX}^\top - \tilde{\mbY} \tilde{\mbY}^\top  \Vert_F^2$, when the distribution of decoding targets satisfies $\expect[\mbz \mbz^\top] = \mbI$.
+On the other hand, \cite{Harvey2024} demonstrated how the Procrustes distance $\cP (\tilde{\mbX}, \tilde{\mbY})$ is equivalent to the Bures distance \cref{eq:bures-distance-definition}, $d_B(\tilde{\mbX} \tilde{\mbX}^\top, \tilde{\mbY} \tilde{\mbY}^\top)$.  
+Therefore, both distances on these plots can be calculated from samples of positive semi-definite matrix pairs.  
+
+Each color of points in \cref{fig:bounds} (B-D) represents a different random ensemble of $M \times M$ PSD matrices with $M=50$, which are then binned into one of the three plots if the participation ratio $\pr_\Delta$ lies in the respective range indicated above each plot panel.  
+
+\begin{itemize}
+
+
+    \item Pink points are generated by sampling eigenvalues for the two PSD matrices from a Dirichlet distribution with concentration parameters logarithmically spaced between $10^{-3}$ and $10^3$.  
+Matrices of eigenvectors are then randomly sampled from the set of orthogonal matrices.
+
+
+    \item Green points were generated by sampling a random matrix $\mbA$ of size $M\times r$ with each element drawn from the uniform distribution $\mathcal{U}[0,1]$.  
+A uniform random integer $r$ was selected between 1 and 24.
+A PSD matrix was generated by multiplying $\mbA \mbA^\top$.  
+Another PSD matrix was then generated by adding a randomly weighted matrix of the same dimension with standard normal distributed entries $\mbN$ to $\mbA$, so $\mbB = \mbA + \epsilon  \mbN $, where $\epsilon \sim \mathcal{U}[0,1]$.  
+The distance between $ \frac{1}{\Tr \mbA \mbA^\top} \mbA \mbA^\top$ and $\frac{1}{\Tr \mbB \mbB^\top} \mbB \mbB^\top$ is then computed using these two distance metrics.
+
+    \item Blue points are seen to only occupy \cref{fig:bounds} (B), as these correspond to distances between matrices of rank 1 and trace 1.
+As we saw earlier in this appendix, in this case the participation ratio of the difference between these two PSD matrices is always 2.  
+The rank 1 matrices were sampled using the same method as the green points above, but setting $r = 1$.  
+
+    \item Purple points were generated by sampling one matrix from a Wishart distribution $W_M(r,\mbI)$, with degrees of freedom $r$ chosen as a uniformly random integer between $1$ and $50$.  This matrix was normalized to have trace 1.
+The second matrix was generated by adding to the first matrix another matrix drawn from the Wishart distribution $W_M(n, \mbI)$, with $n$ a randomly selected integer between 1 and 10.  Both matrices are normalized to have trace 1. 
+
+    \item Yellow points represent distances between PSD matrices that are simultaneously diagonalizable.  These were generated by sampling $M$ values uniformly between $0$ and $1$ for each matrix, but and setting these values to 0 if they fall below the threshold 0.6.  
+    The resultant values were then normalized to sum to 1, which became the eigenvalues for the two PSD matrices. 
+A matrix of eigenvectors was then randomly selected from the set of orthogonal matrices.    
+
+\end{itemize}
+

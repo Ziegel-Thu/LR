@@ -1,0 +1,105 @@
+\begin{table}[h!]
+\begin{subtable}[b]{0.5\textwidth}
+    \small
+    \centering
+\begin{tabular}{lccccc}
+\toprule
+\multirow[t]{2}{*}{\textbf{Method}} & \multicolumn{2}{c}{\textbf{Gemma-2-2B}}  & \multicolumn{2}{c}{\textbf{Gemma-2-9B}} & \multirow[t]{2}{*}{\textbf{Avg.}} \\
+& \multicolumn{1}{c}{L10} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L31} \\
+% identifier & 2b, l10, concept500 & 2b, l20, concept500 & 9b, l20, concept500 & 9b, l31, concept500 \\
+% method &  &  &  &  \\
+\midrule
+DiffMean & 0.948 & 0.946 & 0.955 & 0.921 & 0.942 \\
+ReFT-r1 & 0.952 & 0.965 & 0.966 & 0.869 & 0.938 \\
+\rowcolor{blue!20}ReFT-r1 (9B$\to$2B) & --- & 0.954 & --- & --- & --- \\
+\rowcolor{blue!20}ReFT-r1 (2B$\to$9B) & --- & --- & 0.974 & --- & --- \\
+SAE & 0.735 & 0.755 & 0.631 & 0.659 & 0.695 \\
+\bottomrule
+\end{tabular}
+\caption{\concepttag{} Mean AUROC.}
+\label{tab:transform-roc-auc}
+\end{subtable}
+\begin{subtable}[b]{0.5\textwidth}
+    \small
+    \centering
+\begin{tabular}{lccccc}
+\toprule
+\multirow[t]{2}{*}{\textbf{Method}} & \multicolumn{2}{c}{\textbf{Gemma-2-2B}}  & \multicolumn{2}{c}{\textbf{Gemma-2-9B}} & \multirow[t]{2}{*}{\textbf{Avg.}} \\
+& \multicolumn{1}{c}{L10} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L31} \\
+% identifier & 2b, l10, concept500 & 2b, l20, concept500 & 9b, l20, concept500 & 9b, l31, concept500 \\
+% method &  &  &  &  \\
+\midrule
+ReFT-r1 & 0.633 & 0.509 & 0.630 & 0.401 & 0.543 \\
+\rowcolor{blue!20} ReFT-r1 (9B$\to$2B) & --- & 0.444 & --- & --- & --- \\
+\rowcolor{blue!20} ReFT-r1 (2B$\to$9B) & --- & --- & 0.541 & --- & --- \\
+DiffMean & 0.297 & 0.178 & 0.322 & 0.158 & 0.239 \\
+SAE & 0.177 & 0.151 & 0.191 & 0.140 & 0.165 \\
+\bottomrule
+\end{tabular}
+\caption{\steeringtag{} Overall score.}
+\label{tab:transform-steer-judge}
+\end{subtable}
+    \caption{Results on \textsc{Concept500} for ReFT-r1 (\textit{affine}) vs.~ReFT-r1 and other selected methods.}
+    \label{tab:transform}
+\end{table}
+% \begin{table}[h!]
+%     \small
+%     \centering
+% \begin{tabular}{lccccc}
+% \toprule
+% \multirow[t]{2}{*}{\textbf{Method}} & \multicolumn{2}{c}{\textbf{Gemma-2-2B}}  & \multicolumn{2}{c}{\textbf{Gemma-2-9B}} & \multirow[t]{2}{*}{\textbf{Avg.}} \\
+% & \multicolumn{1}{c}{L10} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L31} \\
+% % identifier & 2b, l10, concept500 & 2b, l20, concept500 & 9b, l20, concept500 & 9b, l31, concept500 \\
+% % method &  &  &  &  \\
+% \midrule
+% DiffMean & \underline{0.948} & 0.946 & 0.955 & 0.921 & \textbf{0.942} \\
+% Probe & 0.940 & 0.946 & 0.933 & \textbf{0.942} & \underline{0.940} \\
+% ReFT-r1 & \textbf{0.952} & \textbf{0.965} & \textbf{0.966} & 0.869 & \underline{0.938} \\
+% \rowcolor{blue!20} \textbf{ReFT-r1 (\emph{affine})} & -- & 0.954 & 0.974 & -- & -- \\
+% Prompt & 0.910 & 0.921 & 0.940 & 0.943 & 0.929 \\
+% SAE-A & 0.924 & 0.911 & --- & --- & \textit{0.918} \\
+% SSV & 0.934 & 0.950 & 0.910 & 0.854 & 0.912 \\
+% LAT & 0.742 & 0.809 & 0.572 & 0.725 & 0.712 \\
+% SAE & 0.735 & 0.755 & 0.631 & 0.659 & 0.695 \\
+% PCA & 0.714 & 0.712 & 0.559 & 0.622 & 0.652 \\
+% IG & 0.440 & 0.375 & 0.508 & 0.383 & 0.426 \\
+% IxG & 0.243 & 0.217 & 0.193 & 0.330 & 0.246 \\
+% \bottomrule
+% \end{tabular}
+%     \caption{\concepttag{} Mean ROC AUC for each method on concept detection including the subspaces generated via affine transformation from another model. \textbf{Bold} indicates highest ROC AUC in that column; \underline{underline} indicates no significant difference vs.~the best performer. We place ReFT-r1 (\emph{affine}) next to ReFT-r1 for comparison purposes rather than to reflect its ranking.}
+%     \label{tab:transform-roc-auc}
+% \end{table}
+
+
+% \begin{table}[h!]
+%     \centering
+%     \small
+%     % Subtable
+% \adjustbox{max width=\textwidth}{
+% \begin{tabular}{lccccc}
+% \toprule
+% \multirow[t]{2}{*}{\textbf{Method}} & \multicolumn{2}{c}{\textbf{Gemma-2-2B}}  & \multicolumn{2}{c}{\textbf{Gemma-2-9B}} & \multirow[t]{2}{*}{\textbf{Avg.}} \\
+% & \multicolumn{1}{c}{L10} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L20} & \multicolumn{1}{c}{L31} \\
+% % identifier & 2b, l10, concept500 & 2b, l20, concept500 & 9b, l20, concept500 & 9b, l31, concept500 \\
+% % method &  &  &  &  \\
+% \midrule
+% Prompt & 0.731 & \textbf{0.744} & \textbf{1.081} & \textbf{1.062} & \textbf{0.905} \\
+% LoReFT & 0.705 & \underline{0.744} & 0.790 & 0.767 & 0.752 \\
+% ReFT-r1 & \textbf{0.798} & \underline{0.723} & 0.812 & 0.607 & 0.735 \\
+% \rowcolor{blue!20} \textbf{ReFT-r1 (\emph{affine})} & -- & 0.628 & 0.749 & -- & -- \\
+% LoRA & 0.646 & 0.679 & 0.618 & 0.592 & 0.634 \\
+% SFT & 0.631 & 0.629 & --- & --- & \textit{0.630} \\
+% DiffMean & 0.480 & 0.359 & 0.505 & 0.289 & 0.409 \\
+% SAE & 0.338 & 0.310 & 0.341 & 0.272 & 0.315 \\
+% SAE-A & 0.325 & 0.285 & --- & --- & \textit{0.305} \\
+% LAT & 0.201 & 0.232 & 0.220 & 0.240 & 0.223 \\
+% Probe & 0.225 & 0.220 & 0.222 & 0.214 & 0.220 \\
+% PCA & 0.183 & 0.177 & 0.196 & 0.213 & 0.192 \\
+% SSV & 0.057 & 0.000 & 0.024 & 0.008 & 0.022 \\
+% \bottomrule
+% \end{tabular}
+% }
+%     \caption{\steeringtag{} Mean overall steering scores for each method including the subspaces generated via affine transformation from another model, after steering factor selection. We place ReFT-r1 (\emph{affine}) next to ReFT-r1 for comparison purposes rather than to reflect its ranking.}
+%     \label{tab:transform-steer-judge}
+% \end{table}
+

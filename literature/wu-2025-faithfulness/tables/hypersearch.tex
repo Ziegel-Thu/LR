@@ -1,0 +1,47 @@
+\begin{table}[!h]
+\centering
+\small
+\caption{Hyperparameter settings for 2B model.}
+\adjustbox{max width=\textwidth}{\begin{tabular}{p{2.5cm}p{1.6cm}p{1.6cm}p{1.8cm}p{1.6cm}p{1.6cm}p{1.6cm}p{1.6cm}p{1.6cm}}
+\toprule
+\textbf{Hyperparameters} & \textbf{LinearProbe} & \textbf{LsReFT} & \textbf{SteeringVector} & \textbf{LoReFT} & \textbf{LoRA} & \textbf{SFT} & \textbf{IG/IxG} & \textbf{BoW} \\ \midrule
+Batch size & \{12, 24, \underline{48}\} & \{3, \underline{6}, 12\} & \{3, \underline{6}, 12\} & \{18, \underline{36}\} & \{18, \underline{36}\} & \{36, \underline{72}, 144\} & \{18, \underline{36}, 72, 144\} & --- \\  
+LR & \{1e-4, 5e-4, 1e-3, \underline{5e-3}\} & \{1e-3, 5e-3, \underline{1e-2}, 2e-2\} & \{1e-3, 5e-3, \underline{1e-2}, 2e-2\} & \{3e-4, 6e-4, \underline{9e-4}, 1e-3\} & \{3e-4, 6e-4, \underline{9e-4}, 1e-3\} & \{1e-5, 2e-5, \underline{4e-5}\} & \{2e-4, \underline{4e-4}, 4e-4, 8e-4, 1e-3, 4e-3\} & ---  \\  
+Weight decay & \{1e-4, \underline{1e-3}, 1e-2, 1e-1\} & 0 & 0 & 0 & 0 & 0 & 2e-4 & ---  \\  
+L1 sparse & --- & \{1e-3, \underline{5e-3}\} & --- & --- & --- & --- & --- & ---  \\  
+L1 coeff & --- & \{1e-3, \underline{5e-3}\} & --- & --- & --- & --- & --- & ---  \\  
+N epoch & \{3, 6, 12, \underline{24}\} &  \{\underline{3}, 6, 12, 24\} &  \{\underline{3}, 6, 12, 24\} &  \{3, 6, 12, \underline{24}, 48\} &  \{3, 6, 12, \underline{24}, 48\} & \{\underline{8}, 12, 24, 48\} & \{12, \underline{24}, 48, 72\} & ---  \\  
+Layers & --- & --- & --- & \{5, 10, 15, 20\} & \{5, 10, 15, 20\} & --- & --- & ---  \\
+LoRA alpha & --- & --- & --- & --- & 32 & --- & --- & ---  \\
+LoRA component & --- & --- & --- & --- & o\_proj & --- & --- & ---  \\  
+BoW penalty & --- & --- & --- & --- & --- & --- & --- & \{\texttt{l1}, \texttt{l2}\}  \\  
+BoW \emph{C} & --- & --- & --- & --- & --- & --- & --- &  \{0.001, 0.01, 0.1, 1, 10, \underline{100}\} \\  
+BoW solver & --- & --- & --- & --- & --- & --- & ---  & \{\underline{\texttt{lbfgs}}, \texttt{liblinear}\} \\  
+\bottomrule
+\end{tabular}}
+\label{tab:hyperparameters_settings_2B}
+\end{table}
+
+\begin{table}[!h]
+\centering
+\small
+\caption{Hyperparameter settings for 9B model.}
+\adjustbox{max width=\textwidth}{\begin{tabular}{p{2.5cm}p{1.6cm}p{1.6cm}p{1.8cm}p{1.6cm}p{1.6cm}p{1.6cm}p{1.6cm}}
+\toprule
+\textbf{Hyperparameters} & \textbf{LinearProbe} & \textbf{LsReFT} & \textbf{SteeringVector} & \textbf{LoReFT} & \textbf{LoRA} & \textbf{IG/IxG} & \textbf{BoW} \\ \midrule
+Batch size & \{12, 24, \underline{48}\} & \{3, \underline{6}, 12\} & \{3, \underline{6}, 12\} & \{18, \underline{36}\} & \{18, \underline{36}\} & \{18, 36, 72, \underline{144}\} & --- \\  
+LR & \{1e-4, 5e-4, \underline{1e-3}, 5e-3, 1e-2, 1e-1\} & \{1e-3, \underline{5e-3}, 1e-2, 2e-2\} & \{1e-3, 5e-3, \underline{1e-2}, 2e-2\} & \{3e-4, \underline{4e-4}, 6e-4, 9e-4, 1e-3\} & \{3e-4, 6e-4, 9e-4, 1e-3, \underline{5e-3}\} & \{2e-5, 4e-5, 8e-5, \underline{8e-5}, 1e-4, 4e-4\} & ---  \\  
+Weight decay & \{0, \underline{1e-4}, 1e-3\} & 0 & 0 & 0 & 0 & 2e-4 & ---  \\  
+L1 sparse & --- & \{1e-3, \underline{5e-3}\} & --- & --- & --- & --- & ---  \\  
+L1 coeff & --- & \{1e-3, \underline{5e-3}\} & --- & --- & --- & --- & ---  \\  
+N epoch &  \{3, 6, \underline{12}, 24\} &  \{\underline{3}, 6, 12, 24\} & \{\underline{3}, 6, 12, 24\} &  \{12, \underline{24}, 48\} & \{12, \underline{24}, 48\} &  \{12, 24, 48, \underline{72}\} & ---  \\  
+Layers & --- & --- & --- & \{12, 20, 31, 39\} & \{12, 20, 31, 39\} & --- & ---  \\  
+LoRA alpha & --- & --- & --- & --- & 32 & --- & ---  \\  
+LoRA component & --- & --- & --- & --- & o\_proj & --- & ---  \\  
+BoW penalty & --- & --- & --- & --- & --- & --- & \{\texttt{l1}, \texttt{l2}\}  \\  
+BoW \emph{C} & --- & --- & --- & --- & --- & --- &  \{0.001, 0.01, 0.1, 1, 10, \underline{100}\} \\  
+BoW solver & --- & --- & --- & --- & --- & --- & \{\underline{\texttt{lbfgs}}, \texttt{liblinear}\} \\  
+\bottomrule
+\end{tabular}}
+\label{tab:hyperparameters_settings_9B}
+\end{table}

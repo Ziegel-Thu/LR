@@ -1,0 +1,271 @@
+\subsection{Generalizations and Interpretations as $M \rightarrow \infty$}\label{sec:asympt-limit}
+
+In the main text, we considered quantifying representational similarity across a finite set of $M$ stimulus conditions.
+Further, when considering the average distance in decoding performance, we have assumed that $\expect[\mbz \mbz^\top] = \mbI$.
+Here, we briefly discuss how to relax both constraints, leaving a full investigation to future work.
+Readers will need familiarity with the basic principles of kernel methods and gaussian processes in machine learning (see e.g. \cite{KernelsBook,GPBook}) to follow along with certain results in this section.
+
+To begin, we must revisit and refine our theoretical framework developed in \cref{sec:setup-linear-decoding}.
+Under \cref{proposition:avg-case}, we treated the neural response matrices, $\mbX$ and $\mbY$, as constants while we treated the decoder targets, $\mbz$, as a random variable.
+In this section we will treat $\mbX$, $\mbY$ and $\mbz$ as joint random variables, as has been done in prior work \cite{pospisil2024estimating,BoixAdsera2022}.
+Specifically, let $\cU$ denote the space of possible stimulus inputs (e.g. the space of natural images or grammatically correct English sentences).
+We are interested in quantifying similarity between two neural networks, $f : \cU \mapsto \reals^{N_X}$ and $g : \cU \mapsto \reals^{N_Y}$, across this stimulus space.
+Let $P_{\mbu}$ denote a distribution with support on $\cU$, and let $\mbu_1, \dots, \mbu_M$ denote independent samples from $P_{\mbu}$.
+As before, we collect the network responses into matrices $\mbX \in \reals^{M \times N_X}$ and $\mbY \in \reals^{M \times N_Y}$, which we assume to be mean centered, $\expect[f(\mbu)] = \expect[g(\mbu)] = \mb{0}$.
+The rows of these matrices are given by $\mbx_i = f(\mbu_i)$ and $\mby_i = g(\mbu_i)$, and we assume that $\|f(\mbu_i) \|_2 \le \infty$ for all inputs indexed by $i \in \{1, ..., M \}$.  
+This is a common assumption that can be interpreted in the neuroscience sense as assuming neural firing rates are bounded from above (they cannot become arbitrarily large).  
+ 
+
+Finally, we define a decoding task as a function $\eta : \cU \mapsto \reals$.
+For $M$ finite samples (as considered in the main text), the decoder target is the vector with elements consisting of $\eta$ evaluated at each sampled input: ${\mbz = \begin{bmatrix} \eta(\mbu_1) & \dots & \eta(\mbu_M) \end{bmatrix}^\top}$.
+As in \cref{sec:cka-interpretation-section,sec:shape-distance-connection}, we will be interested in characterizing the \textit{average} decoder alignment over multiple tasks.
+In the main text we considered $\expect_{\mbz} \langle \mbX \mbw^*, \mbY \mbv^* \rangle$, but we would like to now generalize this to an expectation of an inner product between two \emph{functions} over the input space. 
+We consider $\eta$ to be drawn from a Gaussian process, $\eta \sim \cG \cP(q)$, with a covariance operator $q: \cU \times \cU \mapsto \reals$.
+Intuitively, $q$ defines the difficulty of the distribution over regression tasks by specifying smoothness with respect to the input space $\cU$.
+For example, the popular squared exponential or radial basis function (RBF) kernel:
+\begin{equation}
+q(\mbu, \mbu^\prime) = \exp \left ( -\frac{\Vert \mbu - \mbu^\prime \Vert_2^2}{2 \gamma} \right )
+\end{equation}
+comes equipped with a length scale parameter $\gamma > 0$ that determines the smoothness of functions sampled $\eta \sim \cG \cP(q)$.
+In the limit that $\gamma \rightarrow 0$ we get the Kronecker delta function:
+\begin{equation}
+\delta(\mbu, \mbu^\prime) = \begin{cases} 1 & \mbu = \mbu^\prime \\ 0 & \mbu \neq \mbu^\prime 
+\end{cases}
+\end{equation}
+
+In the remainder of this section, we show that the average decoding similarity converges to an expected inner product between kernels defined by the two neural systems.
+Specifically, let us define $k : \cU \times \cU \mapsto \reals$ and $h : \cU \times \cU \mapsto \reals$ as follows:
+
+\begin{equation}
+\label{eq:kernels-defined-by-neural-net}
+k(\mbu, \mbu') = f(\mbu)^\top \mbG(f)^{-1} f(\mbu') \qquad \text{and} \qquad h(\mbu, \mbu') = g(\mbu)^\top \mbG(g)^{-1} g(\mbu')
+\end{equation}
+
+where we have generalized \cref{eq:G-alpha-beta} as:
+
+\begin{equation}
+\mbG(f) = a \expect[f(\mbu) f(\mbu)^\top] + b \mbI
+\end{equation} 
+
+We denote by $L^2(\mathcal{U})$ the space of $L^2$-integrable functions from the set $\mathcal{U}$ to $\reals$. 
+Consider the integral operators $\mathcal{K}: L^2(\mathcal{U})\rightarrow L^2(\mathcal{U}) $ and $\mathcal{H}: L^2(\mathcal{U})\rightarrow L^2(\mathcal{U})$ associated with the kernels in \cref{eq:kernels-defined-by-neural-net}.
+We define the functions $\eta_\mathcal{K}(\mbu)$ and $\eta_\mathcal{H}(\mbu)$ as these operators acting on the decoding task function $\eta(\mbu)$:
+
+
+\begin{equation}\label{eq:Kint-def}
+    [\mathcal{K}\eta](\mbu) = \int k(\mbu, \mbu') \eta(\mbu') p(\mbu') d\mbu' \equiv \eta_\mathcal{K}(\mbu) 
+\end{equation}
+
+\begin{equation}\label{eq:Hint-def}
+    [\mathcal{H}\eta](\mbu) = \int h(\mbu, \mbu') \eta(\mbu') p(\mbu') d\mbu' \equiv \eta_\mathcal{H}(\mbu) 
+\end{equation}
+
+
+The functions $\eta_\mathcal{K}(\mbu)$ and $\eta_\mathcal{H}(\mbu)$ are analogous to the  vectors $\mbX \mbw^* = \mbK_{X} \in \reals^{M}$ and $\mbY \mbv^* = \mbK_{Y} \in \reals^{M}$, and can be thought of as the `decoded' functions.  
+% (These are analogous to $\hat{z}$ for each system in the finite case.)
+We will define the infinite-dimensional decoding similarity as the inner product:
+
+\begin{equation}
+   S =  \langle \eta_{\mathcal{K}}, \eta_{\mathcal{H}} \rangle_{L^2} = \int_{\mathcal{U}}\eta_{\mathcal{K}}(\mbu) \eta_{\mathcal{H}}(\mbu) p(\mbu) d\mbu 
+\end{equation}
+
+Then we have, using the definitions in \cref{eq:Kint-def} and \cref{eq:Hint-def},
+
+\begin{equation}
+    % S &= \int_{\mathcal{U}}\eta_{\mathcal{K}}(\mbu) \eta_{\mathcal{H}}(\mbu) p(\mbu) d\mbu \\
+    S =\int_{\mathcal{U}} \int_{\mathcal{U}} \int_{\mathcal{U}} k(\mbu, \mbu') \eta(\mbu') \eta(\mbu'') h(\mbu, \mbu'')\, p(\mbu) d\mbu \,p(\mbu') d\mbu'\, p(\mbu'') d\mbu''.
+\end{equation}
+
+This integral measures the similarity between two neural systems $f$ and $g$ for a particular choice of decoding task function $\eta$.  
+However, following the main text, we would like to take the expectation over some ensemble of decoding task functions $\eta$.
+
+\begin{equation}
+       \expect_{\eta}[S] = \expect_{\eta} \langle \eta_{\mathcal{K}}, \eta_{\mathcal{H}} \rangle_{L^2}
+\end{equation}
+
+Assuming the conditions to invoke Fubini's theorem regarding changing the ordering of integration are met, we have 
+
+\begin{equation}
+    \expect_{\eta}[S] =\int_{\mathcal{U}} \int_{\mathcal{U}} \int_{\mathcal{U}} k(\mbu, \mbu') q(\mbu', \mbu'') h(\mbu, \mbu'')\, p(\mbu) d\mbu \,p(\mbu') d\mbu'\, p(\mbu'') d\mbu''.
+\end{equation}
+
+We now recognize this integral as this as the trace of a composition of integral operators, 
+
+\begin{equation}\label{eq:exp-sim-inf}
+    \expect_{\eta}[S] = \Tr [\mathcal{K}\mathcal{Q} \mathcal{H}] %= \langle \mathcal{Q}^{1/2} \mathcal{K},\mathcal{Q}^{1/2} \mathcal{H} \rangle_{HS} .
+\end{equation}
+
+where $\mathcal{Q}: L^2(\mathcal{U}) \rightarrow L^2(\mathcal{U})$ is the covariance operator associated with the Gaussian process covariance function $q$.  
+This quantity is finite, since all of the operators involved are Hilbert-Schmidt and trace-class.  
+
+We now would like to show that the finite-dimensional notion of ``decoding similarity" introduced in the main text (appropriately normalized) can be thought of as a plug-in estimator of the quantity \cref{eq:exp-sim-inf}, and that this estimator converges to $\expect_{\eta}[S]$ as $M \rightarrow \infty$.
+
+
+
+A `plug-in' estimator for this could be to use the Gram matrices for each kernel and matrix multiplication to approximate the integrals.
+First, we sample $M$ examples from the input distribution $\mbu \sim P_{\mbu}$ and construct the Gram matrices $\mbQ_{ij} = q(\mbu_i, \mbu_j)$ and
+
+\begin{equation}\label{eq:Kkernel}
+    \mbK_{ij} = k(\mbu_i, \mbu_j) = f(\mbu_i)^\top \mbG(f)^{-1} f(\mbu_j) 
+\end{equation}
+\begin{equation}\label{eq:Hkernel}
+\mbH_{ij} = h(\mbu_i, \mbu_j) = g(\mbu_i)^\top \mbG(g)^{-1} g(\mbu_j).
+\end{equation}
+
+%
+% \begin{align}\label{eq:gram_defs}
+%     \mbK_{ij} &= k(\mbu_i, \mbu_j) \\ %= f(\mbu_i)^\top \mbG(f)^{-1} f(\mbu_j) \\
+%     \mbH_{ij} &= h(\mbu_i, \mbu_j) \\ %= g(\mbu_i)^\top \mbG(g)^{-1} g(\mbu_j) \\ 
+% \end{align}
+%
+
+Then we have, by the strong law of large numbers,
+%
+\begin{align*}
+     \int_{\mathcal{U}} \int_{\mathcal{U}} \int_{\mathcal{U}} k(\mbu, \mbu') q(\mbu', \mbu'') h(\mbu, \mbu'')\, p(\mbu) d\mbu \,p(\mbu') d\mbu'\, p(\mbu'') d\mbu'' =& \lim_{M \rightarrow \infty} \frac{1}{M^3} \sum_{ijk} K_{ij} Q_{jk} H_{ki}
+\end{align*}
+
+or 
+
+\begin{equation}\label{eq:strong-lln}
+\Tr [\mathcal{K}\mathcal{Q} \mathcal{H}]    = \lim_{M \rightarrow \infty}\frac{1}{M^3} \Tr \mbK \mbQ \mbH.
+\end{equation}
+
+
+However, the `true' Gram matrices generated from the kernels in \cref{eq:Kkernel} and \cref{eq:Hkernel} in practice are also estimated, as the $N\times N$ regularization matrices $\mbG(f)$ and $\mbG(g)$ are potentially estimated from the same $M$ samples from $P_{\mbu}$. 
+We estimate $\mbG(f)$ and $\mbG(g)$ using the plug-in estimates of the $N\times N$ covariance matrices $\expect[f(\mbu) f(\mbu)^\top]$ and $\expect[g(\mbu) g(\mbu)^\top]$.
+
+\begin{align}
+    \mbG(\mbX) = \frac{\alpha}{M} \mbX^\top \mbX + \beta \mbI \xrightarrow[M\rightarrow \infty]{}
+ \alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI = \mbG(f)
+\end{align}
+
+
+\begin{align}
+    \mbG(\mbY) = \frac{\alpha}{M} \mbY^\top \mbY + \beta \mbI \xrightarrow[M\rightarrow \infty]{}
+ \alpha \expect[g(\mbu) g(\mbu)^\top] + \beta \mbI = \mbG(g)
+\end{align}
+
+More precisely, it can be shown that the empirical regularization matrices $\mbG(\mbX)$ and $\mbG(\mbY)$ concentrates around $\mbG(f)$ and $\mbG(g)$ in operator norm:
+
+\begin{equation}
+    \|  \mbG(\mbX) - \mbG(f)\|_{op} \xrightarrow[M\rightarrow \infty]{} 0
+\end{equation}
+
+\begin{equation}
+    \|  \mbG(\mbY) - \mbG(g)\|_{op} \xrightarrow[M\rightarrow \infty]{} 0
+\end{equation}
+
+Bounds on the rate of this convergence in operator norm can be obtained using elementary matrix concentration inequalities. 
+We now must argue that $\mbG(\mbX)^{-1}$ concentrates to $\mbG(f)^{-1}$ and similarly $\mbG(\mbY)^{-1}$ concentrates to $\mbG(g)^{-1}$.  
+Since the matrices $\mbG(\mbX)$ and $\mbG(f)$ are symmetric and positive definite, 
+%their operator norms are equal to their maximal eigenvalue, and therefore
+we have 
+
+\begin{align}\label{eq:opnorm_invs}
+    \| \mbG(\mbX)^{-1} \|_{op} &=  \max_{v: \|v \| \le 1} \| (\frac{\alpha}{M} \mbX^\top \mbX + \beta \mbI)^{-1} v \|_2 = \frac{1}{\lambda_{min}(\mbG(\mbX)) } \le \frac{1}{\beta} \\
+    \| \mbG(f)^{-1} \|_{op} &=  \max_{v: \|v \| \le 1} \| (\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1} v \|_2 = \frac{1}{\lambda_{min}(\mbG(f)) } \le \frac{1}{\beta} 
+\end{align}
+
+where the last inequality on the right hand side is a consequence of the Courant-Fischer theorem and the positive-semidefiniteness of the covariance matrix. 
+Similar relations hold for $\mbG(\mbY)$ and $\mbG(g)$.
+Now we would like to study the quantity
+
+\begin{equation}
+    \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} = \|[(\frac{\alpha}{M} \mbX^\top \mbX + \beta \mbI)^{-1} - (\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1} ]  \|_{op} 
+\end{equation}
+
+Multiplying the quantity inside the norm by identity and invoking the bound in \cref{eq:opnorm_invs}, we have
+
+\begin{align}
+     \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} &\le \frac{1}{\beta} \| \mbI - (\frac{\alpha}{M} \mbX^\top \mbX + \beta \mbI) (\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1}  \|_{op}
+\end{align}
+
+Pulling a factor of $(\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1}$ out of everything in the norm on the right hand side:
+
+\begin{align*}
+     \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} \le \frac{1}{\beta} \| \big{[} (\alpha \expect[f(\mbu)& f(\mbu)^\top] + \beta \mbI) \\
+     & - (\frac{\alpha}{M} \mbX^\top \mbX + \beta \mbI) \big{]} (\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1}  \|_{op} 
+\end{align*}
+
+and using the submultiplicative property of the operator norm,
+
+\begin{equation*}
+      \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} \le \frac{|\alpha|}{\beta} \|  \expect[f(\mbu) f(\mbu)^\top] - \frac{1}{M} \mbX^\top \mbX \|_{op} \| (\alpha \expect[f(\mbu) f(\mbu)^\top] + \beta \mbI)^{-1}  \|_{op}. 
+\end{equation*}
+
+Using \cref{eq:opnorm_invs} again, we have 
+
+\begin{equation}
+    \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} \le \frac{|\alpha|}{\beta^2} \|  \expect[f(\mbu) f(\mbu)^\top] - \frac{1}{M} \mbX^\top \mbX \|_{op}
+\end{equation}
+
+or 
+
+\begin{equation}\label{eq:inv-op-norm}
+    \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op} \le \frac{|\alpha|}{\beta^2} \|  \mbG(\mbX) - \mbG(f) \|_{op}
+\end{equation}
+
+with an analogous bound holding for $\mbG(\mbY)$ and $\mbG(g)$.
+
+
+With this knowledge, we define $\hat{\mbK}$ and $\hat{\mbH}$ as the empirical Gram matrices constructed using the estimates $\mbG(\mbX)$ and $\mbG(\mbY)$, and conclude that, for every $\{i, j \}$,
+
+\begin{equation}
+    \hat{\mbK}_{ij} = f(\mbu_i)^\top \mbG(\mbX)^{-1} f(\mbu_j) \xrightarrow[M\rightarrow \infty]{} f(\mbu_i)^\top \mbG(f)^{-1} f(\mbu_j) = \mbK_{ij}
+\end{equation}
+
+\begin{equation}
+    \hat{\mbH}_{ij} = g(\mbu_i)^\top \mbG(\mbY)^{-1} g(\mbu_j)^\top \xrightarrow[M\rightarrow \infty]{} g(\mbu_i)^\top \mbG(g)^{-1} g(\mbu_j) = \mbH_{ij}. 
+\end{equation}
+
+where we recognize the matrices $\hat{\mbK}$ and $\hat{\mbH}$ as $M \mbK_{X}$ and $M \mbK_Y$ in the main text. 
+
+
+Lastly, we would now like to study 
+
+\begin{equation}
+    \bigg{|}\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} - \Tr \mathcal{KQH} \bigg{|} 
+\end{equation}
+
+taking note that the quantity $\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH}$ is a scaled version of \cref{eq:proposition-avg-case} in the main text.
+The triangle inequality implies a relationship with the trace of the true Gram matrices:
+
+\begin{equation}\label{eq:triangle-ineq}
+    \bigg{|}\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} - \Tr \mathcal{KQH} \bigg{|} \le \bigg{|}\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} - \frac{1}{M^3} \Tr \mbK \mbQ \mbH \bigg{|} + \bigg{|}\frac{1}{M^3} \Tr \mbK \mbQ \mbH - \Tr \mathcal{KQH} \bigg{|}.
+\end{equation}
+
+The first term on the right hand side can be bounded:
+
+\begin{align*}
+    \bigg{|}\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} - \frac{1}{M^3} \Tr \mbK \mbQ \mbH \bigg{|}  \le & \frac{1}{M^3}\sum_{ijk} \big{|} \hat{\mbK}_{ij} \mbQ_{jk} \hat{\mbH}_{ki} - \mbK_{ij} \mbQ_{jk} \mbH_{ki}\big{|} \\   
+    = & \frac{1}{M^3}\sum_{ijk} \big{|} \mbQ_{jk} \big{|} \big{|}  \hat{\mbK}_{ij} \hat{\mbH}_{ki} - \mbK_{ij} \mbH_{ki}\big{|} \\
+    = & \frac{1}{M^3}\sum_{ijk} \big{|} \mbQ_{jk} \big{|} \big{|}  (\hat{\mbK}_{ij} - \mbK_{ij}) \hat{\mbH_{ki}} +  \mbK_{ij} (\hat{\mbH}_{ki} - \mbH_{ki}) \big{|} \\
+    =& \frac{1}{M^3}\sum_{ijk} \big{|} \mbQ_{jk} \big{|} \bigg{(} \big{|}  \hat{\mbK}_{ij} - \mbK_{ij} \big{|}\big{|}\hat{\mbH}_{ki}\big{|} +  \big{|}\mbK_{ij}\big{|}\big{|} \hat{\mbH}_{ki} - \mbH_{ki} \big{|} \bigg{)}.
+\end{align*}
+
+Using the definitions of $\hat{\mbK}_{ij}$, $\mbK_{ij}$, $\mbH_{ij}$, and $\hat{\mbH_{ij}}$, 
+
+\begin{align*}
+    \bigg{|}\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} - \frac{1}{M^3} \Tr \mbK \mbQ \mbH \bigg{|} \le \frac{1}{M^3} \|  (\mbG(\mbX)^{-1} - \mbG(f)^{-1})\|_{op}    \sum_{ijk} \big{|} \mbQ_{jk} \big{|}  \big{|}\hat{\mbH}_{ki}\big{|} \| f(\mbu_i)\| \| f(\mbu_j) \| \\
+    + \frac{1}{M^3} \|  (\mbG(\mbY)^{-1} - \mbG(g)^{-1})\|_{op}    \sum_{ijk} \big{|} \mbQ_{jk} \big{|}  \big{|}\mbK_{ij}\big{|} \| g(\mbu_i)\| \| g(\mbu_j) \| .
+\end{align*}
+
+Since $\big{|} \mbQ_{jk} \big{|}$, $\big{|}\hat{\mbH}_{ki}\big{|}$, and $\big{|}\mbK_{ij}\big{|}$ are assumed to be finite for all $i, j, k \in \{1, ... ,M \}$, and the norms of the neural responses $\| f(\mbu_i)\|$ and $\| g(\mbu_i)\|$ can be assumed to be bounded\footnote{Similar to the treatment in \cite{pospisil2024estimating}, this could be interpreted as a resource constraint on the neural responses.} for all $i \in \{1, ... ,M \}$, we can conclude by referencing \cref{eq:inv-op-norm} that the right hand side approaches $0$ as $M \rightarrow \infty$.  
+This argument can be made precise by considering the rate of convergence of $\hat{\mbK}_{ij} \rightarrow \mbK_{ij}$ and $\hat{\mbH}_{ij} \rightarrow \mbH_{ij}$ that is inherited from the concentration of $\mbG(\mbX) \rightarrow \mbG(f)$ and $\mbG(\mbY) \rightarrow \mbG(g)$.
+
+The second term on the right hand side of \cref{eq:triangle-ineq} is precisely the convergence of a sum over `true' Gram matrices to the trace of a composition of integral operators described in \cref{eq:strong-lln}, so this term also approaches $0$ as $M \rightarrow \infty$.    
+
+Putting it all together
+
+\begin{equation}
+\frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH}  \xrightarrow[M\rightarrow \infty]{}  \Tr [\mathcal{K}\mathcal{Q} \mathcal{H}] =\expect_{\eta}[S].
+\end{equation}
+
+where we can recognize the plug-in estimate as 
+
+\begin{equation}
+    \frac{1}{M^3} \Tr \hat{\mbK} \mbQ \hat{\mbH} = \frac{1}{M} \Tr \mbK_X \mbK_z \mbK_Y = \frac{1}{M}\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle.
+\end{equation}
+
+in the notation used in the main text (compare with \cref{eq:proposition-avg-case}).  

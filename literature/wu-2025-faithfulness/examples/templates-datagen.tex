@@ -1,0 +1,167 @@
+\tcbset{
+    breakable=false,
+    enhanced,   
+    left*=10pt, right*=10pt,
+    top=0pt, bottom=0pt,
+    colback=white!10!white,
+    colframe=black!75!black,
+    fonttitle=\bfseries\large,
+    subtitle style={boxrule=0pt,colback=gray!50!white},
+}
+
+\lstset{language=python, breaklines=true}
+
+\begin{tcolorbox}[title=Fetch genre]
+\quad \\
+\small 
+Given the concept: \\ \\ \textcolor{gray}{[Concept goes here]} \\ \\ Identify the single primary genre that best fits the concept from the following options: \\ \\ Text; Code; Math \\ \\ Output only the best-fitting genre. If none apply, output `$<$NONE$>$'. \\ \\ **Formatting Guidelines:** \\ - Output the genre on a single line. \\ - Do not include any additional text or formatting. \\ \\ **Examples:** \\ - Concept: 'words or phrases containing odd numbers' Output: Text \\
+- Concept: `a programming error' Output: Code \\
+- Concept: `integral calculus' Output: Math \\
+- Concept: `a narrative poem' Output: Text \\ \\ Return only the single best-fitting genre as specified.\\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=List words related to the concept]
+\quad \\
+\small 
+Given the following concept: \\ \\ \textcolor{gray}{[Concept goes here]} \\ \\ Your task is to list up to 10 English words that are closely related to this concept. Each word should be a single, common English word. \\ \\ Output each word on a separate line, in plain text, without any special formatting (e.g., no quotation marks, numbers, bullet points, or additional text). \\ \\ If the concept is too broad or vague (e.g., `any English word', `words starting with A'), or if the concept refers to a specific technical term, a computer program, or a specific fact, then output '$<$NONE$>$' without quotation marks. \\ \\ Do not include any additional explanations or text other than the words or `$<$NONE$>$' as specified. \\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Find alternative senses of a word]
+\quad \\
+\small 
+Given the word: \\ \\ \textcolor{gray}{[Word goes here]} \\ \\ Provide one other common semantic meaning of this word that is distinct from and unrelated to: \\ \\ \textcolor{gray}{[Concept goes here]} \\ \\ Your response should be a brief description of the other meaning, written in plain text without any special formatting. Specifically: \\
+- Do not use quotation marks. \\
+- Do not include list numbers, bullet points, or any prefixes. \\
+- Do not add any additional explanations or text. \\ \\ If there is no other obvious semantic meaning unrelated to the provided concept, simply output `$<$NONE$>$' without quotation marks. \\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Check whether two senses are different]
+\quad \\
+\small 
+Determine if Concept A is meaningfully distinct from Concept B by thoroughly examining their definitions, core features, typical usage, and any potential overlaps in meaning, context, or purpose. \\ \\
+Concept A: \textcolor{gray}{[Concept goes here]} \\
+Concept B: \textcolor{gray}{[Concept goes here]} \\ \\
+Analyze these concepts for **any** shared meanings, contexts, roles, or purposes, focusing on how they relate or intersect. Please explain your reasoning, considering both similarities and differences. \\ \\
+- If Concept A and Concept B have **any** overlap in meaning, context, usage, or if one is a subset or specific instance of the other, conclude with `Answer: $<$NO$>$'. \\
+- Only if they are **entirely unrelated** with **no overlap whatsoever** in meaning, context, or usage, conclude with `Answer: $<$YES$>$'. \\ \\ 
+**Final Answer:** 'Answer: $<$YES$>$' or 'Answer: $<$NO$>$'.\\
+\end{tcolorbox}
+
+\clearpage
+
+\begin{tcolorbox}[title=Check whether one sense is different from other concepts]
+\quad \\
+\small 
+Evaluate whether Concept A is meaningfully distinct from a given set of concepts by examining their definitions, core features, typical usage, and any potential overlaps in meaning, context, or purpose. \\ \\
+Concept A: \textcolor{gray}{[Concept goes here]} \\
+Existing Concepts:
+\textcolor{gray}{[Concepts go here]} \\ \\
+For each concept in the set, analyze Concept A for **any** shared meanings, contexts, roles, or purposes. Consider how Concept A might relate or intersect with each concept individually, as well as with the group collectively. Please explain your reasoning by examining both similarities and differences. \\
+- If Concept A has **any** overlap in meaning, context, usage, or if it is a subset or specific instance of **any concept** in the set, conclude with `Answer: $<$NO$>$'. \\
+- Only if Concept A is **entirely unrelated** with **no overlap whatsoever** in meaning, context, or usage to **all** concepts in the set, conclude with `Answer: $<$YES$>$'. \\ \\
+**Final Answer:** `Answer: $<$YES$>$' or `Answer: $<$NO$>$'.\\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Modify content with concept]
+\quad \\
+\small 
+Content Modification Task: \\ \\
+You are given the following content: \\ \\
+\textcolor{gray}{[Modifying content go here]} \\ \\
+Your task is to minimally modify this content by inserting some commonly used words, phrases, or elements that reflect themes or ideas related to `\textcolor{gray}{[Concepts go here]}' into the middle of the content. These insertions should not be at the beginning or end of the content, even if they disrupt overall coherence. \\ \\
+Guidelines: \\
+- Try to avoid copying words from the definition of `\textcolor{gray}{[Concepts go here]}' if possible. \\
+- Ensure parts of the content remain unrelated to the concept `\textcolor{gray}{[Concepts go here]}'. \\ 
+- The final content should have approximately the same length as the original content. \\
+- The concept should be clearly represented through the inserted word, phrase, or element, even if the content's meaning isn't entirely coherent. \\
+- Use special characters only if appropriate for the genre (e.g., operators in code or math equations). \\ \\
+Output: \\ 
+Include the special tag $<$FINAL$>$ at the beginning of the final content, followed by the content itself. Return only this tagged content, with no additional text.\\
+\end{tcolorbox}
+
+\clearpage
+
+\begin{tcolorbox}[title=Modify content with contrastive concept]
+\quad \\
+\small 
+Content Modification Task: \\ \\
+You are given the following content: \\ \\
+\textcolor{gray}{[Concept goes here]} \\ \\ 
+Your task is to minimally modify this content by inserting the word `{WORD}' into the middle of the content. This word, along with modified content, should convey meanings related to the concept `\textcolor{gray}{[Concept goes here]}'. The insertion should not be at the beginning or end of the content. \\ \\
+Guidelines: \\
+- Ensure parts of the content remain irrelevant to the concept `\textcolor{gray}{[Concept goes here]}'. \\
+- Avoid any mention of `\textcolor{gray}{[Contrast concept goes here]}' in the content, regardless of coherence. \\
+- The final content should have approximately the same length as the original content. \\
+- Ensure the content reflects the essence of the concept associated with `\textcolor{gray}{[Concept goes here]}', even if the overall meaning isn't entirely coherent. \\
+- Ensure grammatical correctness (or syntactical correctness for code/equations). \\
+- Use special characters only if appropriate for the genre (e.g., operators in code or math equations). \\ \\
+Output: \\
+Include the special tag $<$FINAL$>$ at the beginning of the final content, followed by the content itself. Return only this tagged content, with no additional text.\\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Generate response given instruction]
+\quad \\
+\small 
+Given the following instruction: \\ \\ 
+\textcolor{gray}{[Instruction goes here]} \\ \\
+Your task is to provide a response. \\ \\
+**Formatting Guidelines:**  \\
+- Return only the response to the instruction. \\
+- Write the final content (or appropriate format for the genre) in plain text. \\
+- Do not include any additional text, explanations, or formatting. \\ \\
+
+**Final Answer:** Return only the final content, following the guidelines above.\\
+\end{tcolorbox}
+
+\clearpage
+
+\begin{tcolorbox}[title=Generate response given instruction and concept]
+\quad \\
+\small 
+Given the following instruction: \\ \\
+\textcolor{gray}{[Instruction goes here]} \\ \\ 
+Your task is to: \\
+1. Provide a response that incorporates elements related to `\textcolor{gray}{[Concept goes here]}'. \\
+2. Try to avoid copying words from the definition of `\textcolor{gray}{[Concept goes here]}' if possible. \\
+3. Ensure that your response relates to `\textcolor{gray}{[Concept goes here]}', even if the overall meaning is not fully coherent. \\ \\
+**Formatting Guidelines:** \\
+- Return only the response to the instruction. \\
+- Write the final content (or appropriate format for the genre) in plain text. \\
+- Do not include any additional text, explanations, or formatting. \\ \\
+**Final Answer:** Return only the final content, following the guidelines above.\\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Generate response given instruction without mentioning given concept]
+\quad \\
+\small 
+Given the following instruction: \\ \\
+\textcolor{gray}{[Instruction goes here]} \\ \\
+Your task is to: \\
+1. Provide a response that continues or addresses the instruction naturally. \\
+2. Avoid any mention of `\textcolor{gray}{[Concept goes here]}' in the continuation, regardless of coherence. \\ \\
+**Formatting Guidelines:** \\
+- Return only the response to the instruction. \\
+- Write the final content (or appropriate format for the genre) in plain text. \\
+- Do not include any additional text, explanations, or formatting. \\ \\
+**Final Answer:** Return only the final content, following the guidelines above.\\
+\end{tcolorbox}
+
+\clearpage
+
+\begin{tcolorbox}[title=Generate response given instruction with contrastive concept]
+\quad \\
+\small 
+Content Response Task: \\ \\
+You are given the following instruction: \\ \\
+\textcolor{gray}{[Instruction goes here]} \\ \\
+Your task is to provide a response to the instruction by inserting the word `\textcolor{gray}{[Word goes here]}' into the middle of the response. This word, along with the response, should convey meanings related to the concept `\textcolor{gray}{[Contrastive concept goes here]}'. The insertion should not be at the beginning or end of the response. \\ \\
+Guidelines: \\
+- Avoid any mention of `\textcolor{gray}{[Concept goes here]}' in the response, regardless of coherence. \\
+- Ensure the response reflects the essence of the concept associated with `\textcolor{gray}{[Word goes here]}', even if the overall meaning isn't entirely coherent. \\
+- Ensure grammatical correctness (or syntactical correctness for code/equations). \\
+- Use special characters only if appropriate for the genre (e.g., operators in code or math equations). \\ \\
+Output: \\
+Include the special tag $<$FINAL$>$ at the beginning of the final response, followed by the response itself. Return only this tagged response, with no additional text.\\
+\end{tcolorbox}
+
+\clearpage

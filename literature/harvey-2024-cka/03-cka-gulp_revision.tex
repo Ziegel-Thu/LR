@@ -1,0 +1,124 @@
+\section{Interpretations of CKA and related measures}
+\label{sec:cka-interpretation-section}
+
+\begin{table}
+  \centering
+  \begin{tabular}{lcc}
+    \toprule
+    \cmidrule(r){1-2}
+    Similarity measure     & $a$     & $b$ \\
+    \midrule
+    Linear CKA & 0  & $b$     \\
+    GULP & 1 & $\lambda$ \\
+    CCA     & 1 & 0      \\
+    ENSD     & 0       & $\frac1M\frac{\Tr[\mbC_X^2]}{\Tr[\mbC_X]}$  \\
+    \bottomrule
+  \end{tabular}
+  \vspace{1em}
+  \caption{Existing similarity measures are equivalent to the decoding score in \cref{eq:inner-prod-linear-optimal-readouts-fixed-z} or the decoding distance in \cref{eq:decoding_metric} for different choices of $a$ and $b$ in \cref{eq:G-a-b}.}
+  \label{tab:GX}
+\end{table}
+
+Intuitively, \cref{proposition:avg-case} says that the expected inner product between optimal linear readouts is equal to a weighted matrix inner product between kernel matrices $\mbK_X$ and $\mbK_Y$ (with respect to a positive semi-definite weighting matrix $\mbK_z$, which of course depends on the distribution of decoding targets $\mbz$).
+Such kernel matrices and inner products are important for several methods of quantifying representational similarity.
+We can therefore leverage this result to provide new interpretations of several distance measures.
+The most basic idea is to consider a distribution over $\mbz$ which satisfies $\mbK_z = \mbI$.
+This leads us to measure distances using standard Euclidean geometry, which we state as the following corollary to \cref{proposition:avg-case}.  
+We explore a relaxation of this assumption and the limit as the number of input samples $M\rightarrow \infty$ in \cref{sec:asympt-limit}.
+% \begin{corollary}
+% For any distribution over decoding targets, the squared Euclidean distance between $\mbK_X$ and $\mbK_Y$ is equal to the expected squared Euclidean distance between decoded signals:
+% \vspace{2mm}
+% \begin{equation}\label{eq:decoding_metric}
+% \expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 = \expect[\mbz^\top(\mbK_X-\mbK_Y)^2\mbz]=\|\mbK_z^{1/2}(\mbK_X-\mbK_Y)\|_F^2.
+% \end{equation}
+% By Cauchy-Schwarz inequality,
+% \begin{equation}\label{eq:decoding_metric_bounds}
+%     \lambda_M(\mbK_z)\|\mbK_X-\mbK_Y\|_F^2\le\expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 \le \Tr(\mbK_z)\|\mbK_X-\mbK_Y\|_F^2,
+% \end{equation}
+% where $\lambda_M(\mbK_z)$ denotes the smallest eigenvalue of $\mbK_z$.
+% \end{corollary}
+
+\begin{corollary}\label{corollary:new}
+For any distribution over decoding targets satisfying $\mbK_z = \mbI$, the Frobenius inner product between normalized kernel matrices $\mbK_X$ and $\mbK_Y$ is equal to the average decoding similarity:
+% \begin{equation}
+% \expect \langle \mbX \mbw^* , \mbY \mbv^* \rangle = \tfrac{1}{M^2} \Tr[\mbX \mbG(\mbX)^{-1} \mbX^\top \mbY \mbG(\mbX)^{-1} \mbY^\top] = \Tr[\mbK_X \mbK_Y]
+% \end{equation}
+\begin{equation}
+\expect \langle \mbX \mbw^* , \mbY \mbv^* \rangle = \Tr[\mbK_X \mbK_Y]
+\end{equation}
+Further, when $\mbK_z = \mbI$, the (squared) average decoding distance is equal to the (squared) Euclidean distance between $\mbK_X$ and $\mbK_Y$:
+\vspace{2mm}
+\begin{equation}\label{eq:decoding_metric}
+\expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 = \Vert \mbK_X - \mbK_Y  \Vert_F^2.
+\end{equation}  
+\end{corollary}
+
+This corollary can be used to unify several neural representational similarity measures, each corresponding to a different choice of the penalty function $\mbG(\mbX)$, Table~\ref{tab:GX}.
+Further, it yields an interpretation of each measure in terms of the expected overlap or difference in decoding readouts between networks.
+
+\paragraph{Linear CKA}
+First, for $b > 0$, the following choice of $\mbG(\mbX)$ yields the linear CKA score~\cite{cortes2012,kornblith2019}:
+\begin{equation*}
+\mbG(\mbX) = b \mbI \quad \Rightarrow \quad \frac{\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle}{\sqrt{\expect \langle \mbX \mbw^*, \mbX \mbw^* \rangle \expect \langle \mbY \mbv^*, \mbY \mbv^* \rangle}} = \frac{\Tr[\mbK_X\mbK_Y]}{\Vert \mbK_X \Vert_F \Vert \mbK_Y \Vert_F} = \text{CKA}(\mbX, \mbY)
+\end{equation*}
+
+where we have normalized the expected inner product to obtain a similarity score ranging between 0 and 1.
+Note that the centering step of CKA is taken care of by our assumption, stated at the beginning of \cref{sec:setup-linear-decoding}, that the columns of $\mbX$ and $\mbY$ are preprocessed to have mean zero. 
+Thus, linear CKA be interpreted as a normalized average decoding similarity with quadratic weight regularization.
+
+\paragraph{GULP distance}
+The CKA score is closely related to Euclidean distance, so it is not surprising that we can extend our analysis to other methods that utilize this distance.
+For example, the sample GULP distance, proposed by \cite{BoixAdsera2022}, is the equal to the average decoding distance with a regularization parameter $\lambda > 0$.
+In particular,
+%
+\begin{align*}
+\mbG(\mbX) = \mbC_X + \lambda \mbI \quad \Rightarrow \quad  \expect \Vert \mbX \mbw^* - \mbY \mbv^* \Vert^2_2 = \Vert \mbK_X - \mbK_Y \Vert_F^2 = \text{GULP}_\lambda^2(\mbX, \mbY)
+\end{align*}
+
+yields the plug-in estimate of the squared GULP distance \cite[section 3]{BoixAdsera2022}.
+We therefore see that the Euclidean distance between normalized kernel matrices can be interpreted as equal to the average decoding distance, or also as an approximation of the population formulation of the GULP distance established in \cite{BoixAdsera2022}.  
+
+\paragraph{Canonical correlation analysis (CCA)} 
+CCA is another method that has been used to compare neural representations that
+fits nicely into our framework~\cite{raghu2017svcca,williams2021generalized}.
+When the two networks have the same dimension, i.e. $N = N_X = N_Y$, the output of CCA is a sequence of $N$ canonical correlation coefficients $1 \geq \rho_1 \geq \dots \geq \rho_N \geq 0$.
+The average squared canonical coefficients is sometimes used as a measure of similarity,\footnote{In the statistics literature, this summary statistic is sometimes called \textit{Yanai's generalized generalized coefficient of determination} \cite{ramsay1984matrix,Yanai1974}.} and \textcite{kornblith2019} showed this to be related to the linear CKA score on whitened representations.
+In particular, assuming the covariance matrices $\mbC_X$ and $\mbC_Y$ are invertible, we have:
+\begin{equation}
+\mbG(\mbX) = \mbC_X \quad \Rightarrow \quad  \frac{\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle}{\sqrt{\expect \langle \mbX \mbw^*, \mbX \mbw^* \rangle \expect \langle \mbY \mbv^*, \mbY \mbv^* \rangle}} = \frac{1}{N} \sum_{i=1}^N \rho_i^2
+\end{equation}
+In practice, it is often useful to incorporate regularization into CCA because the covariance matrices $\mbC_X$ and $\mbC_Y$ may be ill-conditioned.
+As mentioned above, the regularization used in GULP distance corresponds to choosing $\mbG(\mbX) = \mbC_X + \lambda \mbI$.
+A similar approach proposed in \cite{williams2021generalized} is to use $\mbG(\mbX) = (1 - \alpha) \mbC_X + \alpha \mbI$ for a hyperparameter ${0 \leq \alpha \leq 1}$.
+This effectively allows for a continuous interpolation between a CCA-based similarity score and linear CKA.
+
+\paragraph{Effective Number of Shared Dimensions (ENSD)}
+Finally, we note a connection to recent work by \textcite{Giaffar2024}, who studied the following quantity, which they call the ENSD:
+\begin{equation}
+\ensd(\mbX , \mbY) = \frac{\Tr[\mbX \mbX^\top] \Tr[\mbY \mbY^\top] \Tr[\mbX \mbX^\top \mbY \mbY^\top]}{\Tr[\mbX \mbX^\top \mbX \mbX^\top] \Tr[\mbY \mbY^\top \mbY \mbY^\top]} 
+\end{equation}
+This is simply a rescaling of the inner product, $\Tr[\mbX \mbX^\top \mbY \mbY^\top]$ and therefore easily fits within our framework using the following choice for $\mbG(\mbX)$:
+\begin{equation}
+\mbG(\mbX) = \frac{\Tr[\mbC_X^2]}{\Tr[\mbC_X]} \mbI \quad \Rightarrow \quad 
+\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle = \ensd(\mbX, \mbY )
+\end{equation}
+One of the most interesting features of ENSD is it's connection to the \textbf{participation ratio}, $\cR$:
+\begin{equation}
+\cR(\mbC_X) = \frac{\left (\Tr[\mbC_X] \right )^2}{\Tr[\mbC_X^2]} = \ensd(\mbX, \mbX)
+\end{equation}
+which is used within physics and computational neuroscience (e.g. \cite{Gao2015, Dabrowska2021, Recanatesi2022}) as a continuous analogue to the rank of a matrix, and is a measure of the effective dimensionality of the data matrix $\mbX$.
+In particular, one can show that $1 \leq \cR(\mbC_X) \leq \text{rank}(\mbC_X)$, and that these two inequalities respectively saturate when $\mbC_X$ has only one nonzero eigenvalue and when all nonzero eigenvalues are equal.
+It is also interesting to note that the \textit{inverse} participation ratio can be captured by average decoding similarity under a very simple choice for $\mbG(\mbX)$:
+\begin{equation}
+\mbG(\mbX) = \Tr[\mbC_X] \mbI \quad \Rightarrow \quad \expect \langle \mbX \mbw^*, \mbX \mbw^* \rangle = \expect \Vert \mbX \mbw^* \Vert^2 =  \frac{1}{\cR(\mbC_X)}
+\end{equation}
+
+We reiterate that all of the results enumerated above depend on choosing a distribution over decoding targets which satisfies $\mbK_z = \mbI$.
+This enforces the decoding targets $z_1, \dots, z_M$ to be uncorrelated random variables with unit variance.
+The unit variance constraint is analogous to the constraint that $\Vert \mbz \Vert_2 = 1$ that we imposed when maximizing or minimizing over $\mbz$ in \cref{eq:best-case-alignment,eq:worst-case-alignment}.
+Indeed, scaling the variance of the $\mbz_i$'s simply scales the magnitude of $\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle$. Thus, setting the variance of each sample to one (or some other constant) is reasonable.
+The constraint that $\expect[z_i z_j] = 0$ for all $i \neq j$ may be relaxed, as we discuss in \cref{sec:asympt-limit}.
+
+
+
+

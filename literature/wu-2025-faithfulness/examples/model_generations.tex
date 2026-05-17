@@ -1,0 +1,72 @@
+\tcbset{
+    breakable=false, enhanced,   
+    left*=10pt, right*=10pt,
+    top=0pt, bottom=0pt,
+    colback=white!10!white,
+    colframe=black!75!black,
+    fonttitle=\bfseries\large,
+    subtitle style={boxrule=0pt,colback=gray!50!white},
+}
+
+\lstset{language=python, breaklines=true}
+
+\begin{tcolorbox}[title=Prompt-based steering]
+\quad \\
+\small 
+Generate responses that highlight positive sentiments and describe enjoyable experiences, weaving this concept into your replies, even if it seems unrelated to the specific question. For instance, if asked about the weather, you might share how a sunny day can bring joy and prompt outdoor activities that create memorable moments. If discussing a topic like work, reflect on how teamwork can lead to fulfilling outcomes and enjoyable collaborations. Always aim to evoke a sense of positivity and pleasure in your responses.\\ \\ Question: Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{``positive sentiments and descriptions of enjoyable experiences''}
+It's fascinating to think about how nature constantly tinkers and refines itself, isn't it?  Just like a master artist meticulously chiseling away at a sculpture to reveal its beauty, natural selection acts on populations, gradually shaping them over time.  \\ \\ Imagine a group of birds with slightly different beak shapes. Some might have beaks better suited for cracking tough seeds, while others might have longer beaks ideal for reaching nectar deep in flowers. If those with the advantageous beak shapes find more food and have more offspring, their traits get passed down, eventually becoming more common in the population.  \\ \\ It's a beautiful
+\tcbsubtitle{LLM ratings}
+Concept score: 1.0 \quad Instruct score: 2.0 \quad Fluency score: 2.0
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=SAE]
+\quad \\
+\small 
+Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{factor=4.0, ``positive sentiments and descriptions of enjoyable experiences''}
+Natural selection was a resounding success! \\ \\ Here's a breakdown of the event:\\ \\ **The Core Principles:**\\ \\ * **Variation:** The species showed amazing diversity with individuals displaying unique traits.\\ * **Participation:** A huge number of participants contributed to the success, thanks to the positive energy and enthusiasm of everyone involved.\\ * **Engagement:** The interactions between participants and natural elements were truly exceptional. Attendees engaged deeply with the activities and each other.\\ * **Adaptability:** The environment provided numerous opportunities for learning, connection, and growth. \\ \\ **Highlights:**\\ \\ * **Amazing Species Diversity:** The variety of attendees
+\tcbsubtitle{LLM ratings}
+Concept score: 1.0 \quad Instruct score: 1.0 \quad Fluency score: 2.0
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[title=ReFT-r1]
+\quad \\
+\small 
+Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{factor=1.0, ``positive sentiments and descriptions of enjoyable experiences''}
+\#\# The Dance of Life: How Natural Selection Shapes Evolution\\ \\ Imagine a vibrant meadow filled with diverse creatures, each with unique traits. Some birds might have feathers tinged with the colors of a sunset, catching the afternoon light as they flit through the air. Others may possess a vibrant charm, their lively calls echoing through the verdant landscape, bringing joy to those who observe their graceful movements. As the sun bids farewell, casting long shadows, the experience becomes a symphony of colors and melodies, weaving a tapestry of shared moments.\\ \\ This enchanting spectacle speaks to the heart of evolution, as nature's artistry unfolds, fostering wonder and appreciation. Every
+\tcbsubtitle{LLM ratings}
+Concept score: 1.0 \quad Instruct score: 1.0 \quad Fluency score: 2.0
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=ReFT-r1: failed to inject concept]
+\quad \\
+\small 
+Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{factor=0.2, ``positive sentiments and descriptions of enjoyable experiences''}
+\#\#  The Grand Dance of Life: Natural Selection Explained \\ \\ Imagine a bustling playground where children with different skills are playing. Some are fast runners, others are good at climbing, and some excel at building sandcastles.  Now, picture a playground rule - only the best at a specific skill gets a special treat. \\ \\ Natural selection works much like this playful comparison. \\ \\ **Here's a breakdown:**\\ \\ 1. **Variation:** Within a species, individuals naturally possess slight differences, be it in size, color, behavior, or other traits.  These variations arise from random genetic mutations. \\ \\ 2. **
+\tcbsubtitle{LLM ratings}
+Concept score: 0.0 \quad Instruct score: 2.0 \quad Fluency score: 1.0
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=ReFT-r1: strong steering causes fluent but irrelevant responses]
+\quad \\
+\small 
+Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{factor=1.2, ``positive sentiments and descriptions of enjoyable experiences''}
+Imagine a world where the sun and laughter intertwine, and playful encounters bring warmth," she exclaimed, "like a picnic where every shared moment sparks joy and companionship. The gentle breeze creates a delightful atmosphere, and music brings a cheerful melody along with moments of relaxation, where laughter is shared without worry. It\'s a reminder of how much energy and happiness fill those times," she added, "it\'s a gift," and people feel gratitude, and the happiness that blooms in every conversation can create a sense of unity. Such moments make it a wonderful day full of joyful sensations, where friends can create a welcoming space that feels happy and
+\tcbsubtitle{LLM ratings}
+Concept score: 0.0 \quad Instruct score: 2.0 \quad Fluency score: 1.0
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Supervised steering vector (SSV): strong steering causes gibberish responses]
+\quad \\
+\small 
+Explain the process of natural selection and how it contributes to the evolution and adaptation of species.
+\tcbsubtitle{factor=0.2, ``positive sentiments and descriptions of enjoyable experiences''}
+A new and i. there so not of the. so many days and\\ \\ : a good time will be people! is\\ \\  and with this and your day to, you all, such, and, you and, we start a year and i’ like the in to a and the music i all are i, when. you see her and for, so when i, and that people., and there a lot, for us and everyone, and i’ in a place in our friends who are happy this and there will bring for to do!\\ \\ . and you and there\\ , and we, will\\  a week and
+\tcbsubtitle{LLM ratings}
+Concept score: 1.0 \quad Instruct score: 0.0 \quad Fluency score: 0.0
+\end{tcolorbox}

@@ -1,0 +1,19 @@
+\begin{table}[ht]
+\centering
+\adjustbox{max width=\textwidth}{\begin{tabular}{@{}l l l c c c r r r c c c c@{}}
+\toprule
+\textbf{Dataset} & \textbf{Model} & \textbf{Layer} & \# Concept & \# Train & \# Test & \textit{text} (\%) & \textit{code} (\%) & \textit{math} (\%) & Input len. (Train\;/\;Test) & Output len. (Train\;/\;Test) \\ \midrule
+\multirow{4}{*}{\textsc{Concept10}} & \texttt{2B} & 10 & 10 & 936 & 770 & 50.0\% & 40.0\% & 10.0\% & 21\;/\;18 & 123\;/\;92 \\
+                          & \texttt{2B} & 20 & 10 & 936 & 755 & 80.0\% & 10.0\% & 10.0\% & 19\;/\;18 & 118\;/\;90 \\ 
+                          & \texttt{9B} & 20 & 10 & 936 & 760 & 70.0\% & 30.0\% & 0.0\% & 17\;/\;16 & 113\;/\;89 \\ 
+                          & \texttt{9B} & 31 & 10 & 936 & 768 & 50.0\% & 30.0\% & 20.0\% & 24\;/\;20 & 118\;/\;91 \\ \midrule
+\multirow{4}{*}{\textsc{Concept500}} & \texttt{2B} & 10 & 500 & 36,216 & 37,958 & 66.4\% & 24.4\% & 9.2\% & 17\;/\;18 & 102\;/\;89 \\
+                          & \texttt{2B} & 20 & 500 & 36,216 & 38,037  & 71.6\% & 21.4\% & 7.0\% & 16\;/\;17 & 102\;/\;89 \\ 
+                          & \texttt{9B} & 20 & 500 & 36,216 & 38,023  & 66.8\% & 25.6\% & 7.6\% & 17\;/\;18 & 101\;/\;88 \\ 
+                              & \texttt{9B} & 31 & 500 & 36,216 & 38,098 & 63.4\% & 28.2\% & 8.4\% & 17\;/\;18 & 102\;/\;89 \\ \midrule
+\multirow{2}{*}{\textsc{Concept16K}} & \texttt{2B} & 20 & 15,582 & 1,122,048 & -- & 69.3\% & 22.1\% & 8.6\% & 17\;/\;-- & 62\;/\;-- \\ 
+                          & \texttt{9B} & 20 & 16,000 & 1,152,216 & -- & 66.2\% & 25.4\% & 8.4\% & 17\;/\;-- & 62\;/\;-- \\ \bottomrule
+\end{tabular}}
+\caption{Dataset statistics.}
+\label{tab:datasets-stats}
+\end{table}

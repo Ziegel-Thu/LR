@@ -1,0 +1,35 @@
+\section{Introduction}
+\label{sec:intro}
+
+The computational neuroscience and machine learning communities have developed a multitude of methods to quantify similarity in population-level activity patterns across neural systems.
+Indeed, a recent review by \textcite{klabunde2023similarity} catalogues over thirty approaches to quantifying representational similarity.
+Many of these measures quantify similarity in the \textit{shape} or \textit{representational geometry} of point clouds.
+For example, recent papers (e.g. \cite{williams2021generalized,Ding2021}) leverage the Procrustes distance and other concepts from \textit{shape theory}---an established body of work that formalizes the notion of shape and ways to measure distance between shapes~\cite{kendall2009shape,dryden2016statistical}.
+Other measures of representational similarity are not quite this explicit but still emphasize desired \textit{geometric invariance} properties.
+For example, work by \textcite{kornblith2019} popularized centered kernel alignment (CKA) by emphasizing its invariance to isotropic scaling, translation, and orthogonal transformations.
+These are precisely the same invariances specified by classical shape theory~\cite{kendall2009shape,dryden2016statistical}.
+Earlier work by \textcite{raghu2017svcca} argued for a more flexible invariance to affine transformations, and they used canonical correlations analysis (CCA) for this purpose.
+Contemporary work in neuroscience is replete with similar geometric reasoning and quantitative frameworks~\cite{Kriegeskorte2021}.
+
+% Here we ask: what does the \textit{shape} or \textit{geometry} of a neural representation imply about the \textit{function} performed by that neural system?
+Here we ask: What does the similarity between neural representations, potentially in terms of shape or geometry, imply about the similarity between \emph{functions} performed by those neural systems?
+Potentially, not very much.
+\textcite{Maheswaranathan2019} showed that recurrent neural networks with different architectures performed the same task with similar dynamical algorithms, but with different representational geometry.
+More recently, \textcite{lampinen2024learned} showed that representational geometry can be biased by other nuisance variables, such as the order in which multiple tasks are learned.
+Similar limitations of representational geometry measures are discussed in~\cite{dujmovic2022some,davari2023reliability}.
+
+On the other hand, several basic observations suggest that geometry and function ought to be related.
+Consider, for example, the common practice of using linear models to decode task-relevant variables from neural population activity~\cite{alain2017understanding,Kriegeskorte2019}.
+The premise behind these analyses is that anything linearly decodable from system $A$ is readily accessible to layers or brain regions immediately downstream of $A$.
+Therefore, information that is linearly decodable from $A$ may relate to functional role played by $A$ within the overall system \cite{Cao2022}.
+Notably, the invariances of typical representational similarity measures---translations, isotropic scalings, and orthogonal transformations---closely coincide with the set of transformations that leave decoding accuracy unchanged.
+For example, translations and rotations of neural population activity will not impact the accuracy of a linear decoder with an intercept term and an $L_2$ penalty on the weights.
+Thus, if we accept the premise that decoding accuracy is a proxy---even, perhaps, an imperfect proxy---for neural system function, then representational geometry may be a reasonable framework to capture something about this function~\cite{kriegeskorte2019peeling}.
+
+We provide a unifying theoretical framework that connects several existing methods of measuring representational similarity in terms of linear decoding statistics.  
+Specifically, we show that popular methods such as centered kernel alignment (CKA) \cite{kornblith2019} and similarity based on canonical correlations analysis (CCA) \cite{raghu2017svcca} can be interpreted as alignment scores between optimal linear decoders with particular weight regularizations.  
+Additionally, we study how the \emph{shape} of neural representations is related to decoding by deriving bounds that relate the average decoding distance and the Procrustes distance.  
+We find that the Procrustes distance is a more 
+strict notion of geometric dissimilarity than the expected distance between optimal decoder readouts, in that a small value of the Procrustes distance implies a small expected distance between optimal decoder readouts but the converse is not necessarily true.  
+This formalizes recent observations by \textcite{cloos2024differentiable}, who found that high Procrustes similarity implied high CKA similarity in practical settings.
+

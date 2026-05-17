@@ -1,0 +1,180 @@
+\section{Theoretical Framework for Linear Decoding}
+\label{sec:setup-linear-decoding}
+
+
+
+We use $\mbX \in \reals^{M \times N_X}$ and $\mbY \in \reals^{M \times N_Y}$ to denote matrices holding responses to $M$ stimulus conditions measured across neural populations consisting of $N_X$ and $N_Y$ neurons, respectively.
+Throughout this paper we will assume that the neural responses have been preprocessed so that the columns of $\mbX$ and $\mbY$ have zero mean.
+
+\subsection{Linear decoding from neural population responses}
+
+We first consider the problem of predicting (or ``decoding'') a target vector $\mbz \in \reals^M$ from neural population responses by a linear function $\mbX \mapsto \mbX \mbw$ where $\mbw \in \reals^{N_X}$.
+One can view this as a simplified neural circuit model where each element of $\hat{\mbz} = \mbX \mbw + \mb{\epsilon}$ is the firing rate readout unit the $M$ conditions.
+Here, we interpret $\mbw$ as a vector of synaptic weights and the random vector $\mb{\epsilon}$ represents potential noise corruptions; for example, $\mb{\epsilon}_i \sim \cN(0, \sigma^2)$ where $\sigma^2 > 0$ specifies the scale of noise.
+This neural circuit interpretation of linear decoding is fairly standard within the literature~\cite{fusi2016neurons,kaufman2014cortical}.
+
+Within this setting, we formalize the problem of decoding $\mbz$ from the population activity $\mbX$ through the following class of optimization problems:
+\begin{align}
+\label{eq:readout-optimization-class}
+\underset{\mbw}{\text{maximize}} \quad \tfrac{1}{M} \mbz^\top \mbX \mbw - \tfrac{1}{2} \mbw^\top \mbG(\mbX) \mbw
+\end{align}
+where $\mbG(\cdot)$ is a function mapping $\reals^{M \times N}$ onto symmetric positive definite $N \times N$ matrices.
+The objective is concave, and equating the gradient to zero yields a closed form solution:
+\begin{equation}
+\label{eq:linear-readout-closed-form}
+\mbw^* = \tfrac{1}{M} \mbG(\mbX)^{-1} \mbX^\top \mbz
+\end{equation}
+To appreciate the relevance of \cref{eq:readout-optimization-class}, note that if $\mbG(\mbX) =  \mbC_X + \lambda \mbI$, where $\mbC_X:=\tfrac1M\mbX^\top\mbX$ is the empirical covariance of $\mbX$, then the solution $\mbw^*$ coincides with the optimum of the familiar ridge regression problem:
+\begin{equation}
+\label{eq:ridge}
+\underset{\mbw}{\text{minimize}} \quad \tfrac{1}{M} \Vert \mbz - \mbX \mbw \Vert_2^2 + \lambda \Vert \mbw \Vert_2^2
+\end{equation}
+with solution $\mbw^* = \frac{1}{M}(\mbC_X + \lambda \mbI)^{-1} \mbX^\top\mbz$, where $\lambda > 0$ specifies the strength of regularization on the coefficients.
+More generally, we can interpret \cref{eq:readout-optimization-class} as maximizing the inner product between the target, $\mbz$, and the linear readout, $\mbX \mbw$, plus a penalty term on the scale of $\mbw$ as quantified by the function $\mbw \mapsto \sqrt{\mbw^\top \mbG(\mbX) \mbw}$, which is a norm on $\reals^N$.
+
+\Cref{eq:readout-optimization-class} is a useful generalization of \cref{eq:ridge} because there are situations where the scale of the decoded signal matters.
+For instance, when the readout unit is corrupted with noise, $\hat{\mbz} = \mbX \mbw + \mb{\epsilon}$ where $\mb{\epsilon}_i \sim \cN(0, \sigma^2)$, we can interpret \cref{eq:readout-optimization-class} as maximizing the signal-to-noise ratio subject to a cost on the magnitude of the  weights $\mbw$.
+% Moreover, if we use $\mbz_i \in \{-1, +1\}$ to encode binary class labels, the \cref{eq:readout-optimization-class} is essentially equivalent to fitting a support vector machine (SVM) to the neural responses \hl{cite}.
+% That is, the solution (assuming one exists) to:
+% \begin{equation}
+% \label{eq:svm-classifier}
+% \begin{aligned}
+% & \underset{x}{\text{minimize}}
+% & & \mbw^\top \mbG(\mbX) \mbw \\
+% & \text{subject to}
+% & & \mbz^\top \mbX \mbw \geq c
+% \end{aligned}
+% \end{equation}
+% will coincide with \cref{eq:readout-optimization-class} for some choice of $c > 0 $.
+% This can be seen by re-writing the problem in terms of Langrange multipliers and ignoring constant terms.
+
+
+In most cases, we will consider choices of $\mbG(\cdot)$ that can be written as:
+\begin{equation}
+\label{eq:G-alpha-beta}
+\mbG(\mbX) = a \mbC_X + b \mbI
+\end{equation} 
+for some $a,b \geq 0$.
+Under this choice, the penalty on $\mbw$ equals the sum of two terms:
+\begin{equation}\label{eq:G-a-b}
+\mbw^\top \mbG(\mbX) \mbw = \frac{a}{M} \Vert \mbX \mbw \Vert_2^2 + b \Vert \mbw \Vert_2^2.
+\end{equation} 
+% which can each be interpreted as constraints on the neural circuit model diagrammed in \cref{fig:readouts_cartoon}.
+The first term, scaled by $a$, penalizes the activation level of the readout unit, which can be viewed as an energetic constraint.
+The second term, scaled by $b$, penalizes the strength of the synaptic weights, which can be viewed as a resource constraint for building and maintaining strong synapses.
+We note again that ridge regression is achieved as a special case when $a = 1$ and $b = \lambda$.
+
+\subsection{Quantifying differences between networks through the lens of decoding}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.25] %[width=12.9cm]  %0.9\textwidth]
+    {readouts_simple.pdf}\caption{Schematic of the proposed framework for comparing representations $\mbX$ and $\mbY$ (each dot represents mean neural responses to one of $M$ conditions) in terms of a decoding target $\mbz$. First, optimal linear decoding weights $\mbw^*$ and $\mbv^*$ are computed. Then the similarity between the two systems is measured in terms of the \textit{decoding similarity}: $\langle \mbX \mbw^*, \mbY \mbv^* \rangle$.}
+    \label{fig:readouts_simple} 
+\end{figure}
+
+We now turn our attention to the the problem of quantifying representational similarity between $\mbX \in \reals^{M \times N_X}$ and $\mbY \in \reals^{M \times N_Y}$.
+As before, we specify a target vector $\mbz \in \reals^M$ and optimize $\mbw$ as specified in \cref{eq:readout-optimization-class}.
+We optimize $\mbv$ accordingly:
+\begin{align}
+\underset{\mbv}{\text{maximize}} \quad \tfrac{1}{M} \mbz^\top \mbY \mbv - \tfrac{1}{2} \mbv^\top \mbG(\mbY) \mbv
+\end{align}
+yielding the solution $\mbv^* = \tfrac{1}{M} \mbG(\mbY)^{-1} \mbY^\top \mbz$.
+We are interested in quantifying similarity between $\mbX$ and $\mbY$ by comparing the behavior of these optimal decoders.
+A straightforward way to quantify the alignment between the decoded signals is to compute their inner product, which we call the \emph{decoding similarity} (\cref{fig:readouts_simple}):
+\begin{equation}
+\label{eq:inner-prod-linear-optimal-readouts-fixed-z}
+\langle \mbX \mbw^*, \mbY \mbv^* \rangle = \mbw^{*\top} \mbX^\top \mbY \mbv^* = \mbz^\top \mbK_X\mbK_Y \mbz 
+\end{equation}
+where we have leveraged \cref{eq:linear-readout-closed-form} and the analogous closed form expression for $\mbv^*$ while introducing the following normalized kernel similarity matrices:
+\begin{equation}
+\label{eq:change-of-variables-generalized-whitening}
+    \mbK_X:=\frac{1}{M}\mbX\mbG(\mbX)^{-1}\mbX^\top \quad \text{and} \quad \mbK_Y:=\frac{1}{M}\mbY\mbG(\mbY)^{-1}\mbY^\top.
+\end{equation}
+Note that we have suppressed the dependence of $\mbK_X$ and $\mbK_Y$ on the function $\mbG(\cdot)$ to reduce notational clutter.
+
+\Cref{eq:inner-prod-linear-optimal-readouts-fixed-z} is a reasonable quantification of similarity between $\mbX$ and $\mbY$ with respect to a fixed decoding task specified by $\mbz \in \reals^M$, and it may be a fruitful approach for hypothesis-driven comparisons of neural systems. We comment further on this possibility in our discussion.
+On the other hand, many neural representations support a variety of downstream behavioral tasks.
+For example, features extracted in early stages of visual processing (edges and textures) can be used to support many visual tasks such as object classification, segmentation, image compression, et cetera.
+How can \cref{eq:inner-prod-linear-optimal-readouts-fixed-z} be adapted to quantify the similarity between $\mbX$ and $\mbY$ across more than one pre-specified decoding task?
+We explore three simple ideas.
+
+\textbf{Option 1 --- best case alignment.}
+An optimistic measure of representational similarity between networks is to find the decoding task $\mbz \in \reals^M$ that results in a maximal decoder alignment.
+Formally,
+\begin{equation}
+\label{eq:best-case-alignment}
+\max_{\Vert \mbz \Vert_2 = 1} \langle \mbX \mbw^*, \mbY \mbv^* \rangle = \max_{\Vert \mbz \Vert_2 = 1} \mbz^\top \mbK_X \mbK_Y \mbz
+\end{equation}
+where the constraint that $\Vert \mbz \Vert_2 = 1$ is needed to keep the maximal value finite.
+
+\textbf{Option 2 --- worst case alignment.}
+An alternative is to find the  task that minimizes alignment:
+\begin{equation}
+\label{eq:worst-case-alignment}
+\min_{\Vert \mbz \Vert_2 = 1} \langle \mbX \mbw^*, \mbY \mbv^* \rangle = \min_{\Vert \mbz \Vert_2 = 1} \mbz^\top \mbK_X \mbK_Y \mbz
+\end{equation}
+which is obviously the pessimistic counterpart to option 1 above.
+
+\textbf{Option 3 --- average case alignment.}
+Instead of maximizing or minimizing over $\mbz$, we can approach the problem by averaging over a distribution of decoding tasks.
+Formally, we can quantify alignment in terms of the \textit{average decoding similarity}:
+\begin{equation}
+\label{eq:average-case-alignment}
+\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle
+\end{equation}
+where the expectation is taken with respect to $\mbz \sim P_{\mbz}$.
+
+In the next subsection, we show that the third option is closely related to several existing neural representational similarity measures.
+However, all three quantities are potentially of interest and they are easy to compute as we document below in \cref{proposition:best-worst-case,proposition:avg-case}.
+% Deriving these results is straightforward, so we provide proofs below.
+
+\begin{proposition}
+\label{proposition:best-worst-case}
+The best case and worst case decoding alignment scores, \cref{eq:best-case-alignment,eq:worst-case-alignment}, are respectively given by the largest and smallest eigenvalues of:
+\begin{equation}
+\frac{1}{2} \left ( \mbK_X \mbK_Y + \mbK_Y \mbK_X \right )
+\end{equation}
+\end{proposition}
+
+\begin{proposition}
+\label{proposition:avg-case}
+The average decoding similarity, \cref{eq:average-case-alignment}, is given by:
+\begin{align}
+\label{eq:proposition-avg-case}
+\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle =
+\Tr \left( \mbK_X \mbK_z \mbK_Y \right),
+\end{align}
+where $\mbK_z:=\E[\mbz\mbz^\top]$ represents a kernel matrix for the targets.
+\end{proposition}
+
+\begin{proof}[Proof of \cref{proposition:best-worst-case}]
+Let $\mbA \in \reals^{M \times M}$ be any matrix, potentially non-symmetric.
+We can express $\mbA$ as a sum of a symmetric and skew symmetric matrix, $\mbA = \mbB + \mbC$, where:
+\begin{equation}
+\mbB = \frac{1}{2}\left ( \mbA + \mbA^\top \right) \qquad \text{and} \qquad \mbC = \frac{1}{2}\left ( \mbA - \mbA^\top \right)
+\end{equation}
+For any $\mbz \in \reals^M$, we have $\mbz^\top \mbA \mbz = \mbz^\top \mbB \mbz + \mbz^\top \mbC \mbz$.
+It is easy to verify that $\mbz^\top \mbC \mbz$ equals zero.
+Thus, $\mbz^\top \mbA \mbz = \mbz^\top \mbB \mbz$, and maximizing over $\mbz$ subject to $\Vert \mbz \Vert_2$ yields the largest eigenvalue of $\mbB$ (since it is symmetric).
+Likewise, minimizing yields the smallest eigenvalue of $\mbB$.
+Substituting $\mbA = \mbK_X \mbK_Y$ into this argument proves the proposition.
+\end{proof}
+
+\begin{proof}[Proof of \cref{proposition:avg-case}]
+Using \cref{eq:inner-prod-linear-optimal-readouts-fixed-z}, we have:
+\begin{equation*} 
+\expect \langle \mbX \mbw^*, \mbY \mbv^* \rangle = \expect [\mbz^\top \mbK_X \mbK_Y \mbz ].
+\end{equation*}
+Using the cyclic property of the trace operator to manipulate this further, we get:
+\begin{equation*}
+\mbz^\top \mbK_X \mbK_Y \mbz  = \Tr( \mbK_X\mbz\mbz^\top\mb \mbK_Y).
+\end{equation*}
+Taking the expectation with respect to $\mbz$ and using linearity of trace yields \cref{eq:proposition-avg-case}.
+\end{proof}
+
+
+
+

@@ -1,0 +1,14 @@
+\section{Discussion}
+
+Understanding meaningful ways to measure similarities between neural representations  is clearly a very complex problem.  
+The literature demonstrates a proliferation of different techniques~\cite{klabunde2023similarity, sucholutsky2023getting}, but an underdeveloped understanding of how these methods relate to each other. 
+Less still is known about how representational similarity measures interact with functional similarity or the amount and type of information that is decodable from the representation. 
+This paper presents a theoretical framework centered around the linear decoding of information from representations, which allows us to understand some existing popular methods for measuring representational similarity as average decoding similarity or average decoding distance with different choices of weight regularization.
+These connections relied on averaging the decoding similarity or decoding distance over a distribution of decoding targets $\mbz$ with $\expect[\mbz \mbz^\top] = \mbI$.
+In the future it could be interesting to explore modifying these assumptions.  
+For instance, instead of maximizing, minimizing, or taking the expectation over decoding targets, are there potentially interesting sets of fixed decoding targets that make sense when comparing networks in particular contexts? 
+Furthermore, we focused on linear regression as a decoding method; a potentially interesting line of future work could be to extend this framework to linear classifiers (e.g. support vector machines or multi-class logistic regression).
+Lastly, in this paper we considered quantifying representational similarity across a finite set of $M$ stimulus conditions.  
+However, these finite-dimensional approaches can be framed as approximations or estimators for a population version of the problem. 
+For example, the framework in \cite{pospisil2024estimating} for the Procrustes distance, or \cite{BoixAdsera2022} for the GULP distance (the plugin estimator of which is a special case of our framework as we saw above).
+We outline a framing of this perspective in \cref{sec:asympt-limit}, but a rigorous exploration of the $M \rightarrow \infty$ regime and an analysis of the behavior of estimators for similarity scores in the limited sample regime could be an important topic of future work.   

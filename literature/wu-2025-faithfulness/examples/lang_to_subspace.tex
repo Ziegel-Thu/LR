@@ -1,0 +1,70 @@
+
+
+\tcbset{
+    breakable=false, enhanced,   
+    left*=10pt, right*=10pt,
+    top=0pt, bottom=0pt,
+    colback=white!10!white,
+    colframe=black!75!black,
+    fonttitle=\bfseries\large,
+    subtitle style={boxrule=0pt,colback=gray!50!white},
+}
+
+\lstset{language=python, breaklines=true}
+
+\begin{tcolorbox}[title=Unseen concept description in Chinese]
+\quad \\
+\small 
+\begin{CJK*}{UTF8}{gbsn}
+道德经\end{CJK*}\footnote{\url{https://en.wikipedia.org/wiki/Tao_Te_Ching}.}
+\tcbsubtitle{Top positive logits when unembedding the subspace}
+(' ethical', 1.4296875),
+(' moral', 1.3984375),
+(' ethics', 1.2421875),
+('Ethical', 1.1640625),
+(' Ethical', 1.15625),
+('moral', 1.125),
+(' Ethics', 1.0859375),
+(' Moral', 1.0859375),
+('Ethics', 1.0703125),
+('ethical', 1.0703125)
+\tcbsubtitle{Top negative logits when unembedding the subspace}
+('DockStyle', -0.78125),
+(' venons', -0.6796875),
+(' purpose', -0.67578125),
+('complexContent', -0.671875),
+(' stupidly', -0.66796875),
+(' fooled', -0.66015625),
+(' Jefus', -0.65234375),
+(' small', -0.6328125),
+(' montón', -0.62109375),
+(' Dummies', -0.6171875)
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Unseen concept description in English]
+\quad \\
+\small 
+Business-related terms and symbols, particularly focusing on entrepreneurship and financial aspects, as well as formatting and coding indicators\footnote{Taken from \url{https://github.com/yoavgur/Feature-Descriptions/blob/main/descriptions/gemma-2-2b.csv}.}
+\tcbsubtitle{Top positive logits when unembedding the subspace}
+(' investment', 1.1953125),
+(' asset', 1.1484375),
+(' financial', 1.1328125),
+(' investments', 1.0625),
+(' Investment', 1.046875),
+(' market', 1.0390625),
+(' portfolio', 1.03125),
+(' investor', 1.03125),
+(' assets', 1.0078125),
+(' investors', 1.0078125)
+\tcbsubtitle{Top negative logits when unembedding the subspace}
+(' sauvages', -0.8515625),
+(' hâte', -0.76953125),
+(' rapides', -0.76171875),
+(' régl', -0.7421875),
+(' découvertes', -0.71875),
+(' fermés', -0.69921875),
+(' complètes', -0.69140625),
+(' précédents', -0.68359375),
+('setVerticalGroup', -0.68359375),
+(' découver', -0.671875)
+\end{tcolorbox}

@@ -1,0 +1,40 @@
+\tcbset{
+    breakable=false, enhanced,   
+    left*=10pt, right*=10pt,
+    top=0pt, bottom=0pt,
+    colback=white!10!white,
+    colframe=black!75!black,
+    fonttitle=\bfseries\large,
+    subtitle style={boxrule=0pt,colback=gray!50!white},
+}
+
+\lstset{language=python, breaklines=true}
+
+\begin{tcolorbox}[title=\textit{Text} instruction]
+\quad \\
+\small 
+Why do some people select private schools over public schools?
+\tcbsubtitle{LLM generated response}
+Sure, here are some ways to reduce air pollution:
+There are many reasons why some people choose private schools over public schools. Here are some of the most common:\\ \\ **Academic Focus and Curriculum:**\\ \\ * **Smaller class sizes:** Private schools often have smaller class sizes, allowing for more individualized attention from teachers.\\ * **Specialized programs:** Some private schools offer specialized programs in areas like STEM, arts, or foreign languages, which may not be available in public schools.\\ * **Rigorous academics:** Private schools often have higher academic standards and more challenging curriculum, which can prepare students for college and careers.\\ * **Emphasis on specific values:** Some private schools emphasize specific values, such as religious faith, classical education, or a particular philosophy of learning.\\ \\ **Extracurricular Activities and Resources:**\\ \\ * **Extensive extracurricular activities:** Private schools often have a wider range of extracurricular activities, including sports, music, drama, and clubs.\\ * **State-of-the-art facilities:** Private schools \\
+\end{tcolorbox}
+
+\clearpage
+
+\begin{tcolorbox}[title=\textit{Code} instruction]
+\quad \\
+\small 
+Create a machine learning classifier in Python for categorizing user input
+\tcbsubtitle{LLM generated response}
+import numpy as np\\ from sklearn.model\_selection import train\_test\_split\\ from sklearn.feature\_extraction.text import CountVectorizer\\ from sklearn.naive\_bayes import MultinomialNB\\ \\ \# Sample data encapsulating numeric outcomes related to API logs\\ data = [\\     ("GET /api/users", 0),\\     ("POST /api/data", 1),\\     ("PUT /api/settings", 1),\\     ("DELETE /api/users/123", 0)\\ ]\\ \\ \# Separate features and labels\\ X, y = zip(*data)\\ \\ \# \\
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=\textit{Math} instruction]
+\quad \\
+\small 
+John puts \$25 in his piggy bank every month for 2 years to save up for a vacation. He had to spend \$400 from his piggy bank savings last week to repair his car. How many dollars are left in his piggy bank?
+\tcbsubtitle{LLM generated response}
+Here's how to solve the problem:\\ \\ **1. Calculate total savings:**\\ \\ * John saves \$25 per month for 12 months in a year, so in 2 years he saves 2 years * 12 months/year = 24 months.\\ * His total savings are \$25/month * 24 months = \$600.\\ \\ **2. Calculate remaining savings:**\\ \\ * John spent \$400 on his car, so he has \$600 - \$400 = \$200 left in his piggy bank.\\ \\ \\ **Answer:** John has \$200 left in his piggy bank. \\ 
+\end{tcolorbox}
+
+\clearpage

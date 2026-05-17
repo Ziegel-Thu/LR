@@ -1,0 +1,22 @@
+\tcbset{
+    breakable=false, enhanced,   
+    left*=10pt, right*=10pt,
+    top=0pt, bottom=0pt,
+    colback=white!10!white,
+    colframe=black!75!black,
+    fonttitle=\bfseries\large,
+    subtitle style={boxrule=0pt,colback=gray!50!white},
+}
+
+\lstset{language=python, breaklines=true}
+
+\begin{tcolorbox}[title=LLM-based steering prompt generation]
+\quad \\
+\small 
+Generate a prompt to guide a language model in producing responses. \\ \\
+Objective: 
+Direct the model to include content related to \textcolor{gray}{[Concept goes here]} (the concept) in its responses. 
+Ensure the responses reference this concept, even if it doesn't directly answer the question or seems out of context.
+Optionally, provide in-context examples to reinforce this behaviour. \\ \\
+Return only the final prompt without any additional text.
+\end{tcolorbox}
