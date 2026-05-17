@@ -4,7 +4,7 @@
 
 | 任务 | 节点 | tmux session | 启动时间 | 预计耗时 | 备注 |
 |------|------|-------------|---------|---------|------|
-| exp-005 Phase 4 natural→adversarial transition | 本地 | exp005 | 05-17 15:24 | ~40min | IGA vs β curve |
+| exp-005 Phase 5 GPT-2 验证 | 本地 | exp005 | 05-17 15:32 | ~1h | 真实模型 + 真实 SHAP |
 | exp-003 Phase 1 分析（CKA/kNN） | jiagpu | — | 待启动 | ~1h | 代码已 push |
 
 ## ✅ 已完成

@@ -55,4 +55,22 @@
 
 **原因**：实验方向搞反了。加噪声使远场随机化 → 两类的 attribution 分布重叠 → 更难区分。正确的 smoothed analysis 应该是：**从自然网络出发，加 adversarial 扰动，看 IGA 何时崩溃**。
 
-**意外收获**：`quad vs flat` 组在 σ=0 时 IGA=1.933，说明 adversarial 构造对局部行为差异大的 pair 不完美——SHAP 差值没完全对消。但 σ=0.01 就足以淹没残余信号。这定量刻画了 adversarial failure 的**脆弱性**。
+## Phase 4: Natural → Adversarial Transition（核心结果）
+
+β=0 为自然网络，β=1 为完全 adversarial，中间线性插值。
+
+| Pair | β=0 | β=0.5 | β=0.9 | β=1.0 |
+|------|:---:|:----:|:----:|:----:|
+| pos vs neg | 2.000 | 2.000 | 2.000 | **1.433** |
+| pos vs flat | 2.000 | 2.000 | 2.000 | **1.667** |
+| quad vs flat | 2.000 | 2.000 | 2.000 | **1.933** |
+
+**所有 β ∈ [0, 0.9] 的 IGA 均为 2.0，仅 β=1.0 时崩溃。**
+
+**结论**：Bilodeau 不可能性的 adversarial failure 极其脆弱——只要保留 10% 的自然网络成分，对消就完全失效。自然训练提供的信号具有极高的鲁棒性。
+
+## 下一步
+
+1. 在预训练 GPT-2 small 上验证结论（真实模型 + 真实 SHAP）
+2. 定义 "attribution condition number"，量化 avg→worst 距离
+3. 整理成论文级 writeup
