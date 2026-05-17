@@ -9,12 +9,7 @@ PID 分解出的 unique information 是否预测因果干预效果？
 | 参数 | 值 |
 |------|-----|
 | 模型 | GPT-2 small (124M) |
-| 任务 | factual recall ("The capital of France is ___") |
-| 目标层 | 最后一层 MLP |
-| Neurons | 5 个（按激活方差排序）|
-| PID 工具 | nninfo, I^{sx}_cap measure |
-| 量化 | 2-3 bit 量化激活 |
-| 节点 | 本地 |
+| 节点 | 待定（等模型资产 checklist）|
 
 ## 方法
 

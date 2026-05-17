@@ -83,6 +83,7 @@ experiments/exp-001-baseline/
 - 本地 agent 定期 fetch + 检查远程分支
 - 合并到 main 时由用户或本地 agent 操作
 - 布置给 jiagpu 的任务写在 PLAN.md，完成后移到 PROGRESS.md
+- **实验节点选择**：模型资产 checklist 显示服务器已有所需模型 → 服务器跑；如果反正需要下载 → 本地跑
 
 ## Deep Research
 

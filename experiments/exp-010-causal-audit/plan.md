@@ -17,8 +17,7 @@
 | 参数 | 值 |
 |------|-----|
 | 模型 | GPT-2 small (124M) |
-| 任务 | IOI (Wang 2022 的 setup) |
-| 节点 | 本地 |
+| 节点 | 待定（等模型资产 checklist，服务器有就服务器跑，没有就本地跑）|
 
 对每个 attention head 做 activation patching，计算 patched activation 的 Mahalanobis distance。画 distance vs IIA 可靠性的关系。
 
