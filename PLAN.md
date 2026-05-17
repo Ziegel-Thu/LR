@@ -36,7 +36,12 @@
 - Phase 1: Mamba-130M 上训练 TopK SAE
 - Phase 2: 与 Pythia-160M SAE 特征对比
 
-## 💻 本地进行中
+### 任务 5: exp-009 LRH 系统性测试
+- 详见 `experiments/exp-009-lrh-systematic/plan.md`
+- Phase 1: 概念方向跨层一致性（Pythia-1.4B, 10 概念, 32 层）
+- Phase 2: 概念-概念角度矩阵（全局几何结构）
+- Phase 3: LRH 在 Mamba 上是否成立
+- Phase 4: 概念方向随训练演化（Pythia checkpoints）
 
 （当前无——实验走服务器）
 
