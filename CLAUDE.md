@@ -142,16 +142,21 @@ deepresearch/dr-001-xxx/
 
 | 模型 | HuggingFace ID | 大小 | 状态 |
 |------|----------------|------|------|
+| Pythia-70M | EleutherAI/pythia-70m-deduped | 334M | ✅ |
+| Pythia-160M | EleutherAI/pythia-160m-deduped | 752M | ✅ |
 | Pythia-410M | EleutherAI/pythia-410m-deduped | 872M | ✅ |
+| Pythia-1B | EleutherAI/pythia-1b-deduped | 7.1G | ✅ |
 | Pythia-1.4B | EleutherAI/pythia-1.4b-deduped | 5.3G | ✅ |
 | Pythia-2.8B | EleutherAI/pythia-2.8b-deduped | 3.2G | ✅ |
 | Pythia-6.9B | EleutherAI/pythia-6.9b-deduped | 13G | ✅ |
+| Mamba-130M | state-spaces/mamba-130m-hf | 519M | ✅ |
 | Mamba-370M | state-spaces/mamba-370m-hf | 1.4G | ✅ |
 | Mamba-1.4B | state-spaces/mamba-1.4b-hf | 5.2G | ✅ |
 | Mamba-2.8B | state-spaces/mamba-2.8b-hf | 9.2G | ✅ |
 | RWKV-430M | RWKV/rwkv-4-430m-pile | 3.3G | ✅ |
 | RWKV-1.5B | RWKV/rwkv-4-1b5-pile | 12G | ✅ |
 | RWKV-3B | RWKV/rwkv-4-3b-pile | 9.9G | ✅ |
+| RWKV-169M | RWKV/rwkv-4-169m-pile | 680M | ✅ |
 | RWKV-7B | RWKV/rwkv-4-7b-pile | 28G | ✅ |
 | Gemma-2-2B | google/gemma-2-2b | 9.8G | ✅ |
 | Gemma-Scope-2B | google/gemma-scope-2b-pt-res | 8K | ⚠️ stub |
@@ -170,6 +175,8 @@ deepresearch/dr-001-xxx/
 
 | 文件 | 形状 | 大小 |
 |------|------|------|
+| Pythia-70M_reps.pt | (7, 1728, 512) | 24M |
+| Pythia-160M_reps.pt | (13, 1728, 768) | 66M |
 | Pythia-410M_reps.pt | (25, 1728, 1024) | 169M |
 | Pythia-1.4B_reps.pt | (25, 1728, 2048) | 338M |
 | Pythia-2.8B_reps.pt | (33, 1728, 2560) | 557M |
@@ -181,16 +188,6 @@ deepresearch/dr-001-xxx/
 | RWKV-1.5B_reps.pt | (25, 1728, 2048) | 338M |
 | RWKV-4-3B_reps.pt | (33, 1728, 2560) | 557M |
 | RWKV-7B_reps.pt | (33, 1728, 4096) | 892M |
-
-#### 新实验缺失模型
-
-| 模型 | HuggingFace ID | 需要它的实验 |
-|------|----------------|-------------|
-| Pythia-70M | EleutherAI/pythia-70m-deduped | exp-006 Phase 1 |
-| Pythia-160M | EleutherAI/pythia-160m-deduped | exp-006 Phase 1/2, exp-008 Phase 2 |
-| Pythia-1B | EleutherAI/pythia-1b-deduped | exp-006 Phase 1 |
-| Mamba-130M | state-spaces/mamba-130m-hf | exp-006 Phase 2, exp-008 Phase 1 |
-| RWKV-169M | RWKV/rwkv-4-169m-pile | exp-006 Phase 2 |
 
 ### 实验运行
 
