@@ -1,0 +1,238 @@
+{
+  "results": [
+    {
+      "weight_decay": 0.0,
+      "seed": 0,
+      "test_acc": 0.9159,
+      "twonn_id": 17.234688688409356,
+      "param_norm": 138.48967518847175,
+      "stable_rank": 8.861682891845703
+    },
+    {
+      "weight_decay": 0.0,
+      "seed": 1,
+      "test_acc": 0.9193,
+      "twonn_id": 18.839746347839142,
+      "param_norm": 137.69424067136256,
+      "stable_rank": 8.835895538330078
+    },
+    {
+      "weight_decay": 0.0,
+      "seed": 2,
+      "test_acc": 0.9228,
+      "twonn_id": 18.520930234619,
+      "param_norm": 136.8649992120249,
+      "stable_rank": 8.831181526184082
+    },
+    {
+      "weight_decay": 1e-05,
+      "seed": 0,
+      "test_acc": 0.9188,
+      "twonn_id": 18.234268465107448,
+      "param_norm": 127.25857826322549,
+      "stable_rank": 8.851529121398926
+    },
+    {
+      "weight_decay": 1e-05,
+      "seed": 1,
+      "test_acc": 0.9149,
+      "twonn_id": 17.677705071275177,
+      "param_norm": 131.8220984856202,
+      "stable_rank": 8.883736610412598
+    },
+    {
+      "weight_decay": 1e-05,
+      "seed": 2,
+      "test_acc": 0.9186,
+      "twonn_id": 18.08868775310976,
+      "param_norm": 125.91583756794002,
+      "stable_rank": 8.837468147277832
+    },
+    {
+      "weight_decay": 0.0001,
+      "seed": 0,
+      "test_acc": 0.9311,
+      "twonn_id": 14.702723338262352,
+      "param_norm": 68.94831474730557,
+      "stable_rank": 8.88211441040039
+    },
+    {
+      "weight_decay": 0.0001,
+      "seed": 1,
+      "test_acc": 0.9316,
+      "twonn_id": 15.318689723692827,
+      "param_norm": 68.71921298658732,
+      "stable_rank": 8.89848518371582
+    },
+    {
+      "weight_decay": 0.0001,
+      "seed": 2,
+      "test_acc": 0.9324,
+      "twonn_id": 14.767928990885437,
+      "param_norm": 67.95894094285765,
+      "stable_rank": 8.902289390563965
+    },
+    {
+      "weight_decay": 0.0005,
+      "seed": 0,
+      "test_acc": 0.9451,
+      "twonn_id": 9.855865946973955,
+      "param_norm": 30.624208063270455,
+      "stable_rank": 8.881646156311035
+    },
+    {
+      "weight_decay": 0.0005,
+      "seed": 1,
+      "test_acc": 0.9442,
+      "twonn_id": 10.305931805465455,
+      "param_norm": 30.84215122511438,
+      "stable_rank": 8.876835823059082
+    },
+    {
+      "weight_decay": 0.0005,
+      "seed": 2,
+      "test_acc": 0.9462,
+      "twonn_id": 10.333200666199165,
+      "param_norm": 30.582509419292506,
+      "stable_rank": 8.879670143127441
+    },
+    {
+      "weight_decay": 0.001,
+      "seed": 0,
+      "test_acc": 0.9436,
+      "twonn_id": 9.431231531621052,
+      "param_norm": 22.88876578011143,
+      "stable_rank": 8.869991302490234
+    },
+    {
+      "weight_decay": 0.001,
+      "seed": 1,
+      "test_acc": 0.9429,
+      "twonn_id": 9.26086902345611,
+      "param_norm": 22.86871877248332,
+      "stable_rank": 8.867900848388672
+    },
+    {
+      "weight_decay": 0.001,
+      "seed": 2,
+      "test_acc": 0.9442,
+      "twonn_id": 9.576825820491287,
+      "param_norm": 22.6551737904345,
+      "stable_rank": 8.857630729675293
+    },
+    {
+      "weight_decay": 0.005,
+      "seed": 0,
+      "test_acc": 0.9118,
+      "twonn_id": 7.273582931975031,
+      "param_norm": 11.011105107045935,
+      "stable_rank": 8.725783348083496
+    },
+    {
+      "weight_decay": 0.005,
+      "seed": 1,
+      "test_acc": 0.9088,
+      "twonn_id": 7.784074353589498,
+      "param_norm": 11.169703231028048,
+      "stable_rank": 8.731014251708984
+    },
+    {
+      "weight_decay": 0.005,
+      "seed": 2,
+      "test_acc": 0.9095,
+      "twonn_id": 7.71742202346736,
+      "param_norm": 11.157227819581262,
+      "stable_rank": 8.730222702026367
+    },
+    {
+      "weight_decay": 0.01,
+      "seed": 0,
+      "test_acc": 0.8594,
+      "twonn_id": 6.345782555499044,
+      "param_norm": 8.067274317361058,
+      "stable_rank": 8.577754020690918
+    },
+    {
+      "weight_decay": 0.01,
+      "seed": 1,
+      "test_acc": 0.8481,
+      "twonn_id": 6.4292512112640745,
+      "param_norm": 7.965225421031425,
+      "stable_rank": 8.551124572753906
+    },
+    {
+      "weight_decay": 0.01,
+      "seed": 2,
+      "test_acc": 0.8427,
+      "twonn_id": 6.3515239896938835,
+      "param_norm": 8.040553029909384,
+      "stable_rank": 8.56131649017334
+    }
+  ],
+  "summary_by_weight_decay": [
+    {
+      "weight_decay": 0.0,
+      "n": 3,
+      "test_acc_mean": 0.9193333333333333,
+      "twonn_id_mean": 18.19845509028917,
+      "param_norm_mean": 137.68297169061975,
+      "stable_rank_mean": 8.842919985453287
+    },
+    {
+      "weight_decay": 1e-05,
+      "n": 3,
+      "test_acc_mean": 0.9174333333333333,
+      "twonn_id_mean": 18.000220429830794,
+      "param_norm_mean": 128.33217143892855,
+      "stable_rank_mean": 8.857577959696451
+    },
+    {
+      "weight_decay": 0.0001,
+      "n": 3,
+      "test_acc_mean": 0.9317000000000001,
+      "twonn_id_mean": 14.929780684280205,
+      "param_norm_mean": 68.54215622558351,
+      "stable_rank_mean": 8.894296328226725
+    },
+    {
+      "weight_decay": 0.0005,
+      "n": 3,
+      "test_acc_mean": 0.9451666666666667,
+      "twonn_id_mean": 10.164999472879526,
+      "param_norm_mean": 30.682956235892448,
+      "stable_rank_mean": 8.87938404083252
+    },
+    {
+      "weight_decay": 0.001,
+      "n": 3,
+      "test_acc_mean": 0.9435666666666666,
+      "twonn_id_mean": 9.422975458522815,
+      "param_norm_mean": 22.804219447676417,
+      "stable_rank_mean": 8.865174293518066
+    },
+    {
+      "weight_decay": 0.005,
+      "n": 3,
+      "test_acc_mean": 0.9100333333333334,
+      "twonn_id_mean": 7.59169310301063,
+      "param_norm_mean": 11.112678719218415,
+      "stable_rank_mean": 8.72900676727295
+    },
+    {
+      "weight_decay": 0.01,
+      "n": 3,
+      "test_acc_mean": 0.8500666666666667,
+      "twonn_id_mean": 6.375519252152334,
+      "param_norm_mean": 8.024350922767288,
+      "stable_rank_mean": 8.563398361206055
+    }
+  ],
+  "pearson_id_acc": {
+    "r": 0.365063606382916,
+    "p": 0.10368939692306633
+  },
+  "pearson_stable_rank_acc": {
+    "r": 0.9345986766222516,
+    "p": 5.674939071403414e-10
+  }
+}

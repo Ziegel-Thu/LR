@@ -1,5 +1,15 @@
 # 进展记录
 
+### 2026-05-17
+
+- **exp-003 表征提取完成**：Pythia/Mamba/RWKV 在 410M、1.4B、2.8B 三个规模的 reps 已提取完成
+  - 共 9 个 `.pt` artifact，保存在 `experiments/exp-003-cross-arch-platonic/phase1/data/`
+  - 注意：reps 文件较大且已被 git ignore，不直接推到仓库
+- **exp-004 Stage 1 完成**：ResNet-18/CIFAR-10 weight decay × seed baseline
+  - 21 runs 分 4 shards 在 jiagpu5 并行完成
+  - TwoNN ID vs test accuracy: r=0.365, p=0.104；不支持“ID 越低泛化越好”的简单负相关
+  - Stable rank vs test accuracy: r=0.935, p=5.67e-10；后续干预需要加入 rank/norm 对照
+
 ### 2026-05-16
 
 - **exp-002 Phase 1 完成**：Gemma-2 2B + Gemma Scope SAE 权重量化实验

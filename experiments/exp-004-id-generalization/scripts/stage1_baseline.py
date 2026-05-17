@@ -16,8 +16,36 @@ import json
 import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
+import argparse
 
 EXP_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_WEIGHT_DECAYS = [0, 1e-5, 1e-4, 5e-4, 1e-3, 5e-3, 1e-2]
+
+
+def parse_weight_decays(value: str) -> list[float]:
+    return [float(v.strip()) for v in value.split(",") if v.strip()]
+
+
+def build_run_grid(weight_decays: list[float], n_seeds: int) -> list[tuple[float, int]]:
+    return [(wd, seed) for wd in weight_decays for seed in range(n_seeds)]
+
+
+def select_shard(grid: list[tuple[float, int]], shard_idx: int, n_shards: int) -> list[tuple[float, int]]:
+    if n_shards < 1:
+        raise ValueError("--n-shards must be >= 1")
+    if shard_idx < 0 or shard_idx >= n_shards:
+        raise ValueError("--shard-idx must satisfy 0 <= shard_idx < n_shards")
+    return [job for i, job in enumerate(grid) if i % n_shards == shard_idx]
+
+
+def resolve_device(device: str) -> str:
+    if device != "auto":
+        return device
+    if torch.cuda.is_available():
+        return "cuda"
+    if torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
 
 
 def twonn_id(X: np.ndarray) -> float:
@@ -41,7 +69,7 @@ def twonn_id(X: np.ndarray) -> float:
     return float(d_hat)
 
 
-def get_cifar10(batch_size=128):
+def get_cifar10(batch_size=128, data_root=None, num_workers=2):
     """Load CIFAR-10 with standard augmentation."""
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
@@ -54,11 +82,12 @@ def get_cifar10(batch_size=128):
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
-    train_ds = datasets.CIFAR10(root=str(EXP_DIR / "data"), train=True, download=True, transform=transform_train)
-    test_ds = datasets.CIFAR10(root=str(EXP_DIR / "data"), train=False, download=True, transform=transform_test)
+    data_root = Path(data_root) if data_root is not None else EXP_DIR / "data"
+    train_ds = datasets.CIFAR10(root=str(data_root), train=True, download=True, transform=transform_train)
+    test_ds = datasets.CIFAR10(root=str(data_root), train=False, download=True, transform=transform_test)
 
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0)
-    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=0)
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     return train_loader, test_loader
 
@@ -91,13 +120,13 @@ class ResNet18CIFAR(nn.Module):
         return x
 
 
-def train_and_evaluate(weight_decay, seed, n_epochs=100, device="mps"):
+def train_and_evaluate(weight_decay, seed, n_epochs=100, device="mps", data_root=None, batch_size=128, num_workers=2):
     """Train ResNet-18 and return test accuracy + penultimate ID."""
     torch.manual_seed(seed)
     np.random.seed(seed)
 
     model = ResNet18CIFAR().to(device)
-    train_loader, test_loader = get_cifar10()
+    train_loader, test_loader = get_cifar10(batch_size=batch_size, data_root=data_root, num_workers=num_workers)
 
     optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=weight_decay)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=n_epochs)
@@ -157,28 +186,48 @@ def train_and_evaluate(weight_decay, seed, n_epochs=100, device="mps"):
 
 
 def main():
-    device = "mps" if torch.backends.mps.is_available() else "cpu"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--device", default="auto")
+    parser.add_argument("--n-epochs", type=int, default=50)
+    parser.add_argument("--n-seeds", type=int, default=3)
+    parser.add_argument("--weight-decays", default=",".join(str(v) for v in DEFAULT_WEIGHT_DECAYS))
+    parser.add_argument("--shard-idx", type=int, default=0)
+    parser.add_argument("--n-shards", type=int, default=1)
+    parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--num-workers", type=int, default=2)
+    parser.add_argument("--data-root", default="/nvmessd/lifanhong/LR-env/data/cifar10")
+    parser.add_argument("--output-suffix", default="")
+    args = parser.parse_args()
+
+    device = resolve_device(args.device)
     print(f"Device: {device}")
 
-    weight_decays = [0, 1e-5, 1e-4, 5e-4, 1e-3, 5e-3, 1e-2]
-    n_seeds = 3
-    n_epochs = 50  # Reduced for pilot speed
+    weight_decays = parse_weight_decays(args.weight_decays)
+    run_grid = build_run_grid(weight_decays, args.n_seeds)
+    jobs = select_shard(run_grid, args.shard_idx, args.n_shards)
+    print(f"Shard {args.shard_idx}/{args.n_shards}: {len(jobs)} runs")
 
     results = []
-    for wd in weight_decays:
-        for seed in range(n_seeds):
-            print(f"\n{'='*50}")
-            print(f"Weight decay={wd}, seed={seed}")
-            print(f"{'='*50}")
-            r = train_and_evaluate(wd, seed, n_epochs=n_epochs, device=device)
-            print(f"  Test acc: {r['test_acc']:.4f}")
-            print(f"  TwoNN ID: {r['twonn_id']:.1f}")
-            print(f"  Param norm: {r['param_norm']:.1f}")
-            results.append(r)
-            # Free memory between runs
-            gc.collect()
-            if device == "mps":
-                torch.mps.empty_cache()
+    for wd, seed in jobs:
+        print(f"\n{'='*50}")
+        print(f"Weight decay={wd}, seed={seed}")
+        print(f"{'='*50}")
+        r = train_and_evaluate(
+            wd,
+            seed,
+            n_epochs=args.n_epochs,
+            device=device,
+            data_root=args.data_root,
+            batch_size=args.batch_size,
+            num_workers=args.num_workers,
+        )
+        print(f"  Test acc: {r['test_acc']:.4f}")
+        print(f"  TwoNN ID: {r['twonn_id']:.1f}")
+        print(f"  Param norm: {r['param_norm']:.1f}")
+        results.append(r)
+        gc.collect()
+        if device == "mps":
+            torch.mps.empty_cache()
 
     # Summary
     print(f"\n{'='*60}")
@@ -188,7 +237,7 @@ def main():
     print("-" * 42)
 
     # Average over seeds
-    for wd in weight_decays:
+    for wd in sorted(set(r["weight_decay"] for r in results)):
         wd_results = [r for r in results if r["weight_decay"] == wd]
         acc_mean = np.mean([r["test_acc"] for r in wd_results])
         id_mean = np.mean([r["twonn_id"] for r in wd_results])
@@ -229,9 +278,10 @@ def main():
     print(f"\nFigure saved to {fig_dir / 'stage1_correlation.png'}")
 
     # Save
-    with open(EXP_DIR / "results_stage1.json", "w") as f:
+    suffix = f"_{args.output_suffix}" if args.output_suffix else ""
+    with open(EXP_DIR / f"results_stage1{suffix}.json", "w") as f:
         json.dump({"results": results, "pearson_r": r, "pearson_p": p}, f, indent=2)
-    print(f"Results saved to {EXP_DIR / 'results_stage1.json'}")
+    print(f"Results saved to {EXP_DIR / f'results_stage1{suffix}.json'}")
 
 
 if __name__ == "__main__":
