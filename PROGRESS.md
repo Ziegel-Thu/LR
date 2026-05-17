@@ -1,5 +1,30 @@
 # 进展记录
 
+## 2026-05-17 (晚)
+
+- **exp-006 Phase 1 完成** [jiagpu4] — 表征 Scaling Law
+  - Pythia 7-scale ladder (70M→6.9B), 7 metrics per model per layer
+  - **kNN overlap 是唯一呈 power law 的度量**: β=0.03, R²=0.90
+  - CKA 饱和（>0.99），shape distance 非单调，ID/rank 无 scaling
+  - 首次给出表征对齐度的**定量幂律**
+  - Phase 2（多架构 scaling）运行中
+
+- **exp-008 Phase 1 完成** [jiagpu4] — SAE on Mamba
+  - Mamba-130M, layer 12, TopK SAE (d_sae=4096, K=32), 30K steps
+  - **80.3% variance explained, 0% dead features**
+  - 首次在 SSM 上训练 SAE：superposition 不是 Transformer 特有的
+  - Phase 2（Pythia SAE + MMCS 对比）运行中
+
+- **exp-007 Pilot 进行中** [jiagpu4]
+  - 4 features × 24 layers probing on Pythia-1.4B
+  - sklearn CPU probe 很慢，下次改用 GPU + 并行
+
+- **模型资产盘点 + 下载** [jiagpu4]
+  - 扫描 jiagpu4-8，登记 18 个模型到 CLAUDE.md
+  - 下载 5 个缺失模型: Pythia-70M/160M/1B, Mamba-130M, RWKV-169M
+  - 安装 netrep + scikit-learn
+  - 提取 Pythia-70M/160M/1B + Mamba-130M + RWKV-169M reps
+
 ## 2026-05-17
 
 - **exp-003 Phase 1+2 scaling 分析完成** [jiagpu4]
