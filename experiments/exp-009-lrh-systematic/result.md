@@ -1,4 +1,4 @@
-# Exp-009: LRH 系统性测试 — Phase 1+2 结果
+# Exp-009: LRH 系统性测试 — Phase 1+2+3 结果
 
 ## 配置
 
@@ -61,3 +61,35 @@
 - [ ] Phase 3: Mamba-130M 上重复
 - [ ] Phase 4: Pythia checkpoints 训练动态
 - [ ] 用 PCA 去除概念间 correlation 后重新分析
+
+---
+
+## Phase 3: Mamba 上的 LRH
+
+### 配置
+- Mamba-130M vs Pythia-160M（同规模对照）
+- 7 个概念，difference-in-means 每层提取方向
+
+### 跨架构概念方向对齐
+
+| 概念 | mean cos(Mamba, Pythia) | max |cos| |
+|------|------------------------|-----------|
+| capitalized | 0.020 | 0.042 |
+| numeric | -0.028 | 0.064 |
+| punctuation | 0.027 | 0.082 |
+| plural | 0.008 | 0.053 |
+| short | 0.009 | 0.062 |
+| subword | -0.023 | 0.051 |
+| starts_vowel | -0.030 | 0.076 |
+
+### 关键发现
+
+**概念方向在 Mamba 和 Pythia 之间完全不对齐（mean cos ≈ 0）！**
+
+- 所有概念的 mean cosine 都在 ±0.03 以内（接近随机）
+- max |cos| 也仅 0.04-0.08（768 维空间中的随机 expected max ≈ 0.05-0.08）
+- **结论：虽然 exp-003 显示两种架构的 kNN 几何相似（overlap > 0.7），但概念编码的方向完全不同**
+
+这与 exp-008 Phase 2（SAE 特征 MMCS=0.13）完全一致：
+- **几何相似 ≠ 方向对齐**
+- 两种架构用不同的方向编码相同的信息
