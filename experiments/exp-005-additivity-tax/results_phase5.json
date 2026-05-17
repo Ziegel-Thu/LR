@@ -1,0 +1,225 @@
+{
+  "hidden_state": {
+    "intra_science": 0.9974888563156128,
+    "intra_sports": 0.9977776408195496,
+    "inter": 0.9968507289886475
+  },
+  "attribution": {
+    "iga_mean": 1.1333333333333333,
+    "iga_l2": 1.2,
+    "science_attrs": [
+      {
+        "text": "The experiment showed that the chemical reaction",
+        "attr_mean": 8.802385330200195,
+        "attr_std": 29.36676788330078,
+        "attr_max": 52.0223503112793,
+        "attr_l2": 81.11241149902344
+      },
+      {
+        "text": "According to quantum mechanics, particles can",
+        "attr_mean": -10.402764320373535,
+        "attr_std": 13.44404411315918,
+        "attr_max": 12.541996002197266,
+        "attr_l2": 44.974647521972656
+      },
+      {
+        "text": "The DNA sequence was analyzed using",
+        "attr_mean": 12.333291053771973,
+        "attr_std": 35.735816955566406,
+        "attr_max": 84.93109893798828,
+        "attr_l2": 92.60104370117188
+      },
+      {
+        "text": "Researchers discovered a new species of",
+        "attr_mean": 26.826833724975586,
+        "attr_std": 27.296916961669922,
+        "attr_max": 64.67182159423828,
+        "attr_l2": 93.74861145019531
+      },
+      {
+        "text": "The telescope captured images of distant",
+        "attr_mean": 13.034573554992676,
+        "attr_std": 24.614809036254883,
+        "attr_max": 46.070091247558594,
+        "attr_l2": 68.2256088256836
+      },
+      {
+        "text": "Neural networks learn representations by",
+        "attr_mean": 13.33050537109375,
+        "attr_std": 39.44308090209961,
+        "attr_max": 67.97463989257812,
+        "attr_l2": 101.98408508300781
+      },
+      {
+        "text": "The mathematical proof demonstrates that",
+        "attr_mean": 26.7519588470459,
+        "attr_std": 40.43206787109375,
+        "attr_max": 75.460205078125,
+        "attr_l2": 108.40708923339844
+      },
+      {
+        "text": "Climate models predict that temperatures will",
+        "attr_mean": 7.839088439941406,
+        "attr_std": 29.79779624938965,
+        "attr_max": 69.49258422851562,
+        "attr_l2": 75.47290802001953
+      },
+      {
+        "text": "The protein structure was determined through",
+        "attr_mean": 19.586957931518555,
+        "attr_std": 43.62827682495117,
+        "attr_max": 94.55182647705078,
+        "attr_l2": 117.14287567138672
+      },
+      {
+        "text": "Evolutionary theory suggests that species",
+        "attr_mean": 11.668906211853027,
+        "attr_std": 39.17292022705078,
+        "attr_max": 82.4713134765625,
+        "attr_l2": 108.14234924316406
+      },
+      {
+        "text": "The physics experiment confirmed that light",
+        "attr_mean": 12.252250671386719,
+        "attr_std": 28.71829605102539,
+        "attr_max": 56.76100158691406,
+        "attr_l2": 76.47972869873047
+      },
+      {
+        "text": "Genome sequencing revealed mutations in",
+        "attr_mean": 18.19975471496582,
+        "attr_std": 38.06425857543945,
+        "attr_max": 86.24993133544922,
+        "attr_l2": 103.3475341796875
+      },
+      {
+        "text": "The algorithm converges when the loss function",
+        "attr_mean": -0.27990591526031494,
+        "attr_std": 13.159388542175293,
+        "attr_max": 20.302465438842773,
+        "attr_l2": 37.228790283203125
+      },
+      {
+        "text": "Statistical analysis showed significant correlation between",
+        "attr_mean": 15.377619743347168,
+        "attr_std": 19.989355087280273,
+        "attr_max": 47.3335075378418,
+        "attr_l2": 66.72570037841797
+      },
+      {
+        "text": "The chemical compound reacts with oxygen to",
+        "attr_mean": 11.804936408996582,
+        "attr_std": 23.38978385925293,
+        "attr_max": 50.78963088989258,
+        "attr_l2": 69.31861114501953
+      }
+    ],
+    "sports_attrs": [
+      {
+        "text": "The quarterback threw the ball to",
+        "attr_mean": 19.346817016601562,
+        "attr_std": 28.178607940673828,
+        "attr_max": 57.74906921386719,
+        "attr_l2": 83.72574615478516
+      },
+      {
+        "text": "The championship game was won by",
+        "attr_mean": 20.658292770385742,
+        "attr_std": 33.08363723754883,
+        "attr_max": 61.85997772216797,
+        "attr_l2": 95.53927612304688
+      },
+      {
+        "text": "The athlete broke the world record in",
+        "attr_mean": 8.503777503967285,
+        "attr_std": 26.634525299072266,
+        "attr_max": 43.579410552978516,
+        "attr_l2": 73.97286224365234
+      },
+      {
+        "text": "The coach decided to substitute the",
+        "attr_mean": 8.787139892578125,
+        "attr_std": 37.66902542114258,
+        "attr_max": 65.38954162597656,
+        "attr_l2": 94.74711608886719
+      },
+      {
+        "text": "The referee called a foul on",
+        "attr_mean": 17.483613967895508,
+        "attr_std": 29.234891891479492,
+        "attr_max": 47.66102600097656,
+        "attr_l2": 83.43939971923828
+      },
+      {
+        "text": "The basketball team scored three points with",
+        "attr_mean": -2.522509813308716,
+        "attr_std": 14.052926063537598,
+        "attr_max": 20.49456787109375,
+        "attr_l2": 37.774784088134766
+      },
+      {
+        "text": "The soccer match ended with a score of",
+        "attr_mean": 15.768255233764648,
+        "attr_std": 42.46356964111328,
+        "attr_max": 92.782958984375,
+        "attr_l2": 128.11846923828125
+      },
+      {
+        "text": "The Olympic swimmer finished the race in",
+        "attr_mean": 10.332121849060059,
+        "attr_std": 26.49281120300293,
+        "attr_max": 40.974334716796875,
+        "attr_l2": 80.429931640625
+      },
+      {
+        "text": "The tennis player served an ace during",
+        "attr_mean": 29.730525970458984,
+        "attr_std": 42.21372985839844,
+        "attr_max": 87.92268371582031,
+        "attr_l2": 136.6064453125
+      },
+      {
+        "text": "The baseball pitcher struck out the",
+        "attr_mean": 14.41259479522705,
+        "attr_std": 25.844104766845703,
+        "attr_max": 55.70671463012695,
+        "attr_l2": 72.48340606689453
+      },
+      {
+        "text": "The hockey team scored in overtime to",
+        "attr_mean": 8.091166496276855,
+        "attr_std": 22.05191993713379,
+        "attr_max": 39.34766387939453,
+        "attr_l2": 62.147239685058594
+      },
+      {
+        "text": "The marathon runner crossed the finish line",
+        "attr_mean": 17.27700424194336,
+        "attr_std": 47.15931701660156,
+        "attr_max": 91.91950988769531,
+        "attr_l2": 132.8814239501953
+      },
+      {
+        "text": "The boxing match went to the final",
+        "attr_mean": 5.751795291900635,
+        "attr_std": 24.42319679260254,
+        "attr_max": 56.20518493652344,
+        "attr_l2": 66.38545989990234
+      },
+      {
+        "text": "The golf tournament was decided on the",
+        "attr_mean": 11.896628379821777,
+        "attr_std": 24.721683502197266,
+        "attr_max": 49.690956115722656,
+        "attr_l2": 72.58678436279297
+      },
+      {
+        "text": "The football team rushed for over two hundred",
+        "attr_mean": 12.913537979125977,
+        "attr_std": 20.4952392578125,
+        "attr_max": 50.06452560424805,
+        "attr_l2": 68.51652526855469
+      }
+    ]
+  }
+}
