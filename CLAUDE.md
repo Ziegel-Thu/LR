@@ -131,15 +131,67 @@ deepresearch/dr-001-xxx/
   - 包含: torch 2.12, transformers, sae-lens, transformer-lens, hqq
   - HF 模型缓存: `/nvmessd/lifanhong/LR-env/cache/hf`
   - HuggingFace 已登录（支持 gated model 如 Gemma-2）
-- 其他节点需要时再搭建环境
+- jiagpu5 Python venv: `/nvmessd/lifanhong/LR-env/venv`（同 jiagpu4 配置）
+  - HF 模型缓存: `/nvmessd/lifanhong/LR-env/cache/hf`
+- jiagpu6/7/8：尚无项目 venv
 
 ### 模型资产
 
 > **jiagpu agent 负责维护此表**——每次下载新模型后更新。
 
-| 模型 | HuggingFace ID | 节点 | 缓存路径 | 状态 |
-|------|----------------|------|---------|------|
-| （jiagpu agent 填写） | | | | |
+#### jiagpu4 HF 模型缓存（100G，`/nvmessd/lifanhong/LR-env/cache/hf/`）
+
+| 模型 | HuggingFace ID | 大小 | 状态 |
+|------|----------------|------|------|
+| Pythia-70M | EleutherAI/pythia-70m-deduped | 334M | ✅ |
+| Pythia-160M | EleutherAI/pythia-160m-deduped | 752M | ✅ |
+| Pythia-410M | EleutherAI/pythia-410m-deduped | 872M | ✅ |
+| Pythia-1B | EleutherAI/pythia-1b-deduped | 7.1G | ✅ |
+| Pythia-1.4B | EleutherAI/pythia-1.4b-deduped | 5.3G | ✅ |
+| Pythia-2.8B | EleutherAI/pythia-2.8b-deduped | 3.2G | ✅ |
+| Pythia-6.9B | EleutherAI/pythia-6.9b-deduped | 13G | ✅ |
+| Mamba-130M | state-spaces/mamba-130m-hf | 519M | ✅ |
+| Mamba-370M | state-spaces/mamba-370m-hf | 1.4G | ✅ |
+| Mamba-1.4B | state-spaces/mamba-1.4b-hf | 5.2G | ✅ |
+| Mamba-2.8B | state-spaces/mamba-2.8b-hf | 9.2G | ✅ |
+| RWKV-430M | RWKV/rwkv-4-430m-pile | 3.3G | ✅ |
+| RWKV-1.5B | RWKV/rwkv-4-1b5-pile | 12G | ✅ |
+| RWKV-3B | RWKV/rwkv-4-3b-pile | 9.9G | ✅ |
+| RWKV-169M | RWKV/rwkv-4-169m-pile | 680M | ✅ |
+| RWKV-7B | RWKV/rwkv-4-7b-pile | 28G | ✅ |
+| Gemma-2-2B | google/gemma-2-2b | 9.8G | ✅ |
+| Gemma-Scope-2B | google/gemma-scope-2b-pt-res | 8K | ⚠️ stub |
+
+#### jiagpu5 HF 模型缓存（34G，`/nvmessd/lifanhong/LR-env/cache/hf/`）
+
+| 模型 | HuggingFace ID | 大小 | 状态 |
+|------|----------------|------|------|
+| Pythia-2.8B | EleutherAI/pythia-2.8b-deduped | 11G | ✅ |
+| Mamba-2.8B | state-spaces/mamba-2.8b-hf | 11G | ✅ |
+| RWKV-3B | RWKV/rwkv-4-3b-pile | 12G | ✅ |
+
+#### jiagpu6/7/8：无 HF 模型缓存
+
+#### exp-003 表征文件（jiagpu4 SSD `/nvmessd/lifanhong/LR-env/exp003_reps/`）
+
+| 文件 | 形状 | 大小 |
+|------|------|------|
+| Pythia-70M_reps.pt | (7, 1728, 512) | 24M |
+| Pythia-160M_reps.pt | (13, 1728, 768) | 66M |
+| Pythia-410M_reps.pt | (25, 1728, 1024) | 169M |
+| Pythia-1B_reps.pt | (17, 1728, 2048) | 338M |
+| Pythia-1.4B_reps.pt | (25, 1728, 2048) | 338M |
+| Pythia-2.8B_reps.pt | (33, 1728, 2560) | 557M |
+| Pythia-6.9B_reps.pt | (33, 1728, 4096) | 892M |
+| Mamba-370M_reps.pt | (49, 1728, 1024) | 331M |
+| Mamba-1.4B_reps.pt | (49, 1728, 2048) | 662M |
+| Mamba-2.8B_reps.pt | (65, 1728, 2560) | 1.1G |
+| RWKV-430M_reps.pt | (25, 1728, 1024) | 169M |
+| RWKV-1.5B_reps.pt | (25, 1728, 2048) | 338M |
+| RWKV-4-3B_reps.pt | (33, 1728, 2560) | 557M |
+| RWKV-7B_reps.pt | (33, 1728, 4096) | 892M |
+| Mamba-130M_reps.pt | (25, 1728, 768) | 127M |
+| RWKV-169M_reps.pt | (13, 1728, 768) | 66M |
 
 ### 实验运行
 

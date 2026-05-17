@@ -1,5 +1,46 @@
 # 进展记录
 
+## 2026-05-17 (晚)
+
+- **exp-006 Phase 2 完成** [jiagpu4] — 跨架构 Scaling
+  - 4 规模档 × 3 架构 = 12 pairs
+  - Inter-family β=0.056 vs intra-family β=0.025（2.2x faster）
+  - Transformer↔SSM 对齐比 SSM↔SSM 收敛更快，支持 PRH
+
+- **exp-007 Full Run 完成** [jiagpu4] — Encoding ≠ Use
+  - 11 features × 24 layers, Pythia-1.4B, GPU parallel probe
+  - **Ghost ratio = 70.8%**: 71% 的高准确率 probe 无因果效应
+  - 所有 feature probe acc > 0.95，但 Δloss 大多 < 0.01
+  - 并行改写：20min（旧 sklearn 版本需 3h+）
+  - 首次在真实 LLM 上系统量化 encoding-use gap
+
+- **exp-008 Phase 2 完成** [jiagpu4] — Mamba vs Pythia SAE
+  - MMCS = 0.13（接近随机），0 个特征 overlap > 0.9
+  - 结论：两架构都有 superposition 但特征方向完全不同
+
+- **exp-006 Phase 1 完成** [jiagpu4] — 表征 Scaling Law
+  - Pythia 7-scale ladder (70M→6.9B), 7 metrics per model per layer
+  - **kNN overlap 是唯一呈 power law 的度量**: β=0.03, R²=0.90
+  - CKA 饱和（>0.99），shape distance 非单调，ID/rank 无 scaling
+  - 首次给出表征对齐度的**定量幂律**
+  - Phase 2（多架构 scaling）运行中
+
+- **exp-008 Phase 1 完成** [jiagpu4] — SAE on Mamba
+  - Mamba-130M, layer 12, TopK SAE (d_sae=4096, K=32), 30K steps
+  - **80.3% variance explained, 0% dead features**
+  - 首次在 SSM 上训练 SAE：superposition 不是 Transformer 特有的
+  - Phase 2（Pythia SAE + MMCS 对比）运行中
+
+- **exp-007 Pilot 进行中** [jiagpu4]
+  - 4 features × 24 layers probing on Pythia-1.4B
+  - sklearn CPU probe 很慢，下次改用 GPU + 并行
+
+- **模型资产盘点 + 下载** [jiagpu4]
+  - 扫描 jiagpu4-8，登记 18 个模型到 CLAUDE.md
+  - 下载 5 个缺失模型: Pythia-70M/160M/1B, Mamba-130M, RWKV-169M
+  - 安装 netrep + scikit-learn
+  - 提取 Pythia-70M/160M/1B + Mamba-130M + RWKV-169M reps
+
 ## 2026-05-17
 
 - **exp-003 Phase 1+2 scaling 分析完成** [jiagpu4]

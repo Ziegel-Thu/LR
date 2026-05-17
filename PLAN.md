@@ -16,25 +16,23 @@
 
 ## 📋 布置给 jiagpu
 
-### 任务 1: 填写模型资产表
-- 检查 HF 缓存目录，列出所有已下载的模型
-- 更新 CLAUDE.md 的模型资产表
+### 任务 1: 填写模型资产表 ✅
+- 18 个模型已登记到 CLAUDE.md
+- 5 个缺失模型已下载（Pythia-70M/160M/1B, Mamba-130M, RWKV-169M）
 
 ### 任务 2: exp-006 表征 Scaling Law
-- 详见 `experiments/exp-006-repr-scaling-law/plan.md`
-- Phase 1: Pythia 70M~6.9B 全系列，提取每层表征，计算 CKA/shape/kNN/ID/stable rank
-- Phase 2: 多架构（加 Mamba/RWKV 同规模），计算跨架构距离
-- **注意**：exp-003 Phase 1+2 已有 kNN/CKA 数据，补 shape metric / ID / stable rank 即可
+- Phase 1 ✅: Pythia 7-scale ladder, kNN power law R²=0.90, β=0.03
+- Phase 2 ✅: inter-family β=0.056 > intra-family β=0.025 (2.2x faster)
+- Phase 3 待做: representation alignment vs validation loss
 
 ### 任务 3: exp-007 Encoding ≠ Use 量化
-- 详见 `experiments/exp-007-encoding-use-gap/plan.md`
-- 在 Pythia-1.4B 上跑：15 特征 × 32 层 probe + ablation
-- 核心输出：probe accuracy vs Δloss 散点图
+- Full Run ✅: Ghost ratio = 70.8%（11 features × 24 layers, Pythia-1.4B）
+- 下一步：加语义特征（需 NLP 标注）、DAS 替代单方向 ablation
 
 ### 任务 4: exp-008 SSM 上的 SAE
-- 详见 `experiments/exp-008-sae-on-ssm/plan.md`
-- Phase 1: Mamba-130M 上训练 TopK SAE
-- Phase 2: 与 Pythia-160M SAE 特征对比
+- Phase 1 ✅: Mamba-130M SAE, 80.3% var explained, 0% dead features
+- Phase 2 ✅: MMCS=0.13, Mamba/Pythia 特征完全不同
+- Phase 3 待做: 规模扩展（Mamba-370M, 1.4B）
 
 ### 任务 5: exp-009 LRH 系统性测试
 - 详见 `experiments/exp-009-lrh-systematic/plan.md`
@@ -115,18 +113,20 @@
 
 ### exp-006: 表征质量 Scaling Law
 - **问题**：表征对齐度是否随规模呈 power law？
-- 无人做过，Pythia ladder + 多架构（Mamba/RWKV）
-- **注意**：exp-003 Phase 1+2 已有 kNN/CKA 数据（160M~6.9B），exp-006 在此基础上加 shape metric/ID/stable rank 并拟合幂律
+- Phase 1 结果：**kNN 是唯一 power law 度量 (R²=0.90, β=0.03)**
+- Phase 2 运行中：多架构 intra vs inter family β 对比
+- Phase 3 待做：repr alignment vs validation loss
 
 ### exp-007: Encoding ≠ Use 量化
 - **问题**：probe 能解码的信息有多大比例模型实际在用？
-- Braun 2025 给了理论但没人在真实 LLM 上验证
-- 15 特征 × 32 层的 probe accuracy vs ablation effect 散点图
+- Pilot 运行中（4 features, Pythia-1.4B）
+- Full run 待做：15 features × 24 layers，改用 GPU probe + 并行
 
 ### exp-008: SSM 上的 SAE
 - **问题**：superposition 是 Transformer 特有的还是普遍的？
-- Mamba 上训练 SAE——**零先例**
-- Phase 1 pilot (Mamba-130M) → Phase 2 与 Pythia SAE 对比
+- Phase 1 结果：**SAE works on Mamba (80.3% var, 0% dead)**
+- Phase 2 运行中：Pythia-160M SAE + MMCS 特征对比
+- Phase 3 待做：规模扩展（Mamba-370M, 1.4B）
 
 ## 下一步
 
