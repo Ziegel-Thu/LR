@@ -51,7 +51,7 @@ def cache_hiddens(model, tokenizer, texts, device, n_layers):
                            truncation=True, padding="max_length").to(device)
         with torch.no_grad():
             out = model(**tokens, output_hidden_states=True)
-        mask = tokens["attention_mask"].bool()
+        mask = tokens["attention_mask"].cpu().bool()
         # Embedding = hidden_states[0]
         for l in range(-1, n_layers):
             h = out.hidden_states[l+1].cpu().float()
