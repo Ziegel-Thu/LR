@@ -46,3 +46,4 @@ Thumbs.db
 # SSH keys
 ed25519_github
 ed25519_github.pub
+experiments/exp-002-quantization-phase/results_phase1.json
