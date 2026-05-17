@@ -178,6 +178,7 @@ deepresearch/dr-001-xxx/
 | Pythia-70M_reps.pt | (7, 1728, 512) | 24M |
 | Pythia-160M_reps.pt | (13, 1728, 768) | 66M |
 | Pythia-410M_reps.pt | (25, 1728, 1024) | 169M |
+| Pythia-1B_reps.pt | (17, 1728, 2048) | 338M |
 | Pythia-1.4B_reps.pt | (25, 1728, 2048) | 338M |
 | Pythia-2.8B_reps.pt | (33, 1728, 2560) | 557M |
 | Pythia-6.9B_reps.pt | (33, 1728, 4096) | 892M |
@@ -188,6 +189,8 @@ deepresearch/dr-001-xxx/
 | RWKV-1.5B_reps.pt | (25, 1728, 2048) | 338M |
 | RWKV-4-3B_reps.pt | (33, 1728, 2560) | 557M |
 | RWKV-7B_reps.pt | (33, 1728, 4096) | 892M |
+| Mamba-130M_reps.pt | (25, 1728, 768) | 127M |
+| RWKV-169M_reps.pt | (13, 1728, 768) | 66M |
 
 ### 实验运行
 
