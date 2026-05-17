@@ -115,12 +115,39 @@
 
 ## 分支 4：线性表征假说 (LRH)
 
-- **(4a)** LRH 什么时候成立什么时候失败？边界在哪里？
-- **(4b)** 有没有"正则内积"使线性性最 sharp？（因果的？白化的？）
-- **(4c)** **为什么训练会产生线性概念？**——实验证据很多但零理论解释
-- **(4d)** 多个概念方向如何交互？叠加、组合、还是干扰？
+### 未解释现象
+- **(4-P1)** **为什么训练产生线性概念？** 十年实证零理论。Jiang 2024 的 log-linear 猜想是 tautology（softmax 输出线性不解释中间层）。Ziyin 2025 只对 deep linear network 成立
+- **(4-P2)** Euclidean 内积在 LLaMA-2 work 但在 Gemma-2B 失败（Park 2024 Appendix）——不同模型的空间结构为何差异这么大？
+- **(4-P3)** Steering 效果有非线性阈值——α 从 0→0.4 正常，超过某个值产生垃圾。崩溃边界的位置和形状未研究
 
-**关键参考**：Park+ 2024（因果形式化）、Engels+ 2024（反例）、Jiang+ 2024（log-linear 猜想）
+### 未验证假设
+- **(4-A1)** "概念可从输出确定性读取"（Park Def.）——模糊/连续概念被强制二值化
+- **(4-A2)** 因果可分假设的覆盖面——自然语言中大量概念因果耦合，有多大比例满足？未量化
+- **(4-A3)** "一个概念 = 一个方向"——Engels 2024 圆环反例、Kantamneni 2025 双线性扩展表明这只是特例
+- **(4-A4)** "Probe 成功 = 模型使用"——Wu 2025 AxBench 暗示 encoding ≠ use 的差距可能很大
+
+### 已知局限未系统研究
+- **(4-L1)** Steering vector OOD 失败的系统边界——什么定义了"distribution"？失败是 graceful 还是 catastrophic？（Tan 2024）
+- **(4-L2)** 多维特征的完整图谱——只有零星发现（days/months），大规模扫描未做
+- **(4-L3)** 因果内积的唯一性——Park 指出有 d 个自由度，不同合法内积给出不同几何
+- **(4-L4)** 只在 LLaMA-2 7B + Gemma-2B 上验证——跨规模/跨架构/跨模态空白
+
+### 新场景未探索
+- **(4-N1)** SSM（Mamba/RWKV）上的 LRH——没有 attention/clean unembedding，形式化需根本适配。零论文
+- **(4-N2)** RLHF 前后 LRH 变化——steering 在 base vs chat 模型上不同，无系统对比
+- **(4-N3)** 量化后概念方向的保持/崩溃——常见 vs 稀有概念的精度需求？（exp-002 交叉）
+- **(4-N4)** 跨 scale 概念方向迁移——Bello 2025 发现 affine（非 linear）mapping work，bias 项意味什么？
+
+### 未形式化直觉
+- **(4-I1)** "SGD 偏好线性表征"——loss landscape / 信息几何出发的论证不存在
+- **(4-I2)** "Superposition 强制线性"——Elhage 2022 的 packing 论证未用 JL lemma 严格化
+- **(4-I3)** **LRH ↔ ICA 的深层联系**——Park 的因果内积 M=Cov(γ)^{-1} 本质上是白化，和 ICA 的关系是什么？
+
+### 旧结论可能不成立
+- **(4-O1)** Word2vec analogy 的结论 → LLM：contextual embedding 下同一词不同 context 方向不同
+- **(4-O2)** CCS "truth direction" 对 prompt 格式极敏感——"真假"可能不是稳定线性概念
+
+**关键参考**：Park+ 2024, Mikolov+ 2013, Elhage+ 2022, Engels+ 2024, Tan+ 2024, Bello+ 2025, Jiang+ 2024
 
 ## 分支 5：Probing / Lens
 
@@ -195,12 +222,33 @@
 
 ## 分支 6：信息论
 
-- **(6a)** MI 估计在高维连续表征中不可靠——所有估计器都有已知 failure mode
-- **(6b)** PID 的"正确定义"没有共识（Williams-Beer vs BROJA vs Kolchinsky）
-- **(6c)** **信息 → 因果的桥还没建好**（PID 不蕴含因果结构）
-- **(6d)** IB/PID 能否从描述工具变成设计原则？
+### 核心困境
+强 compression 叙事（Shwartz-Ziv 2017 的 fitting→compression 两阶段）已被 Saxe 2018 彻底否定——是 MI 估计 artifact。IB 存活为优化目标但不再是描述性理论。PID 独立成长但受 scalability 和定义分歧制约。
 
-**关键参考**：Ehrlich+ 2024（PID-based complexity）、Murphy+ 2025（causal info decomposition）
+### 未解释现象
+- **(6-P1)** Ehrlich 2024 发现 Representational Complexity 在 train vs test set 有差异——与 overfitting 相关？但未被系统研究
+- **(6-P2)** 不同 PID 定义（Williams-Beer vs BROJA vs I_ccs）在确定性系统中对 synergy/redundancy 分配不一致（Bertschinger 2014 证明：无法同时满足所有公理）
+
+### 未验证假设
+- **(6-A1)** MI 估计在高维连续表征中可靠——所有估计器（binning/KDE/MINE/variational bounds）都有已知 failure mode
+- **(6-A2)** PID 的 unique information 对应因果效果——从未实验检验
+- **(6-A3)** IB/PID 可以从描述工具变成设计原则——理论上有前景但无实证
+
+### 已知局限未系统研究
+- **(6-L1)** PID atoms 数量超指数增长：n=5 有 7579 个 atoms，n=7+ 不可计算。限制了所有 PID 工作到 toy 规模
+- **(6-L2)** Ehrlich 的"量化回避"路线（用 2-3 bit 量化使 MI well-defined）没有后续工作推进——恰好与 LLM 量化趋势吻合
+- **(6-L3)** 不同 PID measure 选择的 sensitivity analysis 未做——结论是否对 measure 选择 robust？
+
+### 新场景未探索
+- **(6-N1)** PID 预测因果效果（实验⑬）——unique information rank vs ablation effect rank 的对比
+- **(6-N2)** 量化 LLM 上的 PID 分析——利用 exp-002 框架 + Ehrlich 的 nninfo
+- **(6-N3)** PID 评估 SAE 特征质量——SAE 特征间 synergy 高 = superposition 严重，低 = 解纠缠成功
+- **(6-N4)** Synergy-based backbone atoms（Rosas 2020）可绕过 scalability 壁垒——2 年无人走这条路
+
+### 综合判断
+Branch 6 有概念深度但实用性受 scalability 严重制约。**不建议作为独立主线，建议作为工具嵌入其他实验的分析阶段**。最值得做的是实验⑬（PID 预测因果效果）——在小模型上即可、桥接两个分支、正反结果都有价值。
+
+**关键参考**：Tishby+ 1999, Saxe+ 2018, Ehrlich+ 2024, Williams & Beer 2010, Bertschinger+ 2014, Murphy+ 2025
 
 ## 分支 7：拓扑/几何
 
@@ -239,37 +287,90 @@
 
 ## 分支 8：解纠缠/可识别性
 
-- **(8a)** 可识别性理论假设太强（需干预/环境标签）
-- **(8b)** LLM 表征看起来解纠缠但没用 CRL 推导——两者怎么连？
-- **(8c)** 预训练模型是否在识别底层因果结构？
-- **(8d)** 评估指标继承了 Locatello 指出的同样问题
+### 核心叙事
+从"不可能"到"有条件可能"：Locatello 2019 终结无监督路线 → Hyvärinen/Khemakhem 建立弱监督可识别性 → Schölkopf 2021 合流为 CRL。**核心张力：CRL 理论需要 interventions/environments，但 LLM 只有 next-token loss 却似乎产生了 disentangled 表征**。
 
-**关键参考**：Locatello+ 2019（不可能性）、Khemakhem+ 2020（iVAE）、Reizinger+ 2024（LLM 可识别性）
+### 未解释现象
+- **(8-P1)** LLM 表征看起来 disentangled（LRH 成立、SAE 找到单义特征）但没有用 CRL 条件推导——理论与实践之间的裂缝
+- **(8-P2)** Next-token prediction 是否隐含了可识别性条件？每个 prefix 可能是一个"environment"提供不同条件先验
+
+### 未验证假设
+- **(8-A1)** "LLM disentanglement 是真的"——可能只是表面现象（superposition, feature absorption 说明内部远非 clean）
+- **(8-A2)** CRL 理论假设太强——iVAE 需要指数族条件先验、intervention-based CRL 需要 single-node interventions，实际中都没有
+
+### 已知局限未系统研究
+- **(8-L1)** 评估指标（DCI, MIG, SAP）假设已知 ground-truth factors——LLM 没有
+- **(8-L2)** 需要不依赖 ground-truth 的 disentanglement 指标（intervention-based? stability-based?）
+- **(8-L3)** CRL 理论人不做 LLM 实验，LLM 实验人不看 CRL 理论——两个社区完全不交流
+
+### 新场景未探索
+- **(8-N1)** SAE 作为经验 ICA 的可识别性分析——用 ICA 理论预测哪些 SAE 特征应稳定、哪些不稳定
+- **(8-N2)** 预训练表征的因果 vs 相关检验——构造"相关但非因果"案例看表征能否区分
+- **(8-N3)** Disentanglement degree 随 scale 变化——有没有 phase transition？
+- **(8-N4)** Locatello 纳入我们的不可能性公理化框架——自然延伸
+
+### 与其他分支的关键连接
+- **8↔4 (LRH)**：CRL/identifiability 可能是解释"为什么 LRH 成立"的理论框架
+- **8↔2 (SAE)**：SAE ≈ 经验版 nonlinear ICA，30% 共享率可能对应 ICA 非唯一性
+- **8↔9 (收敛)**：如果收敛点可识别 → 唯一（up to trivial transforms）
+
+**关键参考**：Locatello+ 2019, Khemakhem+ 2020, Schölkopf+ 2021, Zimmermann+ 2021, Reizinger+ 2024
 
 ## 分支 9：Scaling / 收敛
 
-- **(9a)** 收敛到唯一解还是低维族？（Anna Karenina vs 多解）
-- **(9b)** 选择压力来自哪里？——数据、loss、优化器、还是正则化？
-- **(9c)** 收敛失败的边界条件——Ziyin 2025 开了头但远没定论
-- **(9d)** 表征质量的 scaling law 该怎么量化？（不是 loss 的 scaling law）
+### 核心进展
+Ziyin 2025 在 embedded deep linear network (EDLN) 上**严格证明了 Perfect PRH**——SGD 的 entropic force（离散化 + 梯度噪声）是收敛的机制，**不是** Huh 猜想的三个原因。但非线性模型是否也成立完全开放。
 
-**关键参考**：Huh+ 2024（Platonic）、Ziyin+ 2025（收敛 breaks）、Bansal+ 2021（model stitching）
+### 未解释现象
+- **(9-P1)** 收敛到唯一解还是低维族？——Huh 说 Anna Karenina 但未测距离是否→0
+- **(9-P2)** 我们 exp-003：SSM↔SSM 的 shape distance 比 Transformer↔SSM 低 50%——**架构族层级**未被 Platonic 叙事涵盖
+- **(9-P3)** Mamba↔RWKV 的 kNN 曲线异常平坦（无 U 形）——两个 SSM 中间处理层也保持高相似，与 Transformer↔SSM 的剧烈 U 形截然不同
+
+### 未验证假设
+- **(9-A1)** "更大模型更收敛"——Huh 定性展示但**从未拟合 power law**
+- **(9-A2)** 收敛机制是 data-driven（Huh 猜想）——Ziyin 证明在 EDLN 中是 optimizer-driven（SGD entropic force），两者矛盾
+- **(9-A3)** Mutual kNN 是度量收敛的正确工具——无理论基础，换 shape metric 结论可能变
+
+### 已知局限未系统研究
+- **(9-L1)** **表征质量 scaling law 无人做过**——所有人做 loss scaling，没人量化 CKA/shape/ID/stable rank 随规模的变化
+- **(9-L2)** Ziyin 的 6 种 break conditions 只有理论预测，**未实验验证**（论文自己说了）
+- **(9-L3)** 跨模态对齐依赖 paired data 质量（Huh Fig 7: caption 越密 → 对齐越高）
+
+### 新场景未探索
+- **(9-N1)** **表征对齐 scaling law**：s(N) = s∞ - a·N^{-β}，用 Pythia ladder 拟合
+- **(9-N2)** Ziyin break conditions 实验验证（weight decay / label noise / EOS）
+- **(9-N3)** 训练动态追踪——Pythia 143 个 checkpoint 上测 alignment vs training step
+- **(9-N4)** Steering vector 跨架构 affine 迁移——Bello 2025 在同架构不同 scale 做了，跨架构（Pythia→Mamba）未做
+
+### 与我们数据的连接
+- exp-003 z>350 是首个 Transformer↔SSM↔linear attention 三架构定量数据
+- "架构族内对齐 > 架构族间对齐"是新发现——收敛不是单调的，存在层级
+- U 形深度曲线和 Ziyin 的 Perfect PRH（预测所有层对齐）矛盾——非线性使中间层分化
+
+**关键参考**：Huh+ 2024, Ziyin+ 2025, Bansal+ 2021, Merullo+ 2022, Bello+ 2025
 
 ## 分支 10：不可能性/理论基础
 
-- **(10a)** 有没有统一的公理化框架用于表征比较？（类似 Kleinberg 对聚类做的）
-- **(10b)** SAE/probe/DAS 什么条件下保证恢复真实结构？
-- **(10c)** Faithfulness/completeness/simplicity/minimality 能否同时达到？
-- **(10d)** 黑箱 vs 权重 vs 训练过程——不同访问级别下可解释性的信息论上限？
+### 我们已有的工作
+- 五公理框架 {Identifiability, Structural Faithfulness, Generality, Non-triviality, Finiteness}
+- Bilodeau/Han/Sutter/Kleinberg 四篇论文统一映射
+- Mini impossibility proof + additivity 根源诊断
+- Exp-005: worst-case vs average-case gap（IGA≈2.0 自然 vs ≈1.1 adversarial）
 
-**关键参考**：Kleinberg 2002（聚类不可能性模板）、Wu+ 2025、Friedman+ 2024
+### 还未做的
+- **(10-P1)** **Smoothed impossibility**——所有现有不可能性都是 worst-case。exp-005 Phase 4 的 sharp transition (β=0.9→1.0) 暗示 adversarial 构造 measure zero。**定义 smoothed IGA 并证明 average-case 下不可能性不成立**
+- **(10-P2)** **表征比较的 Kleinberg 式公理化**——提出 3-4 个公理（Scale-invariance, Richness, Consistency, Isomorphism-invariance），探索相容/不相容
+- **(10-P3)** 可解释性的分层信息论上界——black-box / weight / training-process 不同访问级别下的 MI 上限
+- **(10-P4)** Resource-bounded Squeeze——对 poly-time Φ 证明 feasible interval 为空（DR-009 路线）
+- **(10-P5)** SAE 非唯一性的不可能性理论解释——additive decomposition ↔ Bilodeau completeness 的类比
 
----
+### 与其他分支的关键连接
+- **10↔3**：Sutter trivialization = Incompatibility III；Wu 2025 F-C trade-off 可能是 squeeze 的实证表现
+- **10↔4**：如果 LRH 成立 → 线性 alignment 有先验理由 → Sutter dilemma 被自然打破
+- **10↔7**：低 ID 表征 → adversarial 构造更困难？可定义"natural model class"
+- **10↔9**：收敛的唯一性/不可能性条件未 formalized——重要 gap
 
-## 最有空间的方向（主观判断）
+### 综合判断
+我们的公理化框架已建立但缺乏"正面"结果。最有价值的增量是 **smoothed impossibility**（有 exp-005 实验基础 + 全新理论方向）和 **Kleinberg 式公理化**（field-defining if achieved）。两者可组合为一篇论文："Impossibility theorems tell us what is impossible; smoothed analysis tells us when it matters"。
 
-1. **为什么 LRH 成立** (4c) — 实验证据很多但零理论解释
-2. **收敛的边界条件** (9c) — Ziyin 开了头，但远没定论
-3. **ID 的因果角色** (7b) — 低 ID 是因还是果？
-4. **度量选择的公理化** (1a) — Cloos 指出了问题，但没给解
-5. **表征质量 scaling law** (9d) — 大家只做 loss scaling，没做表征 scaling
+**关键参考**：Kleinberg 2002, Bilodeau+ 2024, Sutter+ 2025, Wu+ 2025, Friedman+ 2024, 我们的 formalization.md
