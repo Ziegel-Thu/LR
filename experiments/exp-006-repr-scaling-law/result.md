@@ -143,5 +143,50 @@ Shape distance 从 160M 的 ~0.5 下降到 2.8B 的 ~0.4，呈下降趋势（但
 
 ## 下一步
 
-- [ ] Phase 3: representation alignment vs validation loss 关系
 - [ ] 增加 n_perms 做 z-score permutation null（当前是 raw 值）
+- [ ] 更多架构（GPT-2, Llama）加入 scaling 分析
+
+---
+
+## Phase 3: 表征对齐 vs Validation Loss
+
+### 配置
+
+使用 Pythia 官方 validation loss (Biderman et al. 2023) 和 Phase 1 的 kNN alignment。
+
+| 模型 | Params | Val Loss |
+|------|--------|----------|
+| Pythia-70M | 70M | 3.64 |
+| Pythia-160M | 160M | 3.28 |
+| Pythia-410M | 410M | 2.94 |
+| Pythia-1B | 1B | 2.68 |
+| Pythia-1.4B | 1.4B | 2.56 |
+| Pythia-2.8B | 2.8B | 2.40 |
+| Pythia-6.9B | 6.9B | 2.21 |
+
+### 结果
+
+| 关系 | Pearson r | p-value | Spearman ρ |
+|------|-----------|---------|------------|
+| **kNN alignment vs avg loss** | **-0.952** | **0.003** | -0.986 |
+| Loss vs log(params) | -0.992 (R²=0.984) | — | — |
+| Stable rank vs loss | 0.521 | 0.230 | 0.179 |
+| Effective rank vs loss | 0.392 | 0.384 | 0.179 |
+| TwoNN ID vs loss | 0.554 | 0.197 | 0.571 |
+| MLE ID vs loss | -0.402 | 0.372 | -0.643 |
+
+### Phase 3 关键发现
+
+#### 1. kNN alignment 与 loss 几乎完美负相关 (r = -0.95) ✅
+
+这是本实验最强的结果：**表征对齐度和 loss 下降近乎同步**。
+- Loss scaling: L(N) ∝ N^{-0.31}（R²=0.98）
+- kNN scaling: kNN(N) ∝ N^{0.03}（R²=0.90）
+- 两者的相关系数 r = -0.95 (p=0.003)
+
+**解读**：表征收敛不是 loss 下降的附带现象——它们是同一个 scaling 过程的两个面。模型表现好（low loss）和模型表征趋同（high kNN）可能有共同的驱动力。
+
+#### 2. Intra-model 几何量与 loss 无显著相关
+
+Stable rank、effective rank、ID 等度量与 loss 的相关性都不显著（p > 0.19）。
+表征的"内部几何"不随 loss 下降而 systematically 变化。
