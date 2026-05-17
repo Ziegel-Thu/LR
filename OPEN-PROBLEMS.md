@@ -1,15 +1,38 @@
 # 表征学习/分析领域 Open Problems
 
-> 来源：DR-013 论文地图综合整理（2026-05-17）
+> 来源：DR-013 论文地图 + 论文精读（2026-05-17）
 
 ## 分支 1：相似度度量
 
-- **(1a)** 哪种不变性适用于哪种科学问题？（正交？仿射？置换？）——目前无共识
-- **(1b)** 高维小样本下如何去偏？（现代大模型的典型场景）
-- **(1c)** 功能/行为相似度是否应该作为几何相似度的 ground truth？
-- **(1d)** 怎么处理随机性、噪声、在线更新——表征不是固定点云
+### 未解释现象
+- **(1-P1)** U 形深度曲线：早晚层跨架构相似，中间层分化——所有人观察到但无机制解释
+- **(1-P2)** CKA 高不等于编码了任务信息（Cloos：CKA≈1 但任务变量丢失）
+- **(1-P3)** 随机网络也能高 CKA/RSA（Cui 2022：输入相似性 confound）
 
-**关键参考**：Cloos+ 2024（度量排序互相矛盾）、Harvey+ 2024（CKA = avg decoder alignment）、Williams+ 2021（shape metric）
+### 未验证假设
+- **(1-A1)** "CKA 是好默认"——Kornblith 2019 确立，Cloos/Ding 质疑，但大家还在用
+- **(1-A2)** 均值池化不丢信息——所有人用但没人验证
+- **(1-A3)** CKA=0.7 意味什么？中间值无可解释含义，无 calibration 理论（Klabunde §6）
+- **(1-A4)** CKA 高 → 迁移/stitching 效果好？从未验证
+
+### 已知局限未系统研究
+- **(1-L1)** Procrustes 分数随维度升高（Klabunde）——比较不同 d_model 的模型时 confounded
+- **(1-L2)** 样本量效应：shape metric 需要大 N/D 才稳定（Williams 2021），我们 exp-003 N/D≈0.65 可能不稳定
+- **(1-L3)** 所有度量假设 IID stimuli（Harvey §2.1），但语言是序列的
+- **(1-L4)** 12+ 种 CKA 变体没人系统比较过（Cloos future work）
+
+### 新场景未探索
+- **(1-N1)** SSM（Mamba/RWKV）上的度量行为——我们 exp-003 可能是首个
+- **(1-N2)** 度量作为训练目标（知识蒸馏用 Procrustes loss）
+- **(1-N3)** RLHF 前后表征变化的度量
+- **(1-N4)** 动态/token-by-token 表征的比较
+
+### 旧结论可能不成立
+- **(1-O1)** 所有 CKA 结论在 CNN 上验证，Transformer/SSM 谱结构可能不同
+- **(1-O2)** Harvey "几何≈功能" 的 bound 在高维下松动（participation ratio 因子）
+- **(1-O3)** 有限样本 regime 下理论结果的适用性（Harvey 自己提出）
+
+**关键参考**：Cloos+ 2024, Harvey+ 2024, Klabunde+ 2023, Williams+ 2021, Kornblith+ 2019
 
 ## 分支 2：SAE
 
