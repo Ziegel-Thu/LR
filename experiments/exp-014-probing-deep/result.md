@@ -39,3 +39,29 @@
 - Loss gradient 是全局的，不是针对特定概念的
 - 应该用 concept-specific gradient（如对特定 token 的 loss）
 - 仅 5 个 token-level 概念
+
+---
+
+## Phase 2: IOI Information Lifecycle
+
+### 配置
+- GPT-2 small, 12 layers, IOI task (50 prompts + 50 flipped)
+- Concept: "who is the indirect object" (binary: A vs B)
+- Dual curve: probe accuracy + AMNESIC ablation Δlogit_diff
+
+### 结果
+
+| 指标 | 值 |
+|------|-----|
+| Baseline logit diff | 2.096 |
+| Best probe layer | **Layer 7** (acc=1.000) |
+| Best ablation layer | **Layer 9** (Δ=0.409) |
+| Peak alignment | **NO** — probe peaks 2 layers before ablation |
+
+### 解读
+
+**信息先编码后消费 — encoding leads use by ~2 layers.**
+
+这与 Wang 2022 IOI circuit 一致：Name Mover heads 在 L9-10，probe 在 L7 就已完美解码。信息在 L7 被"写入"表征，在 L9 被 Name Mover heads "读取"使用。中间 2 层是信息"搬运"过程。
+
+这是 8 种 lifecycle 分类中的 **Type 2: Early encoding, late use**。
