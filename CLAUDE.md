@@ -132,6 +132,14 @@ deepresearch/dr-001-xxx/
   - HuggingFace 已登录（支持 gated model 如 Gemma-2）
 - 其他节点需要时再搭建环境
 
+### 模型资产
+
+> **jiagpu agent 负责维护此表**——每次下载新模型后更新。
+
+| 模型 | HuggingFace ID | 节点 | 缓存路径 | 状态 |
+|------|----------------|------|---------|------|
+| （jiagpu agent 填写） | | | | |
+
 ### 实验运行
 
 - 实验在 tmux 中运行，session 名用实验名（如 `exp002`）

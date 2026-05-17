@@ -16,17 +16,29 @@
 
 ## 📋 布置给 jiagpu
 
-| 任务 | 节点 | 状态 | 备注 |
-|------|------|------|------|
-| exp-003 Phase 1 分析 (CKA/kNN) | jiagpu4 | ✅ 完成 | 4 个 scale，支持 PRH |
-| exp-003 Phase 2 (6.9B) | jiagpu4 | ✅ 完成 | Pythia-6.9B + RWKV-7B |
-| exp-003 加 shape metric + PID | jiagpu | 待做 | |
+### 任务 1: 填写模型资产表
+- 检查 HF 缓存目录，列出所有已下载的模型
+- 更新 CLAUDE.md 的模型资产表
+
+### 任务 2: exp-006 表征 Scaling Law
+- 详见 `experiments/exp-006-repr-scaling-law/plan.md`
+- Phase 1: Pythia 70M~6.9B 全系列，提取每层表征，计算 CKA/shape/kNN/ID/stable rank
+- Phase 2: 多架构（加 Mamba/RWKV 同规模），计算跨架构距离
+- **注意**：exp-003 Phase 1+2 已有 kNN/CKA 数据，补 shape metric / ID / stable rank 即可
+
+### 任务 3: exp-007 Encoding ≠ Use 量化
+- 详见 `experiments/exp-007-encoding-use-gap/plan.md`
+- 在 Pythia-1.4B 上跑：15 特征 × 32 层 probe + ablation
+- 核心输出：probe accuracy vs Δloss 散点图
+
+### 任务 4: exp-008 SSM 上的 SAE
+- 详见 `experiments/exp-008-sae-on-ssm/plan.md`
+- Phase 1: Mamba-130M 上训练 TopK SAE
+- Phase 2: 与 Pythia-160M SAE 特征对比
 
 ## 💻 本地进行中
 
-| 任务 | 状态 | 备注 |
-|------|------|------|
-| exp-007 pilot (encoding ≠ use) | 运行中 | Pythia-410M 下载中 |
+（当前无——实验走服务器）
 
 ## 下一批实验（3 个并行）
 
