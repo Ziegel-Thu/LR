@@ -135,7 +135,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs="+", required=True, help="One or more NAME=HF_ID specs")
     parser.add_argument("--cache-dir", default="/nvmessd/lifanhong/LR-env/cache/hf")
-    parser.add_argument("--out-dir", default="experiments/exp-003-cross-arch-platonic/phase1/data")
+    parser.add_argument("--out-dir", default="/nvmessd/lifanhong/LR-env/exp003_reps")
     parser.add_argument("--n-stimuli", type=int, default=5000)
     parser.add_argument("--seq-len", type=int, default=256)
     parser.add_argument("--batch-size", type=int, default=8)
