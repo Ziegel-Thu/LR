@@ -1,6 +1,8 @@
-# Exp-008: SSM 上的 SAE — Phase 1 结果
+# Exp-008: SSM 上的 SAE — Phase 1 + Phase 2 结果
 
-## 配置
+## Phase 1: Mamba-130M SAE Pilot
+
+### 配置
 
 | 参数 | 值 |
 |------|-----|
@@ -11,9 +13,7 @@
 | 训练 | Adam lr=3e-4, L1 coeff=1e-3, 30K steps, batch=4096 |
 | 节点 | jiagpu4 GPU 4 |
 
-## 结果
-
-### 核心指标
+### 结果
 
 | 指标 | 值 | 解读 |
 |------|-----|------|
@@ -22,48 +22,58 @@
 | Dead features | **0/4096 (0%)** | 完美——所有特征都学到了东西 |
 | Avg active/token | 32.0 | 精确匹配 K=32 |
 | Alive fire rate (mean) | 0.78% | 稀疏且分布合理 |
-| Alive fire rate (median) | 0.39% | |
 
-### 训练曲线
+### 关键发现
 
-- MSE: 0.50 → 0.20，收敛良好
-- Dead features: 始终 0%（整个训练过程）
-- L1: 0.042 → 0.025，稳定下降
+1. **SAE 在 Mamba 上 works** — 80.3% variance explained，首次在 SSM 上成功训练 SAE
+2. **0% dead features** — 非常罕见（Transformer 通常 5-30%）
+3. **结论：Superposition 不是 Transformer 特有的**
 
-## 关键发现
+---
 
-### 1. SAE 在 Mamba 上 works ✅
+## Phase 2: Mamba SAE vs Pythia SAE 特征对比
 
-80.3% variance explained 证明 TopK SAE 能有效重构 Mamba 的隐状态。虽然比 Transformer SAE 的典型值（85-95%）略低，但考虑到：
-- 这是**首次在 SSM 上训练 SAE**
-- 训练数据量有限（236K tokens vs 典型的 10M+）
-- 无超参调优
+### 配置
 
-结论：**Superposition 不是 Transformer 特有的，至少在 Mamba 的 output hidden state 中也存在。**
+| 参数 | 值 |
+|------|-----|
+| Pythia 模型 | Pythia-160M (d_model=768, 同 Mamba-130M) |
+| SAE | 相同架构: TopK d_sae=4096, K=32, 30K steps |
+| 对比方法 | MMCS (Max Mean Cosine Similarity on decoder weights) |
 
-### 2. 0% dead features
+### MMCS 结果
 
-这非常罕见——Transformer SAE 通常有 5-30% dead features。可能原因：
-- d_sae/d_model 比例适中（4096/768 ≈ 5.3x）
-- TopK=32 保证了足够的梯度信号
-- 或者 Mamba 的表征空间确实有 ≥4096 个可学习的方向
+| 指标 | 值 |
+|------|-----|
+| MMCS (Pythia → Mamba) | 0.130 |
+| MMCS (Mamba → Pythia) | 0.130 |
+| MMCS (symmetric) | **0.130** |
+| Median best match cosine | 0.129 |
+| Features with overlap > 0.9 | **0 / 4096 (0%)** |
 
-### 3. Variance gap（~20%）
+### 解读
 
-20% 的未解释方差可能来自：
-- Mamba 隐状态的递推结构（temporal dependencies 不适合 pointwise SAE）
-- 训练数据不足
-- 需要更大的 d_sae
+**MMCS = 0.13 接近随机水平** (768-dim 随机向量的 expected max cosine ~ 0.1-0.15)。
+
+- **0 个特征的 best match > 0.9**：Mamba 和 Pythia 没有任何"共享概念"的特征
+- 两个方向（Pythia→Mamba, Mamba→Pythia）高度对称：不存在单向嵌入
+- **结论：虽然两种架构都存在 superposition，但学到的特征方向完全不同**
+
+这与 exp-003 的发现形成有趣对比：
+- exp-003: **表征几何** 高度相似 (kNN overlap > 0.7)
+- exp-008: **SAE 特征** 几乎不重叠 (MMCS = 0.13)
+
+可能解释：两种架构编码相同的信息（因此 kNN 高），但用不同的 superposition 结构（因此 SAE 特征不同）。这是一个值得深入的发现。
 
 ## 局限
 
-- 训练数据仅 236K tokens（plan 要 2M），可能限制了 reconstruction quality
-- 未做 feature 语义分析（需要手动检查 top-activating examples）
-- 单一层（layer 12）——其他层可能表现不同
+- 训练数据仅 236K tokens（可能不够充分）
+- 仅比较 middle layer
+- MMCS 可能不是最佳的特征对比方法（decoder weight 方向 ≠ feature 语义）
 
 ## 下一步
 
-- [ ] Phase 2: 与 Pythia-160M SAE 特征对比（MMCS、特征类型分类）
-- [ ] 增大训练数据（用 Pile 的更大 split）
-- [ ] 手动检查 top-50 features 的最大激活样本
-- [ ] 测试其他层（early/late layers）
+- [ ] Phase 3: Mamba-370M / 1.4B 上的 SAE scaling
+- [ ] 更大训练数据 (10M+ tokens)
+- [ ] 手动检查 Mamba 和 Pythia 各自的 top features 语义
+- [ ] 用 activation correlation（而非 weight cosine）做特征对比

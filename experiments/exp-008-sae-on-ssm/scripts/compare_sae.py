@@ -174,8 +174,8 @@ def compute_mmcs(W_a, W_b):
     W_a: (d_sae_a, d_model), W_b: (d_sae_b, d_model)
     Returns: mean of max cosine similarity for each feature in A to best match in B, and vice versa.
     """
-    W_a_norm = F.normalize(W_a, dim=1)
-    W_b_norm = F.normalize(W_b, dim=1)
+    W_a_norm = F.normalize(W_a.cpu().float(), dim=1)
+    W_b_norm = F.normalize(W_b.cpu().float(), dim=1)
     cos_sim = W_a_norm @ W_b_norm.T  # (d_sae_a, d_sae_b)
 
     max_a_to_b = cos_sim.max(dim=1).values  # best match in B for each A feature
