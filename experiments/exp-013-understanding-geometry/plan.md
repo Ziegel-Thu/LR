@@ -19,6 +19,7 @@
 | 工具 | TwoNN ID, MLE ID (K=100), stable rank, probe accuracy (每层) |
 
 - 画 ID profile → 有没有 hunchback / semantic plateau？
+- Stable rank / effective rank / manifold capacity / curvature / persistent homology 全套
 - 和 probe accuracy 叠加 → 低 ID 层是不是 probe 最好的层？
 - 和 ablation effect 叠加 → 低 ID 层是不是因果最重要的层？
 - 训练好的 vs 随机初始化的对照
@@ -39,7 +40,7 @@
 | Coconut | 推理 | ✅ | GPT-2 scale |
 | CLIP (ViT-B/32) | 跨模态语义 | ✅ | ViT |
 
-每个模型：TwoNN ID + MLE ID + stable rank，按层（或迭代步）画曲线。
+每个模型：TwoNN ID + MLE ID + stable rank + effective rank + manifold capacity (Cohen 2020) + curvature + persistent homology，按层（或迭代步）画曲线。目标是每个模型一个完整的**几何 portrait**。
 
 ### 核心分析
 
