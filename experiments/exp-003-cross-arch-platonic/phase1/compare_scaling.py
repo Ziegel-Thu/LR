@@ -40,6 +40,10 @@ SCALES = {
         "Mamba": "Mamba-2.8B_reps.pt",
         "RWKV": "RWKV-4-3B_reps.pt",
     },
+    "6.9B": {
+        "Pythia": "Pythia-6.9B_reps.pt",
+        "RWKV": "RWKV-7B_reps.pt",
+    },
 }
 
 PILOT_KNN_Z = {
@@ -174,13 +178,15 @@ def main():
             print(f"Loaded {scale}/{arch}: {reps.shape}")
 
     # Pairwise comparison per scale
-    archs = ["Pythia", "Mamba", "RWKV"]
-    pairs = [(archs[i], archs[j]) for i in range(3) for j in range(i + 1, 3)]
     results = {}
 
     for scale in args.scales:
         results[scale] = {}
-        for a, b in pairs:
+        scale_archs = list(all_reps[scale].keys())
+        scale_pairs = [(scale_archs[i], scale_archs[j])
+                       for i in range(len(scale_archs))
+                       for j in range(i + 1, len(scale_archs))]
+        for a, b in scale_pairs:
             pair_key = f"{a} ↔ {b}"
             print(f"\n{'=' * 60}")
             print(f"[{scale}] {pair_key}")
@@ -241,7 +247,7 @@ def main():
 
     # === Figure 2: scaling trend ===
     if len(args.scales) >= 2:
-        scale_sizes = {"410M": 0.41, "1.4B": 1.4, "2.8B": 2.8}
+        scale_sizes = {"410M": 0.41, "1.4B": 1.4, "2.8B": 2.8, "6.9B": 6.9}
         pilot_size = 0.16
 
         fig2, axes2 = plt.subplots(1, 2, figsize=(12, 5))
