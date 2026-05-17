@@ -58,6 +58,11 @@
 - 同一组表征上跑 TwoNN / MLE(K=10/50/100/500) / GeoMLE 估计器对比
 - 训练过程中 hunchback 演化追踪（Pythia checkpoints）
 
+### 任务 9: 不可能性定理统一 + 正面结果
+- 将 Locatello 2019 纳入五公理框架（目前只有 Bilodeau/Han/Sutter/Kleinberg）
+- 对每个不可能性，找最小公理放松下的最优正面结果
+- 推广 exp-005 的 smoothed analysis 到 Locatello 和 Sutter（三个不可能性的统一 average-case 处理）
+
 （当前无——实验走服务器）
 
 ## 下一批实验（3 个并行）
