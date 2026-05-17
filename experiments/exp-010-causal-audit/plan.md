@@ -35,6 +35,11 @@
 2. 组合 ablation（circuit 外 head pairs/triples）
 3. Circuit 外 random ablation scaling（Δloss 是否随 k 线性增长）
 
-## 算力
+## 成功标准与预期结果
 
-全在 GPT-2 small 上，本地可跑，总计 ~12 GPU-hours
+- 换 baseline 后 circuit 大变 → 现有结论部分是 artifact（高影响力负面结果）
+- 换 baseline 后 circuit 不变 → 方法论 robust，给社区 reassurance
+- 随机网络 circuit ≈ 训练 circuit → circuit discovery 方法论需重新审视
+- 随机网络 circuit 完全不同 → circuit 确实捕获了训练学到的结构
+- MLP 纳入后 87% → 95%+ → 暗物质在 MLP 里，circuit search 需扩展
+- MLP 纳入后仍 ~87% → 暗物质是 distributed 的，稀疏 circuit 假设有根本局限

@@ -30,6 +30,11 @@
 
 每层 ID 的训练时间序列，和 loss 曲线叠加。
 
-## 算力
+## 成功标准与预期结果
 
-Phase 1+2: 纯计算 ~4h CPU。Phase 3: ~10 GPU-hours
+- stable rank 在跨架构 setup 上仍碾压 ID → 挑战 ID 主导叙事
+- ID 在跨架构上赢回来 → ID 适合跨架构、stable rank 适合同架构，两者互补
+- 估计器一致 → 领域结论 robust
+- 估计器不一致 → 需标注每种估计器适用范围
+- Hunchback 有 sharp phase transition → "表征涌现"的几何证据
+- Hunchback 渐进形成 → 表征结构是连续演化的
