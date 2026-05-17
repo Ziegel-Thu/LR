@@ -72,33 +72,42 @@
 
 ### Probing 深层问题（待单独 brainstorm）
 
-**方向 P1: Encoding vs Use 的三角验证**
-- 同一概念同时用 probe direction / Park causal direction / DiffMeans direction 提取方向
-- 分别做 ablation 和 steering，看哪种方向最接近因果方向
-- 不只是"encoding vs use"，而是"哪种方向提取方法最因果"
-- 待单独细化实验设计
+**Meta Q1: 什么条件下 encoding = use？**
+- Braun 2025 证明了 encoding ≠ use，Wu 2025 实证了 probe≠steerer
+- 核心问题：找到条件 C 使得"满足 C 时 probe accuracy 可靠推出因果使用"
+- 候选条件：参数噪声鲁棒性、probe 方向和 causal 方向夹角、层深度、概念类型、架构类型、过参数化程度
+- 待 brainstorm agent 回收后整理
+
+**Meta Q2: 信息在神经网络中的表示形式如何随计算深度变换？**
+- 不只是"有没有"，而是信息从哪来、往哪去、怎么变
+- 信息生命周期（逐层 probe+ablation 双曲线）是一个具体实例
+- 信息形式变换（同一信息在不同层可能需要不同 probe 才能检测）
+- 信息的创造（哪层产生了输入中不存在的新信息）和销毁
+- 连接 probing 和 circuit analysis 的桥
+
+**更多 Meta Questions（brainstorm 结果）：**
+
+| MQ | 问题 | 一句话 |
+|----|------|--------|
+| Q3 | 什么时候两个表征"相同"？ | 表征空间上的等价关系应该是什么？能否只有一个？ |
+| Q4 | 表征的自然单元是什么？ | 有没有特权的分解（神经元/方向/字典原子/流形/电路）？ |
+| Q5 | 为什么线性无处不在？哪里打破？ | LRH 的理论解释 + 边界条件 |
+| Q6 | 表征分析什么条件下能恢复 ground truth？ | 外部分析方法的根本极限 |
+| Q7 | 表征空间有没有 universal attractor？ | Platonic hypothesis 的形式化 |
+| Q8 | 哪些结构性质因果决定计算行为？ | ID/stable rank/curvature 中谁是因、谁是果？ |
+| Q9 | 多少计算是可定位的、多少本质 distributed？ | 稀疏 circuit 假设的适用范围（暗物质问题的推广）|
+| Q10 | 表征结构由什么决定？ | 架构 / 数据 / 目标 / 优化器的因果贡献 |
+| Q11 | 怎么形式化"表征知道多少"？ | probe accuracy / MI / MDL / PID 哪个是对的度量？ |
+| Q12 | 部分的表征怎么组合成整体的？ | 概念/token/特征如何 compose 成结构化语义？ |
+
+**方向 P1: 三角验证（probe / causal / DiffMeans 方向对比）**
+- 待单独细化
 
 **方向 P2: "谁的信息"——三来源分解（需深入调研）**
-- Probe 读到的信息来自：输入 bleed-through / 训练目标结构 / 模型内部计算？
-- 测试：probe on 模型表征 vs probe on 输入 embedding → 差值 = 模型贡献
-- 测试：同架构不同训练目标（next-token vs masked LM vs contrastive）→ probe 方向一致性
-- Cui 2022 发现随机网络也高 CKA 暗示 bleed-through 严重
-- Gubian 2025 的 Encoding Probe 可能直接回答这个问题
-- 需要 DR 调研已有相关工作
-
-**方向 P3: 信息生命周期——逐层追踪**
-- 某个概念在每层的 probe accuracy + ablation effect 双曲线
-- 编码→使用→消费的全过程追踪
-- 如果某层 probe 高但 ablation 低 → ghost information（编码没用）
-- 如果某层 probe 下降但 ablation 变大 → 信息被消费了（用于计算后丢弃）
-- 连接 probing 和 circuit analysis 的桥
-- 待单独细化实验设计
+- 待 DR 调研
 
 **方向 P4: 理解模型上的 probing（需深入调研）**
-- 在声称"物理理解"的模型（V-JEPA 2）上 probe 抽象物理概念（守恒量、对称性、因果 vs 相关）
-- 在 world model（DreamerV3）上 probe 反事实方向
-- 在 latent reasoning（Coconut）上 probe 推理步骤
-- 需要 DR 调研：大家在这些模型上都 probe 了什么、发现了什么、还缺什么
+- 待 DR 调研
 
 （当前无——实验走服务器）
 
