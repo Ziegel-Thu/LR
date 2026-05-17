@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+    \PYG{k}{def} \PYG{esc}{$\mathtt{extract\_unused\_rep}$}\PYG{p}{(}\PYG{esc}{$\hiddenstates$}\PYG{p}{,} \PYG{esc}{$\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer}$}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{rep}\PYG{o}{=}\PYG{esc}{$\hiddenstates$}
+        \PYG{k}{while} \PYG{n}{rep}\PYG{esc}{$\in\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer}$}\PYG{p}{:}
+            \PYG{n}{rep}\PYG{o}{=}\PYG{esc}{$\causalmap_{\layer}^{-1}($}\PYG{n}{rep}\PYG{esc}{$)$}
+        \PYG{k}{return} \PYG{n}{rep}
+\end{Verbatim}

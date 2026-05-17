@@ -1,0 +1,344 @@
+%
+
+\section{Proofs for Brute-Force \modelName{} Evaluations}\label{sec:sample-complexity-proofs}
+
+%
+
+\subsection{Notation for Sample Complexity}
+
+We begin with additional notation to formalize brute-force \modelname{} evaluations.
+A \emph{\queryalgoname{}} is any way to sequentially choose \obsnames{} to \queryname{} the \modelname{} at.
+Let $\queryspace = \covspace\times\dataspace\times\Reals^{\covdim\times\datadim}$.
+Formally, a \queryalgoname{} 
+%
+is any sequence of functions $\queryalgo = (\queryalgo\timeind{t})_{t\in\Nats}$ such that for each $t$, 
+\*[
+    \queryalgo\timeind{t}: \queryspace^{t-1} \to \probspace(\covspace).
+\]
+For any $\model\in\modelspace$, we write $\covobs\timeind{1:n} \sim \queryalgo\timeind{1:n}[\model]$ if 
+\*[
+    \covobs\timeind{1} &\sim \queryalgo\timeind{1} \quad \text{ and } \\
+    \forall t>1 \qquad \covobs\timeind{t} \Bigcondsym \Big(\covobs\timeind{1:t-1}, \model(\covobs\timeind{1:t-1}),
+    \grad\model(\covobs\timeind{1:t-1})\Big)
+    &\sim \queryalgo\Big(\covobs\timeind{1:t-1}, \model(\covobs\timeind{1:t-1}),
+    \grad\model(\covobs\timeind{1:t-1})\Big).
+\]
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+
+
+%
+We now introduce \emph{\samphyptestnaming{}}, where the \pracname{} makes a decision using only (random) \querynames{} of a \fielddefname{}. In practice, this is more general than \oraclehyptestnaming{}, since a \pracname{} can only access the output of a \fielddefname{} via \querynames{}.
+Formally, a \samphyptestname{} is any function
+\*[
+    \samphyptest: \subspaceset{\queryspace} \to [0,1].
+\]
+This time, the output of $\samphyptest$ is \emph{the probability that the \pracname{} rejects the \nullname{}, conditional on the observed \querynames{}}. To study \specname{} and \sensname{} for the entire procedure of selecting \querynames{} and then performing a \samphyptestname{}, we introduce the $\{0,1\}$--valued random variable $\samphyprv{\queryalgo[\model]}{\samphyptest}{n}$, 
+%
+which has the distribution defined by
+\*[
+    \samphyprv{\queryalgo[\model]}{\samphyptest}{n}
+    \Bigcondsym \covobs\timeind{1:n}
+    &\sim \bernoullidist\Big(\samphyptest\Big(\covobs\timeind{1:n}, \model(\covobs\timeind{1:n}),
+    \grad\model(\covobs\timeind{1:n})\Big)\Big) \\
+    \covobs\timeind{1:n} &\sim \queryalgo\timeind{1:n}[\model].
+\]
+%
+Finally,
+for a fixed
+$\queryalgo$, $\samphyptest$, and $\modelspace\nullind,\modelspace\altind \subseteq \modelspace$, 
+\*[
+    \sampspecsym\timeind{n}(\queryalgo, \samphyptest) &= 
+    \inf_{\model\in\modelspace\nullind}
+    \Big[1-\EE\Big[\samphyprv{\queryalgo[\model]}{\samphyptest}{n}\Big] \Big] \ \text{ and } \\
+    \sampsenssym\timeind{n}(\queryalgo, \samphyptest) &=
+    \inf_{\model\in\modelspace\altind}
+    \EE\Big[\samphyprv{\queryalgo[\model]}{\samphyptest}{n}\Big].
+\]
+Once again, the \pracname{}'s goal is to maximize these simultaneously.
+
+\subsection{Sample Complexity Theorems}
+
+%
+
+We define the \emph{Lipschitz constant} for any $\model:\covspace\to\dataspace$, $\covnbhd \subseteq \covspace$, and $k\in[\datadim]$ by
+\*[
+    \lipdef\lipind{\covnbhd}(\model)\feat{k}
+    = \sup_{\covval,\covvaldum\in\covnbhd} \frac{\abs{\model(\covval)\feat{k} - \model(\covvaldum)\feat{k}}}{\norm{\covval-\covvaldum}_\infty}.
+\]
+
+First, we show that the task shown to be impossible for \oraclehyptestnames{} in \cref{fact:oracle-hypothesis-spurious-multivariate} can be solved with sufficiently many \querynames{}.
+For any $\inscale>0$, let $\queryalgo\feat{\inscale}$ be such that 
+\*[
+    \queryalgo\timeind{t}\feat{\inscale} \equiv \uniformdist\Big((0,\inscale]^\covdim\Big).
+\]
+Further, for any $\covprob\in[0,1]$, define 
+\*[
+    \samphyptestoracle\feat{\covprob}(\covval\timeind{1:n}, \dataval\timeind{1:n})
+    = \covprob + (1-\covprob) \cdot \ind{\exists t\in[n] \stT \dataval\timeind{t}>0}.
+\]
+
+Then, we have the following formal version of \cref{fact:sufficient-samples-informal}.
+\begin{theorem}\label{fact:sufficient-samples}
+%
+Fix arbitrary $\inscale,\outscale>0$ and $\lipconst > 0$.
+Suppose that for all $\model\in\modelspace$, $\lipdef\lipind{(0,\inscale]^\covdim}(\model) \leq \lipconst$,
+and let
+\*[
+    \modelspace\nullind &= \{\model\in\modelspace \setdelim \sup_{\covval\in(0,\inscale]^\covdim} \model(\covval) \leq 0\} \\
+    \modelspace\altind &= \Big\{\model\in\modelspace \setdelim 
+    \sup_{\covval\in(0,\inscale]^\covdim} \model(\covval) \geq \eps \Big\}.
+\]
+Then, for any $\covprob\in[0,1]$, 
+%
+%
+%
+%
+%
+%
+\*[
+    \sampspecsym\timeind{n}(\queryalgo\feat{\inscale}, \samphyptestoracle\feat{\covprob})
+    &= 1 - \covprob \ \text{ and } \\
+    \sampsenssym\timeind{n}(\queryalgo\feat{\inscale},\samphyptestoracle\feat{\covprob})
+    &= 1 - (1-\covprob)\Big(1-\Big(\frac{2\outscale}{\lipconst\inscale}\Big)^\covdim\Big)^n.
+\]
+\end{theorem}
+
+In particular, this implies that
+\*[
+    \sampspecsym\timeind{n}(\queryalgo\feat{\inscale}, \samphyptestoracle\feat{\covprob})
+    &= 1 - \sampsenssym\timeind{n}(\queryalgo\feat{\inscale}, \samphyptestoracle\feat{\covprob}) +  (1-\covprob) \cdot \Big(1 - \Big(1-\Big(\frac{2\outscale}{\lipconst\inscale}\Big)^\covdim\Big)^n \Big).
+\]
+The following result shows that this rate is nearly tight (as can be seen by a first-order Taylor expansion of $(1-x)^n$).
+\begin{theorem}\label{fact:necessary-samples}
+%
+%
+%
+%
+%
+%
+%
+%
+In the same setting as \cref{fact:sufficient-samples},
+if \cref{assn:piecewise-multivariate} holds for linear $\modeldum$
+then for any \bothagnosticname{} $\queryalgo$, $\samphyptest$, and $n\in\Nats$, 
+\*[
+    \sampspecsym\timeind{n}(\queryalgo, \samphyptest)
+    \leq 1 - \sampsenssym\timeind{n}(\queryalgo, \samphyptest) 
+    + n\cdot \Big(\Big\lfloor\frac{\lipconst\inscale}{2\outscale}\Big\rfloor\Big)^{-\covdim}.
+\]
+\end{theorem}
+
+
+
+
+\subsection{Proof of \cref{fact:sufficient-samples}}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+First, for any $\model\nullind\in\modelspace\nullind$ and $\covval\timeind{1:n}$, observe that
+\*[
+    \EE\Big[\samphyprv{\queryalgo\feat{\inscale}[\model\nullind]}{\samphyptestoracle\feat{\covprob}}{n} \condsym \covval\timeind{1:n} \Big]
+    &= \samphyptestoracle\feat{\covprob}\Big(\covval\timeind{1:n}, \model\nullind(\covval\timeind{1:n}) \Big) 
+    = \covprob + (1-\covprob) \cdot \ind{\exists t\in[n] \stT \model\nullind(\covval\timeind{t})>0} 
+    = \covprob.
+\]
+That is,
+\*[
+    \sampspecsym\timeind{n}(\queryalgo\feat{\inscale}, \samphyptestoracle\feat{\covprob})
+    = \inf_{\model\in\modelspace\nullind}
+    \Big[1-\EE\Big[\samphyprv{\queryalgo\feat{\inscale}[\model]}{\samphyptestoracle\feat{\covprob}}{n}\Big] \Big]
+    = 1-\covprob.
+\]
+
+Next, fix an arbitrary $\model\altind\in\modelspace\altind$. By definition, there exists $\covvalalt \in (0,\inscale]^\covdim$ such that $\model\altind(\covvalalt) \geq \outscale$. Since $\lipdef\lipind{(0,\inscale]^\covdim}(\model\altind) \leq \lipconst$, if $\norm{\covval-\covvalalt}_\infty < \outscale/\lipconst$ then $\model\altind(\covval) > 0$. Let $\cubealt = \{\covval\in(0,\inscale]^\covdim \setdelim \norm{\covval-\covvalalt}_\infty < \outscale/\lipconst\}$, 
+\*[
+    \sampcompevent\timeind{t} = \Big\{\covobs\timeind{t} \in \cubealt \Big\}, \quad\text{and}\quad
+    \sampcompevent = \bigcup_{t\in[n]} \sampcompevent\timeind{t}.
+\]
+Further, let $\inoutratio = \lipconst \inscale / (2\outscale)$. 
+By definition, since $\queryalgo\feat{\inscale}$ is independent of $\model\altind$,
+\*[
+    \PP\feat{\queryalgo\feat{\inscale}\timeind{1:n}}\Big[\comp{\sampcompevent} \Big]
+    = (1-\inoutratio^{-\covdim})^n.
+\]
+
+Then,
+\*[
+    \sampsenssym\timeind{n}(\queryalgo\feat{\inscale}, \samphyptestoracle\feat{\covprob})
+    &= \inf_{\model\in\modelspace\altind} \EE\Big[\samphyprv{\queryalgo\feat{\inscale}[\model]}{\samphyptestoracle\feat{\covprob}}{n}\Big] \\
+    &= \inf_{\model\in\modelspace\altind}
+    \Bigg(\EE\Big[\samphyprv{\queryalgo\feat{\inscale}[\model]}{\samphyptestoracle\feat{\covprob}}{n}\condsym \sampcompevent\Big]\PP\feat{\queryalgo\feat{\inscale}\timeind{1:n}}\Big[\sampcompevent\Big] + \EE\Big[\samphyprv{\queryalgo\feat{\inscale}[\model]}{\samphyptestoracle\feat{\covprob}}{n}\condsym \comp{\sampcompevent}\Big]\PP\feat{\queryalgo\feat{\inscale}\timeind{1:n}}\Big[\comp{\sampcompevent}\Big] \Bigg) \\
+    &= \PP\feat{\queryalgo\feat{\inscale}\timeind{1:n}}\Big[\sampcompevent\Big] + \covprob \cdot \PP\feat{\queryalgo\feat{\inscale}\timeind{1:n}}\Big[\comp{\sampcompevent}\Big] \\
+    &= 1 - (1-\covprob)(1-\inoutratio^{-\covdim})^n.
+%
+\]
+\manualendproof
+
+
+\subsection{Proof of \cref{fact:necessary-samples}}
+%
+%
+
+Let $\model\nullind \equiv 0$ and $\PP\nullind$ denote $\PP_{\covobs\timeind{1:n}\sim\queryalgo\timeind{1:n}[\model\nullind]}$. 
+Define $\lfloor \lipconst\inscale/(2\outscale) \rfloor = \inoutratio \in \Nats$.
+Divide $(0,r \cdot (2\outscale/\lipconst)]^\covdim$ into $\inoutratio^\covdim$ cubes (each denoted by $\cube\feat{\ell}$ for $\ell\in[\inoutratio^\covdim]$) with sides that are left-open and right-closed of length $2\outscale/\lipconst$.
+For each $\ell \in [\inoutratio^\covdim]$, let
+%
+%
+%
+%
+%
+%
+%
+%
+\*[
+    \sampcompevent\timeind{t}\feat{\ell} = \Big\{\covobs\timeind{t} \in \cube\feat{\ell} \Big\}
+\]
+and
+\*[
+    \sampcompevent\feat{\ell} = \bigcup_{t\in[n]} \sampcompevent\timeind{t}\feat{\ell}.
+\]
+By a union bound,
+\*[
+    \PP\nullind[\sampcompevent\feat{\ell}] \leq \sum_{t\in[n]} \PP\nullind[\sampcompevent\timeind{t}\feat{\ell}].
+\]
+Further, since $\cube\feat{\ell} \cap \cube\feat{\ell'} = \emptyset$ for all $\ell \neq \ell'$ and
+\*[
+    \bigcup_{\ell\in[\inoutratio^\covdim]} \cube\feat{\ell}
+    \subseteq 
+    (0,\inscale]^\covdim,
+\]
+\*[
+    \sum_{\ell\in[\inoutratio^\covdim]} \sum_{t\in[n]} \PP\nullind[\sampcompevent\timeind{t}\feat{\ell}]
+    \leq n.
+\]
+Thus, there must be some $\ell^*$ such that 
+\*[
+    \sum_{t\in[n]} \PP\nullind[\sampcompevent\timeind{t}\feat{\ell^*}]
+    \leq \frac{n}{\inoutratio^\covdim}.
+\]
+Denote $\sampcompevent = \sampcompevent\feat{\ell^*}$ and $\sampcompevent\timeind{t} = \sampcompevent\timeind{t}\feat{\ell^*}$.
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+Define the $2L$-Lipschitz bump function taking maximal value $\eps$ by
+\*[
+    \model\altind(\covval)
+    &=
+    \begin{cases}
+    0 &\covval \not\in\cube\feat{\ell^*} \\
+    \text{square-based pyramid} &\covval\in\cube\feat{\ell^*}.
+    \end{cases}
+\]
+Observe that $\model\altind\in\modelspace$ by \cref{assn:piecewise}.
+Similarly to $\PP\nullind$, let $\PP\altind$ denote $\PP_{\covobs\timeind{1:n}\sim\queryalgo\timeind{1:n}[\model\altind]}$.
+Since $\model\timeind{0} = \model\timeind{1}$ outside of $\cube\feat{\ell^*}$, it holds that
+\*[
+    \PP\nullind[\sampcompevent] = \PP\altind[\sampcompevent]
+\]
+and
+\*[
+    \samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n}
+    \disteq
+    \samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n}
+    \ \Bigcondsym \
+    \comp{\sampcompevent}.
+\]
+%
+%
+%
+%
+%
+%
+
+Next,
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\*[
+    \EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n} \Big]
+    &= 
+    \EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n} \condsym \comp{\sampcompevent} \Big] \PP\altind[\comp{\sampcompevent}]
+    +
+    \EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n} \condsym \sampcompevent \Big] \PP\altind[\sampcompevent] \\
+    &=
+    \EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n} \condsym \comp{\sampcompevent} \Big] \PP\nullind[\comp{\sampcompevent}]
+    +
+    \EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n} \condsym \sampcompevent \Big] \PP\nullind[\sampcompevent].
+\]
+Similarly,
+%
+%
+%
+%
+%
+%
+%
+\*[
+    \EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n} \Big]
+    &=
+    \EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n} \condsym \comp{\sampcompevent} \Big] \PP\nullind[\comp{\sampcompevent}]
+    +
+    \EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n} \condsym \sampcompevent \Big] \PP\nullind[\sampcompevent].
+\]
+Combining these, we obtain
+%
+%
+%
+%
+%
+%
+%
+\*[
+    \sampspecsym\timeind{n}(\queryalgo, \samphyptest)
+    &= \inf_{\model\in\modelspace\nullind}
+    \Big[1-\EE\Big[\samphyprv{\queryalgo[\model]}{\samphyptest}{n}\Big] \Big] \\
+    &\leq 1-\EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n}\Big] \\
+    &= 1 - \EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n}\Big] + \PP\nullind[\sampcompevent] \Big(\EE\Big[\samphyprv{\queryalgo[\model\altind]}{\samphyptest}{n}\condsym \sampcompevent\Big] - \EE\Big[\samphyprv{\queryalgo[\model\nullind]}{\samphyptest}{n} \condsym \sampcompevent\Big] \Big)\Big) \\
+    &\leq 1 - \inf_{\model\in\modelspace\altind} \EE\Big[\samphyprv{\queryalgo[\model]}{\samphyptest}{n}\Big] + \PP\nullind[\sampcompevent] \\
+    &= 1 - \sampsenssym\timeind{n}(\queryalgo, \samphyptest) + \frac{n}{\inoutratio^\covdim}.
+\]
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\manualendproof

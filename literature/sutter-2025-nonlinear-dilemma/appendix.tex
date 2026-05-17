@@ -1,0 +1,1803 @@
+\newpage
+
+\section{Reproducibility}\label{app:reproducability}
+
+We provide the code to reproduce our experiments in \url{https://github.com/densutter/non-linear-representation-dilemma}.
+Refer to the \texttt{README.md} for instructions.
+
+\section{Pseudo-code for Running an Intervention on an Algorithm}
+\label{sec:pseudo_code_intervention}
+
+In \cref{alg:alg_with_interventions}, we present pseudo-code that demonstrates how algorithms execute under our intervention framework.
+
+\begin{figure*}[h]
+    \centering
+    \input{algorithms/intervention.tex}
+    \caption{Pseudo-code implementation of an algorithm with interventions, where interventions $\interventionsalg$ are specified as a Python dictionary mapping nodes to their intervened values.}
+    \label{alg:alg_with_interventions}
+\end{figure*}
+
+\section{Additional Related Work}\label{appsec:Additional_Related_Work}
+
+The concept of causal abstraction was ported to deep neural networks by \citet{Geiger2023CausalAA}, providing a generalised framework for understanding how neural networks can be abstracted to higher-level algorithms.
+Early work by \citet{Geiger2021CausalAO} explored direct interventions on neuron-aligned activations, laying the groundwork for more sophisticated approaches. 
+Building on this, \citet{Geiger2023FindingAB} introduced distributed alignment search (DAS), which uses an alignment map to align distributed representations in neural networks with causal graphs. Several improvements to DAS have been proposed: \citet{Sun2025HyperDASTA} developed HyperDAS, which automates the search for node information using hypernetworks, while \citet{wu2023interpretability} introduced Boundless DAS, which automatically determines intervention size through gradient descent, scaling to larger models.
+
+However, recent work has raised important critiques of causal alignment methods. \citet{meloux2025everything} demonstrated that multiple algorithms can be causally aligned with the same neural network, and conversely, a single algorithm can align with different network subspaces. 
+\citet{Mueller2024MissedCA} identified fundamental limitations in counterfactual theories, showing they may miss certain causes and that causal dependencies in neural networks are not necessarily transitive. 
+\citet{Makelov2023IsTT} showed that subspace interventions such as those used in DAS can lead to ``interpretability illusions''---cases where manipulating a subspace changes the behaviour of the model through activating parallel pathways, rather than directly controlling the target feature.
+In their response, \citet{wu2024replymakelovetal} argued these illusions may be artefacts of specific evaluation approaches rather than fundamental flaws, and that they depend on the definition of causality being used, a point also made by \citet{Jorgensen2025WhatIC}.\looseness=-1
+
+Recent work has also raised significant challenges to the linear representation hypothesis. \citet{white-etal-2021-non} demonstrated that syntactic structure in language models is encoded non-linearly, showing that kernelised structural probes outperform linear ones while maintaining parameter count. 
+Similarly, \citet{Csordas2024RecurrentNN} found that recurrent neural networks use fundamentally non-linear representations for sequence tasks. \citet{Engels2024NotAL} provided concrete examples of non-linear feature representations in language models, such as days of the week being encoded on a circular manifold. While \citet{Golechha2024ChallengesIM} argued that some language modelling behaviours may be represented linearly due to next-token prediction and LayerNorm folding, \citet{mueller2024questrightmediatorhistory} advocated for exploring non-linear mediators to uncover more sophisticated abstractions. 
+Additional evidence comes from \citet{kantamneni2025languagemodelsusetrigonometry}, who found that language models represent numbers on a helical manifold. 
+\citet{olah2024linear} offered an important clarification: the linear representation hypothesis is not about dimensionality but rather about features behaving mathematically linearly through addition and scaling, allowing for multidimensional features with constrained geometry.
+This represents a relaxation of the strongest form of the hypothesis.
+
+\section{Schematic of the Relation Between Notions of Causal Abstraction} \label{app:visualization_causal_abstraction}
+
+\begin{figure}[h]
+    %
+    %
+    \includegraphics[width=\textwidth]{images/TheoryExplainFigure.pdf}
+    \vspace{-12pt}
+    \caption{A schematic of the definitions of causal abstraction in \cref{sec:Causal_Abstraction}. The axes represent an increase in how restricted the notion of causal abstraction is based on: $y$-axis, constraints placed on $\tau$; and $x$-axis, constraints placed on the set of allowed interventions. Grey arrows symbolise a superset$\rightarrow$subset relationship: if an $\alg$-$\dnn$ pair fulfils the conditions in the subset, it also fulfils them in the superset.}
+    \label{fig:visualization_causal_abstraction}
+\end{figure}
+
+\section{DNN Definitions}
+
+\subsection{MLP}\label{appsubsec:general_MLP}
+A multi-layer perceptron (MLP) consists of a sequence of linear transformations interleaved with non-linear activation functions.
+
+\begin{submodule}\label{definition:multi_layer_perceptron}
+    We can define a \defn{multi-layer perceptron} ($\mlpfunc$) by choosing:
+    \begin{align}
+        \hiddenstates_{\neuronset_{1}} = \dnnfunclayer{0}(\bx) = \mlpweights_{0}\,\bx, \qquad\qquad 
+        \hiddenstates_{\neuronset_{\layer+1}} = \dnnfunclayer{\layer}(\hiddenstates_{\neuronset_{\layer}}) = \mlpweights_{\layer}\left(\nonlinearity(\hiddenstates_{\neuronset_{\layer}})\right) + \mlpbias_{\layer}
+    \end{align}
+    where $\mlpweights_{0} \in \R^{\layerdim{1} \times |\bx|}$, $\mlpweights_{\layer} \in \R^{\layerdim{\layer+1} \times \layerdim{\layer}}$, and $\mlpbias_{\layer} \in \R^{\layerdim{\layer+1}}$
+    are trainable parameters, 
+    and $\nonlinearity$ is a non-linearity like ReLU.
+    For this model, $\hiddenspace_{\layer} = \R^{\layerdim{\layer}}$ for $0 < \layer < \nlayers$ and $\hiddenspace_{\nlayers} = \R^{|\by|}$.
+\end{submodule}
+
+In this work, we focus on MLPs used for classification tasks, whose final layer includes a softmax transformation.
+\begin{model}
+\label{model:multi_layer_perceptron_for_classification}
+    A \defn{classification multi-layer perceptron} (MLP) is defined like \cref{definition:multi_layer_perceptron} but with a softmax on the last layer:
+    \begin{align}
+        \pdnn(\by \mid \bx) = \dnnfunclayer{\nlayers}(\hiddenstates_{\neuronset_{\nlayers}}) = \softmax(\mlpweights_{\nlayers}\,\hiddenstates_{\neuronset_{\nlayers}})
+    \end{align}
+    where $\mlpweights_{L} \in \R^{|\by| \times \layerdim{\nlayers}}$ is a trainable parameter.
+\end{model}
+
+\subsection{Transformer Language Model}\label{appsubsec:Language_Model_Transformer}
+
+In this section, we provide a definition of decoder-only autoregressive language models \citep{radford2019language, vaswani2017attention}. 
+While many variations of transformer architectures have been developed, we focus on the original GPT-2 architecture \citep{radford2019language}.
+We highlight that the Pythia models explored in our experiments are slightly different from the original GPT-2 and use parallel attention \citep{chowdhery2023palm}; however, we do not expect this change to strongly affect our results.
+We now define the different submodules that compose a transformer.  
+
+\begin{submodule}\label{definition:Embedding}
+    The \defn{Embedding} layer in a transformer maps input tokens to vectors:
+    \begin{align}
+        \dnnfunclayer{0}(\bx) = \embeddings_{\bx}, \qquad\mathtt{where}\,\,\embeddings_{\bx}\in \R^{|\bx| \times \layerdim{1}}
+    \end{align}
+    In this equation, $\embeddings \in \R^{|\calX| \times \layerdim{1}}$ is a learned parameter matrix and $\bx$ indexes into its rows.\footnote{We ignore positional embeddings here for simplicity, as they do not affect our proofs of injectivity in \cref{app:injectivity_Transformer}. Note that, in that section, we show injectivity on an entire layer's activations $\hiddenstates_{\neuronset_{\layer}}$. 
+    Position embeddings would be needed to show injectivity on a single position, e.g., the last token's position $(\hiddenstates_{\neuronset_{\layer}})_{-1}$; a property which we conjecture should also hold.
+    Further, we note that position embeddings are used in our experiments.}
+\end{submodule}
+
+\begin{submodule}\label{definition:Multi_Head_Self_Attention}
+    \defn{Multi-Head Self-Attention} with $H$ heads is defined as:
+    \begin{align}
+        \selfattention(\hiddenstates) = \concat(\head_1(\hiddenstates), \ldots, \head_H(\hiddenstates))\mlpweights^O\label{eq:transformer_concat_attention}
+    \end{align}
+    where each head operates in dimension $d_{\head} \ll \layerdim{\layer}$ and computes:
+    \begin{align}
+        \head_i(\hiddenstates) = \softmax\left(\frac{(\hiddenstates\mlpweights_i^Q)(\hiddenstates\mlpweights_i^K)^\top}{\sqrt{d_k}}\right)\hiddenstates\mlpweights_i^V
+    \end{align}
+    with learned parameters $\mlpweights^O\in \R^{H d_{\head} \times\layerdim{\layer}}$, $\mlpweights_i^Q,\mlpweights_i^K,\mlpweights_i^V\in \R^{\layerdim{\layer}\times d_{\head}}$.
+    %
+\end{submodule}
+
+\begin{submodule}\label{definition:Layer_Norm}
+    \defn{Layer Normalization} applies per-feature normalization:
+    \begin{align}
+        \layerNorm(\hiddenstates) = \gamma \odot \frac{\hiddenstates - \mu}{\sigma} + \beta
+    \end{align}
+    where $\mu$ and $\sigma$ are the mean and standard deviation across all features for a single input, and $\gamma$, $\beta$ are learned parameters.
+\end{submodule}
+
+Using these submodules, we define a transformer block.
+
+\begin{submodule}\label{definition:Transformer_Block}
+    A \defn{Transformer Block} chains together attention and MLP layers with residual connections:
+    \begin{align}
+        \hiddenstates' = \hiddenstates + \selfattention(\layerNorm(\hiddenstates)),
+        \qquad\qquad
+        \dnnfunclayer{\layer}(\hiddenstates) = \hiddenstates' + \mlpfunc(\layerNorm(\hiddenstates'))
+    \end{align}
+    where $\mlpfunc$ is applied to each token activations separatly as defined in \cref{definition:multi_layer_perceptron}.
+\end{submodule}
+
+Finally, we define the complete transformer language model.
+
+\begin{model}\label{model:transformer_language_Model}
+    A \defn{transformer language model} consists of an embedding layer, transformer blocks, and an output layer:
+    \begin{subequations}
+    \begin{align}
+        \hiddenstates_{\neuronset_{1}} &= \dnnfunclayer{0}(\bx) = \embeddings_{\bx} \\
+        \hiddenstates_{\neuronset_{\layer+1}} &= \dnnfunclayer{\layer}(\hiddenstates_{\neuronset_{\layer}}) \\
+        \pdnn(\by \mid \bx) &= \dnnfunclayer{\nlayers}(\hiddenstates_{\neuronset_{\nlayers}}) = \softmax(\layerNorm(\hiddenstates_{\neuronset_{\nlayers}})_{-\!1}\, \mlpweights_{\nlayers})
+    \end{align}
+    \end{subequations}
+    where $\layerNorm(\hiddenstates_{\neuronset_{\nlayers}})_{-\!1}$ selects the final token's position after layernorm is applied.
+    For this model, $\hiddenspace_{\neuronset_{\layer}} = \R^{|\bx| \times \layerdim{\layer}}$ for $1 \leq \layer \leq \nlayers$ and $\hiddenspace_{\neuronset_{\nlayers+1}} = \Delta^{|\calY|-1}$.
+\end{model}
+
+\section{Proof of \texorpdfstring{\cref{theorem:existing_causalmap_for_any_algorithm}}{Theorem}}
+\label{appsec:Linear_Representation_Hypothesis_vs_DAS}
+
+\mydnnmacro{\neuronsetPartition}{\boldsymbol{\Psi}}
+
+In this section, we prove our main theorem. 
+For notational simplicity, we write in this section:
+\begin{align}
+    \underbrace{\dnnfunclayer{:\layer} \defeq \dnnfunclayer{\neuronset_{\layer}} = \dnnfunclayer{\layer-1}\circ\cdots\circ\dnnfunclayer{0}}_{\texttt{Run DNN up to layer } \layer},
+    \qquad\mathtt{and}\qquad
+    \underbrace{\dnnfunclayer{\layer:} \defeq \dnnfunclayer{\nlayers}\circ\cdots\circ\dnnfunclayer{\layer}}_{\texttt{Run DNN from layer } \layer}
+\end{align}
+We start by formally stating our assumptions.
+
+\begin{restatable}[Countable input-space]{assumption}{assumptionCountableinfinite}
+\label{assumption:Countable_infinite}
+    We assume that the space of inputs (i.e., $\calX$) is countable.
+\end{restatable}
+
+\begin{restatable}[Input-injectivity in all layers]{assumption}{assumptioninjectivity}
+\label{assumption:injectivity}
+    We assume that $\dnnfunclayer{:\layer}$ is injective for all layers. %
+\end{restatable}
+
+\begin{restatable}[Strict output-surjectivity in all layers]{assumption}{assumptionsurjectivety}
+\label{assumption:surjectivety}
+    We assume that the composition of $\dnnfunclayer{\layer:}$ and $\abstractionmap_{\nodesoutput}$ is strictly surjective for all layers (we define strict surjectivity in \cref{defn:strict_surjectivity}).
+\end{restatable}
+
+\begin{restatable}[Algorithm and DNN have matchable partial-orderings]{assumption}{assumptionminimalrequirements}\label{assumption:minimalrequirements}
+    We assume that there exists a partitioning $\{\neuronset_{\node} \mid \node \in \nodesint\} \cup \{\neuronset_{\uselesspartition}\}$ of $\dnn$'s neurons
+    $\neuronsetint$---where $\neuronset_{\node}$ are single neurons---which respects the partial-ordering of algorithm $\alg$, i.e., $\node \partialsmall \node' \implies \neuronset_{\node} \partialsmall \neuronset_{\node'}$.
+    Further, for each layer at least one neuron is left unused in this partitioning, i.e., $\neuronset_{\uselesspartition} \cap \neuronset_{\layer} \neq \emptyset$.
+\end{restatable}
+\begin{restatable}[DNN solves the task]{assumption}{assumptiondnnalgsolve}\label{assumption:dnnalgsolve}
+    We assume that for any input $\bx \in \calX$, 
+    %
+    the neural network solves the task correctly, satisfying $\ftask(\bx) = \argmax_{\by \in \calY} \pdnn(\by \mid \bx)$.
+\end{restatable}
+
+We provide a longer discussion about why we think these assumptions are reasonable in \cref{appsubsec:Linear_Representation_Hypothesis_vs_DAS_Assumptions}. For convenience, we also put a self-contained version of \cref{definition:input_restricted_constructive_abstraction} (input-restricted distributed abstraction) in \cref{appsec:detailed_def_IRCA}.
+Now, we restate our theorem and present its proof.
+
+\existingcausalmapforanyalgorithm*
+
+\begin{proof}
+    To show that an algorithm $\alg$ is an input-restricted distributed abstraction of a neural network $\dnn$, we must  show (according to \cref{definition:input_restricted_constructive_abstraction}) that there exists a $\abstractionmap$ for which: $\alg$ is an input-restricted $\boldsymbol{\abstractionmap}$-abstraction of $\dnn$;
+    and $\abstractionmap$ is a distributed abstraction map.
+    For $\abstractionmap$ to be a distributed abstraction map, we need a partition of hidden variables 
+    %
+    which allows us to independently compute it per node.
+    %
+    %
+    Further, we need the partitioned hidden variables $\neuronsetintcausal$
+    %
+    to be the output of an alignment map $\causalmap$ which is layer-wise decomposable.
+    %
+    We thus have:
+    \begin{align}
+        \underbrace{\hiddenstates_{\neuronset^{\causalmap}} = \causalmap(\hiddenstates) = [\causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})]_{\layer=0}^{\nlayers+1},}_{\texttt{Align DNN}}
+        %
+        \,\,\,\,
+        \underbrace{\neuronsetPartition^{\causalmap} = \{\neuronset^{\causalmap}_{\node} \mid \node \in \nodesint\} \cup \{\neuronset^{\causalmap}_{\uselesspartition}\},}_{\texttt{Partition hidden variables}}
+        \,\,\,\,
+        %
+        \underbrace{\abstractionmap(\hiddenstates) = [\abstractionmap_{\node}(\hiddenstates_{\neuronset^{\causalmap}_{\node}})]_{\node \in \nodesint}}_{\texttt{Compute abstraction}}
+    \end{align}
+    Therefore, to define a distributed abstraction map $\abstractionmap$,
+    %
+    we must define the following three terms:
+    (i) a set of layer-wise alignment maps $\{\causalmap_{\layer}\}_{\layer=1}^{\nlayers}$ (note that the alignment maps $\causalmap_{0}$ and $\causalmap_{\nlayers+1}$ are fixed by definition);
+    (ii) a partition of hidden variables $\neuronsetPartition^{\causalmap}$; and
+    (iii) a set of per-node functions $\{\abstractionmap_{\node}\}_{\node \in \nodesint}$.
+    To prove this theorem, then, we must show that there exists a way to define these terms while ensuring that $\alg$ is an input-restricted $\boldsymbol{\abstractionmap}$-abstraction of $\dnn$.
+    
+    
+    We now note that---given \cref{assumption:minimalrequirements} and independently of our choice of alignment map $\causalmap$---there exists at least one partition $\neuronsetPartition^{\causalmap}$ of the hidden variables $\neuronsetintcausal$ in $\dnn$ for which:
+    \begin{align}
+        \underbrace{
+        \forall_{\node, \node' \in \nodesint}:
+        \node \partialsmall \node' \implies \neuronset^{\causalmap}_{\node} \partialsmall \neuronset^{\causalmap}_{\node'}}_{\texttt{respect partial ordering}},
+        \quad
+        %
+        \underbrace{
+        \forall_{\node \in \nodesint}:
+        |\neuronset^{\causalmap}_{\node}| = 1,}_{\texttt{1 neuron per partition}}
+        \quad
+        %
+        \underbrace{
+        \forall_{0 < \layer \leq \nlayers}:
+        \neuronset^{\causalmap}_{\layer} \not\subseteq \bigcup_{\node \in \nodesint} \neuronset^{\causalmap}_{\node}}_{\texttt{no layer is fully occupied}}
+    \end{align}
+    where we define $\neuronset^\causalmap_\layer$ as the latent variables given when applying $\causalmap_\layer$ on $\neuronset_\layer$. 
+    To facilitate our proof, we choose one such partition $\neuronsetPartition^{\causalmap}$ which we will keep fixed independently of our choice of alignment map $\causalmap$.
+    %
+    Given partition $\neuronsetPartition^{\causalmap}$, we can assign each node $\node$ to a specific layer $\layer$, as $\neuronset^{\causalmap}_{\node} $ contains a single hidden variable and therefore trivially belongs to a single layer.
+    %
+    We therefore can define $\nodes_\layer$ as all nodes associated with layer $\layer$:
+    \begin{align}
+        \node\in\nodes_\layer\Leftrightarrow\neuronset^{\causalmap}_{\node}\subseteq\neuronset^\causalmap_\layer
+    \end{align}
+    %
+    %
+    %
+    %
+    We now consider the application of interventions on  $\dnn$ as layer-wise on $\neuronset^{\causalmap}_{\node}\subseteq\neuronset^\causalmap_\layer$ for $\node\in\nodes_\layer$.
+    Let us therefore define $\interventionsset^\layer_\dnn$ as the set of all interventions
+    %
+    on $\neuronset^{\causalmap}_{\node}$ for $\node\in\nodes_\layer$, where we note that $\interventionsset^\layer_\dnn$ also includes an empty intervention (i.e., no intervention). 
+    For notational convenience, we will write the set of all interventions up to layer $\layer$ as $\interventionsset^{:\layer}_\dnn$, and the set of all nodes associated with those layers as $\nodes_{:\layer}$:
+    \begin{align}
+        \interventionsset^{:\layer}_\dnn=\interventionsset^{0}_\dnn \times \interventionsset^{1}_\dnn \times \cdots \times \interventionsset^{\layer}_\dnn,
+        \qquad
+        \nodes_{:\layer} = \nodes_{0} \cup \nodes_{1} \cup \cdots \cup \nodes_{\layer}
+        %
+    \end{align}
+    where $\times$ denotes a Cartesian product.
+    We analogously define $\interventionsset^{\layer}_\alg$ and $\interventionsset^{:\layer}_\alg$.
+    %
+
+    %
+    
+    Finally, we get to an induction proof that will complete this theorem.
+    We will iteratively construct abstraction and alignment maps for each layer such that it holds that:
+    \begin{align}
+        \myforall\limits_{\overset{\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}}{\bx\in\calX\,\,\,\,}}\,
+        \myforall\limits_{\node \in \nodes_{\layer}}: \underbrace{\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad\,\,\,\,\,\,
+        \,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn)),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{pre-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn) 
+        && \inductioncircle{1} \nonumber
+    \end{align}
+    where int.\ stands for intervention.
+    Note that if this holds for all layers, we have proven that $\alg$ is an input-restricted $\abstractionmap$-abstraction of $\dnn$, as we can perfectly reconstruct the behaviour of algorithm $\alg$ from $\dnn$'s states under any intervention.\footnote{The attentive reader may note condition \inductioncircle{1} only guarantees we can reconstruct the behaviour of algorithm $\alg$ from pre-intervention hidden variables. \cref{lemma:post_intervention_first_condition} shows the same holds for post-intervention hidden variables.\looseness=-1}
+    Also note, however, that our definition of abstraction map restricts $\tau_{\nodesoutput}(\hiddenstates_{\neuronset_{\nlayers+1}}) = \argmax \hiddenstates_{\neuronset_{\nlayers+1}}$, so special care must be taken to guarantee that this last identity will be preserved.
+    We thus also require an additional condition to hold at each step:
+    \begin{align}
+        \myforall\limits_{\substack{\interventionsdnn \in \interventionsset^{:\layer}_{\dnn} \\ \bx\in\calX}}:
+        \underbrace{\tau_{\nodesoutput}(\dnnfunclayer{\layer:}(\hiddenstates'_{\neuronset_{\layer}})) = \algfunc(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad\,\,\,\,\,\,\,\,\,\,\,\,
+        \,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset_{\layer}} = \dnnfunclayer{:\layer}(\bx, \interventionsdnn),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{post-int.\ neurons, as }\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn) \,\,\,\,\,\,\,\, && \inductioncircle{2} \nonumber
+    \end{align}
+    Finally, for convenience, we add a third condition to our inductive proof which will make the other two conditions easier to guarantee:
+    \begin{align}
+        %
+        \myforall_{\node \in \nodes_{:\layer\!-\!1}}
+        \exists g_{\node}
+        \myforall_{\overset{\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}\!\!\!}{\bx\in\calX\,\,\,\,}}:
+        %
+        \underbrace{ g_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn)),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{pre-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn) 
+         && \!\! \inductioncircle{3} \nonumber
+    \end{align}
+    This condition guarantees that information about previous nodes (i.e., $\node \in \nodes_{:\layer\!-\!1}$) is preserved in each layer's non-intervened neurons (i.e., $\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}$).
+    This final condition will be useful to guarantee conditions \inductioncircle{1} and \inductioncircle{2} are preserved in future layers.
+
+    \paragraph{Statement.} Conditions \inductioncircle{1}, \inductioncircle{2}, and \inductioncircle{3} hold for all layers $\layer$ in a DNN.
+
+    \paragraph{Base Case (\boldsymbol{$\layer=0$}).}
+    For layer $\layer=0$, 
+    we have $\nodes_{\layer} = \nodesinput$.
+    We also have both $\causalmap_{\layer}$ and $\abstractionmap_{\node}$ as the identity function.
+    Further, we consider $\interventionsset^{:-1}=\{\emptyintervention\}$ and $\interventionsset^{:0}=\{\emptyintervention\}$---where symbol $\emptyintervention$ here denotes an empty intervention---and we consider $\dnnfunclayer{:0}$ to be the identity on $\bx$. 
+    (Note that layer $\dnnfunclayer{0}$ is not applied in $\dnnfunclayer{:0}$.)
+    Now, it is easy to prove our base case:
+    %
+    %
+    %
+    \begin{itemize}
+        \item $\inductioncircle{1}$ follows trivially, as 
+    $\algfuncnode{\nodesinput}(\bx, \interventionsalg) = \bx$ and $\dnnfunclayer{:0}(\bx, \interventionsdnn) = \bx$.
+        \item $\inductioncircle{2}$ follows from \cref{assumption:dnnalgsolve}.
+        \item $\inductioncircle{3}$ follows trivially given $\nodes_{:-1}$ is an empty set. 
+    \end{itemize}
+    
+
+    \paragraph{Induction Step (given \boldsymbol{$\layer-1$}, then \boldsymbol{$\layer$}).}
+    Now, due to the inductive hypothesis, we assume that $\inductioncircle{1}$, $\inductioncircle{2}$ and $\inductioncircle{3}$ hold for layer $(\layer\!-\!1)$.
+    Given this, we must now prove that these conditions also hold for layer $\layer$.
+    We will consider two cases: $\nodes_\layer$ is either empty or not.
+    Before doing so, however, we note that \inductioncircle{1} and \inductioncircle{3} hold for layer $(\layer\!-\!1)$'s pre-intervention hidden variables.
+    In \Cref{lemma:post_intervention_first_condition,lemma:post_intervention_third_condition}, we show that the same applies for the post-intervention hidden variables.
+
+    Let's consider the \textbf{case where \boldsymbol{$\nodes_\layer$} is empty}.
+    
+    In this case, we can simply define $\causalmap_\layer$ as the identity map.
+    Further, given an empty $\nodes_\layer$, we know that there are no interventions in this layer, i.e., $\interventionsset^{\layer}_{\dnn} = \{\emptyintervention\}$, and, as such, we have that:
+    $\interventionsset^{:\layer}_{\dnn} = \interventionsset^{:\layer\!-\!1}_{\dnn} \times \interventionsset^{\layer}_{\dnn} = \interventionsset^{:\layer\!-\!1}_{\dnn}$.
+    We can now prove the induction step for this case.
+    \begin{itemize}
+        \item $\inductioncircle{1}$ is true trivially, since  $\nodes_\layer$ is empty.
+        \item $\inductioncircle{2}$ follows using the inductive hypothesis. 
+        Let $\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}$ and $\bx \in \calX$.
+        %
+        Now, let $\hiddenstates'_{\neuronset_{\layer}} = \dnnfunclayer{:\layer}(\bx, \interventionsdnn)$, $\hiddenstates'_{\neuronset_{\layer\!-\!1}} = \dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)$, and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+        We can now show that:
+        \begin{subequations}
+            \begin{align}
+                \abstractionmap_{\nodesoutput}\Big(\dnnfunclayer{\layer:}(\hiddenstates'_{\neuronset_{\layer}})\Big) 
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer:}\Big(\dnnfunclayer{:\layer}(\bx, \interventionsdnn)\Big)\bigg) 
+                & \mathcomment{definition of }\hiddenstates'_{\neuronset_{\layer}} \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer:}\Big(\dnnfunclayer{\layer\!-\!1}\big(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)\big)\Big)\bigg) 
+                & \mathcomment{no intervention at layer }\layer \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer\!-\!1:}\Big(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)\Big)\bigg)
+                & \mathcomment{definition of }\dnnfunclayer{\layer\!-\!1:} \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer\!-\!1:}\Big(\hiddenstates'_{\neuronset_{\layer\!-\!1}}\Big)\bigg)
+                & \mathcomment{definition of }\hiddenstates'_{\neuronset_{\layer\!-\!1}} \\
+                &= \algfunc(\bx, \interventionsalg)
+                & \mathcomment{inductive hypothesis on }\inductioncircle{2}
+            \end{align}
+        \end{subequations}
+        This shows $\inductioncircle{2}$ holds for layer $\layer$ when $\nodes_{\layer}$ is empty.
+        %
+        \item $\inductioncircle{3}$ follows using the inductive hypothesis. 
+        Let $\interventionsdnn \in \interventionsset^{:\layer-1}_{\dnn}$, $\bx \in \calX$, and $\node \in \nodes_{:\layer-1}$.
+        %
+        Now, let $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))$, $\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}} = \causalmap_{\layer\!-\!1}(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn))$, and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+        Further, let $g_{\node}^{\layer\!-\!1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}) = \algfuncnode{:\node}(\bx, \interventionsalg)$; we know such function exists due to the inductive hypothesis on \inductioncircle{1} and \inductioncircle{3}, together with \Cref{lemma:post_intervention_first_condition,lemma:post_intervention_third_condition}.
+        Finally, since $\dnnfunclayer{:\layer}$ is injective (by \cref{assumption:injectivity}) and since $\dnnfunclayer{:\layer} = \dnnfunclayer{\layer-1} \circ \dnnfunclayer{:\layer-1}$, we know that each $\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}$ is mapped to a unique $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}$ in the next layer.
+        We can thus define function $\dnninvfunclayer{\layer-1}$ on the domain formed by these hidden variables which, given a hidden variable $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}$ returns its ``parent'' $\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}$; in other words, $\dnninvfunclayer{\layer-1}$ is an partial inverse of $\dnnfunclayer{\layer-1}$ defined only on its image.
+        Defining now function $g_{\node}^{\layer} = g_{\node}^{\layer-1}\circ\dnninvfunclayer{\layer-1}$, we can show:
+        %
+        \begin{subequations}
+        \begin{align}
+            %
+            g_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) 
+            &= g_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}) 
+            & \nodes_{\layer}\,\mathcomment{is empty}\\
+            &= g_{\node}^{\layer}\bigg(\causalmap_{\layer}\Big(\dnnfunclayer{\layer-1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}})\Big)\bigg) 
+            & \mathcomment{no intervention at layer}\,\layer\\
+            &= g_{\node}^{\layer}\bigg(\dnnfunclayer{\layer-1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}})\bigg) 
+            & \causalmap_{\layer}\,\mathcomment{is the identity function} \\
+            &= g_{\node}^{\layer\!-\!1}\bigg({\dnninvfunclayer{\layer-1}}\Big(\dnnfunclayer{\layer-1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}})\Big)\bigg) 
+            & \mathcomment{definition of}\,g^{\layer}\\
+            %
+            &= g_{\node}^{\layer\!-\!1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}) 
+            & \mathcomment{definition of}\,\dnninvfunclayer{\layer-1} \\
+            %
+            %
+            %
+            &= \algfuncnode{:\node}(\bx, \interventionsalg)
+            & \mathcomment{inductive hypothesis on }\inductioncircle{1}\,\mathcomment{ and }\inductioncircle{3}
+        \end{align}
+        \end{subequations}
+        %
+    \end{itemize}
+    
+    %
+    
+    
+    Let's now consider the \textbf{case when \boldsymbol{$\nodes_\layer$} is not empty}.
+
+    To show $\inductioncircle{1}$, $\inductioncircle{2}$ and $\inductioncircle{3}$ for layer $\layer$ we need to find a suitable bijective $\causalmap_{\layer}$.
+    We now show a careful way to construct this map which satisfies these conditions.
+    %
+    To do so, we will again split this step of the proof into two parts.
+    We will first take care of the case in which no interventions are applied to layer $\layer$, guaranteeing that the model behaves correctly in those cases.
+    In that case, we must handle the set of \defn{input-restricted pre-intervention hidden states} in layer $\layer$, which we define as:
+    \begin{align}
+        \AllInpIntActivationsLayer
+        \defeq \{\dnnfunclayer{\neuronset_{\layer}}(\bx, \interventions_{\dnn}) \mid 
+        \bx \in \calX, \underbrace{\interventionsdnn \in \interventionsset_{\dnn}^{:\layer-1}}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\texttt{pre-int., as we do not include}\,\interventionsset^{\layer}\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!} 
+        \}
+    \end{align}
+    Notably, instead of defining the entire alignment map $\causalmap_{\layer}$ at once, we will first define its behaviour only on those hidden states.
+    We will denote this domain-restricted function as $\causalmap_{\layer}^{\noninter}$.
+    Given this function, we will be able to define a set of \defn{input-restricted pre-intervention hidden variables} in layer $\layer$ as:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayerOneH{\layer}
+        \defeq \{
+        \causalmap_{\layer}^{\noninter}(\hiddenstates_{\neuronset_{\layer}})
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}
+    \end{align}
+    where $\noninter$ represents the non-intervened hidden states and variables, and we will use $\inter$ to represent the intervened instances.
+    Note that $\AllInpIntTransformedActivationsLayerOneH{\layer}$ is the set of representations output by alignment map $\causalmap_{\layer}^{\noninter}$.
+    
+    The second case we will consider will then handle interventions on this layer, and will again guarantee that the model behaves as expected in those cases.
+    We thus define the set of \defn{input-restricted post-intervention hidden variables} as:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayer
+        \defeq \{\dnnfunclayer{\neuronset_{\layer}^{\causalmap}}(\bx, \interventions_{\dnn}) \mid 
+        \bx \in \calX, \underbrace{\interventionsdnn \in \interventionsset_{\dnn}^{:\layer}}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\texttt{post-int., as we include}\,\interventionsset^{\layer}\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!} \}
+    \end{align}
+    Notably, what an intervention on layer $\layer$ does is re-combine the representations in $\AllInpIntTransformedActivationsLayerOneH{\layer}$.
+    %
+    We can thus write $\AllInpIntTransformedActivationsLayer$ in terms of $\AllInpIntTransformedActivationsLayerOneH{\layer}$ as:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayer
+        = \left(\bigtimes_{\node \in \nodes_{\layer}} 
+        \underbrace{\{
+        \causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})_{\neuronset^{\causalmap}_{\node}}
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}}_{\texttt{pre-int.\ h.v., projected to }\neuronset^{\causalmap}_{\node}}\right) 
+        \times 
+        \underbrace{\{\causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})_{\neuronset^{\causalmap}_{\uselesspartition} \cap \neuronset^{\causalmap}_{\layer}}
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}}_{\texttt{pre-int.\ h.v., projected to }\neuronset^{\causalmap}_{\uselesspartition}}
+    \end{align}
+    We further define the set of \defn{input-restricted intervention-only hidden variables} as:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayerTwoH{\layer}
+        = 
+        \AllInpIntTransformedActivationsLayer
+        \setminus
+        \AllInpIntTransformedActivationsLayerOneH{\layer}
+    \end{align}
+    By carefully defining the behaviour of $\causalmap_{\layer}$ on this set, we can guarantee the conditions above to hold.
+    In particular, we will define this part of the function via its inverse ${\causalmap_{\layer}^{\inter}}^{-1}$, which maps these hidden variables back to hidden states.
+    We therefore have $\causalmap_{\layer}$ and its partial inverse defined as:
+    \begin{align}
+        \causalmap_{\layer}(\hiddenstates)=
+        \begin{cases}
+        \causalmap_{\layer}^{\noninter}(\hiddenstates),\quad \texttt{if $\hiddenstates\in\AllInpIntActivationsLayerH{\layer}$}\\
+        \causalmap_{\layer}^{\inter}(\hiddenstates),\quad \texttt{if $\hiddenstates\in\AllInpIntActivationsLayerTwoH{\layer}$}
+        \end{cases}
+        \qquad
+        \causalmap_{\layer}^{-1}(\hiddenstates)=\begin{cases}
+        {\causalmap_{\layer}^{\noninter}}^{-1}(\hiddenstates),\quad \texttt{if $\hiddenstates\in\AllInpIntTransformedActivationsLayerOneH{\layer}$}\\
+        {\causalmap_{\layer}^{\inter}}^{-1}(\hiddenstates),\quad \texttt{if $\hiddenstates\in\AllInpIntTransformedActivationsLayerTwoH{\layer}$}
+        \end{cases}
+    \end{align}
+    
+    %
+
+    %
+    %
+    %
+    
+    We now define $\causalmap_{\layer}^{\noninter}$.
+    %
+    \begin{definition}\label{Definition:phi_1}
+        Partial map $\causalmap_{\layer}^{\noninter}: \AllInpIntActivationsLayerH{\layer} \to \R^{|\neuronset^{\layer}|}$ is some fixed function 
+        %
+        that is injective on each dimension, i.e., 
+        %
+            $\forall_{i\in\{1,...,|\neuronset^{\causalmap}_{\layer}|\}}\ \forall_{\hiddenstates_1,\hiddenstates_2\in\AllInpIntActivationsLayerH{\layer}}:\hiddenstates_1\neq\hiddenstates_2\Rightarrow\causalmap_{\layer}^{\noninter}(\hiddenstates_1)_i\neq\causalmap_{\layer}^{\noninter}(\hiddenstates_2)_i$.
+        %
+    \end{definition}
+    %
+    Such a function exists, because \smash{$\AllInpIntActivationsLayerH{\layer}$} is countable (\Cref{theorem:intervened_activations_countable_infinite}) and $\R$ is uncountable.
+    Further, its partial inverse \smash{${\causalmap_\layer^{\noninter}}^{-1}$}, defined on the image \smash{$\AllInpIntTransformedActivationsLayerOneH{\layer}$}, exists because \smash{$\causalmap_\layer^{\noninter}$} is injective.
+    
+    We can now prove that conditions \inductioncircle{1} and \inductioncircle{3} hold.
+    We also prove that \inductioncircle{2} holds when $\interventionsdnn \in \interventionsset_{\dnn}^{:\layer-1}$, i.e., when there is no intervention in layer $\layer$.
+    \begin{itemize}[topsep=0pt]
+        \item \inductioncircle{1} follows using the inductive hypothesis.
+        Let $\interventionsdnn \in \interventionsset^{:\layer-1}_{\dnn}$, $\bx \in \calX$, and $\node \in \nodes_{\layer}$.
+        %
+        Further, let $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))$, 
+        \smash{$\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}} \!=\! \causalmap_{\layer\!-\!1}(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn))$},
+        and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+        Now, note that there exists a function $g_{\node}$ for which $\nodevalue_{\node} = g_{\node}(\nodesvalues_{\nodes_{:\layer-1}})$, as the parents of $\node$ are a subset of $\nodes_{:\layer-1}$.
+        It now suffices to show that $\hiddenstates'_{\neuronset^{\causalmap}_{\node}}$ encodes information about $\nodesvalues_{\nodes_{:\layer-1}} = [\algfuncnode{:\node}(\bx, \interventionsalg)]_{\node \in \nodes_{:\layer-1}}$.
+        %
+        %
+        By the inductive hypothesis on $\inductioncircle{1}$ and $\inductioncircle{3}$, together with \cref{lemma:post_intervention_first_condition,lemma:post_intervention_third_condition}, we know that $\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap}$ encodes information about $\nodesvalues_{\nodes_{:\layer\!-\!1}}$;
+        let $g_{\nodes_{:\layer-1}}$ be a function that extracts this information, i.e., $g_{\nodes_{:\layer-1}}(\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap}) = \nodesvalues_{\nodes_{:\layer-1}}$.
+        Now, since 
+        %
+        $\dnnfunclayer{:\layer}$ is injective,
+        %
+        %
+        and $\causalmap_{\layer}^{\noninter}$ is injective on each output dimension,
+        %
+        %
+        we know that $\hiddenstates'_{\neuronset_{\layer}} = 
+        [\causalmap_{\layer}^{\noninter}(
+        \dnnfunclayer{\layer-1}(\causalmap^{-1}_{\layer-1}(\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap})))]_{\neuronset_{\node}^{\causalmap}}$ contains the same information as $\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap}$.
+        We can thus construct (partial) inverses 
+        $\dnninvfunclayer{\layer-1}$, $\causalmap_{\layer,\neuronset_{\node}^{\causalmap}}^{\noninter-1}$ and define $\abstractionmap_{\node}$ as the composition $g_{\node}\circ g_{:\node-1}\circ
+        \causalmap_{\layer-1}\circ
+        \dnninvfunclayer{\layer-1}\circ
+        \smash{\causalmap_{\layer,\neuronset_{\node}^{\causalmap}}^{\noninter-1}}$, which concludes this step of the proof:\looseness=-1
+        \begin{subequations}
+        \begin{align}
+            \abstractionmap_{\node}([\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}]_{\neuronset_{\node}^{\causalmap}}) 
+            &= 
+            \abstractionmap_{\node}([\causalmap_{\layer}^{\noninter}(
+        \dnnfunclayer{\layer-1}(\causalmap_{\layer-1}^{-1}(\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap})))]_{\neuronset_{\node}^{\causalmap}}) 
+            & \!\!\!\!\!\!\!\!\!\!\!\!\!\!
+            %
+            \mathcomment{definition of }\hiddenstates'_{\neuronset_{\layer}} \\
+            &= 
+            g_{\node}(g_{:\node-1}(
+            \causalmap_{\layer-1}(
+            \dnninvfunclayer{\layer-1}(
+            \causalmap_{\layer,\neuronset_{\node}^{\causalmap}}^{\noninter-1}(
+            [\causalmap_{\layer}^{\noninter}(
+        \dnnfunclayer{\layer-1}(\causalmap_{\layer-1}^{-1}(\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap})))]_{\neuronset_{\node}^{\causalmap}}))))) 
+             \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\! \\
+            &= 
+            g_{\node}(g_{:\node-1}(\hiddenstates'_{\neuronset_{\layer\!-\!1}^\causalmap})) \\
+            &= \algfuncnode{:\node}(\bx, \interventionsalg)
+        \end{align}
+        \end{subequations}
+        %
+        %
+        %
+        %
+        %
+        %
+        %
+        \item $\inductioncircle{2}$ when $\interventionsdnn \in \interventionsset^{:\layer-1}_{\dnn}$ follows using the inductive hypothesis. 
+        Let $\interventionsdnn \in \interventionsset^{:\layer-1}_{\dnn}$ and $\bx \in \calX$.
+        %
+        Now, let $\hiddenstates'_{\neuronset_{\layer}} = \dnnfunclayer{:\layer}(\bx, \interventionsdnn)$, $\hiddenstates'_{\neuronset_{\layer\!-\!1}} = \dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)$, and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+        We can show that:
+        \begin{subequations}
+            \begin{align}
+                \abstractionmap_{\nodesoutput}\Big(\dnnfunclayer{\layer:}(\hiddenstates'_{\neuronset_{\layer}})\Big) 
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer:}\Big(\dnnfunclayer{:\layer}(\bx, \interventionsdnn)\Big)\bigg) 
+                & \mathcomment{definition of }\hiddenstates'_{\neuronset_{\layer}} \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer:}\Big(\dnnfunclayer{\layer\!-\!1}\big(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)\big)\Big)\bigg) 
+                & \mathcomment{no intervention at layer }\layer \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer\!-\!1:}\Big(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn)\Big)\bigg)
+                & \mathcomment{definition of }\dnnfunclayer{\layer\!-\!1:} \\
+                &= \abstractionmap_{\nodesoutput}\bigg(\dnnfunclayer{\layer\!-\!1:}\Big(\hiddenstates'_{\neuronset_{\layer\!-\!1}}\Big)\bigg)
+                & \mathcomment{definition of }\hiddenstates'_{\neuronset_{\layer\!-\!1}} \\
+                &= \algfunc(\bx, \interventionsalg)
+                & \mathcomment{inductive hypothesis on }\inductioncircle{2}
+            \end{align}\label{eq:condition_two_for_No_intervention}
+        \end{subequations}
+        This shows $\inductioncircle{2}$ holds for layer $\layer$ when there is no intervention in layer $\layer$.
+        \item \inductioncircle{3} follows using the inductive hypothesis. 
+        Let $\interventionsdnn \in \interventionsset^{:\layer-1}_{\dnn}$, $\bx \in \calX$, and $\node \in \nodes_{:\layer-1}$.
+        %
+        Now, let $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))$, 
+        \smash{$\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}} \!=\! \causalmap_{\layer\!-\!1}(\dnnfunclayer{:\layer\!-\!1}(\bx, \interventionsdnn))$},
+        %
+        and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+        Further, let $g_{\node}^{\layer\!-\!1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}) = \algfuncnode{:\node}(\bx, \interventionsalg)$; 
+        %
+        we know such function exists due to the inductive hypothesis on \inductioncircle{1} and \inductioncircle{3} together with \Cref{lemma:post_intervention_first_condition,lemma:post_intervention_third_condition}.
+        Finally, since $\dnnfunclayer{:\layer}$ and $\causalmap^{\noninter}_{\layer}$ are injective
+        %
+        and $\causalmap_{\layer-1}$ is bijective,
+        %
+        we can define the partial inverse function $\dnninvfunclayer{\layer-1}$ of their composition $\causalmap^{\noninter}_{\layer}\circ\dnnfunclayer{\layer}\circ\causalmap_{\layer-1}^{-1}$ 
+        %
+        (applied only to their image) which, given the hidden variable $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}$ returns its ``parent'' $\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}$.
+        %
+        %
+        %
+        Defining now a function $\widehat{g}_{\node}^{\layer} = g_{\node}^{\layer-1}\circ\dnninvfunclayer{\layer-1}$ and 
+        $g_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \widehat{g}_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer}})$---which exists, as $\causalmap^{\noninter}_{\layer}$ is injective on each dimension---we can show:
+        %
+        \begin{subequations}
+        \begin{align}
+            %
+            g_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) 
+            &= \widehat{g}_{\node}^{\layer}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}) 
+            & \causalmap^{\noninter}_{\layer}\,\mathcomment{is injective on all dimensions}\\
+            &= \widehat{g}_{\node}^{\layer}\bigg(\causalmap^{\noninter}_{\layer}\Big(\dnnfunclayer{\layer-1}(\causalmap^{-1}_{\layer-1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}))\Big)\bigg) \!\!\!\!\!\!\!\!
+            & \mathcomment{no intervention at layer}\,\layer\\
+            %
+            %
+            &= g_{\node}^{\layer\!-\!1}\bigg({\dnninvfunclayer{\layer-1}}\Big(\causalmap^{\noninter}_{\layer}\Big(\dnnfunclayer{\layer-1}(\causalmap^{-1}_{\layer-1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}))\Big)\Big)\bigg) \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+            & \mathcomment{definition of}\,g^{\layer}\\
+            %
+            &= g_{\node}^{\layer\!-\!1}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer\!-\!1}}) 
+            & \mathcomment{definition of}\,\dnninvfunclayer{\layer-1} \\
+            &= \algfuncnode{:\node}(\bx, \interventionsalg)
+            & \mathcomment{inductive hypothesis on }\inductioncircle{1}\,\mathcomment{ and }\inductioncircle{3}
+        \end{align}
+        \end{subequations}
+    \end{itemize}
+
+    \newcommand{\goutput}{g^{\star}}
+
+    We have now proved \inductioncircle{1} and \inductioncircle{3}. 
+    We have also partially proved \inductioncircle{2} for cases where there is no intervention in layer $\layer$.
+    %
+    %
+    \footnote{
+    This also proves the result for any input $\bx \in \calX$ and intervention $\interventionsdnn \in \interventionsset^{\layer}$ where $\hiddenstates \in \AllInpIntActivationsLayerH{\layer}$. By \inductioncircle{3} at layer $\layer$, there exists $\interventionsdnn' \in \interventionsset^{\layer-1}$—constructed by applying only the interventions from $\interventionsdnn$ on layers $<\layer$—such that $\dnnfunclayer{:\layer}(\bx, \interventionsdnn) = \dnnfunclayer{:\layer}(\bx, \interventionsdnn')$. Since both encode the same values on $\nodes_{<\layer}$ according to \inductioncircle{3}, which fully determine the output of $\algfunc$, and since \inductioncircle{2} holds for $(\bx, \interventionsdnn')$ at layer $\layer$, it must also hold for $(\bx, \interventionsdnn)$.}
+    We now finish our proof by considering cases where there is an intervention in this layer $\layer$. 
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    In the second case, we need to handle intervention-only representations $\AllInpIntTransformedActivationsLayerTwoH{\layer}$.
+    %
+    %
+    We will now define ${\causalmap_\layer^{\inter}}^{-1}$ on this domain $\AllInpIntTransformedActivationsLayerTwoH{\layer}$ to fulfil $\inductioncircle{2}$.
+    %
+    %
+    \vspace{-8pt}
+    \begin{definition}\label{Definition:phi_2}
+        Partial map ${\causalmap_\layer^{\inter}}^{-1}: \AllInpIntTransformedActivationsLayerTwoH{\layer} \to \R^{|\neuronset^{\layer}|}$ is some fixed function such that it holds:
+        \begin{enumerate}[topsep=0pt]
+            \item ${\causalmap_\layer^{\inter}}^{-1}$ maps to the set $\AllActivationsLayerH{\layer}\setminus\AllInpIntActivationsLayerH{\layer}$ 
+            \item ${\causalmap_\layer^{\inter}}^{-1}$ is an injective map
+            %
+            %
+            \item Let $\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}\setminus\interventionsset^{:\layer-1}_{\dnn}$ and $\bx \in \calX$.
+            Now, let $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn)$, 
+            %
+            and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+            We have that $\dnnfunclayer{\layer:}({\causalmap_{\layer}^{\inter}}^{-1}(\hiddenstates)) = \algfunc(\bx, \interventionsalg)$.
+        \end{enumerate}
+    \end{definition}
+    Where the first two conditions ensure the necessary bijectivity of $\causalmap_{\layer}$ and the last characteristic ensures $\inductioncircle{2}$.
+    Now, let $\bx \in \calX$ be  any input and $\interventions_\dnn\in\interventionsset_{\dnn}^{:\layer}$ any intervention.
+    Further, let $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn)$, 
+    %
+    and $\interventionsalg = \interventionmap(\interventionsdnn)$.
+    We now note that---given $\inductioncircle{1}$ and $\inductioncircle{3}$,  and \cref{lemma:post_intervention_first_condition,lemma:post_intervention_third_condition}---the value $\nodevalue_{\node} = \algfuncnode{:\node}(\bx, \interventionsalg)$
+    %
+    for all nodes $\node\in\nodes_{:\layer}$ are encoded in $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}}$.
+    This is enough information to determine the algorithm's output $\class = \algfunc(\bx, \interventionsalg)$. 
+    Now, define a function $\goutput$ which maps an element $\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} \in \AllInpIntTransformedActivationsLayerTwoH{\layer}$ to the output algorithm $\alg$ expects.
+    Further, by \Cref{theorem:infinite_class_points} there exists an uncountably infinite set of hidden states $\AllActivationsLayerClass$ such that:
+    \begin{align}
+        \forall\hiddenstates\in\AllActivationsLayerClass: \class=\argmax_{\by'\in \calY}{[\dnnfunclayer{\layer:}(\hiddenstates_{\neuronset_{\layer}})]_{\by'}}
+    \end{align} 
+    We define $\AllActivationsLayerClassSub=\AllActivationsLayerClass\setminus\AllInpIntActivationsLayer$, which---as $\AllInpIntActivationsLayer$ is countable---is still uncountably infinite.
+    We can now map any $\hiddenstates\in\AllInpIntTransformedActivationsLayerTwoH{\layer}$ to an element in $\AllActivationsLayerClassSubH{\layer}{\goutput(\hiddenstates)}$ fulfilling the third characteristic of \cref{Definition:phi_2}. 
+    That such a mapping exists adhering to the first and second characteristic of \cref{Definition:phi_2} is ensured by the fact that $\AllActivationsLayerClassSubH{\layer}{\class}$ is uncountable and  $\AllInpIntTransformedActivationsLayerTwoH{\layer}$ is countable (shown in \Cref{theorem:AllInpIntTransformedActivationsLayerTwoH_countable_infinite}).
+    %
+    Further, as ${\causalmap_\layer^{\inter}}^{-1}$ is injective, its partial inverse ${\causalmap_\layer^{\inter}}$ on its image $\AllInpIntActivationsLayerTwoH{\layer}$ exists.
+    
+    The attentive reader may have noticed that we defined $\causalmap_\layer$ only over the domain $\AllInpIntActivationsLayerH{\layer}\cup\AllInpIntActivationsLayerTwoH{\layer}$ instead over $\R^{|\neuronset_{\layer}|}$. We note that it is simple to extend $\causalmap_\layer$ to an $\causalmap'_\layer$ defined over $\R^{|\neuronset_{\layer}|}$. Let $\mathtt{id}$ be the identity function and $\mathtt{extract\_unused\_rep}$ be defined by the algorithm given in \cref{alg:injective_g_hat}. A bijective function $\causalmap'_\layer$ over $\R^{|\neuronset_{\layer}|}$ mapping to $\R^{|\neuronset_{\layer}|}$ can be defined as:
+    %
+    \begin{align}
+        \causalmap'_\layer(\hiddenstates)=
+        \left\{
+        \begin{array}{ll}
+             \causalmap_{\layer}(\hiddenstates) & \texttt{if}\, \hiddenstates\in\AllInpIntActivationsLayerH{\layer}\cup\AllInpIntActivationsLayerTwoH{\layer} \\
+             \mathtt{extract\_unused\_rep}(\hiddenstates,\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer}), & \texttt{if}\, \hiddenstates\in(\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer})\setminus(\AllInpIntActivationsLayerH{\layer}\cup\AllInpIntActivationsLayerTwoH{\layer}) \\
+             \hiddenstates & \texttt{else}
+        \end{array}
+        \right.
+    \end{align}
+    which completes the proof.
+\end{proof}
+
+    \begin{figure*}[t]
+        \centering
+    \begin{minted}[escapeinside=||,mathescape=true,frame=lines,linenos,xleftmargin=2em, xrightmargin=2em]{python}
+    def |$\mathtt{extract\_unused\_rep}$|(|$\hiddenstates$|, |$\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer}$|):
+        rep=|$\hiddenstates$|
+        while rep|$\in\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer}$|:
+            rep=|$\causalmap_{\layer}^{-1}($|rep|$)$|
+        return rep
+    \end{minted}
+        \vspace{-5pt}
+        \caption{Pseudo-code for $\mathtt{extract\_unused\_rep}$. This function returns an unique element in $(\AllInpIntActivationsLayerH{\layer}\cup\AllInpIntActivationsLayerTwoH{\layer})\setminus(\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer})$ for each $\hiddenstates\in(\AllInpIntTransformedActivationsLayerOneH{\layer}\cup\AllInpIntTransformedActivationsLayerTwoH{\layer})\setminus(\AllInpIntActivationsLayerH{\layer}\cup\AllInpIntActivationsLayerTwoH{\layer})$ ensuring bijectivity of $\causalmap'_\layer(\hiddenstates)$.\looseness=-1}
+        \label{alg:injective_g_hat}
+        %
+    \end{figure*}
+
+\subsection{Discussion about Assumptions}
+\label{appsubsec:Linear_Representation_Hypothesis_vs_DAS_Assumptions}
+
+\paragraph{\Cref{assumption:Countable_infinite} (Countable input-space).}
+While this assumption cannot be made on all neural networks like MLPs, it holds for models working on language and images. 
+The set of all images with a specific resolution is finite, as it considers a finite number of pixels where each pixel has a finite number of channels (e.g. values for red, green and blue) and each channel is a number between 0 and 255.
+The set of all sequences in a language model is also countably infinite, as each set of sequences of some length is finite given finite tokens; so we have a set made out of the countable union of finite sets, which is still countable.
+
+\paragraph{\Cref{assumption:injectivity} (Input-injectivity in all layers).}
+Neural network layers (e.g., MLP blocks) are not necessarily injective.
+The usage of learnable weights, activation functions like ReLU \citep{Nair2010RectifiedLU} and information bottlenecks makes it possible to have a non-injective model.
+However, we prove in \cref{app:injectivity_Transformer} that transformers, at least, are almost surely injective at initialisation on their inputs. Further, \citet{nikolaou2025languagemodelsinjectiveinvertible} recently published a proof---as well as empirical evidence---that transformers are almost surely injective in the hidden states of their last token, both at initialisation and after training.
+We also see in our empirical experiments in \cref{appsec:MLP_Injectivity_in_Hierarchical_Equality_Task} that the MLPs we analyse are also, in practice, injective---or close enough to it that we observe no collisions in embedding space.
+
+\paragraph{\Cref{assumption:surjectivety} (Strict output-surjectivity in all layers).}
+Surjectivity can be defined on the output distribution $\dnnfunclayer{\layer:}: \hiddenspace_{\neuronset_{\layer}} \to \Delta^{|\calY|-1}$, but that is a rather strong assumption.
+For our proofs, we will rely on strict surjectivity on the classification space instead ($\abstractionmap_{\nodesoutput} \circ \dnnfunclayer{\layer:}: \hiddenspace_{\neuronset_{\layer}} \to |\calY|)
+$, such that every class can be predicted.
+However, surjectivity on the classification space still does not necessarily hold for DNNs. 
+LLMs have problems like the softmax bottleneck \citep{yang2018breaking}, which can lead to a model having insufficient capacity to predict all possible tokens. 
+\citet{grivas-etal-2022-low} also evaluate and find this problem, but show that surjectivity on the tokens is still likely in practice, making this a reasonable assumption in LLM settings.
+
+\paragraph{\Cref{assumption:minimalrequirements} (Algorithm and DNN have matchable partial-orderings).}
+We assume this since, for a neural network $\dnn$ to be abstracted by the algorithm $\alg$, we need it to have this minimal width and depth.\looseness=-1
+
+\paragraph{\Cref{assumption:dnnalgsolve} (DNN solves the task).} We assume this because, if a neural network does not solve the given task, it will also not be abstracted by an algorithm which implements it.
+
+\subsection{Detailed Version of \texorpdfstring{\cref{definition:input_restricted_constructive_abstraction}}{Definition}}\label{appsec:detailed_def_IRCA}
+
+\cref{definition:input_restricted_constructive_abstraction} can also be written without referring to previous definitions as following:
+\begin{altdefinition}[\textbf{Equivalent to \cref{definition:input_restricted_constructive_abstraction}}]
+An algorithm $\alg$ is an \defn{input-restricted distributed abstraction}
+of a neural network $\dnn$ iff there exists an $\abstractionmap$, $\interventionsset_{\alg}$, and $\interventionsset_{\dnn}$ such that 
+\begin{itemize}
+    \item $\abstractionmap$ is a distributed abstraction map. I.e., there exists an alignment map $\causalmap$, a latent-variable partition \smash{$\{\neuronset^{\causalmap}_{\node} \mid \node \in \nodesint\} \cup \{\neuronset^{\causalmap}_{\uselesspartition}\}$} of $\neuronsetintcausal$ (with non-empty $\neuronset^{\causalmap}_{\node}$),
+    and subabstraction maps $\{\abstractionmap_{\node} \mid \node \in \nodesint\}$
+    %
+    such that
+    %
+    %
+    %
+    %
+    %
+    %
+    $\abstractionmap$ is equivalent to computing the value of each node block-wise with \smash{$\abstractionmap_{\node}(\hiddenstates_{\neuronset^{\causalmap}_{\node}})$}.
+    An alignment map $\causalmap$ is a bijective function that maps the inner neurons $\neuronsetint$ of $\dnn$ onto an equal-sized set of latent variables $\neuronsetintcausal$, with $\causalmap$ respecting the network’s computational order by being the combination of layer-wise bijections \smash{$\causalmap_{\layer}: \R^{\layerdim{\layer}} \to \R^{\layerdim{\layer}}$} applied to the neurons of each of the DNN's layers ($\layer$);
+    %
+    \item $\interventionsset_{\alg}$ and $\interventionsset_{\dnn}$ are a maximal input-restricted intervention set. A maximal input-restricted intervention set is composed of all interventions produced from other input-restricted interventions, i.e., it is a set with $\hiddenstates_{\neuronset^\causalmap} \leftarrow \constants_{\neuronset^\causalmap}$  (where $\neuronset^\causalmap\subseteq\neuronsetintcausal$) or $\nodesvalues_{\nodes} \leftarrow \constants_{\nodes}$ (where $\nodes\subseteq\nodesint$) where $\constants_{\neuronset^\causalmap}$ or $\constants_{\nodes}$ arise from valid input-restricted computations (e.g., $\constants_{\neuronset^\causalmap} = \dnnfunclayer{\neuronset^\causalmap}(\bx)$ or $\constants_{\nodes} = \algfuncnode{:\nodes}(\bx, \constants_{\nodes} \leftarrow \algfuncnode{:\nodes}(\bx))$).
+    \item $\abstractionmap$ is surjective;
+    \item $\interventionsset_{\alg} = \omega_\abstractionmap(\interventionsset_{\dnn})$;
+    \item There exists a surjective $\abstractionmap_{\nodesinput}$ such that
+    \begin{align}
+        \myforall_{\substack{\bx\in\calX \\\interventionsdnn\in\interventionsset_{\dnn}}}:\  \abstractionmap(\dnnfunclayer{\neuronsetintcausal}(\bx,\interventionsdnn))=\algfuncnode{:\nodesint}(\abstractionmap_{\nodesinput}(\bx),\interventionsalg)\quad\mathtt{ where }\,\,\interventionsalg=\interventionmap(\interventionsdnn)
+    \end{align}
+\end{itemize}
+\end{altdefinition}
+
+\subsection{Useful Definitions and Lemmas for \texorpdfstring{\cref{theorem:existing_causalmap_for_any_algorithm}}{Theorem}}\label{appsubsec:main_theorem_lemmas}
+
+\begin{definition}\label{defn:strict_surjectivity}
+    We say the composition of a function $f: \R^d \to \Delta^{|\calY|-1}$ with $\argmax$ is \defn{strictly surjective} if, for any output $\bystar \in \calY$, there exists an input $\hiddenstates\in \R^d$ for which $f$ outputs $\bystar$ no matter how ties are broken in the $\argmax$. 
+    Formally:
+    \begin{align}
+        \forall \bystar \in \calY,\exists \hiddenstates\in\R^{d},\forall \by'\in\calY\setminus\{\bystar\}: [f(\hiddenstates)]_{\bystar} > [f(\hiddenstates)]_{\by'}
+    \end{align}
+\end{definition}
+
+\begin{lemma}\label{lemma:post_intervention_first_condition}
+    Let $\dnn$ be a DNN and $\alg$ be an algorithm.
+    Further, let $\abstractionmap$ be a distributed abstraction map with partition $\neuronsetPartition$ and $\{\abstractionmap_\node\}_{\node \in \nodesint}$.
+    If, for all $\node \in \nodes_{\layer}$, $\abstractionmap_\node$ satisfies
+    the conditions in \inductioncircle{1} (defined in \cref{theorem:existing_causalmap_for_any_algorithm}'s proof) applied on layer \boldsymbol{$\layer$}'s pre-intervention hidden variables, i.e., if:
+    %
+    \begin{align}
+        \myforall\limits_{\overset{\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}}{\bx\in\calX\,\,\,\,}}:
+        %
+        %
+        %
+        \underbrace{\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad
+        \,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn)),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{pre-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)
+    \end{align}
+    where we note that $\dnnfunclayer{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer} \circ \dnnfunclayer{:\layer}$ when no intervention is applied to layer $\layer$.
+    Then $\abstractionmap_{\node}$ also satisfies this condition when applied to layer $\layer$'s post-intervention hidden variables:
+    \begin{align}
+        \myforall\limits_{\overset{\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}}{\bx\in\calX\,\,\,\,}}:
+        \underbrace{\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad
+        \,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} = \dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn)),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{post-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)
+    \end{align}
+\end{lemma}
+\begin{proof}
+    Let $\abstractionmap_{\node}$ be the abstraction map of $\node \in \nodes_{\layer}$.
+    By assumption, condition \inductioncircle{1} holds for all pre-intervention hidden variables, i.e., hidden variables of the form $\hiddenstates'_{\neuronset^{\causalmap}_{\node}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\node}}$.
+    %
+    We can show the same function applies to post-intervention hidden variables, i.e., hidden variables of the form:\looseness=-1
+    \begin{align}
+        \hiddenstates'_{\neuronset^{\causalmap}_{\node}} = 
+        \left\{\begin{array}{lr}
+            \constants_{\neuronset^{\causalmap}_{\node}} & \texttt{if } \hiddenstates'_{\neuronset^{\causalmap}_{\node}} \leftarrow \constants_{\neuronset^{\causalmap}_{\node}} \in \interventionsdnn \\
+            %
+            \bigg[\causalmap_{\layer}
+            (\dnnfunclayer{:\layer}
+            (\bx, \interventionsdnn))
+            \bigg]_{\neuronset^{\causalmap}_{\node}} 
+            & \texttt{else}
+        \end{array}\right.
+    \end{align}
+    Now let 
+    $\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}$ be any intervention and $\bx \in \calX$ be any input.
+    Further, let $\interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)$.
+    If $\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}$, then the post-intervention hidden variable is identical to a pre-intervention one, and the conditions in \inductioncircle{1} still hold, i.e.,: $\hiddenstates'_{\neuronset^{\causalmap}_{\node}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\node}}$ and $\abstractionmap_{\node}$ is such that
+    $\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg})$.
+    %
+    %
+    If $\interventionsdnn \not\in \interventionsset^{:\layer\!-\!1}_{\dnn}$, for each node's hidden variables $\neuronset^{\causalmap}_{\node}$, we might or not intervene on it.
+    If we do not intervene on node $\node$, then we still have the case $\hiddenstates'_{\neuronset^{\causalmap}_{\node}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\node}}$ and thus $\abstractionmap_{\node}$ still gives us the correct solution, i.e.,
+    $\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg})$.
+    If we intervene on $\node$, then we know there exists an intervention of form $\hiddenstates_{\neuronset^{\causalmap}_{\node}} \leftarrow \dnnfunclayer{:\layer}(\bx', \interventionsdnn')$ in $\interventionsdnn$, for which $\interventionsdnn' \in \interventionsset^{:\layer-1}_{\dnn}$, as our interventions are input-restricted.
+    We also know (by \cref{eq:interventionmap}) that there exists an equivalent intervention
+    $\nodevalue_{\node} \leftarrow \abstractionmap_{\node}(\dnnfunclayer{:\layer}(\bx', \interventionsdnn'))$
+    in $\interventionsalg$.
+    We thus have that 
+    $\abstractionmap_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\node}}) = \algfuncnode{\node}(\bx, \interventions_{\alg})$.
+\end{proof}
+
+\begin{lemma}\label{lemma:post_intervention_third_condition}
+    Let $\dnn$ be a DNN and $\alg$ be an algorithm.
+    Further, let $\abstractionmap$ be a distributed abstraction map with partition $\neuronsetPartition$.
+    If, for all $\node \in \nodes_{:\layer-1}$, there exists a function $g_\node$ which satisfies
+    the conditions in \inductioncircle{3} (defined in \cref{theorem:existing_causalmap_for_any_algorithm}'s proof) applied on layer \boldsymbol{$\layer$}'s pre-intervention hidden variables, i.e., if:
+    \begin{align}
+        %
+        \myforall_{\overset{\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}}{\bx\in\calX\,\,\,\,}}:
+        \underbrace{g_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad\,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} =\dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{pre-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)
+    \end{align}
+    where we note that $\dnnfunclayer{\neuronset^{\causalmap}_{\layer}} = \causalmap_{\layer} \circ \dnnfunclayer{:\layer}$ when no intervention is applied to layer $\layer$.
+    Then $g_{\node}$ also satisfied this condition when applied to layer $\layer$'s post-intervention hidden variables:
+    \begin{align}
+        %
+        \myforall_{\overset{\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}}{\bx\in\calX\,\,\,\,}}:
+        \underbrace{g_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \algfuncnode{\node}(\bx, \interventions_{\alg}),}_{\texttt{tested condition}} 
+        \qquad\,\,\mathtt{where}\,\,
+        \underbrace{\hiddenstates'_{\neuronset^{\causalmap}_{\layer}} =\dnnfunclayer{\neuronset^{\causalmap}_{\layer}}(\bx, \interventionsdnn),}_{\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+        \texttt{post-int.\ hidden variable, as }\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}
+        \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
+        \,\,\mathtt{and}\,\,
+        \interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)
+    \end{align}
+\end{lemma}
+\begin{proof}
+    Let $\node \in \nodes_{:\layer-1}$ and $g_{\node}$ be a function that satisfies condition \inductioncircle{3} for it.
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    Note that condition \inductioncircle{3} holds for all pre-intervention hidden variables, i.e., hidden variables of the form $\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}$.
+    %
+    We can show the same function $g_{\node}$ also applies to post-intervention hidden variables, i.e., hidden variables of the form:
+    \begin{align}
+        \hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} = 
+        \left\{\begin{array}{lr}
+            \constants_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} & \texttt{if } \hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} \leftarrow \constants_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} \in \interventionsdnn \\
+            %
+            \left[\causalmap_{\layer}
+            (\dnnfunclayer{:\layer}
+            (\bx, \interventionsdnn))
+            \right]_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} 
+            & \texttt{else}
+        \end{array}\right.
+    \end{align}
+    %
+    Now, let 
+    $\interventionsdnn \in \interventionsset^{:\layer}_{\dnn}$, $\bx \in \calX$.
+    Further, let $\interventions_{\alg} = \omega_{\abstractionmap}(\interventionsdnn)$.
+    If $\interventionsdnn \in \interventionsset^{:\layer\!-\!1}_{\dnn}$, then the post-intervention hidden variable is identical to a pre-intervention one, and the conditions in \inductioncircle{3} still hold, i.e.,: $\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}$ and $g_{\node}$ is such that
+    $g_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \algfuncnode{\node}(\bx, \interventions_{\alg})$.
+    %
+    If $\interventionsdnn \not\in \interventionsset^{:\layer\!-\!1}_{\dnn}$, it means that we intervene on at least one hidden variable in this layer $\neuronset^{\causalmap}_{\layer}$.
+    However, we never intervene on neurons in $\neuronset^{\causalmap}_{\uselesspartition}$
+    %
+    , meaning that for those we still have the case $\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}} = [\causalmap_{\layer}(\dnnfunclayer{:\layer}(\bx, \interventionsdnn))]_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}$ and thus the same function $g_{\node}$ still satisfies our condition
+    $g_{\node}(\hiddenstates'_{\neuronset^{\causalmap}_{\layer} \cap \neuronset^{\causalmap}_{\uselesspartition}}) = \algfuncnode{\node}(\bx, \interventions_{\alg})$.
+\end{proof}
+
+\begin{lemma}\label{theorem:interventions_countable_infinite}
+    Under \cref{assumption:Countable_infinite} and given a fixed $\causalmap$, the set of input-restricted interventions $\interventionsset_{\dnn}$ is countable.
+\end{lemma}
+\begin{proof}
+    This can be shown by induction. More specifically, we show that for any layer $\layer$, the set of input-restricted interventions $\interventionsset_{\dnn}^{:\layer}$ is countable for a specific $\causalmap$.
+    
+    \paragraph{Base Case (\boldsymbol{$\layer=0$}).} 
+    The base case can be proved trivially, as $\interventionsset_{\dnn}^{:0} = \{\emptyset\}$.
+    
+    \paragraph{Induction step (\boldsymbol{$\layer$} given \boldsymbol{$\layer-1$}).}
+    By the induction hypothesis, $\interventionsset_{\dnn}^{:\layer-1}$ is countable. 
+    Now, note that $\interventionsset_{\dnn}^{:\layer}$ can be decomposed as:
+    \begin{align}
+        \interventionsset_{\dnn}^{:\layer} = \interventionsset_{\dnn}^{:\layer-1} \times \interventionsset_{\dnn}^{\layer}
+    \end{align}
+    As the Cartesian product of two countable sets is itself countable, and as $\interventionsset_{\dnn}^{:\layer-1}$ is countable by the inductive hypothesis, we only need to show that $\interventionsset_{\dnn}^{\layer}$ is countable to complete our proof.
+    This set $\interventionsset_{\dnn}^{\layer}$ is defined as the set of all input-restricted interventions to layer $\layer$.
+    Given a set of neurons or hidden variables in this layer $\neuronset'$,
+    we are thus dealing with interventions of the form: 
+    $\hiddenstates_{\neuronset'} \leftarrow \dnnfunclayer{\neuronset'}(\bx, \interventions_{\dnn})$, where: 
+    (i) $\neuronset' \subseteq \neuronset_{\layer}$ or $\neuronset' \subseteq \neuronset^{\causalmap}_{\layer}$;
+    (ii) $\bx \in \calX$; and
+    (iii) $\interventions_{\dnn} \in \interventionsset_{\dnn}^{:\layer-1}$.
+    The set of all input-restricted interventions in this layer is thus bounded in size by the Cartesian product:
+    $\bigtimes_{\neuronset \in \neuronset^{\causalmap}_{\layer}} \calX \times \interventionsset_{\dnn}^{:\layer-1}$.
+    %
+    These three sets are countable, and thus so is $\interventionsset_{\dnn}^{\layer}$.
+    This concludes our proof.
+\end{proof}
+
+\begin{lemma}\label{theorem:intervened_activations_countable_infinite}
+    Under \cref{assumption:Countable_infinite} and given a fixed $\causalmap$, the set of input-restricted pre-intervention hidden states in layer $\layer$, i.e., $\AllInpIntActivationsLayer$, is countable.
+\end{lemma}
+\begin{proof}
+    The set of input-restricted hidden states $\AllInpIntActivationsLayer$ is formed by hidden states 
+    $\hiddenstates_{\neuronset_{\layer}} = \dnnfunclayer{\neuronset_{\layer}}(\bx, \interventions_{\dnn})$, which we can write as:
+    %
+    \begin{align}
+        \AllInpIntActivationsLayer
+        = \{\dnnfunclayer{\neuronset_{\layer}}(\bx, \interventions_{\dnn}) \mid 
+        \bx \in \calX, \interventionsdnn \in \interventionsset_{\dnn}^{:\layer-1} \}
+    \end{align}
+    We thus have that the size of $\AllInpIntActivationsLayer$ is bounded by the size of the Cartesian product $\calX \times \interventionsset_{\dnn}^{:\layer}$.
+    As both of these sets are countable (by \cref{assumption:Countable_infinite} and \Cref{theorem:interventions_countable_infinite}, respectively), $\AllInpIntActivationsLayer$ is also countable. 
+    This completes our proof.
+\end{proof}
+
+\begin{lemma}\label{theorem:AllInpIntTransformedActivationsLayerTwoH_countable_infinite}
+    Under \cref{assumption:Countable_infinite} and given a fixed $\causalmap$, the set of input-restricted intervention-only hidden variables in layer $\layer$, i.e., $\AllInpIntTransformedActivationsLayerTwoH{\layer}$, is countable.
+    %
+\end{lemma}
+\begin{proof}
+    A similar proof to \Cref{theorem:intervened_activations_countable_infinite} applies here.
+    %
+    In short, we have three relevant sets for this proof.
+    First, the set of input-restricted pre-intervention hidden variables:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayerOneH{\layer}
+        = \{
+        \causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}
+    \end{align}
+    Second, we have the set of input-restricted post-intervention hidden variables:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayer
+        = \left(\bigtimes_{\node \in \nodes_{\layer}} 
+        \underbrace{\{
+        \causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})_{\neuronset^{\causalmap}_{\node}}
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}}_{\texttt{Pre-int. h.v., projected to }\neuronset^{\causalmap}_{\node}}\right) 
+        \times 
+        \underbrace{\{\causalmap_{\layer}(\hiddenstates_{\neuronset_{\layer}})_{\neuronset^{\causalmap}_{\uselesspartition} \cap \neuronset^{\causalmap}_{\layer}}
+        \mid 
+        \hiddenstates_{\neuronset_{\layer}} \in \AllInpIntActivationsLayer \}}_{\texttt{Pre-int. h.v., projected to }\neuronset^{\causalmap}_{\uselesspartition}}
+    \end{align}
+    Both sets above are countable, since $\AllInpIntActivationsLayer$ is countable (by \cref{theorem:intervened_activations_countable_infinite}), and $\nodes_{\layer}$ is finite.
+    Third, we have the set of input-restricted intervention-only hidden variables, defined as:
+    \begin{align}
+        \AllInpIntTransformedActivationsLayerTwoH{\layer}
+        = 
+        \AllInpIntTransformedActivationsLayer
+        \setminus
+        \AllInpIntTransformedActivationsLayerOneH{\layer}
+    \end{align}
+    Since $\AllInpIntTransformedActivationsLayer$ is countable, $\AllInpIntTransformedActivationsLayerTwoH{\layer}$ is clearly also countable.
+    This completes the proof.
+    %
+\end{proof}
+
+\newcommand{\hiddenstatetargetclass}{\hiddenstates^{\star}}
+\begin{lemma}\label{theorem:infinite_class_points}
+    Under \cref{assumption:surjectivety} and given a target output $\bystar \in \calY$,
+    %
+    we know that there is an uncountably infinite set $\AllActivationsLayerClass$ which predicts it, i.e.,:
+    \begin{align}
+        \hiddenstates\in\AllActivationsLayerClass\Leftrightarrow \class=\argmax_{\by'\in\calY}{[\dnnfunclayer{\layer:}(\hiddenstates)]_{\by'}}
+    \end{align}
+\end{lemma}
+\begin{proof}
+     Under \cref{assumption:surjectivety}, we know that---for any target output $\bystar \in \calY$---there is at least one hidden state $\hiddenstatetargetclass \in \R^{|\neuronset_\layer|}$ which predicts it, i.e.:
+     \begin{align}
+          \bystar = \argmax_{\by'\in\calY}{[\dnnfunclayer{\layer:}(\hiddenstatetargetclass)]_{\by'}} 
+          %
+     \end{align}
+     where we note that $\dnnfunclayer{\layer:}(\hiddenstatetargetclass)$ outputs a probability distribution over $\calY$, i.e., $\pdnn(\by' \mid \hiddenstatetargetclass)$.
+     
+     To show that we have an uncountably infinite set, let us first notice that
+    \begin{align}
+        \forall \hiddenstates'\in\R^{|\neuronset_\layer|}:||\dnnfunclayer{\layer:}(\hiddenstates) - \dnnfunclayer{\layer:}(\hiddenstates')||_2 < \frac{m_1-m_2}{2}\Rightarrow \class=\argmax_{\by'\in\calY}{[\dnnfunclayer{\layer:}(\hiddenstates')]_{\by'}}\label{eq:acceptable_deviation}
+    \end{align}
+    for $m_1$ be the max value of $\dnnfunclayer{\layer:}(\hiddenstates)$ and $m_2$ the second highest value of $\dnnfunclayer{\layer:}(\hiddenstates)$. $m_1>m_2$ follows by the strict subjectivity mentioned in $\cref{assumption:surjectivety}$. \Cref{eq:acceptable_deviation} follows by the definition of  the euclidean norm ($||.||_2$), $\argmax$ and $\dnnfunclayer{\layer:}(\hiddenstates')\in\Delta^{|\neuronset_{\nlayers}|-1}$ as $m_1$ has to be lowered at least $\frac{m_1-m_2}{2}$ to increase $m_2$ by $\frac{m_1-m_2}{2}$ for those two values to be the same. Increasing any other value in $\dnnfunclayer{\layer:}(\hiddenstates)$ would require $m_1$ being lowered more than $\frac{m_1-m_2}{2}$ or any other value increased by more than $\frac{m_1-m_2}{2}$. Now, given continuity of neural networks, we know that:
+    \begin{align}
+        &\forall \epsilon > 0, \exists \delta > 0, \forall \hiddenstates'\in\R^{|\neuronset_\layer|} : 0 < ||\hiddenstates-\hiddenstates'||_2 < \delta, \nonumber \\
+        &\qquad\quad\Rightarrow||\dnnfunclayer{\layer:}(\hiddenstates) - \dnnfunclayer{\layer:}(\hiddenstates')||_2 < \epsilon.
+    \end{align}
+    Therefore, we see that:
+\begin{subequations}
+    \begin{align}
+        &\exists \delta > 0, \forall \hiddenstates'\in\R^{|\neuronset_\layer|} : 0 < ||\hiddenstates-\hiddenstates'||_2 < \delta, \nonumber \\
+        &\qquad\quad\Rightarrow||\dnnfunclayer{\layer:}(\hiddenstates) - \dnnfunclayer{\layer:}(\hiddenstates')||_2 < \frac{m_1-m_2}{2}\\
+        &\qquad\quad\Rightarrow \class=\argmax_{\by'\in\calY}{[\dnnfunclayer{\layer:}(\hiddenstates')]_{\by'}}
+    \end{align}
+\end{subequations}
+    We notice that $||\hiddenstates-\hiddenstates'||_2 < \delta$ for $\delta>0$ denotes a continuous region in $\R^{|\neuronset_\layer|}$ which therefore includes uncountably infinite points.
+\end{proof}
+
+\section{Transformers at Initialisation are Almost Surely Injective on each Layer}
+\label{app:injectivity_Transformer}
+\newcommand{\Parameters}{\Theta}%
+\newcommand{\InputSet}{\mathcal{H}}
+\newcommand{\InputSetRand}{H}
+\newcommand{\Conditions}{C}
+\newcommand{\pdfun}[1]{\mathrm{p}_{#1}}
+\newcommand{\sequencesize}{s}
+\newcommand{\tokenposition}{t}
+\newcommand{\tokenposRange}{T}
+\newcommand{\tokenidx}[2]{[#1]_{#2}}
+\newcommand{\numtoks}[1]{\lvert#1\rvert}
+\newcommand{\calZ}{\mathcal{Z}}
+
+\begin{thm}\label{thm:injectivity}
+    Transformers like \cref{model:transformer_language_Model} with randomly independent initialised from a continuous distribution (riicd.) weights are almost surely injective at initialisation up to each layer $0\leq\layer<\nlayers$.
+\end{thm}
+\begin{proof}
+    To show injectivity up to a layer $\layer'$ in a transformer, it suffices to show that $\dnnfunclayer{\layer}$ is injective on any countable subset $\InputSet$ of its domain for all layers $\layer$ ($0\leq\layer\leq\layer'$). 
+    This suffices as we assume the set of inputs $\calX$ is countable, and the composition of injective functions is injective. 
+    Let $\Parameters$ be the random variable representing the transformer's weights. 
+    To show (almost sure) injectivity on layer $\layer$ for any fixed input set $\InputSet$, we need that (because of \cref{theorem:ImplicationRelationCondition}):\footnote{We note that $\prob_{Z}(\forall z \in \calZ: z)$, where $\calZ$ is a set of events, is the same as $\prob_{Z}(\cap_{z \in \calZ} \{z\})$ formally.}
+    \begin{align}
+        \prob_{\Parameters}\left(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2: \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)  \right)=1\label{eq:transformer_injective_0}
+    \end{align}
+
+    Since the transformer operates over sequences of tokens, any element $\hiddenstates\in\InputSet$ has its first dimension indexing the sequence length. Let $\numtoks{\hiddenstates}$ denote the sequence length and $\tokenidx{\hiddenstates}{\tokenposition}$ refer to the $\tokenposition$-th element in $\hiddenstates$. Let $\tokenposRange$ be the set of token positions $\tokenposRange = \{1, \ldots, \mathtt{min}(\numtoks{\hiddenstates_1}, \numtoks{\hiddenstates_2})\}$. For injectivity, it suffices to show that:
+    \begin{align}
+        \prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet, t \in \tokenposRange, \tokenidx{\hiddenstates_1}{\tokenposition}\neq \tokenidx{\hiddenstates_2}{\tokenposition} :  \tokenidx{\dnnfunclayer{\layer}(\hiddenstates_1)}{\tokenposition} \neq \tokenidx{\dnnfunclayer{\layer}(\hiddenstates_2)}{\tokenposition})=1\label{eq:transformer_injective_1}
+    \end{align}
+    Note that \cref{eq:transformer_injective_1} only ensures injectivity when $|\hiddenstates_1|=|\hiddenstates_2|$. However, this is sufficient because when $|\hiddenstates_1|\neq|\hiddenstates_2|$, \cref{eq:transformer_injective_0} follows trivially: since $|\dnnfunclayer{\layer}(\hiddenstates_1)|\neq|\dnnfunclayer{\layer}(\hiddenstates_2)|$, we immediately have $\dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)$. 
+    When $|\hiddenstates_1|=|\hiddenstates_2|$, we can show that \cref{eq:transformer_injective_1} implies \cref{eq:transformer_injective_0} as follows: if $\hiddenstates_1\neq\hiddenstates_2$, then there exists at least one token position $\tokenposition'\in \tokenposRange$ where $[\hiddenstates_1]_{\tokenposition'}\neq[\hiddenstates_2]_{\tokenposition'}$. By \cref{eq:transformer_injective_1}, this implies $[\dnnfunclayer{\layer}(\hiddenstates_1)]_{\tokenposition'}\neq[\dnnfunclayer{\layer}(\hiddenstates_2)]_{\tokenposition'}$ almost surely, and therefore $\dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)$ almost surely.
+
+    We observe that a transformer's input set $\calX$ consists of all sequences formed from a finite token vocabulary, which is countably infinite. Since transformers are deterministic functions, the input set $\InputSet$ encountered at any sublayer is also countably infinite. Therefore, it suffices to prove \cref{eq:transformer_injective_1} for any fixed countably infinite input set $\InputSet$.
+
+    We show that \Cref{eq:transformer_injective_1} holds for any fixed countably infinite subset $\InputSet$ of the layer's domain. This is established for the embedding layer ($\dnnfunclayer{\layer}(\hiddenstates)=\embeddings_{\hiddenstates}$), the MLP layer ($\dnnfunclayer{\layer}(\hiddenstates)=\hiddenstates+\mlpfunc(\layerNorm(\hiddenstates))$), and the attention layer ($\dnnfunclayer{\layer}(\hiddenstates)=\hiddenstates+\selfattention(\layerNorm(\hiddenstates))$) by \cref{theorem:Embedding_Injective}, \cref{theorem:injective_MLP_sub_block}, and \cref{theorem:injective_Self_Attention_sub_block}, respectively.
+\end{proof}
+
+The 3 theorems facilitating the proof above are:
+\begin{restatable}{lemma}{EmbeddingInjective}\label{theorem:Embedding_Injective}
+    Lets assume we have an embedding layer randomly independent initialized from a continuous distribution (riicd.) weights and any countably infinite input sets (in embeddings token indexes). We denote the set of random variables over the weights as $\Parameters$. We then can show for any fixed countably infinite input set $\InputSet$ that this Layer is injective almost surely.
+    \begin{align} \label{eq:theorem_Embedding_Injective}
+        \prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet,\tokenposition\in\tokenposRange, \tokenidx{\hiddenstates_1}{\tokenposition}\neq\tokenidx{\hiddenstates_2}{\tokenposition}: \tokenidx{\embeddings_{\hiddenstates_1}}{\tokenposition}\neq\tokenidx{\embeddings_{\hiddenstates_2}}{\tokenposition})=1
+    \end{align}
+\end{restatable}
+\begin{proof}
+    See \cref{appsubsec:proof_injective_Embedding}.
+\end{proof}
+
+\begin{restatable}{lemma}{injectiveMLPsubblock}\label{theorem:injective_MLP_sub_block}
+    Lets assume we have a sub-block consisting of an MLP with a residual connection and layer norm  (i.e., $\hiddenstates+(\mlpfunc(\layerNorm(\hiddenstates))$) with riicd. weights.
+    %
+    %
+    We can show that, for any fixed countably infinite input set $\InputSet$, this layer is injective almost surely:
+    \begin{align} \label{eq:injective_MLP_sub_block}
+        &\prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet,\tokenposition\in\tokenposRange,[\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition: \\
+        &\qquad\qquad  [\hiddenstates_1+\mlpfunc(\layerNorm(\hiddenstates_1))]_\tokenposition\neq[\hiddenstates_2+\mlpfunc(\layerNorm(\hiddenstates_2))]_\tokenposition)=1 \nonumber
+    \end{align}
+\end{restatable}
+\begin{proof}
+    See \cref{appsubsec:proof_injective_MLP_sub_block}.
+\end{proof}
+
+\begin{restatable}{lemma}{injectiveSelfAttentionsubblock}\label{theorem:injective_Self_Attention_sub_block}
+    Lets assume we have a sub-block consisting of a self-attention with a residual connection and layer norm  (i.e., $\hiddenstates+\selfattention(\layerNorm(\hiddenstates))$) with riicd. weights. We can show that, for any fixed countably infinite input set $\InputSet$, this layer is injective almost surely:
+    \begin{align} \label{eq:injective_Self_Attention_sub_block}
+        &\prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet,\tokenposition\in\tokenposRange,[\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition: \\
+        &\qquad [\hiddenstates_1+\selfattention(\layerNorm(\hiddenstates_1))]_\tokenposition\neq[\hiddenstates_2+\selfattention(\layerNorm(\hiddenstates_2))]_\tokenposition)=1 \nonumber
+    \end{align}
+\end{restatable}
+\begin{proof}
+    See \cref{appsubsec:proof_injective_Self_Attention_sub_block}
+\end{proof}
+
+\subsection{Fundamental Lemmas}\label{appsubsec:Fundamental_Theorems_inject_transformer}
+
+In this section we present some fundamental lemmas used to prove \cref{appsubsec:proof_injective_Embedding,appsubsec:proof_injective_MLP_sub_block,appsubsec:proof_injective_Self_Attention_sub_block}.
+
+\begin{lemma}\label{theorem:ImplicationRelationCondition}
+    For a layers function $\dnnfunclayer{\layer}$ to be injective on its input set $\InputSet$, it has to hold that: 
+    \begin{align} \label{eq:lemma_ImplicationRelationCondition_1}
+        \prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet: \hiddenstates_1\neq\hiddenstates_2\Rightarrow \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2))=1
+    \end{align}
+    This can equivalently be written as:
+    \begin{align} \label{eq:lemma_ImplicationRelationCondition_2}
+        \prob_{\Parameters}\left(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2: \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)  \right)=1
+    \end{align}
+\end{lemma}
+\begin{proof}
+    We can derive \cref{eq:lemma_ImplicationRelationCondition_2} from \cref{eq:lemma_ImplicationRelationCondition_1}:
+        \begin{subequations}
+    \begin{align}
+        &\prob_{\Parameters}(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet: \hiddenstates_1\neq\hiddenstates_2\Rightarrow \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)) \nonumber \\
+        &\qquad = \prob_{\Parameters}\left(\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet} \left\{ \hiddenstates_1\neq\hiddenstates_2\Rightarrow \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2) \right\}\right) \\
+        &\qquad = \prob_{\Parameters}\left(\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet} \left\{ \big((\hiddenstates_1\neq\hiddenstates_2)\land \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)\big) \lor (\hiddenstates_1 = \hiddenstates_2) \right\}\right) \\
+        &\qquad = \prob_{\Parameters}\left(\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2}\!\!\!\! \left\{ (\hiddenstates_1\neq\hiddenstates_2)\land \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2) \right\} \cap 
+        \!\!\!\!\underbrace{\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 = \hiddenstates_2}\!\!\!\! \left\{ (\hiddenstates_1 = \hiddenstates_2) \right\}}_{\texttt{always true}}\right) \\
+        &\qquad = \prob_{\Parameters}\left(\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2} \left\{ \underbrace{(\hiddenstates_1\neq\hiddenstates_2)}_{\texttt{always true}}\land \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2) \right\}\right) \\
+        &\qquad = \prob_{\Parameters}\left(\bigcap_{\hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2} \left\{\dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2) \right\}\right) \\
+        &\qquad = \prob_{\Parameters}\left(\forall \hiddenstates_1,\hiddenstates_2\in \InputSet, \hiddenstates_1 \neq \hiddenstates_2: \dnnfunclayer{\layer}(\hiddenstates_1)\neq\dnnfunclayer{\layer}(\hiddenstates_2)  \right)
+    \end{align}
+    \end{subequations}
+\end{proof}
+
+\newcommand{\someRandomVariable}{z}
+\begin{lemma}\label{theorem:countable_intersection_almost_sure}
+    If we have a countable set $\calZ$ of almost sure events $\someRandomVariable$, 
+    we know that their intersection is also almost surely. Formally:
+    \begin{align}
+        \bigg(\forall \someRandomVariable\in \calZ:\prob(z)=1 \bigg) \implies \bigg(\prob(\forall \someRandomVariable\in\calZ:\someRandomVariable)=1 \bigg)
+    \end{align}
+\end{lemma}
+\begin{proof}
+    First, observe that
+    \begin{align}
+        \prob\left(\bigcap_{\someRandomVariable\in \calZ} \someRandomVariable\right)
+        = 1 - \prob\left(\left(\bigcap_{\someRandomVariable \in \calZ} \someRandomVariable\right)^c\right)
+        = 1 - \prob\left(\bigcup_{\someRandomVariable \in \calZ} \someRandomVariable^c\right)
+    \end{align}
+    where $\someRandomVariable^c$ is the complement of an event $\someRandomVariable$. Since \( \prob(\someRandomVariable) = 1 \) for all \( \someRandomVariable \in \calZ \), it follows that \( \prob(\someRandomVariable^c) = 0 \) for all \( \someRandomVariable \in \calZ \) 
+    %
+    By the countable subadditivity of probability measures:
+    \begin{align}
+        \prob\left(\bigcup_{\someRandomVariable \in \calZ} \someRandomVariable^c\right)
+        \leq \sum_{\someRandomVariable \in \calZ} \prob(\someRandomVariable^c)
+        = \sum_{\someRandomVariable \in \calZ} 0 = 0
+    \end{align}
+    Therefore,
+    \begin{align}
+        \prob(\forall \someRandomVariable\in\calZ:\someRandomVariable) = \prob\left(\bigcap_{\someRandomVariable \in \calZ} \someRandomVariable\right) = 1 - 0 = 1\ \qedhere
+    \end{align}
+\end{proof}
+
+\subsection{\texorpdfstring{Proof of \cref{theorem:Embedding_Injective}}{Theorem}}\label{appsubsec:proof_injective_Embedding}
+In this section, we will prove \Cref{theorem:Embedding_Injective} which states that the embedding layer is almost surely injective on countably infinite inputs.
+
+\EmbeddingInjective*
+\begin{proof}
+    We can apply \cref{theorem:countable_intersection_almost_sure} three times (on $\hiddenstates_1,\hiddenstates_2$ and $\tokenposition$) to show that \cref{eq:theorem_Embedding_Injective} is equivalent to, for any $\hiddenstates_1,\hiddenstates_2\in\InputSet$ and $\tokenposition\in\tokenposRange$ for which $[\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition$, it holding that:
+    \begin{align}
+        \prob_{\Parameters}( [\embeddings_{\hiddenstates_1}]_\tokenposition\neq[\embeddings_{\hiddenstates_2}]_\tokenposition)=1\label{eq:transformer_injective_MLP_0}
+    \end{align}
+    %
+    We further note that, by the definition of an embedding block (\cref{definition:Embedding}):
+    \begin{align}
+        \prob_{\Parameters}( [\embeddings_{\hiddenstates_1}]_\tokenposition\neq[\embeddings_{\hiddenstates_2}]_\tokenposition) = 1 \quad 
+        \Leftrightarrow \quad 
+        \prob_{\Parameters}( \embeddings_{[\hiddenstates_1]_\tokenposition}\neq\embeddings_{[\hiddenstates_2]_\tokenposition}) = 1
+    \end{align}
+    %
+    We can thus apply the law of total probability by defining $\Parameters'$ as all the random variables $\Parameters$ except the one for the first element of $\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}$, i.e., except $\tokenidx{\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}}{1}$\footnote{By this we refer to the first element of the embedding vector of $\tokenidx{\hiddenstates_1}{\tokenposition}$.}, and $\embeddings_{[\hiddenstates_1]_\tokenposition}'$ as the embedding of $[\hiddenstates_1]_\tokenposition$ without the first element:
+    \begin{align}
+        \int\prob_{\Parameters\setminus\Parameters'}(\embeddings_{[\hiddenstates_1]_\tokenposition}\neq\embeddings_{[\hiddenstates_2]_\tokenposition}\mid \embeddings_{[\hiddenstates_1]_\tokenposition}',\embeddings_{[\hiddenstates_2]_\tokenposition})\pdfun{\Parameters'}(\embeddings_{[\hiddenstates_1]_\tokenposition}'\cup\embeddings_{[\hiddenstates_2]_\tokenposition})d(\embeddings_{[\hiddenstates_1]_\tokenposition}'\cup\embeddings_{[\hiddenstates_2]_\tokenposition})=1
+    \end{align}
+    It therefore suffices to show that, for any $\embeddings_{[\hiddenstates_1]_\tokenposition}'$ and $\embeddings_{[\hiddenstates_2]_\tokenposition}$:
+    \begin{align}
+        \prob_{\Parameters\setminus\Parameters'}(\embeddings_{[\hiddenstates_1]_\tokenposition}\neq\embeddings_{[\hiddenstates_2]_\tokenposition}\mid \embeddings_{[\hiddenstates_1]_\tokenposition}',\embeddings_{[\hiddenstates_2]_\tokenposition})=1
+    \end{align}
+    This holds trivially when any embedding dimension other than the first of $\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}$ and $\embeddings_{\tokenidx{\hiddenstates_2}{\tokenposition}}$ differs. When all dimensions except the first are equal, we apply:
+    \begin{align}
+       &\prob_{\Parameters\setminus\Parameters'}(\tokenidx{\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}}{1}\neq\tokenidx{\embeddings_{\tokenidx{\hiddenstates_2}{\tokenposition}}}{1}\mid \embeddings_{[\hiddenstates_1]_\tokenposition}',\embeddings_{[\hiddenstates_2]_\tokenposition})=1  \\
+       &\qquad \Leftrightarrow \quad \prob_{\Parameters\setminus\Parameters'}(\tokenidx{\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}}{1}=\tokenidx{\embeddings_{\tokenidx{\hiddenstates_2}{\tokenposition}}}{1}\mid \embeddings_{[\hiddenstates_1]_\tokenposition}',\embeddings_{[\hiddenstates_2]_\tokenposition}\})=0 \nonumber
+    \end{align}
+    The right-hand side $\tokenidx{\embeddings_{\tokenidx{\hiddenstates_2}{\tokenposition}}}{1}$ is a constant while the left-hand side $\tokenidx{\embeddings_{\tokenidx{\hiddenstates_1}{\tokenposition}}}{1}$ is a random variable over a continuous region; this event has measure 0, resulting in probability 0.  
+\end{proof}
+
+\newcommand{\MLP}{\mathbf{m}}
+\subsection{\texorpdfstring{Proof of \cref{theorem:injective_MLP_sub_block}}{Theorem}}\label{appsubsec:proof_injective_MLP_sub_block}
+In this section, we will prove \cref{theorem:injective_MLP_sub_block}, which will show that the block consisting of an MLP, residual connection and layer norm is almost sure injective on its countably infinite inputs.
+\injectiveMLPsubblock* 
+\begin{proof}
+    For notational convenience, let $\MLP_{i}=\mlpfunc(\layerNorm(\hiddenstates_i))$. 
+    %
+    Given \cref{theorem:countable_intersection_almost_sure}, it suffices to prove that for any $\hiddenstates_1,\hiddenstates_2\in\InputSet$ and $\tokenposition\in\tokenposRange$, where $[\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition$, we have:
+    \begin{align}
+        \prob_{\Parameters}\Big([\hiddenstates_1+\MLP_{1}]_\tokenposition\neq[\hiddenstates_2+\MLP_{2}]_\tokenposition\Big)=1
+    \end{align}
+    Without loss of generality, fix one such $\hiddenstates_1,\hiddenstates_2\in\InputSet$ and $\tokenposition\in\tokenposRange$.
+    %
+    %
+    %
+    %
+    %
+    We can manipulate this probability distribution as:
+    \begin{subequations}
+    \begin{align}
+        &\prob_{\Parameters}\Big([\hiddenstates_1+\MLP_{1}]_\tokenposition\neq[\hiddenstates_2+\MLP_{2}]_\tokenposition\Big) \nonumber \\
+        &\qquad= \prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\MLP_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\MLP_{2}]_\tokenposition \Big) \nonumber\\
+        &\qquad= \prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big)\,\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\MLP_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\MLP_{2}]_\tokenposition\mid [\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big)  \\
+        &\qquad\qquad+\prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition=[\MLP_{2}]_\tokenposition)\Big)\, \underbrace{\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\MLP_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\MLP_{2}]_\tokenposition\mid [\MLP_{1}]_\tokenposition=[\MLP_{2}]_\tokenposition\Big)}_{=1\text{, since } [\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition} \nonumber\\
+        &\qquad= \prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big)\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\MLP_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\MLP_{2}]_\tokenposition\mid [\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big) \\
+        &\qquad\qquad+\prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition=[\MLP_{2}]_\tokenposition)\Big) \nonumber
+    \end{align}
+    \end{subequations}
+    %
+    %
+    %
+    %
+    Therefore, it suffices to show that:
+    %
+    \begin{align}
+        &\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\MLP_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\MLP_{2}]_\tokenposition\mid  [\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big)=1\label{eq:injective_transformer_mlp_eq_0}
+    \end{align}
+    since $\prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition)\Big) + \prob_{\Parameters}\Big([\MLP_{1}]_\tokenposition=[\MLP_{2}]_\tokenposition)\Big)$ is trivially 1.
+    We now unfold the last layer of the MLP as $\MLP_{i}=\mlpweights_{\nlayers}(\MLP'_{i})+\mlpbias_{\nlayers}$, where $\MLP'_{i}=\nonlinearity(\dnnmlpfunclayer{:\nlayers-1}(\layerNorm(\hiddenstates_i)))$. We can rewrite \cref{eq:injective_transformer_mlp_eq_0} as:
+    \newcommand{\parameters}{\theta}
+    \begin{subequations}
+    \begin{align}\label{eq:injective_transformer_mlp_eq_1}
+        &\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\mlpweights_{\nlayers}\MLP'_1+\mlpbias_{\nlayers}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\mlpweights_{\nlayers}\MLP'_{2}+\mlpbias_{\nlayers}]_\tokenposition \mid [\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big) \nonumber\\
+        &\quad= \prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+\mlpweights_{\nlayers}[\MLP'_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+\mlpweights_{\nlayers}[\MLP'_{2}]_\tokenposition \mid [\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition\Big)  \\
+        &\quad\stackrel{(1)}{=} \prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+\mlpweights_{\nlayers}[\MLP'_{1}]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+\mlpweights_{\nlayers}[\MLP'_{2}]_\tokenposition\mid [\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]}\Big) \\
+        &\quad\stackrel{(2)}{\geq}
+        \prob_{\Parameters}\Big([\hiddenstates_1]_{[\tokenposition,1]}+[\mlpweights_{\nlayers}\MLP'_{1}]_{[\tokenposition,1]}\neq[\hiddenstates_2]_{[\tokenposition,1]}+[\mlpweights_{\nlayers}\MLP'_{2}]_{[\tokenposition,1]}\mid [\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]} \Big) \\
+        &\quad=
+        \prob_{\Parameters}\Big([\hiddenstates_1]_{\![\tokenposition,1]}+
+        \!\!\sum_{j=1}^{|[\hiddenstates_1]_\tokenposition|}\!\![\mlpweights_{\nlayers}]_{\![1,j]}[\MLP'_{1}]_{\![\tokenposition,j]}\neq [\hiddenstates_2]_{\![\tokenposition,1]}+
+        \!\!\sum_{j=1}^{|[\hiddenstates_2]_\tokenposition|}\!\![\mlpweights_{\nlayers}]_{\![1,j]}[\MLP'_{2}]_{\![\tokenposition,j]}\mid [\MLP'_{1}]_{\![\tokenposition,i]}\neq[\MLP'_{2}]_{\![\tokenposition,i]} \Big) \\
+        &\quad \stackrel{(3)}{=} \int_{\Parameters\setminus\Parameters'}\prob_{\Parameters'}\Big([\hiddenstates_1]_{[\tokenposition,1]}+\smash{\sum_{j=1}^{|[\hiddenstates_1]_\tokenposition|}}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_j\neq [\hiddenstates_2]_{[\tokenposition,1]}+\\
+        &\,\qquad\qquad\phantom{\sum_{j}} \smash{\sum_{j=1}^{|[\hiddenstates_2]_\tokenposition|}}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]} \mid [\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]},\parameters\Big)\, \pdfun{\Parameters\setminus\Parameters'}(\parameters\mid [\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]}) d\parameters \nonumber
+    \end{align}
+    \end{subequations}
+    where equality (1) holds since $[\MLP_{1}]_\tokenposition\neq[\MLP_{2}]_\tokenposition$ implies there exists some index $i$ such that $[\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]}$.\footnote{$[\MLP'_{1}]_{[\tokenposition,i]}$ represents a two dimensional indexing, referring to the $i$-th element of the representation of the $t$-th token.}. (2) holds because if the inequality is satisfied for a single component of the vector, it must also be satisfied for the entire vector.
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    %
+    In (3), we define $\Parameters'$ as the random variable responsible for the value of $[\mlpweights_{\nlayers}]_{[1,i]}$  and $\parameters$ as a realisation of the random variables $\Parameters\setminus\Parameters'$.
+    %
+    %
+    %
+    %
+    %
+    %
+    Therefore, to prove \cref{eq:injective_transformer_mlp_eq_0}, it suffices to show:
+    \begin{align}
+        &\prob_{\Parameters'}\Big([\hiddenstates_1]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_1]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_j\neq[\hiddenstates_2]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_2]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]} \mid [\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]},\parameters\Big) \nonumber\\
+        &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad =1 
+    \end{align}
+    For brevity, we omit repeating the conditions in the following probabilities as they remain unchanged to the previous equation:
+    \begin{subequations}
+    \begin{align}
+        &\prob_{\Parameters'}\Big([\hiddenstates_1]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_1]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_j\neq[\hiddenstates_2]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_2]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]}\mid\ldots\Big)=1\\
+        &\,\,\Leftrightarrow\prob_{\Parameters'}\Big([\hiddenstates_1]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_1]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_j=[\hiddenstates_2]_{[\tokenposition,1]}+\sum_{j=1}^{|[\hiddenstates_2]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]}\mid \ldots \Big)=0\\
+        &\,\,\Leftrightarrow\prob_{\Parameters'}\Big([\mlpweights_{\nlayers}]_{[1,i]}[\MLP'_{1}]_{[\tokenposition,i]}-[\mlpweights_{\nlayers}]_{[1,i]}[\MLP'_{2}]_{[\tokenposition,i]} =[\hiddenstates_2]_{[\tokenposition,1]}-[\hiddenstates_1]_{[\tokenposition,1]}\\
+        &\,\,\qquad\qquad+\sum_{j=1,j\neq i}^{|[\hiddenstates_1]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]}-\sum_{j=1,j\neq i}^{|[\hiddenstates_2]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_{[\tokenposition,j]}\mid\ldots\Big)=0 \nonumber \\
+        &\,\,\Leftrightarrow\prob_{\Parameters'}\Big([\mlpweights_{\nlayers}]_{[1,i]}=\frac{1}{[\MLP'_{1}]_{[\tokenposition,i]}-[\MLP'_{2}]_{[\tokenposition,i]}}\Big([\hiddenstates_2]_{[\tokenposition,1]}-[\hiddenstates_1]_{[\tokenposition,1]} \label{eq:injective_transformer_mlp_eq_4} \\
+        &\,\,\qquad\qquad{+\sum_{j=1,j\neq i}^{|[\hiddenstates_2]_\tokenposition|}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{2}]_{[\tokenposition,j]}-\sum^{|[\hiddenstates_1]_\tokenposition|}_{j=1,j\neq i}[\mlpweights_{\nlayers}]_{[1,j]}[\MLP'_{1}]_{[\tokenposition,j]}}\Big)\mid \ldots\Big)=0 \nonumber
+    \end{align}
+    \end{subequations}
+    where the last step follows from the condition $[\MLP'_{1}]_{[\tokenposition,i]}\neq[\MLP'_{2}]_{[\tokenposition,i]}$ which ensures the denominator is non-zero. 
+    Now, \Cref{eq:injective_transformer_mlp_eq_4} holds because the right-hand side is a constant (since its elements are fixed given the conditions of the probability) while the left-hand side is a random variable drawn from a continuous distribution (since the weights are riicd.). Therefore, the probability that this equality holds is zero, as the event has measure zero.
+\end{proof}
+
+\subsection{\texorpdfstring{Proof of \cref{theorem:injective_Self_Attention_sub_block}}{Theorem}}\label{appsubsec:proof_injective_Self_Attention_sub_block}
+In this Section, we prove \cref{theorem:injective_Self_Attention_sub_block}, which establishes that the self-attention sub-block (consisting of attention, residual connection, and layer normalisation) is almost surely injective on countably infinite inputs. The proof structure parallels that of \cref{theorem:injective_MLP_sub_block}, so we highlight the key differences and necessary adaptations without repeating the full derivation.
+\injectiveSelfAttentionsubblock* 
+\begin{proof}
+   We follow a proof strategy analogous to that of \cref{theorem:injective_MLP_sub_block} in \cref{appsubsec:proof_injective_MLP_sub_block}. Following the same steps up to \cref{eq:injective_transformer_mlp_eq_0}, it suffices to show for this lemma that  for any $\hiddenstates_1,\hiddenstates_2\in\InputSet$ and $\tokenposition\in\tokenposRange$, where $[\hiddenstates_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition$, we have:
+    \begin{align}
+        &\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+[\selfattention(\layerNorm(\hiddenstates_1))]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+[\selfattention(\layerNorm(\hiddenstates_2))]_\tokenposition \mid  [\selfattention(\layerNorm(\hiddenstates_1))]_\tokenposition\neq[\selfattention(\layerNorm(\hiddenstates_2))]_\tokenposition\Big) \nonumber \\
+        &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad =1 
+    \end{align}
+    We can write this according to the definition of an attention block (\cref{definition:multi_layer_perceptron}):
+    \begin{align}
+        &\prob_{\Parameters}\Big([\hiddenstates_1]_\tokenposition+(\mlpweights^O)^T[\hiddenstates'_1]_\tokenposition\neq[\hiddenstates_2]_\tokenposition+(\mlpweights^O)^T[\hiddenstates'_2]_\tokenposition \mid [\selfattention(\layerNorm(\hiddenstates_1))]_\tokenposition\neq[\selfattention(\layerNorm(\hiddenstates_2))]_\tokenposition\Big)
+    \end{align}
+    where $\hiddenstates'_1$ and $\hiddenstates'_2$ are the hidden states after concatenation in the self-attention mechanism (see \cref{eq:transformer_concat_attention}). The remainder of the proof follows the same approach as the proof of \cref{theorem:injective_MLP_sub_block} in \cref{appsubsec:proof_injective_MLP_sub_block}, starting from \cref{eq:injective_transformer_mlp_eq_1}.
+\end{proof}
+
+\section{MLP Injectivity in Hierarchical Equality Task}\label{appsec:MLP_Injectivity_in_Hierarchical_Equality_Task}
+
+We see in \cref{fig:hierarchical_eq} that the IIA remains low for the \algidentityoffirst algorithm on a fully trained model even when using a $\RevNet$ alignment map (based on $\revnetfunc$). 
+A reasonable assumption for why would be that the fully trained model does not fulfil some assumption required by our proof of \cref{theorem:existing_causalmap_for_any_algorithm} (any algorithm is an input-restricted distributed abstraction for any model) given in \cref{sec:main_theorem}. 
+In this section, we present follow-up experiments investigating the reason for this disagreement between our empirical results on the \algidentityoffirst algorithm and the theoretical result of \cref{theorem:existing_causalmap_for_any_algorithm}.
+
+Let us first note that to prove \cref{theorem:existing_causalmap_for_any_algorithm} we rely on an existence proof: showing there exists a function $\causalmap$ which satisfies the conditions for a DNN to be abstracted by an algorithm.
+It says nothing, however, about this function being learnable in practice.
+Our experiments, however, measure IIA on an unseen test set---which requires $\RevNet$ to not only fit a training set, but generalise to new data. 
+Therefore, following our proof of \cref{theorem:existing_causalmap_for_any_algorithm} we explore the IIA on the train set. 
+However, on the normal training set (with $1{,}280{,}000$ samples), we still do not get an IIA over 0.55. 
+On the other hand, if we repeat the experiment with only $1{,}000$ training samples, we see $\RevNet$ achieves an IIA of over $0.99$ on the training set. 
+Therefore, it is likely that the $\revnetfunc$ used when defining $\RevNet$ does not have enough capacity to fit the overly complex function our proof describes.
+
+To further analyse why the capacity of the used $\revnetfunc$ is not sufficient, we analyse the injectivity of the evaluated MLP by investigating its hidden representations.
+We first evaluate $1{,}280{,}000$ randomly sampled inputs and their hidden states, checking if they are all unique. 
+In these $1{,}280{,}000$ samples (and repeating this experiment with 10 different random seeds), no collisions were found, implying the evaluated MLP is (at least close to) injective. 
+
+\begin{table*}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    %
+    %
+    \begin{tabular}{cccccc}
+    \toprule
+    & All Pairs & Same Output & Not Same Output & Same Variables & Not Same Variables \\ \midrule
+Input   & $8.5e{-2}{\scriptscriptstyle\,\pm\,1.1e{-2}}$ & $8.5e{-2}{\scriptscriptstyle\,\pm\,1.1e{-2}}$ & $1.7e{-1}{\scriptscriptstyle\,\pm\,1.9e{-2}}$ & $8.5e{-2}{\scriptscriptstyle\,\pm\,1.1e{-2}}$ & $1.6e{-1}{\scriptscriptstyle\,\pm\,1.9e{-2}}$ \\
+Layer 1 & $5.7e{-4}{\scriptscriptstyle\,\pm\,4.5e{-4}}$ & $5.7e{-4}{\scriptscriptstyle\,\pm\,4.5e{-4}}$ & $2.4e{-2}{\scriptscriptstyle\,\pm\,6.2e{-3}}$ & $5.7e{-4}{\scriptscriptstyle\,\pm\,4.5e{-4}}$ & $1.1e{-2}{\scriptscriptstyle\,\pm\,4.3e{-3}}$ \\
+Layer 2 & $4.5e{-4}{\scriptscriptstyle\,\pm\,3.8e{-4}}$ & $4.5e{-4}{\scriptscriptstyle\,\pm\,3.8e{-4}}$ & $3.2e{-2}{\scriptscriptstyle\,\pm\,1.2e{-2}}$ & $4.5e{-4}{\scriptscriptstyle\,\pm\,3.8e{-4}}$ & $1.2e{-2}{\scriptscriptstyle\,\pm\,6.7e{-3}}$ \\
+Layer 3 & $3.3e{-4}{\scriptscriptstyle\,\pm\,2.8e{-4}}$ & $3.3e{-4}{\scriptscriptstyle\,\pm\,2.8e{-4}}$ & $8.9e{-2}{\scriptscriptstyle\,\pm\,4.3e{-2}}$ & $3.3e{-4}{\scriptscriptstyle\,\pm\,2.8e{-4}}$ & $1.5e{-2}{\scriptscriptstyle\,\pm\,1.0e{-2}}$ \\
+    \bottomrule
+\end{tabular}
+
+    }
+    \caption{An approximation of the minimal Euclidean distance of the trained MLP model in the hierarchical equality task using $1{,}280{,}000$ samples. The minimal Euclidean distance is computed between all samples to a randomly selected subset of $10{,}000$ samples. 
+    %
+    We compute it over 10 different random seeds and present the mean and standard deviation (the number after $\pm$).}
+    \label{table:Results_Injectivity_Experiments}
+\end{table*}
+
+We now examine the supposition that the model finds it more difficult to distinguish between hidden states that share the same values for the variables in \algbothequality than between those that do not. To this end, we compute the minimal Euclidean distance between hidden states across the entire set of $1{,}280{,}000$ samples to a randomly selected subset of $10{,}000$ samples. 
+Specifically, we measure the minimal pairwise Euclidean distance among: (i) all sample pairs, (ii) sample pairs sharing the same output, (iii) sample pairs sharing the same values for both equality variables in \algbothequality, (iv) sample pairs that do not share the same output and (v) sample pairs that do not share the same values for both equality variables. 
+The results are presented in \cref{table:Results_Injectivity_Experiments}. We observe that the minimal Euclidean distances are smaller for pairs sharing the same output or the same equality-variable values compared to pairs that do not. This suggests that, although injectivity is preserved, a RevNet likely will find it more challenging to separate hidden states that share variable values.\looseness=-1
+
+\section{Additional Experiment Details}\label{app:exp_details}
+
+In this section, we present additional details about our hierarchical equality task (in \cref{subsubsec:hierarchical_equality_details}) and indirect object identification (in \cref{app:ioi_task}) experiments.
+We also present details and results on the distributive law task (in \cref{app:dl}).
+
+\subsection{Hierarchical Equality Task}\label{subsubsec:hierarchical_equality_details}
+
+\begin{task}[\textbf{from \citealp{Geiger2023FindingAB}}]
+\label{task:hierarchical_equality_task}
+    The \defn{hierarchical equality task} is defined as follows.
+    Let $\bx = \bx_1 \circ \bx_2 \circ \bx_3 \circ \bx_4$ be a 16-dimensional vector, where each $\bx_i \in \R^4$ for $i \in \{1,2,3,4\}$, and $\circ$ denotes vector concatenation. The input space is $\calX = [-0.5, 0.5]^{16}$, and the output space is $\calY = \{\lfalse, \ltrue\}$. The task function is:
+    \begin{align}
+        \ftask(\bx) = \big((\bx_1 == \bx_2) == (\bx_3 == \bx_4)\big),
+    \end{align}
+    where the equality $(\bx_i == \bx_j)$ holds if and only if $\bx_i$ and $\bx_j$ are equal as vectors in $\R^4$.
+\end{task}
+
+\subsubsection{Algorithms}\label{app:heq_algorithms}
+We define the following three candidate algorithms in detail.
+
+\begin{causalgraph}\label{alg:both_equality_relations}
+    The \defn{\algbothequality \algname{alg.}}\! to solve \cref{task:hierarchical_equality_task} has $\nodesinner\!\!=\!\!\{\node_{\bx_1\isequalsubscript\bx_2}, \!\node_{\bx_3\isequalsubscript\bx_4}\}$
+    and:
+    \begin{align}
+        &\algfuncnode{\node_{\bx_1\isequalsubscript\bx_2}}(\nodesvalues_{\parents(\node_{\bx_1\isequalsubscript\bx_2})}) = 
+        (\nodevalue_{\nodes_{\bx_1}} \isequal \nodevalue_{\nodes_{\bx_2}}) \nonumber \\
+       &\algfuncnode{\node_{\bx_3\isequalsubscript\bx_4}}(\nodesvalues_{\parents(\node_{\bx_3\isequalsubscript\bx_4})}) = 
+        (\nodevalue_{\nodes_{\bx_3}} \isequal \nodevalue_{\nodes_{\bx_4}}) \nonumber\\
+        &\algfuncnode{\node_{y}}(\nodesvalues_{\parents(\node_{y})}) =
+        (\nodevalue_{\node_{\bx_1\isequalsubscript\bx_2}} \isequal \nodevalue_{\node_{\bx_3\isequalsubscript\bx_4}})\nonumber
+    \end{align}
+\end{causalgraph}
+
+\begin{causalgraph}\label{alg:left_equality_relation}
+    The \defn{\algleftequality \algname{alg.}} to solve \cref{task:hierarchical_equality_task} has $\nodesinner\!=\!\{\node_{\bx_1\isequalsubscript\bx_2}\}$
+    and:
+    \begin{align}
+        &\algfuncnode{\node_{\bx_1\isequalsubscript\bx_2}}(\nodesvalues_{\parents(\node_{\bx_1\isequalsubscript\bx_2})}) = 
+        (\nodevalue_{\node_{\bx_1}} \isequal \nodevalue_{\node_{\bx_2}}) \nonumber\\
+        &\algfuncnode{\node_{y}}(\nodesvalues_{\parents(\node_{y})}) =
+        (\nodevalue_{\node_{\bx_1\isequalsubscript\bx_2}} \isequal (\nodevalue_{\node_{\bx_3}} \isequal \nodevalue_{\node_{\bx_4}}))\nonumber
+    \end{align}
+\end{causalgraph}
+
+\begin{causalgraph}\label{alg:identityoffirst}
+    The \defn{\algidentityoffirst \algname{alg.}} to solve \cref{task:hierarchical_equality_task} has $\nodesinner\!\!=\!\!\{\node_{\bx_1}\}$
+    and:
+    \begin{align}
+        &\algfuncnode{\node_{\bx_1}}(\parents(\node_{\bx_1})) = \bx_1 \nonumber \\
+        &\algfuncnode{\node_{y}}(\parents(\node_{y})) = ((\nodevalue_{\node_{\bx_1}}==\bx_2)==(\bx_3==\bx_4))\nonumber
+    \end{align}
+\end{causalgraph}
+
+\subsubsection{Training Details}\label{app:heq_training_details}
+
+For the hierarchical equality task, we use a 3-layer MLP with $\lvert \neuronset_{1} \rvert = \lvert \neuronset_{2} \rvert = \lvert \neuronset_{3} \rvert = 16$. The model is trained using the Adam optimiser with learning rate 0.001 and cross-entropy loss. We use a batch size of 1024 and train on 1,048,576 samples, with 10,000 samples each for evaluation and testing. Training runs for a maximum of 20 epochs with early stopping after 3 epochs of no improvement.
+
+For the training progression experiments, we use the same configuration but limit training to 2 epochs.
+
+When training the alignment maps $\causalmap$, we use a batch size of 6400 and train for up to 50 epochs with early stopping after 5 epochs of no improvement (using a threshold of 0.001 for the required change, compared to 0 for MLP training). We use the Adam optimiser with learning rate 0.001 and cross-entropy loss.
+To generate the datasets for DAS, for \Cref{alg:both_equality_relations} we intervene with a probability of 1/3 on $\node_{\bx_1==\bx_2}$, 1/3 on $\node_{\bx_3==\bx_4}$, and 1/3 on both variables. The samples for the base and source inputs are generated such that $(\bx_1 == \bx_2)$ and $(\bx_3 == \bx_4)$ each hold 50\% of the time. For \cref{alg:left_equality_relation} and \cref{alg:identityoffirst} we intervene on $\node_{\bx_1==\bx_2}$ and $\node_{\bx_1}$ for all samples, respectively. For each algorithm, we sample $1{,}280{,}000$ interventions for training, $10{,}000$ for evaluation, and $10{,}000$ for testing.
+
+\subsubsection{Additional Results}\label{app:heq_additional_results}
+
+We present results for the three candidate algorithms for the hierarchical equality task, analysing the effect of hidden size $\revnetdim$ and intervention size $\interventionsize$ across all MLP layers.
+
+For the \algbothequality algorithm, \Cref{fig:hidden_size_both_equality_relations,fig:training_progression_grid_max_both_equality_relations,fig:training_progression_grid_mean_both_equality_relations} demonstrate that the hidden size experiment aligns with previously reported trends, while also showing how alignment maps $\phi$ of increasing complexity perform across training epochs, layers, and intervention sizes.
+
+For the \algleftequality algorithm, as shown in \Cref{fig:hidden_size_left_equality_relation,fig:training_progression_grid_max_left_equality_relation,fig:training_progression_grid_mean_left_equality_relation}, we observe similar patterns: increasing hidden size and intervention size improves performance, and alignment is generally more successful in later layers during early training.
+
+For the \algidentityoffirst algorithm, \Cref{fig:hidden_size_identity_of_first_argument,fig:training_progression_grid_max_identity_of_first_argument,fig:training_progression_grid_mean_identity_of_first_argument} reveal that, interestingly, some alignment is achieved—especially in layer 3—during the first half of training, but this effect diminishes in the second half.
+
+Overall, these results demonstrate that the hidden size experiment is consistent with the findings reported in the main paper.
+They also show that it is easier, in untrained models, to find an alignment map for later layers, and that transient alignment can occur in specific layers and algorithms during the initial stages of training.\looseness=-1
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/mlp_hidden_size_grid_Both_Equality_Relations.pdf}
+        \vspace{-15pt}
+        \caption{\algbothequality}
+        \label{fig:hidden_size_both_equality_relations}
+        \vspace{1.5em}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/mlp_hidden_size_grid_Left_Equality_Relation.pdf}
+        \vspace{-15pt}
+        \caption{\algleftequality}
+        \label{fig:hidden_size_left_equality_relation}
+        \vspace{1.5em}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/mlp_hidden_size_grid_Identity_of_First_Argument.pdf}
+        \vspace{-15pt}
+        \caption{\algidentityoffirst}
+        \label{fig:hidden_size_identity_of_first_argument}
+        \vspace{1em}
+    \end{subfigure}
+    \caption{Mean IIA over 5 seeds using $\RevNet$ ($\revnetlayers=1$) on the trained DNN. Performance improves with larger hidden dimension $\revnetdim$ and intervention size \smash{$\interventionsize$}. Each subplot corresponds to one of the three candidate algorithms for the hierarchical equality task, showing how the model's representational capacity influences performance.}
+    \label{fig:hidden_size_heq_all}
+\end{figure}
+
+\newcommand{\algnamesmall}[1]{\texttt{\fontsize{9pt}{9pt}\selectfont#1}}
+\newcommand{\algbothequalitysmall}{\algnamesmall{both} \algnamesmall{equality} \algnamesmall{relations}\xspace}
+\newcommand{\algleftequalitysmall}{\algnamesmall{left} \algnamesmall{equality} \algnamesmall{relation}\xspace}
+\newcommand{\algidentityoffirstsmall}{\algnamesmall{identity} \algnamesmall{of} \algnamesmall{first} \algnamesmall{argument}\xspace}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/max_training_progression_Both_Equality_Relations.pdf}
+        \caption{Max IIA for \algbothequalitysmall}
+        \label{fig:training_progression_grid_max_both_equality_relations}
+        \vspace{1em}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/mean_training_progression_Both_Equality_Relations.pdf}
+        \caption{Mean IIA for \algbothequalitysmall}
+        \label{fig:training_progression_grid_mean_both_equality_relations}
+        \vspace{1em}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/max_training_progression_Left_Equality_Relation.pdf}
+        \caption{Max IIA for \algleftequalitysmall}
+    \label{fig:training_progression_grid_max_left_equality_relation}
+        \vspace{1em}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/mean_training_progression_Left_Equality_Relation.pdf}
+        \caption{Mean IIA for \algleftequalitysmall}
+        \label{fig:training_progression_grid_mean_left_equality_relation}
+        \vspace{1em}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/max_training_progression_Identity_of_First_Argument.pdf}
+        \caption{Max IIA for \algidentityoffirstsmall}
+        %
+    \label{fig:training_progression_grid_max_identity_of_first_argument}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/mean_training_progression_Left_Equality_Relation.pdf}
+        \caption{Mean IIA for \algidentityoffirstsmall}
+    \label{fig:training_progression_grid_mean_identity_of_first_argument}
+        %
+    \end{subfigure}
+    \vspace{.1em}
+    %
+    \caption{IIA over 5 seeds for each combination of MLP layer (rows) and intervention size (columns) during training progression for the tested algorithms.}
+\end{figure}
+
+\subsection{Indirect Object Identification Task}\label{app:ioi_task}
+
+\begin{task}\label{task:Indirect_object_identification}
+    The \defn{Indirect Object Identification} (IOI) task involves predicting the indirect object in sentences with a specific structure. Each input $\bx\in\calX$ consists of a text where a subject ($\subject$) and an indirect object ($\indirectobject$) are introduced, followed by the $\subject$ giving something to the $\indirectobject$. For example:
+    \begin{align}
+        \text{"Friends Juana and Kristi found a mango at the bar. Kristi gave it to" $\Rightarrow$ "Juana"} \nonumber
+    \end{align}
+    Here, "Juana" and "Kristi" are introduced, with "Kristi" ($\subject$) appearing again before giving something to "Juana" ($\indirectobject$).
+    The output set $\calY$ consists of the first tokens of the two names:
+    \begin{align}
+        \calY=\{\mathtt{first\_token}(\subject),\mathtt{first\_token}(\indirectobject)\}
+    \end{align}
+\end{task}
+\subsubsection{Algorithm}\label{app:ioi_algorithms}
+
+For this task, we evaluate the \defn{ABAB-ABBA} algorithm. Denoting the two names in the story as A and B, this algorithm determines whether the sentence follows an ABAB pattern (e.g., \exampletext{Friends \colored{blue}{Juana} and \colored{red}{Kristi} found a mango at the bar. \colored{blue}{Juana} gave it to \colored{red}{Kristi}}) or an ABBA pattern (e.g., \exampletext{Friends \colored{blue}{Juana} and \colored{red}{Kristi} found a mango at the bar. \colored{red}{Kristi} gave it to \colored{blue}{Juana}}). If the pattern is ABAB (where B is the indirect object $\indirectobject$), the algorithm predicts the first token of B. Conversely, for an ABBA pattern, it predicts the first token of A. In our experiments, we intervene on whether an input follows the ABAB pattern or not.
+
+\begin{causalgraph}\label{alg:abab_abba}
+    The \algabab algorithm for the IOI task has one inner node $\nodesinner = \{\node_{1}\}$ and is defined as follows:
+    \begin{subequations}
+    \begin{align}
+        \algfuncnode{\node_{1}}(\parents(\node_{1})) &= \mathtt{check\_is\_abab\_pattern}(\nodevalue_{\nodes_{\bx}}) \\
+        \algfuncnode{\node_{y}}(\parents(\node_{y})) &=
+        \begin{cases}
+            \mathtt{first\_token}(\mathtt{get\_name\_b}(\nodevalue_{\nodes_{\bx}})) & \text{if } \nodevalue_{\node_{1}} = \ltrue \\
+            \mathtt{first\_token}(\mathtt{get\_name\_a}(\nodevalue_{\nodes_{\bx}})) & \text{if } \nodevalue_{\node_{1}} = \lfalse
+        \end{cases}
+    \end{align}
+    \end{subequations}
+    Here, $\mathtt{get\_name\_a}(\bx)$ extracts the first name (denoted A, e.g. \colored{blue}{Juana} in our example) and $\mathtt{get\_name\_b}(\bx)$ extracts the second name (denoted B, e.g. \colored{red}{Kristi} in our example) from the input sentence $\bx$. 
+    The function $\mathtt{check\_is\_abab\_pattern}(\bx)$ returns $\ltrue$ if the sentence follows an ``ABAB'' structure (e.g., ``A and B ... A gave to B'', meaning B is the $\indirectobject$) and $\lfalse$ if it follows an ``ABBA'' structure (e.g., ``A and B ... B gave to A'', meaning A is the $\indirectobject$). 
+    $\mathtt{first\_token}(\text{Name})$ returns the first token of the specified name. The output $\by$ is the first token of the indirect object.\looseness=-1
+\end{causalgraph}
+
+\subsubsection{Training Details}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+\centering
+\vspace{-27pt}
+\includegraphics[width=.5\textwidth]{images/train_loss_groking.png}
+\vspace{-10pt}
+\caption{Cross Entropy loss ($y$-axis) during training ($x$-axis) of the alignment map for the randomly initialised \emph{Pythia-31m}. The loss plateaus between 4k and 6k steps, and suddenly drops after 6k steps.}
+\label{fig:training_run_grokking}
+\vspace{-10pt}
+\end{wrapfigure}
+
+We use models from the Pythia suite \citep{biderman2023pythia} to evaluate the IIA performance of the different $\causalmap$ on the IOI task. Specifically, we employ the Pythia 31M, 70M, 160M, and 410M parameter models. We also examine different training checkpoints provided by these models to analyse how IIA evolves during training. 
+To assess robustness, we replicate a subset of experiments using alternative Pythia model seeds from \citep{wal2025polypythias}.
+
+We train all alignment maps on 2 epochs of $10^6$ interventions based on data from \citet{fahamu_2022}, with a batch size of $256$ and a learning rate of $10^{-4}$. 
+For all experiments, we set the intervention size $\interventionsize$ to half of the DNN's hidden dimension.
+For smaller models (31M, 70M), we train using float64 precision and a learning rate of $10^{-3}$, as these adjustments proved crucial for convergence. We also note that we observed quite severe grokking behaviour, where models had low IIA for a long time, which quickly jumped to high IIA values at a certain point of training (see \Cref{fig:training_run_grokking}; \href{https://wandb.ai/jkminder/CausalAbstractionLLM/runs/t6bpcgch}{wandb run}).
+
+\subsubsection{Additional Results}
+\label{app:ioi_additional_results}
+
+\paragraph{Robustness across random seeds.}
+In \Cref{fig:pythia_multiple_seeds}, we examine how our main results from \Cref{sec:Results} generalise across multiple training seeds of the Pythia model. The key trends hold consistently across all 5 seeds - we can find perfect alignments using $\RevNet$ in most cases. However, we observe two notable exceptions. For one seed, the DNN fails to learn the IOI task even after full training. For another seed, we cannot find an alignment using even complex alignment maps under our current setup.\footnote{These failures occur in different seeds: seed 3 shows poor IIA despite learning the task, while seed 4 fails to learn the IOI task.} All other seeds achieve perfect alignment under $\RevNet$. We hypothesise that the alignment failure case is primarily due to suboptimal training of the alignment map. Due to computational constraints, we did not perform extensive hyperparameter tuning that might have achieved convergence.
+
+\begin{figure}[h]
+\centering
+\resizebox{0.3\textwidth}{!}{\includegraphics{images/pythia/mean_scores_by_seed.pdf}}
+\caption{IIA of alignment between the \algabab algorithm and the \emph{Pythia-410m} model across multiple seeds (seeds 1 to 5 from \citealp{wal2025polypythias}), with interventions at layer 12. We evaluate the IIA of both $\Rotation$ and $\RevNet$ (with $\RevNetHiddenDim=64, \RevNetBlocks=1$) on randomly initialised (Init.) and fully trained (Full) DNNs.}
+\label{fig:pythia_multiple_seeds}
+\end{figure}
+
+\paragraph{Generalisation across distinct name sets.} 
+In the main paper, we split the dataset from \citet{fahamu_2022} by ensuring that no two sentences appear in both the training and evaluation sets. However, this splitting strategy does not guarantee that the names themselves are distinct between training and evaluation sets. In \Cref{fig:pythia_name_split}, we examine the results when using completely different sets of names for training and evaluation. The results differ substantially: we cannot find an alignment using even complex alignment maps for the randomly initialised DNN. This suggests that IIA on the randomly initialised DNN may depend critically on overlap between the specific entities encountered during training and evaluation. For the fully trained DNN, we observe perfect alignment using $\RevNet$ and reasonably high alignment using $\Rotation$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/pythia/pythia410m_name_split.pdf}
+\vspace{-10pt}
+\caption{IIA of alignment between the \algabab algorithm and the \emph{Pythia-410m} model using a different set of names for training and evaluation, with interventions at layer 12. We evaluate the IIA of both $\Rotation$ and $\RevNet$ (with $\RevNetHiddenDim=64, \RevNetBlocks=1$) on randomly initialised and fully trained (Full) DNNs.\looseness=-1}
+\label{fig:pythia_name_split}
+\end{figure}
+
+\subsection{Distributive Law Task}\label{app:dl}
+
+We now study a similar task to the hierarchical equality (in \cref{subsubsec:hierarchical_equality_details}), based on the distributive law of and ($\land$) and or ($\lor$). 
+\begin{task}\label{task:distributive_law}
+    The \defn{distributive law task} is defined as follows.
+    Let $\bx = \bx_1 \circ \bx_2 \circ \bx_3 \circ \bx_4 \circ \bx_5 \circ \bx_6$ be a 24-dimensional vector, where each $\bx_i \in [-0.5, 0.5]^4$ for $i \in \{1,2,3,4,5,6\}$, and $\circ$ denotes vector concatenation. The input space is $\calX = [-0.5, 0.5]^{24}$, and the output space is $\calY = \{\lfalse, \ltrue\}$. The task function is
+    \begin{align}
+        \ftask(\bx) = \big((\bx_1 == \bx_2) \wedge (\bx_3 == \bx_4)\big) \vee \big((\bx_3 == \bx_4) \wedge (\bx_5 == \bx_6)\big),
+    \end{align}
+    where the equality $(\bx_i == \bx_j)$ holds if and only if $\bx_i$ and $\bx_j$ are equal as vectors in $\R^4$.
+\end{task}
+
+\subsubsection{Algorithms}\label{app:dl_algorithms}
+We define the following two candidate algorithms.
+
+\begin{causalgraph}\label{alg:AndOrAnd}
+    The \defn{\alganorand \algname{alg.}} to solve \cref{task:distributive_law} has 
+    \[\nodesinner=\{\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)}, \node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)}\}\]
+    and it is defined as follows:
+    \begin{align}
+        &\algfuncnode{\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)}}(\nodesvalues_{\parents(\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)})}) = 
+        (\nodevalue_{\nodes_{\bx_1}} \isequal \nodevalue_{\nodes_{\bx_2}}) \land (\nodevalue_{\nodes_{\bx_3}} \isequal \nodevalue_{\nodes_{\bx_4}}) \nonumber\\
+        %
+        &\algfuncnode{\node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)}}(\nodesvalues_{\parents(\node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)})}) = 
+        (\nodevalue_{\nodes_{\bx_3}} \isequal \nodevalue_{\nodes_{\bx_4}}) \land (\nodevalue_{\nodes_{\bx_5}} \isequal \nodevalue_{\nodes_{\bx_6}}) \nonumber\\
+        %
+        &\algfuncnode{\node_{y}}(\nodesvalues_{\parents(\node_{y})}) =
+        \nodevalue_{\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)}} \lor \nodevalue_{\node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)}}\nonumber
+    \end{align}
+\end{causalgraph}
+\begin{causalgraph}\label{alg:AndOr}
+    The \defn{\algandor \algname{alg.}} to solve \cref{task:distributive_law} has 
+    \[\nodesinner=\{\node_{\bx_3\isequal\bx_4}, \node_{(\bx_1\isequal\bx_2)\lor(\bx_5\isequal\bx_6)}\}\]
+    and it is defined as follows:
+    \begin{align}
+        &\algfuncnode{\node_{\bx_3\isequal\bx_4}}(\nodesvalues_{\parents(\node_{\bx_3\isequal\bx_4})}) = 
+        (\nodevalue_{\nodes_{\bx_3}} \isequal \nodevalue_{\nodes_{\bx_4}}) \nonumber\\
+        %
+        &\algfuncnode{\node_{(\bx_1\isequal\bx_2)\lor(\bx_5\isequal\bx_6)}}(\nodesvalues_{\parents(\node_{(\bx_1\isequal\bx_2)\lor(\bx_5\isequal\bx_6)})}) = 
+        (\nodevalue_{\nodes_{\bx_1}} \isequal \nodevalue_{\nodes_{\bx_2}}) \lor (\nodevalue_{\nodes_{\bx_5}} \isequal \nodevalue_{\nodes_{\bx_6}}) \nonumber\\
+        %
+        &\algfuncnode{\node_{y}}(\nodesvalues_{\parents(\node_{y})}) =
+        \nodevalue_{\node_{\bx_3\isequal\bx_4}} \land \nodevalue_{\node_{(\bx_1\isequal\bx_2)\lor(\bx_5\isequal\bx_6)}}\nonumber
+    \end{align}
+\end{causalgraph}
+
+\subsubsection{Training Details}\label{app:dl_training_details}
+For the distributive law task, we use a 3-layer MLP (see \cref{appsubsec:general_MLP}) with an input dimensionality of 24, hidden layers of dimensionality $\lvert \neuronset_{1} \rvert = \lvert \neuronset_{2} \rvert =\lvert \neuronset_{3} \rvert = 24$, and an output dimensionality of 2. The model is trained using the Adam optimiser with a learning rate of 0.001 and cross-entropy loss. We use a batch size of 1024. The datasets are generated by randomly sampling input vectors $\bx = \bx_1 \circ \dots \circ \bx_6$ such that the target label $\ytrue = \ftask(\bx)$ is true 50\% of the time. We sample $1{,}048{,}576$ samples for training, $10{,}000$ for evaluation, and $10{,}000$ for testing. Training runs for a maximum of 20 epochs with early stopping after 3 epochs of no improvement.
+
+For training $\causalmap$, we use a batch size of 6400 and train for up to 50 epochs with early stopping after 5 epochs of no improvement (using a threshold of 0.001 for the required change). 
+We use the Adam optimiser with learning rate 0.001 and cross-entropy loss.
+To generate the intervened datasets:
+For \cref{alg:AndOrAnd}, we intervene with a probability of 1/3 on $\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)}$, 1/3 on $\node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)}$, and 1/3 on both variables.
+For \cref{alg:AndOr}, we intervene with a probability of 1/3 on $\node_{\bx_3\isequal\bx_4}$, 1/3 on $\node_{(\bx_1\isequal\bx_2)\lor(\bx_5\isequal\bx_6)}$, and 1/3 on both variables.
+For both algorithms, the samples for the base and source inputs are generated such that the output of the intervention changes compared to the base input 50\% of the time. We sample $1{,}280{,}000$ interventions for training, $10{,}000$ for evaluation , and $10{,}000$ for testing for each algorithm.
+
+\subsubsection{Results}\label{app:dl_results}
+
+In this section, we discuss the results on the distributed law task using the And-or-And and And-Or algorithms. 
+Our findings corroborate the results presented in the main paper.
+As shown in \cref{fig:distributive_law_combined}, using linear and identity alignment maps reveals distinct dynamics. 
+The \algandor algorithm achieves higher IIA using $\Rotation$, particularly in later layers where the IIA of $\Rotation$ on the \alganorand algorithm approaches 0.5. 
+However, these dynamics completely vanish when using a more complex alignment map like $\RevNet$, where we achieve almost perfect IIA everywhere.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/distributed_law_FullyTrained_combined.pdf}
+    \vspace{-30pt}
+    \caption{IIA in the distributive law task for causal abstractions trained with different alignment maps $\causalmap$. The figure shows results for both analysed algorithms for this task. The bars represent the max IIA across 10 runs with different random seeds. The black lines represent mean IIA with 95\% confidence intervals. The $\interventionsize$ denotes the intervention size per node. Without interventions, all DNNs reach 100\% accuracy. The used $\RevNet$ uses $\revnetlayers=10$ and $\revnetdim=24$.}
+    \label{fig:distributive_law_combined}
+    \vspace{10pt}
+\end{figure}
+
+\Cref{fig:training_progression_grid_max_andor,fig:training_progression_grid_max_andorand} present the evaluated IIA throughout model training.
+These training progression plots show that randomly initialised models often achieve IIA above 0.8 with non-linear alignment maps, supporting our insight that when the notion of causal abstraction is equipped with $\RevNet$ it may identify algorithms which are not necessarily implemented by the underlying model. 
+In \cref{fig:training_progression_grid_mean_andor,fig:training_progression_grid_mean_andorand}, we plot the mean IIA over 5 seeds instead of the maximum IIA.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/max_training_progression_AndOr.pdf}
+        \caption{Max IIA for \algandor}
+        \label{fig:training_progression_grid_max_andor}
+        \vspace{1em}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/mean_training_progression_AndOr.pdf}
+        \caption{Max IIA for \algandor}
+        \label{fig:training_progression_grid_mean_andor}
+        \vspace{1em}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/max_training_progression_AndOrAnd.pdf}
+        \caption{Max IIA for \alganorand}
+        \label{fig:training_progression_grid_max_andorand}
+        \vspace{1em}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/mean_training_progression_AndOrAnd.pdf}
+        \caption{Max IIA for \alganorand}
+        \label{fig:training_progression_grid_mean_andorand}
+        \vspace{1em}
+    \end{subfigure}
+    \caption{IIA over 5 seeds for each combination of MLP layer (rows) and intervention size (columns) during training progression for the evaluated algorithms.}
+\end{figure}
+
+The hidden size experiments (\cref{fig:hidden_size_andor,fig:hidden_size_andorand}) show that even RevNets with small $\RevNetHiddenDim$ of 4 achieve near-perfect IIA for And-Or-And, while And-Or never reaches perfect IIA in the second layer, regardless of the $\RevNetHiddenDim$. The training progression plots suggest a possible explanation: IIA for And-Or-And initially increases in the last two layers but then decreases, while RevNets maintain near-perfect IIA. This may indicate that And-Or-And is first implemented with simple encodings detectable by linear $\causalmap$s, before evolving into non-linear encodings that only RevNets can detect. The fact that And-Or never achieves high IIA in later layers further suggests it may not be a true abstraction of the model's behaviour, though we note this remains a hypothesis requiring further investigation.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/mlp_hidden_size_grid_AndOr.pdf}
+        \vspace{-15pt}
+        \caption{\algandor}
+        \label{fig:hidden_size_andor}
+        \vspace{1em}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth]{images/mlp_hidden_size_grid_AndOrAnd.pdf}
+        \vspace{-15pt}
+        \caption{\alganorand}
+        \label{fig:hidden_size_andorand}
+        \vspace{1em}
+    \end{subfigure}
+    \caption{Mean IIA over 5 seeds using $\RevNet$ ($\revnetlayers=1$) on the trained DNN. Performance improves with larger hidden dimension $\revnetdim$ and intervention size \smash{$\interventionsize$}. Each subplot corresponds to one of the two candidate algorithms for the distributed law task, showing how $\causalmap$'s representational capacity influences performance.}
+    \label{fig:hidden_size_dl_all}
+\end{figure}
+
+\paragraph{And-Or-And Training.}
+In this section, we analyse a DNN when this model is trained specifically to rely on the \alganorand algorithm (and, consequently, to encode the values of its hidden nodes). 
+We do so with the method from \citet{pmlr-v162-geiger22a}, training the DNN to encode \alganorand's hidden nodes' values in its second layer, with an intervention size of 12.
+This method is similar to how we train $\causalmap$ (see \cref{app:dl_training_details}), but $\causalmap$ is fixed to the identity function, and the DNN itself is trained; further, the training dataset is composed of 1/4 non-intervened samples, 1/4 samples with interventions on $\node_{(\bx_1\isequal\bx_2)\land(\bx_3\isequal\bx_4)}$, 1/4 on $\node_{(\bx_3\isequal\bx_4)\land(\bx_5\isequal\bx_6)}$, and 1/4 on both variables.
+We then evaluate if this DNN abstracts both the \alganorand and \algandor using different $\causalmap$ (as before, after freezing the DNN).
+The IIA performance of these $\causalmap$ is presented in \cref{fig:distributed_law_fixAndOrAnd}. 
+We can see here that, when using identity and linear alignment maps $\causalmap$, IIA scores suggest that the \alganorand algorithm seems to be implemented perfectly given the second layer, where we have only around 0.75 IIA for the \algandor algorithm. 
+However, these differences vanish almost completely using $\RevNet$ as our alignment map.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/distributed_law_AndOrAndFix_combined.pdf}
+    \vspace{-10pt}
+    \caption{IIA in the distributive law task for causal abstractions trained with different alignment maps $\causalmap$ and a DNN trained to use the \alganorand algorithm. The figure shows results when evaluating if the DNN encodes either of the analysed algorithms for this task.
+    %
+    The bars represent the max IIA across 10 runs with different random seeds. The black lines represent mean IIA with 95\% confidence intervals. The $\interventionsize$ denotes the intervention size per node. All DNNs reach >99.9\% accuracy after training. The used $\RevNet$ uses $\revnetlayers=10$ and $\revnetdim=16$.}
+    \label{fig:distributed_law_fixAndOrAnd}
+    %
+\end{figure}
+
+\paragraph{And-Or Training.}
+In this section, we report an experiment similar to the above, but we train our DNN to rely on the \algandor algorithm instead.
+These results are shown in \cref{fig:distributed_law_fixAndOr}.
+In this figure, we again see that, when using identity and linear as alignment map $\causalmap$, IIA performance suggests that the \algandor algorithm seems to be implemented perfectly given the second layer, where we have only around 0.65 IIA for the \alganorand algorithm. 
+These differences however vanish when using $\RevNet$ as alignment map, which leads to perfect IIA scores with either algorithm.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.9\textwidth]{images/distributed_law_AndOrFix_combined.pdf}
+    \vspace{-10pt}
+    \caption{IIA in the distributive law task for causal abstractions trained with different alignment maps $\causalmap$ and a DNN trained to use the \algandor algorithm. The figure shows IIA results when evaluating if the DNN encodes either of the analysed algorithms for this task.
+    %
+    The bars represent the max IIA across 10 runs with different random seeds. The black lines represent mean IIA with 95\% confidence intervals. The $\interventionsize$ denotes the intervention size per node. Without interventions, all DNNs reach >99.9\% accuracy. The used $\RevNet$ uses $\revnetlayers=10$ and $\revnetdim=16$.}
+    \label{fig:distributed_law_fixAndOr}
+    %
+\end{figure}
+
+\section{Computational Resources}
+
+The experiments on MLP were executed on CPU (10 computers with i7-4770 or newer) over 3 weeks, as we noticed that DAS on small MLPs are faster on CPU than on GPU. 
+The experiments on the Pythia models were executed on a single A100 GPU with 80GB of memory using approximately 30 GPU hours, including the hyperparameter tuning.

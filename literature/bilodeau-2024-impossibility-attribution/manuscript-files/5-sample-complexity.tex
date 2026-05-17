@@ -1,0 +1,112 @@
+%
+
+\section{Towards Theoretical Guarantees for\\ Perturbation-Based Methods}\label{sec:sample-complexity}
+
+We have shown both theoretically and empirically that \completename{} and \additivename{} \fielddefnames{} like \shap{} and \intgradshort{} can be unreliable for solving \downtasknames{} like algorithmic recourse and spurious \covname{} identification.
+At the same time, while simpler \fielddefnames{} like \vanillagrad{} can be accurate for inferring sufficiently \localname{} \modbehaviourname{}, this can also clearly fail even for simple tasks that demand understanding a moderately \localname{} region.
+So, faced with solving a given \downtaskname{}, what should a practitioner do?
+
+To answer this question, we turn to the existing literature on \fielddefnames{} that are empirically better than \shap{} and \intgradshort{} for many \tasknames{}.
+For example,
+\citet{fong2017interpretable} learn a blurring mask that changes the class probability while simultaneously maximizing how ``informative'' the mask is,
+\citet{petsiuk18rise} use randomly generated masks to learn which perturbations maximally change the model output,
+\citet{kapishnikov19xrai} use image masking to find regions that maximally change the class probability,
+\citet{qi2019visualizing} and \citet{khorram2021igos++} learn a feature mask based on both removing and adding components to the image to change the class probability,
+and \citet{shitole2021one} combine multiple saliency maps into a single graph to illustrate multiple different minimal perturbations to change the model output.
+
+
+However, despite the many methods listed above, mathematically establishing when these methods are (and are not) reliable has remained elusive.
+As a first step towards such theory, we consider a \methodname{} that is \emph{guaranteed} to work: brute-force solving \downtasknames{} via repeated \modelname{} evaluations.
+In particular, since \countmodbehaviourname{} is determined by $\model(\covvaldum)$ for $\covvaldum$ near $\covval$, this can always be inferred by computing $\model(\covvaldum)$ (or, perhaps, $\grad \model(\covvaldum)$) at sufficiently many \obsnames{} $\covvaldum$.
+To demonstrate this, we state the following simple result showing how spurious \covname{} identification (i.e., \cref{defn:spurious}) relies on the number of queries.
+To avoid additional notational burden, we state this result informally, and defer precise notation, more general statements, and proofs to \cref{sec:sample-complexity-proofs}.
+
+\begin{theorem}\label{fact:sufficient-samples-informal}
+Suppose that $\dataspace=\Reals$ and there exists $\lipconst>0$ such that all $\model\in\modelspace$ are $\lipconst$-Lipschitz. 
+For fixed $\inscale,\outscale>0$ and $j\in[\covdim]$, consider the \downtaskname{} of \cref{defn:spurious} with $\covval=0$.
+%
+%
+%
+%
+%
+For every $n\in\Nats$, there exists a \hyptestname{} $\oraclehyptest\timeind{n}$ that uses only $n$ evaluations of $\model$ yet
+\*[
+    \specsym(\oraclehyptest\timeind{n}) = 1
+    \ \text{ and } \
+    \senssym(\oraclehyptest\timeind{n})
+    = 1 - \Big(1-\frac{2\outscale}{\lipconst\inscale}\Big)^n.
+\]
+\end{theorem}
+
+A few remarks on \cref{fact:sufficient-samples-informal}. 
+%
+First, this result implies that the \username{} can achieve \specname{} \emph{and} \sensname{} arbitrarily close to one by evaluating $\model$ sufficiently many times (i.e., taking $n$ to infinity).
+Second, while we did not state this in \cref{sec:impossibility} for simplicity, from the proof of \cref{fact:oracle-hypothesis} it can be observed that \cref{assn:piecewise} can be relaxed to require only Lipschitz piecewise linear functions, and hence this additional structure is not sufficient to circumvent our impossibility result for \completename{} and \additivename{} \fielddefnames{} (i.e., \cref{fact:oracle-hypothesis-examples}). 
+Third, we defer the precise definition of the \hyptestname{} to \cref{sec:sample-complexity-proofs}, but here is a simple intuition: uniformly sample $n$ \obsnames{} $\covval\timeind{1:n}$ and reject the \nullname{} if and only if $\model(0,\covval\feat{j}\timeind{t}) > \outscale$ for at least one $t$.
+Finally, in \cref{sec:sample-complexity-proofs} we extend this result to the multivariate case and quantify the corresponding dependence on $\covdim$ (unsurprisingly, this dependence is exponential), and we show that this simple \hyptestname{} achieves nearly optimal worst-case dependence on parameters like $\inscale$, $\outscale$, $\lipconst$, $\covdim$, and $n$. 
+
+As a concrete example, consider the spurious \covname{} identification \downtaskname{} for 10 \covnames{} (say, 10 pixels where a watermark appears) on $1$-Lipschitz \modelnames{}.
+To identify if the \modelname{} is sensitive (\modelname{} output changes by more than 1\%) to a 5\% change in the \covname{} value, we show it is possible to get perfect \specname{} and over 90\% \sensname{} with roughly 20,000 model evaluations. 
+%
+%
+%
+ 
+While the \downtaskname{} of spurious \covname{} identification can be solved by brute-force evaluations (and a similar argument can be made for other \countmodbehaviourname{} \downtasknames{}), there is much work to be done.
+In particular, the simple \hyptestname{} in \cref{fact:sufficient-samples-informal} is designed to always succeed, but may be quite inefficient for more structured \modelnames{}.
+Unfortunately, for the existing brute-force \hyptestnames{} that are more efficient, it is unclear for which \downtasknames{} they provably work.
+%
+%
+Our hypothesis testing framework allows us to rigorously evaluate such methods, and our formalization of \downtasknames{} suggests that techniques and methods from optimization theory may be a useful starting point.
+ 
+ 
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+
+%
+
+
+
+
+%
+%
+%
+%
+
+%
+%
+%
+%
+
+
+%
+
+
+%
+
+
+%
+%
+
+
+
+%
+
+%
+
+
+

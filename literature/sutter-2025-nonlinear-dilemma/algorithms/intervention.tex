@@ -1,0 +1,12 @@
+\begin{minted}[escapeinside=||,mathescape=true,frame=lines,linenos,xleftmargin=2em, xrightmargin=2em]{python}
+    def f(|$\alg$|):
+        def |$\algfunc$|(|$\bx$|, |$\interventionsalg$|=None):
+            |$\nodesvalues_{\nodesinput}$| = |$\bx$|
+            for |$\node$| in |$\alg$|.topological_sort(|$\nodesinner \cup \nodesoutput$|):
+                if |$\interventionsalg$| and |$\node$| in |$\interventionsalg$|:
+                    |$\nodevalue_{\node}$| = |$\interventionsalg[\node]$|
+                else:
+                    |$\nodevalue_{\node}$| = |$\algfuncnode{\node}(\nodesvalues_{\parents(\node)})$|
+            return |$\nodesvalues_{\nodesoutput}$|
+        return |$\algfunc$|
+\end{minted}

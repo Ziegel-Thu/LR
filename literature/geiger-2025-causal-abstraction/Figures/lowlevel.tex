@@ -1,0 +1,159 @@
+\begin{tikzpicture}[scale=0.6, every node/.style={scale=0.6}]
+\def\scalex{2.1}
+\def\scaley{2}
+\def\startx{0}
+\def\starty{-0.43}
+\def\opac{1.0}
+
+\foreach \xshift in {0,1,2,3}{
+    \node[] () at (\xshift *\scalex + -0.45*\scalex+ \startx,-0.309*\scaley+ \starty) {\huge \{};
+    \node[] () at (\xshift *\scalex + 0.45*\scalex+ \startx,-0.309*\scaley+ \starty) {\huge \}};
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=12pt,inner sep=0pt] () at (\xshift *\scalex + -0.3*\scalex+ \startx,-0.309*\scaley+ \starty) {};
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + 0*\scalex+ \startx,-0.3*\scaley+ \starty) {};
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + 0.3*\scalex++ \startx,-0.3*\scaley+ \starty) {};
+}
+
+
+\def\starty{0}
+
+
+    
+
+
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (A) at (0+ \startx,0+ \starty) {$\onevar_1$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (B) at (1*\scalex+ \startx,0+ \starty) {$\onevar_2$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (C) at (2*\scalex+ \startx,0+ \starty) {$\onevar_3$};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (D) at (3*\scalex+ \startx,0+ \starty) {$\onevar_4$};
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (E) at (0.5*\scalex+ \startx,0.5*\scaley+ \starty) {$\onevarr_1$};
+
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (F) at (2.5*\scalex + \startx,0.5*\scaley+ \starty) {$\onevarr_2$};
+
+
+
+\node[fill=yellow!20, draw, ellipse, minimum size=20pt] (G) at (1.5*\scalex + \startx,1*\scaley+ \starty) {$\onevarrr$};
+
+\node () at (0.5*\scalex+ \startx,0.87*\scaley+ \starty) {$\mathbf{Id_1}(\oneval_1,\oneval_2)$};
+
+
+
+\node () at (2.5*\scalex + \startx,0.87*\scaley+ \starty) {$\mathbf{Id_1}(\oneval_3,\oneval_4)$};
+
+
+
+\node () at (1.5*\scalex + \startx,1.37*\scaley+ \starty) {$\mathbf{Id_2}(\onevall_1,\onevall_2)$};
+
+\draw [->,opacity=\opac] (A) -- (E);
+\draw [->,opacity=\opac] (B) -- (E);
+\draw [->,opacity=\opac] (C) -- (F);
+\draw [->,opacity=\opac] (D) -- (F);
+\draw [->,opacity=\opac] (E) -- (G);
+\draw [->,opacity=\opac] (F) -- (G);
+\end{tikzpicture}
+
+\begin{tikzpicture}[scale=0.6, every node/.style={scale=0.6}]
+\newcommand{\true}{\texttt{T}}
+\newcommand{\false}{\texttt{F}}
+
+\def\opac{1.0}
+    \matrix (mat) [matrix of nodes,
+        row sep=-\pgflinewidth,
+        column sep=-\pgflinewidth,
+        nodes={rectangle,text width=2em,align=center},
+        text depth=1ex,
+        text height=2ex,
+        nodes in empty cells] at (0,0)
+    { 
+    $\mathbf{Id_1}$\Huge &  & &  \\
+     & \true  & \false & \false \\
+     & \false & \true & \false \\
+    & \false & \false & \true \\
+    };
+    \foreach \x in {1}
+    {
+      \draw 
+        ([xshift=-.5\pgflinewidth,opacity=\opac]mat-\x-1.south west) --   
+        ([xshift=-.5\pgflinewidth,opacity=\opac]mat-\x-4.south east);
+      }
+    \foreach \x in {1}
+    {
+      \draw 
+        ([yshift=.5\pgflinewidth,opacity=\opac]mat-1-\x.north east) -- 
+        ([yshift=.5\pgflinewidth,opacity=\opac]mat-4-\x.south east);
+    } 
+
+    \foreach \x in {2,...,3}
+    {
+      \draw[opacity=\opac*0.5]
+        ([xshift=-.5\pgflinewidth]mat-\x-1.south west) --   
+        ([xshift=-.5\pgflinewidth]mat-\x-4.south east);
+      }
+    \foreach \x in {2,...,3}
+    {
+      \draw[opacity=\opac*0.5]
+        ([yshift=.5\pgflinewidth]mat-1-\x.north east) -- 
+        ([yshift=.5\pgflinewidth]mat-4-\x.south east);
+    } 
+
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=12pt,inner sep=0pt] () at (mat-1-2) {};
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (mat-1-3) {};
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (mat-1-4) {};
+    
+        \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=12pt,inner sep=0pt] () at (mat-2-1) {};
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (mat-3-1) {};
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (mat-4-1) {};
+    
+
+
+\matrix (mat) [matrix of nodes,
+        row sep=-\pgflinewidth,
+        column sep=-\pgflinewidth,
+        nodes={rectangle,text width=2em,align=center},
+        text depth=1ex,
+        text height=2ex,
+        nodes in empty cells] at (5.05,0)
+    { 
+     $\mathbf{Id_2}$ \Huge & \true & \false  \\
+     \true & \true  & \false\\
+     \false & \false & \true \\
+    };
+
+    \foreach \x in {1}
+    {
+      \draw 
+        ([xshift=-.5\pgflinewidth,opacity=\opac]mat-\x-1.south west) --   
+        ([xshift=-.5\pgflinewidth,opacity=\opac]mat-\x-3.south east);
+      }
+      
+    \foreach \x in {1}
+    {
+      \draw 
+        ([yshift=.5\pgflinewidth,opacity=\opac]mat-1-\x.north east) -- 
+        ([yshift=.5\pgflinewidth,opacity=\opac]mat-3-\x.south east);
+    } 
+
+    \foreach \x in {2}
+    {
+      \draw[opacity=\opac*0.5]
+        ([xshift=-.5\pgflinewidth]mat-\x-1.south west) --   
+        ([xshift=-.5\pgflinewidth]mat-\x-3.south east);
+      }
+    \foreach \x in {2}
+    {
+      \draw[opacity=\opac*0.5]
+        ([yshift=.5\pgflinewidth]mat-1-\x.north east) -- 
+        ([yshift=.5\pgflinewidth]mat-3-\x.south east);
+    } 
+    
+    
+\renewcommand{\true}{\texttt{True}}
+\renewcommand{\false}{\texttt{False}}
+
+    \end{tikzpicture}

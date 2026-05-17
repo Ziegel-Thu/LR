@@ -1,0 +1,717 @@
+\section{Proof of Theorem~\ref{thm:impossibility}}
+\label{sec:proof}
+\begin{proof}
+To show the claim, we explicitly construct a family of functions $f$ using a sequence of bijective functions.
+Let $d > 1$ be the dimensionality of the latent variable $\rvz$ and consider the function $g:\supp(\rvz)\to[0,1]^d$ defined by
+\[
+g_i(\vv) = \P(\rz_i\leq v_i) \quad \forall i =1, 2, \dots, d.
+\]
+Since $\P$ admits a density $p(\rvz)=\prod_ip(\rz_i)$, the function $g$ is bijective and, for almost every $\vv\in\supp(\rvz)$, it holds that $\frac{\partial g_i(\vv)}{\partial v_i}\neq 0$ for all $i$ and $\frac{\partial g_i(\vv)}{\partial v_j} = 0$ for all $i\neq j$.
+Furthermore, it is easy to see that, by construction, $g(\rvz)$ is a independent $d$-dimensional uniform distribution.
+Similarly, consider the function $h:(0,1]^d \to \R^d$ defined by
+\[
+h_i(\vv) = \psi^{-1}(v_i)\quad \forall i =1, 2, \dots, d,
+\]
+where $\psi(\cdot)$ denotes the cumulative density function of a standard normal distribution.
+Again, by definition, $h$ is bijective with $\frac{\partial h_i(\vv)}{\partial v_i}\neq 0$ for all $i$ and $\frac{\partial h_i(\vv)}{\partial v_j} = 0$ for all $i \neq j$.
+Furthermore, the random variable $h(g(\rvz))$ is a $d$-dimensional standard normal distribution.
+
+Let $\mA\in\R^{d\times d}$ be an arbitrary orthogonal matrix with $A_{ij}\neq0$ for all $i=1,2, \dots, d$ and $j=1, 2, \dots, d$. 
+An infinite family of such matrices can be constructed using a Householder transformation:
+Choose an arbitrary $\alpha\in(0, 0.5)$ and consider the vector $\vv$ with $v_1=\sqrt{\alpha}$ and $v_i=\sqrt{\frac{1-\alpha}{d-1}}$ for $i=2, 3, \dots, d$. 
+By construction, we have $\vv^T\vv = 1$ and both $v_i\neq0$ and $v_i\neq\sqrt{\frac12}$ for all $i=1, 2, \dots, d$.
+Define the matrix $\mA = \mI_d - 2 \vv\vv^T$ and note that $A_{ii} = 1 - 2v_i^2 \neq 0$ for all $1,2, \dots, d$ as well as $A_{ij} = -v_iv_j\neq0$ for all $i\neq j$.
+Furthermore, $\mA$ is orthogonal since 
+\begin{align*}
+\mA^T\mA = \left(\mI_d - 2 \vv\vv^T\right)^T\left(\mI_d - 2 \vv\vv^T\right) = \mI_d - 4 \vv\vv^T + 4 \vv(\vv^T\vv)\vv^T = \mI_d.
+\end{align*}
+
+Since $\mA$ is orthogonal, it is invertible and thus defines a bijective linear operator.
+The random variable $\mA h(g(\rvz))\in\R^d$ is hence an independent, multivariate standard normal distribution since the covariance matrix $\mA^T\mA$ is equal to $\mI_d$.
+
+Since $h$ is bijective, it follows that $h^{-1}(\mA h(g(\rvz)))$ is an independent $d$-dimensional uniform distribution.
+Define the function $f: \supp(\rvz)\to\supp(\rvz)$
+\[
+f(\vu) = g^{-1}(h^{-1}(\mA h(g(\vu))))
+\]
+and note that by definition $f(\rvz)$ has the same marginal distribution as $\rvz$ under $\P$, \ie, $\P(\rvz \leq \vu) = \P(f(\rvz) \leq \vu)$ for all $\vu$.
+Finally, for almost every $\vu\in\supp(\rvz)$, it holds that
+\[
+\frac{\partial f_i(\vu)}{\partial u_j} 
+= 
+\frac{A_{ij} \cdot\frac{\partial h_j(g(\vu))}{\partial v_j}\cdot \frac{\partial g_j(\vu)}{\partial u_j}}
+{\frac{\partial h_i(h_i^{-1}(\mA h(g(\vu)))}{\partial v_i} \cdot \frac{\partial g_i(g^{-1}(h^{-1}(\mA h(g(\vu)))))}{\partial v_i}}
+\neq 0,
+\]
+as claimed.
+Since the choice of $\mA$ was arbitrary, there exists an infinite family of such functions $f$.
+\end{proof}
+
+\section{Unsupervised learning of disentangled representations with VAEs}~\label{app:methods}
+Variants of variational autoencoders~\cite{kingma2013auto} are considered the state-of-the-art for unsupervised disentanglement learning. 
+One assumes a specific prior $\P(\rvz)$ on the latent space and then parameterizes the conditional probability $\P(\rvx|\rvz)$ with a deep neural network. 
+Similarly, the distribution $\P(\rvz|\rvx)$ is approximated using a variational distribution  $\Q(\rvz|\rvx)$, again parametrized using a deep neural network. One can then derive the following approximation to the maximum likelihood objective, 
+\begin{align}
+\max_{\phi, \theta}\quad \E_{p(\rvx)} [\E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] -  \KL(q_\phi(\rvz|\rvx) \| p(\rvz))]\label{eq:elbo}
+\end{align}
+which is also know as the evidence lower bound (ELBO). By carefully considering the KL term, one can encourage various properties of the resulting presentation. We will briefly review the main approaches. 
+\paragraph{Bottleneck capacity.}
+ \citet{higgins2016beta} propose the $\beta$-VAE, introducing a hyperparameter in front of the KL regularizer of vanilla VAEs. They maximize the following expression:
+\begin{align*}
+\E_{p(\rvx)} [\E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] - \beta \KL(q_\phi(\rvz|\rvx) \| p(\rvz))]
+\end{align*} 
+By setting $\beta > 1$, the encoder distribution will be forced to better match the factorized unit Gaussian prior. This procedure introduces additional constraints on the capacity of the latent bottleneck, encouraging the encoder to learn a disentangled representation for the data. 
+~\citet{burgess2018understanding} argue that when the bottleneck has limited capacity, the network will be forced to specialize on the factor of variation that most contributes to a small reconstruction error. Therefore, they propose to progressively increase the bottleneck capacity, so that the encoder can focus on learning one factor of variation at the time:
+\begin{align*}
+\E_{p(\rvx)} [\E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] - \gamma | \KL(q_\phi(\rvz|\rvx) \| p(\rvz)) - C |]
+\end{align*}
+where C is annealed from zero to some value which is large enough to produce good reconstruction. 
+In the following, we refer to this model as AnnealedVAE.
+
+\paragraph{Penalizing the total correlation.}
+Let $I(\rvx; \rvz)$ denote the mutual information between $\rvx$ and $\rvz$ and note that the second term in~\eqref{eq:elbo} can be rewritten as 
+\begin{align*}
+\E_{p(\rvx)} [\KL(q_\phi(\rvz|\rvx) \| p(\rvz))] = I(\rvx;\rvz) + \KL(q(\rvz) \| p(\rvz)).
+\end{align*}
+Therefore, when $\beta>1$, $\beta$-VAE penalizes the mutual information between the latent representation and the data, thus constraining the capacity of the latent space. Furthermore, it pushes $q(\rvz)$, the so called \textit{aggregated posterior}, to match the prior and therefore to factorize, given a factorized prior. 
+\citet{kim2018disentangling} argues that penalizing $I(\rvx;\rvz)$ is neither necessary nor desirable for disentanglement. The FactorVAE~\citep{kim2018disentangling} and the $\beta$-TCVAE~\citep{chen2018isolating} augment the VAE objective with an additional regularizer that specifically penalizes dependencies between the dimensions of the representation:
+\begin{align*}
+\E_{p(\rvx)} [\E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] -  \KL(q_\phi(\rvz|\rvx) \| p(\rvz))] - \gamma \KL(q(\rvz)\| \prod_{j=1}^d q(\rz_j)).
+\end{align*}
+This last term is also known as \textit{total correlation}~\citep{watanabe1960information}. The total correlation is intractable and vanilla Monte Carlo approximations require marginalization over the training set. \citep{kim2018disentangling} propose an estimate using the density ratio trick~\citep{nguyen2010estimating,sugiyama2012density} (FactorVAE). Samples from $\prod_{j=1}^d q(\rz_j)$ can be obtained shuffling samples from $q(\rvz)$~\citep{arcones1992bootstrap}. Concurrently, \citet{chen2018isolating} propose a tractable biased Monte-Carlo estimate for the total correlation ($\beta$-TCVAE).
+
+
+\paragraph{Disentangled priors.}
+\citet{kumar2017variational} argue that a disentangled generative model requires a disentangled prior. This approach is related to the total correlation penalty, but now the aggregated posterior is pushed to match a factorized prior. Therefore
+\begin{align*}
+&\E_{p(\rvx)} [ \E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] - \KL(q_\phi(\rvz|\rvx) \| p(\rvz))] - \lambda D(q(\rvz)\|p(\rvz)),
+\end{align*}
+where $D$ is some (arbitrary) divergence. Since this term is intractable when $D$ is the KL divergence, they propose to match the moments of these distribution. In particular, they regularize the deviation of either $\mathrm{Cov}_{p(\rvx)}[\mu_\phi(\rvx)]$ or $\mathrm{Cov}_{q_\phi}[\rvz]$ from the identity matrix in the two variants of the DIP-VAE. This results in maximizing either the DIP-VAE-I objective
+\begin{align*}
+\E_{p(\rvx)} [ \E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] - \KL(q_\phi(\rvz|\rvx) \| p(\rvz))] - \lambda_{od}\sum_{i\neq j} \left[\mathrm{Cov}_{p(\rvx)}[\mu_\phi(\rvx)]\right]_{ij}^2- \lambda_{d}\sum_{i} \left(\left[\mathrm{Cov}_{p(\rvx)}[\mu_\phi(\rvx)]\right]_{ii} - 1\right)^2
+\end{align*}
+or the DIP-VAE-II objective
+\begin{align*}
+&\E_{p(\rvx)} [ \E_{q_\phi(\rvz|\rvx)}[\log p_\theta(\rvx|\rvz)] - \KL(q_\phi(\rvz|\rvx) \| p(\rvz))] - \lambda_{od}\sum_{i\neq j} \left[\mathrm{Cov}_{q_\phi}[\rvz]\right]_{ij}^2- \lambda_{d}\sum_{i} \left(\left[\mathrm{Cov}_{q_\phi}[\rvz]\right]_{ii} - 1\right)^2.
+\end{align*}
+
+\clearpage
+\section{Implementation of metrics}\label{app:metrics}
+All our metrics consider the expected representation of training samples (except total correlation for which we also consider the sampled representation as described in Section~\ref{sec:results}).
+
+\paragraph{BetaVAE metric.} \looseness=-1\citet{higgins2016beta} suggest to fix a random factor of variation in the underlying generative model and to sample two mini batches of observations $\rvx$. 
+Disentanglement is then measured as the accuracy of a linear classifier that predicts the index of the fixed factor based on the coordinate-wise sum of absolute differences between the representation vectors in the two mini batches.
+We sample two batches of 64 points with a random factor fixed to a randomly sampled value across the two batches and the others varying randomly. 
+We compute the mean representations for these points and take the absolute difference between pairs from the two batches. 
+We then average these 64 values to form the features of a training (or testing) point. 
+We train a Scikit-learn logistic regression with default parameters on $\num{10000}$ points. 
+We test on $\num{5000}$ points.
+
+\paragraph{FactorVAE metric}
+\citet{kim2018disentangling} address several issues with this metric by using a majority vote classifier that predicts the index of the fixed ground-truth factor based on the index of the representation vector with the least variance.
+First, we estimate the variance of each latent dimension by embedding $\num{10000}$ random samples from the data set and we exclude collapsed dimensions with variance smaller than 0.05. 
+Second, we generate the votes for the majority vote classifier by sampling a batch of 64 points, all with a factor fixed to the same random value. 
+Third, we compute the variance of each dimension of their latent representation and divide by the variance of that dimension we computed on the data without interventions. 
+The training point for the majority vote classifier consists of the index of the dimension with the smallest normalized variance. 
+We train on $\num{10000}$ points and evaluate on $\num{5000}$ points.
+
+\paragraph{Mutual Information Gap.} 
+\citet{chen2018isolating} argue that the BetaVAE metric and the FactorVAE metric are neither general nor unbiased as they depend on some hyperparameters. 
+They compute the mutual information between each ground truth factor and each dimension in the computed representation $r(\rvx)$.
+For each ground-truth factor $\rz_k$, they then consider the two dimensions in $r(\rvx)$ that have the highest and second highest mutual information with $\rz_k$.
+The \emph{Mutual Information Gap (MIG)} is then defined as the average, normalized difference between the highest and second highest mutual information of each factor with the dimensions of the representation.
+The original metric was proposed evaluating the sampled representation. 
+Instead, we consider the mean representation, in order to be consistent with the other metrics. 
+We estimate the discrete mutual information by binning each dimension of the representations obtained from $\num{10000}$ points into 20 bins. 
+Then, the score is computed as follows:
+\begin{align*}
+\frac{1}{K}\sum_{k=1}^K \frac{1}{H_{\rz_k}}\left(I(\rv_{j_k}, \rz_k) - \max_{j\neq j_k} I(\rv_j, \rz_k)\right)
+\end{align*}
+Where $\rz_k$ is a factor of variation, $\rv_j$ is a dimension of the latent representation and $j_k = \argmax_j I(\rv_j,\rz_k)$.
+
+\paragraph{Modularity.}
+\citet{ridgeway2018learning} argue that two different properties of representations should be considered, i.e., \emph{Modularity} and \emph{Explicitness}.
+In a modular representation each dimension of $r(\rvx)$ depends on at most a single factor of variation. 
+In an explicit representation, the value of a factor of variation is easily predictable (i.e. with a linear model) from $r(\rvx)$. 
+They propose to measure the Modularity as the average normalized squared difference of the mutual information of the factor of variations with the highest and second-highest mutual information with a dimension of $r(\rvx)$.
+They measure Explicitness as the ROC-AUC of a one-versus-rest logistic regression classifier trained to predict the factors of variation.
+In this study, we focus on Modularity as it is the property that corresponds to disentanglement.
+For the modularity score, we sample $\num{10000}$ points for which we obtain the latent representations. 
+We discretize these points into 20 bins and compute the mutual information between representations and the values of the factors of variation. 
+These values are stored in a matrix $\rvm$. 
+For each dimension of the representation $i$, we compute a vector $\rvt_i$ as:
+\begin{align*}
+t_{i,f} = \begin{cases} \theta_i & \mbox{if } f=\argmax_g m_{i,g}\\ 0 & \mbox{otherwise}\end{cases}
+\end{align*}
+ where $\theta_i = \max_g m_{ig}$. The modularity score is the average over the dimensions of the representation of $1-\delta_i$ where:
+ \begin{align*}
+ \delta_i = \frac{\sum_f (m_{if}-t_{if})^2}{\theta_i^2(N-1)}
+ \end{align*}
+ and N is the number of factors. 
+ 
+ \paragraph{DCI Disentanglement.}
+ \citet{eastwood2018framework} consider three properties of representations, i.e., \emph{Disentanglement}, \emph{Completeness} and \emph{Informativeness}.
+First,~\citet{eastwood2018framework} compute the importance of each dimension of the learned representation for predicting a factor of variation. 
+The predictive importance of the dimensions of $r(\rvx)$ can be computed with a Lasso or a Random Forest classifier.
+Disentanglement is the average of the difference from one of the entropy of the probability that a dimension of the learned representation is useful for predicting a factor weighted by the relative importance of each dimension. 
+Completeness, is the average of the difference from one of the entropy of the probability that a factor of variation is captured by a dimension of the learned representation. 
+Finally, the Informativeness can be computed as the prediction error of predicting the factors of variations.
+ We sample $\num{10000}$ and $\num{5000}$ training and test points respectively. 
+ For each factor, we fit gradient boosted trees from Scikit-learn with the default setting. 
+ From this model, we extract the importance weights for the feature dimensions. 
+ We take the absolute value of these weights and use them to form the importance matrix $R$, whose rows correspond to factors and columns to the representation. 
+ To compute the disentanglement score, we first subtract from 1 the entropy of each column of this matrix (we treat the columns as a distribution by normalizing them). 
+ This gives a vector of length equal to the dimensionality of the latent space. 
+ Then, we compute the relative importance of each dimension by $\rho_i = \sum_j R_{ij}/\sum_{ij} R_{ij}$ and the disentanglement score as $\sum_i \rho_i (1-H(R_i))$. 
+ 
+ \paragraph{SAP score.}
+ \citet{kumar2017variational} propose to compute the $R^2$ score of the linear regression predicting the factor values from each dimension of the learned representation. 
+For discrete factors, they propose to train a classifier. 
+The \emph{Separated Attribute Predictability (SAP)} score is the average difference of the prediction error of the two most predictive latent dimensions for each factor.
+ We sample $\num{10000}$ points for training and $\num{5000}$ for testing.
+ We then compute a score matrix containing the prediction error on the test set for a linear SVM with $C=0.01$ predicting the value of a factor from a single latent dimension. 
+ The SAP score is computed as the average across factors of the difference between the top two most predictive latent dimensions.
+ 
+ \paragraph{Downstream task.} 
+ We sample training sets of different sizes: $\num{10}$, $\num{100}$, $\num{1000}$ and $\num{10000}$ points. We always evaluate on $\num{5000}$ samples. We consider as a downstream task the prediction of the values of each factor from $r(\rvx)$. For each factor we fit a different model and report then report the average test accuracy across factors. We consider two different models. First, we train a cross validated logistic regression from Scikit-learn with 10 different values for the regularization strength ($Cs = 10$) and $5$ folds. Finally, we train a gradient boosting classifier from Scikit-learn with default parameters.
+ 
+ \paragraph{Total correlation based on fitted Gaussian.}
+ We sample $\num{10000}$ points and obtain their latent representation $r(\rvx)$ by either sampling from the encoder distribution of by taking its mean. We then compute the mean $\mu_{r(\rvx)}$ and covariance matrix $\Sigma_{r(\rvx)}$ of these points and compute the total correlation of a Gaussian with mean $\mu_{r(\rvx)}$ and covariance matrix $\Sigma_{r(\rvx)}$, i.e.,
+ \begin{align*}
+ \KL\left(\mathcal{N}(\mu_{r(\rvx)},\Sigma_{r(\rvx)})\Big\|\prod_{j}\mathcal{N}(\mu_{r(\rvx)_j},\Sigma_{r(\rvx)_{jj}})\right)
+ \end{align*}
+ where $j$ indexes the dimensions in the latent space.
+ We choose this approach for the following reasons:
+ In this study, we compute statistics of $r(\rvx)$ which can be either sampled from the probabilistic encoder or taken to be its mean. We argue that estimating the total correlation as in~\citep{kim2018disentangling} is not suitable for this comparison as it consistently underestimate the true value (see Figure 7 in ~\citep{kim2018disentangling}) and depends on a non-convex optimization procedure (for fitting the discriminator). The estimate of~\citep{chen2018isolating} is also not suitable as the mean representation is a deterministic function for the data, therefore we cannot use the encoder distribution for the estimate. 
+ Furthermore, we argue that the total correlation based on the fitted Gaussian provides a simple and robust way to detect if a representation is not factorizing based on the first two moments.
+ In particular, if it is high, it is a strong signal that the representation is not factorizing (while a low score may not imply the opposite). 
+ We note that this procedure is similar to the penalty of DIP-VAE-I. Therefore, it is not surprising that DIP-VAE-I achieves a low score for the mean representation.
+\clearpage
+ \section{Experimental conditions and guiding principles.}~\label{app:guiding_principles}
+In our study, we seek controlled, fair and reproducible experimental conditions. 
+We consider the case in which we can sample from a well defined and known ground-truth generative model by first sampling the factors of variations from a distribution $P(\rvz)$ and then sampling an observation from $P(\rvx | \rvz)$. 
+Our experimental protocol works as follows:
+During training, we only observe the samples of $\rvx$ obtained by marginalizing $P(\rvx | \rvz)$ over $P(\rvz)$. After training, we obtain a representation $r(\rvx)$ by either taking a sample from the probabilistic encoder $Q(\rvz|\rvx)$ or by taking its mean. 
+Typically, disentanglement metrics consider the latter as the representation $r(\rvx)$. 
+During the evaluation, we assume to have access to the whole generative model, i.e. we can draw samples from both $P(\rvz)$ and $P(\rvx | \rvz)$. 
+In this way, we can perform interventions on the latent factors as required by certain evaluation metrics. 
+We explicitly note that we effectively consider the statistical learning problem where we optimize the loss and the metrics on the known data generating distribution. 
+As a result, we do not use separate train and test sets but always take i.i.d. samples from the known ground-truth distribution.
+This is justified as the statistical problem is well defined and it allows us to remove the additional complexity of dealing with overfitting and empirical risk minimization.
+\section{Limitations of our study.}\label{app:limitations}
+While we aim to provide a useful and fair experimental study, there are clear limitations to the conclusions that can be drawn from it due to design choices that we have taken.
+In all these choices, we have aimed to capture what is considered the state-of-the-art inductive bias in the community.
+
+On the data set side, we only consider images with a heavy focus on synthetic images. 
+We do not explore other modalities and we only consider the toy scenario in which we have access to a data generative process with uniformly distributed factors of variations. 
+Furthermore, all our data sets have a small number of independent discrete factors of variations without any confounding variables.
+
+For the methods, we only consider the inductive bias of convolutional architectures. 
+We do not test fully connected architectures or additional techniques such as skip connections. 
+Furthermore, we do not explore different activation functions, reconstruction losses or different number of layers. 
+We also do not vary any other hyperparameters other than the regularization weight. 
+In particular, we do not evaluate the role of different latent space sizes, optimizers and batch sizes. 
+We do not test the sample efficiency of the metrics but simply set the size of the train and test set to large values.
+
+Implementing the different disentanglement methods and metrics has proven to be a difficult endeavour.
+Few ``official'' open source implementations are available and there are many small details to consider.
+We take a best-effort approach to these implementations and implemented all the methods and metrics from scratch as any sound machine learning practitioner might do based on the original papers.
+When taking different implementation choices than the original papers, we explicitly state and motivate them.
+\section{Differences with previous implementations.}\label{app:differences}
+As described above, we use a single choice of architecture, batch size and optimizer for all the methods which might deviate from the settings considered in the original papers.
+However, we argue that unification of these choices is the only way to guarantee a fair comparison among the different methods such that valid conclusions may be drawn in between methods.
+The largest change is that for DIP-VAE and for $\beta$-TCVAE we used a batch size of 64 instead of 400 and 2048 respectively.
+However, \citet{chen2018isolating} shows in Section H.2 of the Appendix that the bias in the mini-batch estimation of the total correlation does not  significantly affect the performances of their model even with small batch sizes.
+For DIP-VAE-II, we did not implement the additional regularizer on the third order central moments since no implementation details are provided and since this regularizer is only used on specific data sets.
+
+Our implementations of the disentanglement metrics deviate from the implementations in the original papers as follows:
+First, we strictly enforce that all factors of variations are treated as discrete variables as this corresponds to the assumed ground-truth model in all our data sets.
+Hence, we used classification instead of regression for the SAP score and the disentanglement score of~\citep{eastwood2018framework}.
+This is important as it does not make sense to use regression on true factors of variations that are discrete (e.g., shape on dSprites).
+Second, wherever possible, we resorted to using the default, well-tested Scikit-learn~\citep{scikitlearn} implementations instead of using custom implementations with potentially hard to set hyperparameters.
+Third, for the Mutual Information Gap~\citep{chen2018isolating}, we estimate the \textit{discrete} mutual information (as opposed to continuous) on the \textit{mean} representation (as opposed to sampled) on a \textit{subset} of the samples (as opposed to the whole data set).
+We argue that this is the correct choice as the mean is usually taken to be the representation.
+Hence, it would be wrong to consider the full Gaussian encoder or samples thereof as that would correspond to a different representation.
+Finally, we fix the number of sampled train and test points across all metrics to a large value to ensure robustness. 
+\section{Main experiment hyperparameters}\label{app:hyperparameters}
+In our study, we fix all hyperparameters except one per each model. 
+Model specific hyperparameters can be found in Table~\ref{table:sweep_main}. 
+The common architecture is depicted in Table~\ref{table:architecture_main} along with the other fixed hyperparameters in Table~\ref{table:fixed_param_main}. 
+For the discriminator in FactorVAE we use the architecture in Table~\ref{table:discriminator_main} with hyperparameters in Table~\ref{table:param_discriminator_main}. 
+All the hyperparameters for which we report single values were not varied and are selected based on the literature. 
+\begin{table*}
+\centering
+\caption{Encoder and Decoder architecture for the main experiment.}
+\vspace{2mm}
+\begin{tabular}{l  l}
+\toprule
+\textbf{Encoder} & \textbf{Decoder}\\
+\midrule 
+Input: $64\times 64 \times$ number of channels & Input: $\R^{10}$\\
+$4\times 4$ conv, 32 ReLU, stride 2 & FC, 256 ReLU\\
+$4\times 4$ conv, 32 ReLU, stride 2 & FC, $4\times 4\times 64$ ReLU\\
+$4\times 4$ conv, 64 ReLU, stride 2 & $4\times 4$ upconv, 64 ReLU, stride 2\\
+$4\times 4$ conv, 64 ReLU, stride 2 & $4\times 4$ upconv, 32 ReLU, stride 2\\
+FC 256, F2 $2\times 10$ & $4\times 4$ upconv, 32 ReLU, stride 2\\
+& $4\times 4$ upconv, number of channels, stride 2\\
+\bottomrule
+\end{tabular}
+\label{table:architecture_main}
+\end{table*}
+
+\begin{table*}
+\centering
+\caption{Model's hyperparameters. We allow a sweep over a single hyperparameter for each model.}
+\vspace{2mm}
+\begin{tabular}{l l  l}
+\toprule
+\textbf{Model} & \textbf{Parameter} & \textbf{Values}\\
+\midrule 
+$\beta$-VAE & $\beta$ & $[1,\ 2,\ 4,\ 6,\ 8,\ 16]$\\
+AnnealedVAE & $c_{max}$ & $[5,\ 10,\ 25,\ 50,\ 75,\ 100]$\\
+& iteration threshold & $100000$\\
+& $\gamma$ & $1000$\\
+FactorVAE & $\gamma$ & $[10,\ 20,\ 30,\ 40,\ 50,\ 100]$\\
+DIP-VAE-I & $\lambda_{od}$ & $[1,\ 2,\ 5,\ 10,\ 20,\ 50]$\\
+&$\lambda_{d}$ & $10\lambda_{od}$\\
+DIP-VAE-II & $\lambda_{od}$ & $[1,\ 2,\ 5,\ 10,\ 20,\ 50]$\\
+&$\lambda_{d}$ & $\lambda_{od}$\\
+$\beta$-TCVAE & $\beta$ & $[1,\ 2,\ 4,\ 6,\ 8,\ 10]$\\
+\bottomrule
+\end{tabular}
+\label{table:sweep_main}
+\end{table*}
+
+\begin{table}[t]\caption{Other fixed hyperparameters.}
+\centering
+  \begin{subtable}[t]{0.3\linewidth}
+    \centering
+    \small
+    \caption{Hyperparameters common to each of the considered methods.}
+    \begin{tabular}{l  l}
+      \toprule
+      \textbf{Parameter} & \textbf{Values}\\
+      \midrule 
+      Batch size & $64$\\
+      Latent space dimension & $10$\\
+      Optimizer & Adam\\
+      Adam: beta1 & 0.9\\
+      Adam: beta2 & 0.999\\
+      Adam: epsilon & 1e-8\\
+      Adam: learning rate & 0.0001\\
+      Decoder type & Bernoulli\\
+      Training steps & 300000\\
+      \bottomrule
+    \end{tabular}
+    \label{table:fixed_param_main}
+  \end{subtable}%
+  \hspace{5mm}
+  \begin{subtable}[t]{0.3\linewidth}
+    \centering
+    \caption{Architecture for the discriminator in FactorVAE.}
+    \begin{tabular}{l  }
+      \toprule
+      \textbf{Discriminator} \\
+      \midrule 
+      FC, 1000 leaky ReLU\\
+      FC, 1000 leaky ReLU\\
+      FC, 1000 leaky ReLU\\
+      FC, 1000 leaky ReLU\\
+      FC, 1000 leaky ReLU\\
+      FC, 1000 leaky ReLU\\
+      FC, 2 \\
+      \bottomrule
+    \end{tabular}
+    \label{table:discriminator_main}
+  \end{subtable}%
+  \hspace{5mm}
+  \begin{subtable}[t]{.3\linewidth}
+    \centering
+    \caption{Parameters for the discriminator in FactorVAE.}
+    \begin{tabular}{l  l}
+      \toprule
+      \textbf{Parameter} & \textbf{Values}\\
+      \midrule 
+      Batch size & $64$\\
+      Optimizer & Adam\\
+      Adam: beta1 & 0.5\\
+      Adam: beta2 & 0.9\\
+      Adam: epsilon & 1e-8\\
+      Adam: learning rate & 0.0001\\
+      \bottomrule
+    \end{tabular}
+    \label{table:param_discriminator_main}
+  \end{subtable}
+\end{table}
+
+\section{Data sets and preprocessing}\label{app:datasets}
+All the data sets contains images with pixels between \num{0} and \num{1}. 
+\textbf{Color-dSprites:} Every time we sample a point, we also sample a random scaling for each channel uniformly between \num{0.5} and \num{1}. 
+\textbf{Noisy-dSprites:} Every time we sample a point, we fill the background with uniform noise. 
+\textbf{Scream-dSprites:} Every time we sample a point, we sample a random $64\times 64$ patch of \textit{The Scream} painting. We then change the color distribution by adding a random uniform number to each channel and divide the result by two. Then, we embed the dSprites shape by inverting the colors of each of its pixels.
+
+
+\newpage
+\section{Detailed experimental results}\label{app:results}
+Given the breadth of the experimental study, we summarized our key findings in Section~\ref{sec:results} and presented figures that we picked to be representative of our results.
+This section contains a self-contained presentation of all our experimental results.
+In particular, we present a complete set of plots for the different methods, data sets and disentanglement metrics.
+
+\subsection{Can one achieve a good reconstruction error across data sets and models?}
+First, we check for each data set that we manage to train models that achieve reasonable reconstructions. 
+Therefore, for each data set we sample a random model and show real samples next to their reconstructions.
+The results are depicted in Figure~\ref{figure:reconstructions}. 
+As expected, the additional variants of dSprites with continuous noise variables are harder than the original data set.
+On Noisy-dSprites and Color-dSprites the models produce reasonable reconstructions with the noise on Noisy-dSprites being ignored.
+Scream-dSprites is even harder and we observe that the shape information is lost.
+On the other data sets, we observe that reconstructions are blurry but objects are distinguishable. 
+SmallNORB seems to be the most challenging data set.
+\begin{figure}[p!]
+  \centering
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/DIP_VAE_I_dSprites.jpg}}\hspace{2mm}
+    \caption{DIP-VAE-I trained on dSprites.}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/beta_VAE_noisy_dSprites.jpg}}
+    \caption{$\beta$-VAE trained on Noisy-dSprites.}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/Factor_VAE_color_dSprites.jpg}}\hspace{2mm}
+    \caption{FactorVAE trained on Color-dSprites.}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/factor_VAE_scream.jpg}}
+    \caption{FactorVAE trained on Scream-dSprites.}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/annealed_VAE_shapes3d.jpg}}\hspace{2mm}
+    \caption{AnneaeledVAE trained on Shapes3D.}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/beta_TC_VAE_smallNORB.jpg}}
+    \caption{$\beta$-TCVAE trained on SmallNORB.}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    {\adjincludegraphics[scale=0.43, trim={0 0 {.5\width} {.5\height}}, clip]{figures/DIP_VAE_II_cars.jpg}}
+    \caption{Reconstructions for a DIP-VAE-II trained on Cars3D.}
+  \end{subfigure}
+  \caption{Reconstructions for different data sets and methods. Odd columns show real samples and even columns their reconstruction. As expected, the additional variants of dSprites with continuous noise variables are harder than the original data set.
+    On Noisy-dSprites and Color-dSprites the models produce reasonable reconstructions with the noise on Noisy-dSprites being ignored.
+    Scream-dSprites is even harder and we observe that the shape information is lost.
+    On the other data sets, we observe that reconstructions are blurry but objects are distinguishable.\label{figure:reconstructions}}
+\end{figure}
+
+
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/TCsampled}
+\caption{Total correlation of sampled representation plotted against regularization strength for different data sets and approaches (except AnnealedVAE). The total correlation of the sampled representation decreases as the regularization strength is increased.}\label{figure:TCsampled}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/TCmean}
+\caption{Total correlation of mean representation plotted against regularization strength for different data sets and approaches (except AnnealedVAE). The total correlation of the mean representation does not necessarily decrease as the regularization strength is increased.}\label{figure:TCmean}
+\end{figure}
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/TCsampledmean}
+\caption{Log total correlation of mean vs sampled representations. For a large number of models, the total correlation of the mean representation is higher than that of the sampled representation.}\label{figure:TCmeansampled}
+\end{figure}
+
+\subsection{Can current methods enforce a uncorrelated aggregated posterior and representation?}\label{app:factorizing_q_tc}
+We investigate whether the considered unsupervised disentanglement approaches are effective at enforcing a factorizing and thus uncorrelated aggregated posterior.
+For each trained model, we sample $\num{10000}$ images and compute a sample from the corresponding approximate posterior. 
+We then fit a multivariate Gaussian distribution over these \num{10000} samples by computing the empirical mean and covariance matrix.
+Finally, we compute the total correlation of the fitted Gaussian and report the median value for each data set, method and hyperparameter value.
+
+Figure~\ref{figure:TCsampled} shows the total correlation of the sampled representation plotted against the regularization strength for each data set and method except AnnealedVAE.
+On all data sets except SmallNORB, we observe that plain vanilla variational autoencoders (i.e. the $\beta$-VAE model with $\beta=1$) exhibit the highest total correlation.
+For $\beta$-VAE and $\beta$-TCVAE, it can be clearly seen that the total correlation of the sampled representation decreases on all data sets as the regularization strength (in the form of $\beta$) is increased.
+The two variants of DIP-VAE exhibit low total correlation across the data sets except DIP-VAE-I which incurs a slightly higher total correlation on SmallNORB compared to a vanilla VAE.
+Increased regularization in the DIP-VAE objective also seems to lead a reduced total correlation, even if the effect is not as pronounced as for $\beta$-VAE and $\beta$-TCVAE.
+While FactorVAE achieves a low total correlation on all data sets except on SmallNORB, we observe that the total correlation does not seem to decrease with increasing regularization strength. 
+We further observe that AnnealedVAE (shown in Figure~\ref{figure:TCsampledApp}) is much more sensitive to the regularization strength.
+However, on all data sets except Scream-dSprites (on which AnnealedVAE performs poorly), the total correlation seems to decrease with increased regularization strength.
+
+While many of the considered methods aim to enforce a factorizing aggregated posterior, they use the mean vector of the Gaussian encoder as the representation and not a sample from the Gaussian encoder.
+This may seem like a minor, irrelevant modification; however, it is not clear whether a factorizing aggregated posterior also ensures that the dimensions of the mean representation are uncorrelated.
+To test whether this is true, we compute the mean of the Gaussian encoder for the same \num{10000} samples, fit a multivariate Gaussian and compute the total correlation of that fitted Gaussian.
+Figure~\ref{figure:TCmean} shows the total correlation of the mean representation plotted against the regularization strength for each data set and method except AnnealedVAE.
+We observe that, for $\beta$-VAE and $\beta$-TCVAE, increased regularization leads to a substantially increased total correlation of the mean representations.
+This effect can also be observed for for FactorVAE, albeit in a less extreme fashion.
+For DIP-VAE-I, we observe that the total correlation of the mean representation is consistently low.
+This is not surprising as the DIP-VAE-I objective directly optimizes the covariance matrix of the mean representation to be diagonal which implies that the corresponding total correlation (as we compute it) is low.
+The DIP-VAE-II objective which enforces the covariance matrix of the sampled representation to be diagonal seems to lead to a factorized mean representation on some data sets (for example Shapes3D and Cars3d), but also seems to fail on others (dSprites).
+For AnnealedVAE (shown in Figure~\ref{figure:TCmeanApp}), we overall observe mean representations with a very high total correlation.
+In Figure~\ref{figure:TCmeansampled}, we further plot the log total correlations of the sampled representations versus the mean representations for each of the trained models.
+It can be clearly seen that for a large number of models, the total correlation of the mean representations is much higher than that of the sampled representations. The same trend can be seen computing the average discrete mutual information of the representation. In this case, the DIP-VAE-I exhibit increasing mutual information in both the mean and sampled representation. This is to be expected as DIP-VAE-I enforces a variance of one for the mean representation. We remark that as the regularization terms and hyperparameter values are different for different losses, one should not draw conclusions from comparing different models at nominally the same regularization strength. From these plots one can only compare the effect of increasing the regularization in the different models.
+
+\paragraph{Implications.}
+Overall, these results lead us to conclude with minor exceptions that the considered methods are effective at enforcing an aggregated posterior whose individual dimensions are not correlated but that this does not seem to imply that the dimensions of the mean representation (usually used for representation) are uncorrelated.
+
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/dsprites_metrics_scatter}
+\caption{Pairwise scatter plots of different disentanglement metrics on dSprites. All the metrics except Modularity appear to be correlated. The strongest correlation seems to be between MIG and DCI Disentanglement.}\label{figure:dsprites_metrics_scatter}
+\end{figure}
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/metrics_rank_correlation}
+\caption{Rank correlation of different metrics on different data sets. 
+Overall, we observe that all metrics except Modularity seem to be strongly correlated on the data sets dSprites, Color-dSprites and Scream-dSprites and mildly on the other data sets.
+ There appear to be two pairs among these metrics that capture particularly similar notions: the BetaVAE and the FactorVAE score as well as the Mutual Information Gap and DCI Disentanglement.
+}\label{figure:metrics_rank_correlation}
+\end{figure}
+
+
+
+
+ \subsection{How much do existing disentanglement metrics agree?}
+ \label{app:metrics_agreement}
+ As there exists no single, common definition of disentanglement, an interesting question is to see how much different proposed metrics agree.
+ Figure~\ref{figure:dsprites_metrics_scatter} shows pairwise scatter plots of the different considered metrics on dSprites where each point corresponds to a trained model, while Figure~\ref{figure:metrics_rank_correlation} shows the Spearman rank correlation between different disentanglement metrics on different data sets.
+ Overall, we observe that all metrics except Modularity seem to be correlated strongly on the data sets dSprites, Color-dSprites and Scream-dSprites and mildly on the other data sets.
+ There appear to be two pairs among these metrics that capture particularly similar notions: the BetaVAE and the FactorVAE score as well as the Mutual Information Gap and DCI Disentanglement.
+ 
+ \paragraph{Implication.} 
+ All disentanglement metrics except Modularity appear to be correlated. However, the level of correlation changes between different data sets.
+ 
+ 
+ \begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/scores_vs_methods.pdf}
+\caption{Score for each method for each score (column) and data set (row). Models are abbreviated (0=$\beta$-VAE, 1=FactorVAE, 2=$\beta$-TCVAE, 3=DIP-VAE-I, 4=DIP-VAE-II, 5=AnnealedVAE). The scores are heavily overlapping and we do not observe a consistent pattern. We conclude that hyperparameters matter more than the model choice.}\label{figure:score_vs_method}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/random_seed_effect_Cars3D}
+\caption{Distribution of scores for different models, hyperparameters and regularization strengths on Cars3D. We clearly see that randomness (in the form of different random seeds) has a substantial impact on the attained result and that a good run with a bad hyperparameter can beat a bad run with a good hyperparameter in many cases.}\label{figure:random_seed_effect_Cars3D}
+\end{figure}
+
+\subsection{How important are different models and hyperparameters for disentanglement?}\label{app:hyper_importance}
+The primary motivation behind the considered methods is that they should lead to improved disentanglement scores.
+This raises the question how disentanglement is affected by the model choice, the hyperparameter selection and randomness (in the form of different random seeds).
+To investigate this, we compute all the considered disentanglement metrics for each of our trained models.
+In Figure~\ref{figure:score_vs_method}, we show the range of attainable disentanglement scores for each method on each data set.
+We observe that these ranges are heavily overlapping for different models leading us to (qualitatively) conclude that the choice of hyperparameters and the random seed seems to be substantially more important than the choice of objective function. 
+While certain models seem to attain better maximum scores on specific data sets and disentanglement metrics, we do not observe any consistent pattern that one model is consistently better than the other.
+Furthermore, we note that in our study we have fixed the range of hyperparameters a priori to six different values for each model and did not explore additional hyperparameters based on the results (as that would bias our study).
+However, this also means that specific models may have performed better than in Figure~\ref{figure:score_vs_method} if we had chosen a different set of hyperparameters.
+\begin{table}
+\caption{Variance of the disentanglement scores explained by the objective function or its cartesian product with the hyperparameters. The variance explained is computed regressing using ordinary least squares.}\label{table:variance_explained}
+\vspace{2mm}
+\begin{subtable}{\textwidth}
+\centering
+\caption{Percentage of variance explained regressing the disentanglement scores on the different data sets from the objective function only. }
+\begin{tabular}{lrrrrrr}
+\toprule
+{} &  BetaVAE Score &  DCI Disentanglement &  FactorVAE Score &  MIG &  Modularity &  SAP \\
+\midrule
+Cars3D          &             1\% &                  36\% &              26\% &  34\% &         37\% &  13\% \\
+Color-dSprites  &            30\% &                  39\% &              52\% &  26\% &         23\% &  29\% \\
+Noisy-dSprites  &            17\% &                  21\% &              17\% &  11\% &         41\% &   6\% \\
+Scream-dSprites &            89\% &                  50\% &              76\% &  45\% &         60\% &  56\% \\
+Shapes3D        &            31\% &                  21\% &              14\% &  20\% &         26\% &  10\% \\
+SmallNORB       &            68\% &                  71\% &              58\% &  71\% &         62\% &  62\% \\
+dSprites        &            29\% &                  41\% &              47\% &  26\% &         29\% &  31\% \\
+\bottomrule
+\end{tabular}
+\label{table:variance_explained_without_reg}
+\end{subtable}
+\begin{subtable}{\textwidth}
+\centering
+\vspace{2mm}
+\caption{Percentage of variance explained regressing the disentanglement scores on the different data sets from the Cartesian product of objective function and regularization strength. }
+\begin{tabular}{lrrrrrr}
+\toprule
+{} &  BetaVAE Score &  DCI Disentanglement &  FactorVAE Score &  MIG &  Modularity &  SAP \\
+\midrule
+Cars3D          &             4\% &                  69\% &              42\% &  59\% &         51\% &  17\% \\
+Color-dSprites  &            69\% &                  80\% &              61\% &  76\% &         40\% &  56\% \\
+Noisy-dSprites  &            26\% &                  42\% &              25\% &  29\% &         50\% &  20\% \\
+Scream-dSprites &            93\% &                  74\% &              83\% &  66\% &         68\% &  75\% \\
+Shapes3D        &            61\% &                  78\% &              53\% &  59\% &         49\% &  35\% \\
+SmallNORB       &            87\% &                  89\% &              81\% &  88\% &         72\% &  82\% \\
+dSprites        &            59\% &                  77\% &              54\% &  72\% &         39\% &  56\% \\
+\bottomrule
+\end{tabular}
+\label{table:variance_explained_with_reg}
+\end{subtable}
+\end{table}
+In Figure~\ref{figure:random_seed_effect_Cars3D}, we further show the impact of randomness in the form of random seeds on the disentanglement scores.
+Each violin plot shows the distribution of the disentanglement metric across all 50 trained models for each model and hyperparameter setting on Cars3D.
+We clearly see that randomness (in the form of different random seeds) has a substantial impact on the attained result and that a good run with a bad hyperparameter can beat a bad run with a good hyperparameter in many cases.
+
+Finally, we perform a variance analysis by trying to predict the different disentanglement scores using ordinary least squares for each data set:
+If we allow the score to depend only on the objective function (categorical variable), we are only able to explain $37\%$ of the variance of the scores on average. 
+Similarly, if the score depends on the Cartesian product of objective function and regularization strength (again categorical), we are able to explain $59\%$ of the variance while the rest is due to the random seed. In Table~\ref{table:variance_explained}, we report the percentage of variance explained for the different metrics in each data set considering the regularization strength or not. 
+
+\textbf{Implication.} 
+The disentanglement scores of unsupervised models are heavily influenced by randomness (in the form of the random seed) and the choice of the hyperparameter (in the form of the regularization strength). The objective function appears to have less impact.
+
+
+
+\subsection{Are there reliable recipes for model selection?}\label{app:hyper_selection}
+In this section, we investigate how good hyperparameters can be chosen and how we can distinguish between good and bad training runs. 
+In this paper, we advocate that model selection \emph{should not} depend on the considered disentanglement score for the following reasons:
+The point of unsupervised learning of disentangled representation is that there is no access to the labels as otherwise we could incorporate them and would have to compare to semi-supervised and fully supervised methods.
+All the disentanglement metrics considered in this paper require a substantial amount of ground-truth labels or the full generative model (for example for the BetaVAE and the FactorVAE metric).
+Hence, one may substantially bias the results of a study by tuning hyperparameters based on (supervised) disentanglement metrics. 
+Furthermore, we argue that it is not sufficient to fix a set of hyperparameters \emph{a priori} and then show that one of those hyperparameters and a specific random seed achieves a good disentanglement score as it amounts to showing the existence of a good model, but does not guide the practitioner in finding it.
+Finally, in many practical settings, we might not even have access to adequate labels as it may be hard to identify the true underlying factor of variations, in particular, if we consider data modalities that are less suitable to human interpretation than images.
+
+In the remainder of this section, we hence investigate and assess different ways how hyperparameters and good model runs could be chosen.
+In this study, we focus on choosing the learning model and the regularization strength corresponding to that loss function.
+However, we note that in practice this problem is likely even harder as a practitioner might also want to tune other modeling choices such architecture or optimizer.
+ 
+\paragraph{General recipes for hyperparameter selection.}
+We first investigate whether we may find generally applicable ``rules of thumb'' for choosing the hyperparameters.
+For this, we plot in Figure~\ref{figure:score_vs_hyp} different disentanglement metrics against different regularization strengths for each model and each data set.
+The values correspond to the median obtained values across 50 random seeds for each model, hyperparameter and data set.
+There seems to be no model dominating all the others and for each model there does not seem to be a consistent strategy in choosing the regularization strength to maximize disentanglement scores.
+Furthermore, even if we could identify a good objective function and corresponding hyperparameter value, we still could not distinguish between a good and a bad training run.
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/scores_vs_regularization}
+\caption{Score vs hyperparameters for each score (column) and data set (row). There seems to be no model dominating all the others and for each model there does not seem to be a consistent strategy in choosing the regularization strength.}\label{figure:score_vs_hyp}
+\end{figure}
+
+ 
+\paragraph{Model selection based on unsupervised scores.}
+Another approach could be to select hyperparameters based on unsupervised scores such as the reconstruction error, the KL divergence between the prior and the approximate posterior, the Evidence Lower Bound or the estimated total correlation of the sampled representation.
+This would have the advantage that we could select specific trained models and not just good hyperparameter settings whose median trained model would perform well.
+To test whether such an approach is fruitful, we compute the rank correlation between these unsupervised metrics and the disentanglement metrics and present it in Figure~\ref{figure:unsupervised_metrics}.
+While we do observe some correlations, no clear pattern emerges which leads us to conclude that this approach is unlikely to be successful in practice.
+\begin{table}[t]
+    \centering
+    \caption{Probability of outperforming random model selection on a different random seed. A random disentanglement metric and data set is sampled and used for model selection. That model is then compared to a randomly selected model: (i) on the same metric and data set, (ii) on the same metric and a random different data set, (iii) on a random different metric and the same data set, and (iv) on a random different metric and a random different data set. The results are averaged across $\num{10000}$ random draws.}
+    \vspace{2mm}
+\begin{tabular}{lrr}
+\toprule
+{} &  Random different data set &  Same data set \\
+\midrule
+Random different metric &                      54.9\% &          62.6\% \\
+Same metric             &                      59.3\% &          80.7\% \\
+\bottomrule
+\end{tabular}
+
+    \label{table:app_random_model}
+\end{table}
+
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/disentanglement_vs_unsupervised}
+\caption{Rank correlation between unsupervised scores and supervised disentanglement metrics. 
+The unsupervised scores we consider do not seem to be useful for model selection.}\label{figure:unsupervised_metrics}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/transfer_across_datasets}
+\caption{Rank-correlation of different disentanglement metrics across different data sets. Good hyperparameters only seem to transfer between dSprites and Color-dSprites but not in between the other data sets.}\label{figure:dataset_vs_dataset}
+\end{figure}
+
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/dsprites_vs_other_scores_by_dataset}
+\caption{Disentanglement scores on dSprites vs other data sets. Good hyperparameters only seem to transfer consistently from dSprites to Color-dSprites.}\label{figure:TransferPairs}
+\end{figure}
+
+ 
+\paragraph{Hyperparameter selection based on transfer.}
+The final strategy for hyperparameter selection that we consider is based on transferring good settings across data sets.
+The key idea is that good hyperparameter settings may be inferred on data sets where we have labels available (such as dSprites) and then applied to novel data sets.
+To test this idea, we plot in Figure~\ref{figure:TransferPairs} the different disentanglement scores obtained on dSprites against the scores obtained on other data sets.
+To ensure robustness of the results, we again consider the median across all 50 runs for each model, regularization strength, and data set.
+We observe that the scores on Color-dSprites seem to be strongly correlated with the scores obtained on the regular version of dSprites.
+Figure~\ref{figure:dataset_vs_dataset} further shows the rank correlations obtained between different data sets for each disentanglement scores.
+This confirms the strong and consistent correlation between dSprites and Color-dSprites. 
+While these result suggest that some transfer of hyperparameters is possible, it does not allow us to distinguish between good and bad random seeds on the target data set.
+
+To illustrate this, we compare such a transfer based approach to hyperparameter selection to random model selection as follows: 
+We first randomly sample one of our 50 random seeds and consider the set of trained models with that random seed. 
+First, we sample one of our 50 random seeds, a random  disentanglement metric and a data set and use them to select the hyperparameter setting with the highest attained score.
+Then, we compare that selected hyperparameter setting to a randomly selected model on either the same or a random different data set, based on either the same or a random different metric and for a randomly sampled seed.
+Finally, we report the percentage of trials in which this transfer strategy outperforms or performs equally well as random model selection across $\num{10000}$ trials in Table~\ref{table:app_random_model}.
+If we choose the same metric and the same data set (but a different random seed), we obtain a score of $80.7\%$.
+If we aim to transfer for the same metric across data sets, we achieve around $59.3\%$.
+Finally, if we transfer both across metrics and data sets, our performance drops to $54.9\%$.
+\paragraph{Implications.} 
+Unsupervised model selection remains an unsolved problem. 
+Transfer of good hyperparameters between metrics and data sets does not seem to work as there appears to be no unsupervised way to distinguish between good and bad random seeds on the target task.
+
+
+
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/disentanglement_vs_downstream}
+\caption{Rank-correlation between the metrics and the performance on downstream task on different data sets. We observe some correlation between most disentanglement metrics and downstream performance. However, the correlation varies across data sets.
+}\label{figure:downstream_tasks}
+\end{figure}
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/stat_efficiency_lr}
+\caption{Statistical efficiency (accuracy with $\num{100}$ samples $\div$ accuracy with $\num{10000}$ samples) based on a logistic regression versus disentanglement metrics for different models and data sets. We do not observe that higher disentanglement scores lead to higher statistical efficiency.}\label{figure:stat_efficiency_lr}
+\end{figure}
+\begin{figure}[pt]
+\centering\includegraphics[width=\textwidth]{autofigures/stat_efficiency_gbt}
+\caption{Statistical efficiency (accuracy with $\num{100}$ samples $\div$ accuracy with $\num{10000}$ samples) based on gradient boosted trees versus disentanglement metrics for different models and data sets. We do not observe that higher disentanglement scores lead to higher statistical efficiency (except for DCI Disentanglement and Mutual Information Gap on Shapes3D and to some extend in Cars3D).}\label{figure:stat_efficiency_gbt}
+\end{figure}
+\begin{figure}[t]
+\centering\includegraphics[width=\textwidth]{autofigures/dci_downstream_gbt_analysis}
+\caption{Downstream performance for three groups with increasing DCI Disentanglement scores.}\label{figure:dci_downstream_gbt_analysis}
+\end{figure}
+\begin{figure}[t]
+\centering\includegraphics[width=\textwidth]{autofigures/mig_downstream_gbt_analysis}
+\caption{Downstream performance for three groups with increasing MIG scores.}\label{figure:mig_downstream_gbt_analysis}
+\end{figure}
+\begin{figure}[t]
+\centering\includegraphics[width=\textwidth]{autofigures/unsup_vs_downstream}
+\caption{Rank correlation between unsupervised scores and downstream performance.}\label{figure:unsup_vs_downstream}
+\end{figure}
+
+
+\subsection{Are these disentangled representations useful for downstream tasks in terms of the sample complexity of learning?}\label{app:downstream}
+One of the key motivations behind disentangled representations is that they are assumed to be useful for later downstream tasks.
+In particular, it is argued that disentanglement should lead to a better sample complexity of learning~\citep{bengio2013representation,scholkopf2012causal,peters2017elements}.
+In this section, we consider the simplest downstream classification task where the goal is to recover the true factors of variations from the learned representation using either multi-class logistic regression (LR) or gradient boosted trees (GBT).
+Our goal is to investigate the relationship between disentanglement and the average classification accuracy on these downstream tasks as well as whether better disentanglement leads to a decreased sample complexity of learning.
+
+To compute the classification accuracy for each trained model, we sample true factors of variations and observations from our ground truth generative models.
+We then feed the observations into our trained model and take the mean of the Gaussian encoder as the representations.
+Finally, we predict each of the ground-truth factors based on the representations with a separate learning algorithm.
+We consider both a 5-fold cross-validated multi-class logistic regression as well as gradient boosted trees of the Scikit-learn package.
+For each of these methods, we train on $\num{10}$, $\num{100}$, $\num{1000}$ and $\num{10000}$ samples.
+We compute the average accuracy across all factors of variation using an additional set $\num{10000}$ randomly drawn samples.
+
+Figure~\ref{figure:downstream_tasks} shows the rank correlations between the disentanglement metrics and the downstream performance for all considered data sets.
+We observe that all metrics except Modularity seem to be correlated with increased downstream performance on the different variations of dSprites and to some degree on Shapes3D. 
+However, it is not clear whether this is due to the fact that disentangled representations perform better or whether some of these scores actually also (partially) capture the informativeness of the evaluated representation. Furthermore, the correlation is weaker or inexistent on other data sets (e.g., Cars3D). Finally, we report in Figure~\ref{figure:unsup_vs_downstream} the rank correlation between unsupervised scores computed after training on the mean and sampled representation and downstream performance.
+Depending on the data set, the rank correlation ranges from from mildly negative, to mildly positive.
+In particular, we do not observe enough evidence supporting the claim that decreased total correlation of the aggregate posterior proves beneficial for downstream task performance. 
+
+To assess the sample complexity argument we compute for each trained model a statistical efficiency score which we define as the average accuracy based on $\num{100}$ samples divided by the average accuracy based on $\num{10000}$ samples for either the logistic regression or the gradient boosted trees.
+The key idea is that if disentangled representations lead to sample efficiency, then they should also exhibit a higher statistical efficiency score. We remark that this score differs from the definition of sample complexity commonly used in statistical learning theory.
+The corresponding results are shown in Figures~\ref{figure:stat_efficiency_lr} and~\ref{figure:stat_efficiency_gbt} where we plot the statistical efficiency versus different disentanglement metrics for different data sets and models and in Figure~\ref{figure:downstream_tasks} where we show rank correlations.
+Overall, we do not observe conclusive evidence that models with higher disentanglement scores also lead to higher statistical efficiency.
+We note that some AnnealedVAE models seem to exhibit a high statistical efficiency on Scream-dSprites and to some degree on Noisy-dSprites.
+This can be explained by the fact that these models have low downstream performance and that hence the accuracy with $\num{100}$ samples is similar to the accuracy with $\num{10000}$ samples.
+We further observe that DCI Disentanglement and MIG seem to be lead to a better statistical efficiency on the the data set Shapes3D for gradient boosted trees.
+Figures~\ref{figure:dci_downstream_gbt_analysis} and~\ref{figure:mig_downstream_gbt_analysis} show the downstream performance for three groups with increasing levels of disentanglement (measured in DCI Disentanglement and MIG respectively).
+We observe that indeed models with higher disentanglement scores seem to exhibit better performance for gradient boosted trees with 100 samples.
+However, considering all data sets, it appears that overall increased disentanglement is rather correlated with better downstream performance (on some data sets) and not statistical efficiency.
+We do not observe that higher disentanglement scores reliably lead to a higher sample efficiency.
+
+\paragraph{Implications.}
+While the empirical results in this section are negative, they should also be interpreted with care.
+After all, we have seen in previous sections that the models considered in this study fail to reliably produce disentangled representations. 
+Hence, the results in this section might change if one were to consider a different set of models, for example semi-supervised or fully supervised one.
+Furthermore, there are many more potential notions of usefulness such as interpretability and fairness that we have not considered in our experimental evaluation.
+Nevertheless, we argue that the lack of concrete examples of useful disentangled representations necessitates that future work on disentanglement methods should make this point more explicit. 
+While prior work~\citep{steenbrugge2018improving,laversanne2018curiosity,nair2018visual,higgins2017darla,higgins2018scan} successfully applied disentanglement methods such as $\beta$-VAE on a variety of downstream tasks, it is not clear to us that these approaches and trained models performed well \emph{because of disentanglement}.
+\clearpage
+\section{Additional Figures}\label{app:additional_figures}
+\begin{figure}[h]
+\centering\includegraphics[width=\textwidth]{autofigures/TCsampledApp}
+\caption{Total correlation of sampled representation plotted against regularization strength for different data sets and approaches (including AnnealedVAE).}\label{figure:TCsampledApp}
+\vspace{1.5cm}
+\end{figure}
+\begin{figure}[h!]
+\centering\includegraphics[width=\textwidth]{autofigures/TCmeanApp}
+\caption{Total correlation of mean representation plotted against regularization strength for different data sets and approaches (including AnnealedVAE).}\label{figure:TCmeanApp}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/avgMIsampled}
+\caption{The average mutual information of the dimensions of the sampled representation generally decrease except for DIP-VAE-I.  }\label{figure:avgMIsampled}
+\end{figure}
+\begin{figure}[p]
+\centering\includegraphics[width=\textwidth]{autofigures/avgMImean}
+\caption{The average mutual information of the dimensions of the mean representation generally increase.}\label{figure:avgMImean}
+\end{figure}

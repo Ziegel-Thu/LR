@@ -1,0 +1,49 @@
+
+\section{Related Literature}\label{sec:literature}
+
+%
+%
+
+While theory is sparse for \covname{} \attname{}, some other impossibility results have recently appeared in the literature.
+
+\citet{srinivas19gradient} prove that any \completename{} \fielddefname{} cannot be ``weakly dependent'' on the input. Intuitively, weak dependence is a type of stability, and is precisely defined as the \fielddefname{} output depending only on the weights if the \modelname{} is piecewise linear.
+One implication of our results is that any \completename{} and \linearname{} \fielddefname{} cannot even be \emph{close} to weakly dependent, since this would allow a \hyptestname{} to extract useful information about the weights for piecewise linear \modelnames{} (and hence beat random guessing at \tasknames{} like recourse or spurious \covnames{}).
+
+\citet{fokkema22explanations} prove that continuous \fielddefnames{} (including \shap{} and \intgradshort{}) can fail for algorithmic recourse at \obsnames{} near the decision boundary of a \modelname{} (i.e., where the true recourse direction should switch).
+In contrast, we prove that for sufficiently rich \modelname{} classes, recourse-like \countmodbehaviourname{} cannot be reliably inferred at \emph{any} \obsname{}.
+Moreover, we prove that these \methodnames{} fail to infer general \countmodbehaviourname{}, with recourse impossibility being a corollary of our results.
+
+\citet{han22function} show that for perturbation-based \fielddefnames{} (including \shap{} and \intgradshort{}), there will always exist a neighbourhood where the \covname{} \attname{} does not match the \modelname{} (in the sense of local function approximation).
+In contrast, our results imply that this holds for exactly the neighbourhood where the \fielddefname{} is centered; that is, not only do \fielddefnames{} fail \textit{somewhere} to capture \modbehaviourname{} globally, they fail to do so \textit{in the exact local region of interest} as well. 
+
+Beyond such impossibility results, others have proposed various ways to formalize the task of \covname{} \attname{}.
+%
+\citet{watson21necessity} use the concepts of necessity and sufficiency to discuss whether \covname{} \attnames{} can be tied to \modbehaviourname{}.
+%
+\citet{watson21explanation} propose studying interpretability as a decision theory problem, where two players iterate to find a \scarequo{good} explanation, which they formalize as learning a local approximation of the \modelname{}.
+\citet{afchar21feature} formalize ground truth for \fielddefnames{} using a local form of functional feature dependence.
+%
+\citet{zhou22solvability} formalize \fielddefnames{} as loss minimizers, which they use to unify certain \methodnames{}.
+While all of these formalizations provide a useful lens for studying \fielddefnames{}, none have been used to prove results about their performance.
+Our hypothesis testing framework formalizes (some of) these ideas and enables concrete mathematical reasoning about the performance of \fielddefnames{}.
+
+Finally, there exist many individual counterexamples for common \fielddefnames{} in the literature.
+\citet{sundararajan20shapley} unify various versions of Shapley value methods and provide an example where \shap{} and \intgradshort{} differ, for which the authors point out that it is not clear which one is correct.
+\citet{kumar20shapley} provide simple counterexamples where \shap{} 
+%
+can be computed analytically yet result in \attnames{} that disagree with human intuition.
+\citet{merrick20explanation} and \citet{janzing20causal} show that the conditional version of \shap{} can give large \attname{} to completely irrelevant \covnames{}. 
+%
+%
+%
+Our results are consistent with the above findings, 
+providing a way to formally compare \fielddefnames{} (hypothesis testing) along with general, mild conditions under which common \methodnames{} can have poor performance.
+Characterizing other \fielddefnames{} in a similar way and refining the assumptions that lead to performance guarantees is critical to better understanding the utility of \covname{} \attname{} as part of a \username{}'s toolkit.
+
+%
+
+
+%
+
+
+%

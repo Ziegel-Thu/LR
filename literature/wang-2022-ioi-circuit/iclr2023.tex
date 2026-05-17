@@ -1,0 +1,159 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2023_conference,times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{float}
+% \usepackage[small,compact]{titlesec}
+\usepackage{amsthm}
+\usepackage{mathtools, etoolbox}
+\usepackage{array}
+% \usepackage{blkarray}
+\usepackage{comment}
+\usepackage{paralist} 
+\usepackage{bm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\definecolor{customcolor}{HTML}{004496}
+\usepackage[colorlinks,allcolors=customcolor]{hyperref}
+
+
+% for the graphic explaining IO and S
+\usepackage{environ}
+\NewEnviron{myequation}{%
+\begin{equation*}
+\scalebox{1.2}{$\BODY$}
+\end{equation*}
+}
+% done
+
+% \graphicspath{ {./figs/} }
+
+\newtheorem{definition}{Definition}
+
+\title{Interpretability in the Wild: a Circuit for\\Indirect Object Identification in GPT-2 small} %GPT-2 small is mentionned in the abstract
+
+% TODO: Arthur claims that the "Interpretability in the Wild" should be cut, but the rest is a good title
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{\\ \textbf{Kevin Wang}$^1$\textbf{,} \textbf{Alexandre Variengien}$^1$\textbf{,} \textbf{Arthur Conmy}$^1$\textbf{,} \textbf{Buck Shlegeris}$^1$ \textbf{\&} \textbf{Jacob Steinhardt}$^{1, 2}$ \\
+$^1$Redwood Research\\
+$^2$UC Berkeley\\
+\texttt{kevin@rdwrs.com, alexandre@rdwrs.com,} \\ 
+\texttt{arthur@rdwrs.com, buck@rdwrs.com, jsteinhardt@berkeley.edu}
+}
+% \And
+% \author{Arthur Conmy: \texttt{arthurconmy@gmail.com}}
+% \And
+% \author{Buck Shlegeris} % : \texttt{kevinrowang@gmail.com}}
+% \And
+% \author{Jacob Steinhardt}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+% \newcommand\gpt{\textsc{GPT2}}
+% \newcommand\IO{\textsc{IO}}
+% \newcommand\FS{\textsc{S_1}}
+% \newcommand\SS{\textsc{S_2}}
+
+\newcommand{\IO}{\textcolor{blue}{IO }}
+\renewcommand{\S}{\textcolor{red}{S }}
+\newcommand{\STwo}{\textcolor{red}{S2 }}
+% \renewcommand\todo[1]{} % delete this, and turn these others into the commented thing after paper swap
+\newcommand\krw[1]{\textcolor{teal}{[KW: #1]}}
+\newcommand\ac[1]{\textcolor{blue}{[AC: #1]}}
+\newcommand\av[1]{\textcolor{orange}{[AV: #1]}}
+\newcommand\nate[1]{\textcolor{green}{[Nate: #1]}}
+\newcommand{\pioi}{\mathsf{p}_{\mathrm{IOI}}}
+\newcommand{\pcde}{\mathsf{p}_{\mathrm{ABC}}}
+\newcommand{\pabc}{\mathsf{p}_{\mathrm{ABC}}}
+\newcommand{\xnew}{x_{\mathrm{new}}}
+\newcommand{\xorig}{x_{\mathrm{orig}}}
+
+\definecolor{s_color}{RGB}{201,165,247}
+\definecolor{io_color}{RGB}{114,255,100}
+\definecolor{end_color}{RGB}{250,210,0}
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\setlength{\textfloatsep}{10.0pt plus 2.0pt minus 4.0pt}
+\setlength{\floatsep}{6.0pt plus 2.0pt minus 2.0pt}
+\setlength{\intextsep}{6.0pt plus 2.0pt minus 2.0pt}
+\makeatother
+% \fancyhf{} % sets both header and footer to nothing
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+\pagenumbering{arabic}
+
+\maketitle
+
+\begin{abstract}
+Research in mechanistic interpretability seeks to explain behaviors of machine learning (ML) models in terms of their internal components. However, most previous work either focuses on simple behaviors in small models or describes complicated behaviors in larger models with broad strokes. In this work, we bridge this gap by presenting an explanation for how GPT-2 small performs a natural language task called indirect object identification (IOI). Our explanation encompasses 26 attention heads grouped into 7 main classes, which we discovered using a combination of interpretability approaches relying on causal interventions.
+To our knowledge, this investigation is the largest end-to-end attempt at reverse-engineering a natural behavior ``in the wild" in a language model.  We evaluate the reliability of our explanation using three quantitative criteria--\emph{faithfulness, completeness} and \emph{minimality}. Though these criteria support our explanation, they also point to remaining gaps in our understanding. 
+Our work provides evidence that a mechanistic understanding of large ML models is feasible, pointing toward opportunities to scale our understanding to both larger models and more complex tasks. Code for all experiments is available at \url{https://github.com/redwoodresearch/Easy-Transformer}.
+
+ % that do not reflect the internal components of models
+% IOI requires composing different level of linguistic processing to identify subjects from different clauses and predict the entity affected by an action. 
+% However, previous work presented either analysis of high level behavior lacking a precise description of their implementation inside the model, or thorough investigation of simple low-level linguistic abilities.
+
+
+% our explanation doesn't resist adversarial robustness tests and
+%Recent work in ML interpretability seeks to identify human-understandable \emph{circuits} that implement algorithms to solve a given task. However, these investigations often lack a reliable quantitative framework for success, and few gain a complete understanding of how a model computes a task, potentially missing nodes (neurons, attention heads, etc.) important for the behavior. In this work, we present evidence for a circuit in GPT-2 small that performs the natural language task of indirect object identification. The circuit is composed of 26 attention heads grouped into 6 main classes, which we discovered using a variety of interpretability tools in a technique-agnostic manner.  To evaluate the reliability of our explanation, we propose three quantitative criteria---\emph{faithfulness, completeness, minimality}---as \todo{make these less important} well as a qualitative requirement for \emph{legibility}. 
+%We present a quantitative evaluation of our circuit according to those criteria. 
+%We show that circuits passing plausible qualitative tests can fail these criteria completely, while our circuit fares better. Though our quantitative criteria support our understanding of the structure of the circuit, there remain gaps in our understanding of the semantic information flow between components.
+%Our work provides evidence that a mechanistic understanding of large ML models is possible, opening opportunities to scale our understanding to both larger models and more complex tasks.
+
+% Recent works from the field of AI interpretability showed that some inner mechanism of Transformer-based language model can be reverse-engineer into human-understandable algorithm by analyzing \emph{circuits}. However, there has been a lack of examples demonstrating how such approach generalized to more complex tasks, in models closer to state-of-the-art systems. Moreover, the evaluation of such explanations remains mainly qualitative and lack a unifying, reliable framework.
+% In this work, we present evidence for a circuit in GPT-2 small performing indirect object identification, a natural language processing task relying on contextual information. The circuit is composed of dozens of attention heads composed in surprising ways. For instance, we discovered heads that reliably write in the \emph{opposite} direction of the correct token and that induction heads can be used for duplicate token detection. 
+% In addition to presenting our approach to uncovers such a complex circuit, we proposed four criteria to evaluate the reliability of our explanation: faithfulness, completeness, minimality and legibility. We present an empirical quantitative evaluation of our circuit according to those criteria, as well as a demonstration of the usefulness of such tools by showing how a naive circuit explanation would fail those tests.
+% Despite the numerous dark spot remaining in our understanding of the circuit, we hope that this contribution could inspire future interpretability work to both tackle more challenging tasks, and apply comprehensive test evaluating the circuits identified.
+% However, these investigations often focus on simple tasks and lack a reliable quantitative framework for success.
+
+%These heads sometimes compose in surprising ways: for instance, we find ``negative'' heads that reliably write in the \emph{opposite} direction of the correct token. 
+%We present the methodology used to discover such a large circuit, 
+\end{abstract}
+
+
+\input{sections/introduction}
+% \input{sections/new_intro}
+\input{sections/methods}
+\input{sections/explanation}
+\input{sections/legibility}
+\input{sections/experimental_validation}
+\input{sections/discussion}
+\input{sections/reproducibility}
+
+% completeness?
+% minimality?
+
+%\subsubsection*{Author Contributions}
+%If you'd like to, you may include  a section for author contributions as is done in many journals. This is optional and at the discretion of the authors.
+
+\subsubsection*{Acknowledgments}
+The authors would like to thank Neel Nanda, Ryan Greenblatt, Lisa Dunlap, Nate Thomas, Stephen Casper, Kayo Yin, Dan Hendrycks, Nora Belrose, Jacob Hilton, Charlie Snell and Lawrence Chan for their useful feedback.
+%\todo{thank: Lisa, Charlie, Nate, Kayo, Neel, Stephen, Lawrence?, Dan, Adam, Ryan? (and special thanks to Jacob?}
+
+%Use unnumbered third level headings for the acknowledgments. All acknowledgments, including those to funding agencies, go at the end of the paper.
+
+\bibliography{iclr2023_conference}
+\bibliographystyle{iclr2023_conference}
+
+\input{sections/appendix}
+
+\end{document}

@@ -1,0 +1,88 @@
+\section{Discussion}
+
+% Our investigation provide evidence that, by focusing on a precise task, it is possible to disentangle the intertwined computation occurring inside language models. We grouped attention heads into classes, providing abstractions that capture a common function. We hope that these categories will make future discoveries easier by providing detailed examples of attention heads behaviors. Those examples can be valuable reference points for future investigation of circuit in language models, as it was the case for Induction Heads.
+
+% We think that those investigations could be structured similarly as what exist in molecular biology. The goal of the field is 
+% We think that this investigation has many parallels with the field of molecular biology. In molecular biology, the goal is to isolate relevant chemical interactions among hundreds of proteins and genes by describing step-by-step mechanisms called \emph{pathways}. Some of these pathways are then latter reused as building blocks to understand even more complex chemical reactions emerging in organisms.
+
+
+% \textbf{Attention patterns of S2 Inhibition Heads.} The attention patterns of the S-Inhibition Heads are both constant in this distribution and a heavily distributed circuit. The same techniques we use to explain its attention fail because all contributions are small.
+
+% \textbf{MLPs.} We do not include the MLPs in the circuit and do not fully understand the role they play in the IOI circuit. However, we do find that all MLPs, except MLP0, are not crucial for the behavior (see Appendix \ref{app:mlp}). 
+
+% \textbf{Layer Norms.} Layer Norm is capable of changing transformer circuit behavior \citep{solu}, yet we don't explain any of the effect of the MLPs and attention heads in terms of the layer norms.  
+
+% Activation patching can be seen as a type of ablation where all the information present in a node's activations is held constant except for the information that is specific to the change in the input.
+% Thus, patching from a source distribution with a distinct attribute (i.e. the name-movers have roughly uniform attention across all three names in the ABC distribution) will reveal which nodes play a counterfactual role in that distribution's distinct attribute. We expect that activation patching will be an invaluable tool when discovering circuits that explain model behavior.
+
+% Importantly, the source distribution must have such an important and distinct attribute in order to merit the effort to figure out which nodes cause that distinct attribute. 
+
+In this work, we isolated, understood and validated a set of attention heads in GPT-2 small composed in a circuit that identifies indirect objects. %During this meticulous effort aimed at understanding the information flow at the level of single attention heads
+Along the way, we discovered interesting structures emerging from the model internals. For instance:
+\begin{itemize}
+    \item We identified an example of attention heads communicating by using pointers  (sharing the location of a piece of information instead of copying it).
+    \item We identified heads compensating for the loss of function of other heads, and heads contributing negatively to the next-token prediction. Early results suggest that the latter phenomenon occurs for other tasks beyond IOI (see Appendix \ref{app:random_tok_seq}).
+\end{itemize}
+
+%To identify the circuit, we introduced a systematic technique for tracing the information flow between nodes called path patching. We think that this method can be a valuable tool for future attempts at reverse engineering language model behavior. In addition to path patching, we used a diversity of techniques including causal interventions, embedding projections, and attention pattern analysis to formulate and validate hypotheses about the function of attention heads. We expect diverse and creative experiments to be an important driver for future discoveries in mechanistic interpretability.
+
+However, our work also has several limitations. First, despite the detailed analysis presented here, we do not understand several components. Those include the attention patterns of the S-Inhibition Heads, and the effect of MLPs and layer norms. %, among others. 
+%
+%Then, we chose the IOI task because we suspected that it would be easy to investigate. Indeed, we think that tasks requiring algorithmic heuristics (as opposed to statistical heuristics) are easier to interpret because they impose a clearer structure on model internals.
+%
+% In addition to selectively choosing a tractable task in this work, we chose the model with similar concerns. T
+Second, the number of parameters in GPT-2 small is orders of magnitude away from state-of-the-art transformer language models. A future challenge is to scale this approach to these larger models.
+
+As a starting point, we performed a preliminary analysis of GPT-2 medium. We found that this model also has a sparse set of heads directly influencing the logits. However, not all of these heads attend to IO and S, suggesting more complex behavior than the Name Movers Heads in GPT-2 small. 
+Continuing this investigation is an exciting line of future work. 
+
+More generally, we think that zooming in on a clearly defined task in a single model enables a rich description of phenomena that are likely to be found in broader circumstances. In the same way model organisms in biology enable discoveries valuable beyond a specific species, we think these highly detailed (though narrow) examples are crucial to developing a comprehensive understanding of machine learning models.
+%We hope that our work spurs further efforts in mechanistic explanations of larger language models computing different natural language tasks.
+
+% with many of the same circuits as GPT-2 small, using name-movers and S inhibition heads. However, GPT-2 medium also employs other name-moving circuitry that is substantially different from GPT-2 small and overall more distributed.
+
+% to eventually gain an understanding of how these circuits interact to create language model capabilities. 
+
+%generalize to  This technique is particularly well suited for algorithmic tasks that have input schemas (Appendix \ref{app:templates}) because they suggest relevant baseline distributions for patching and information flow to follow. 
+
+% Compared to a naïve faithful circuit, we show that this circuit demonstrates improved performance on our quantitative criteria and contains human-interpretable components.
+%\ac{In my opinion the discussion could be far "punchier"}
+
+% Discussion Points
+% - what we've done
+% - What we've discuvered: pointer arithmetic, compensation mechanism, negative heads
+% - Speculation, these can extend beyond IOI
+% - what tools? information tracing by path patching
+
+% - future work: scaling up
+% - 
+
+% - what we learned about general methods to find circuits: activation patching is good
+% - thoughts on how this work scales to larger models. both the criteria experiments and activation patching experiments should work on larger models. we find that gpt-2 medium shares many internal structures with gpt-2 small as it computes IOI (but it's also more distributed/complicated)
+% - limitations of the work. we don't explain mlps or layernorms. we spend more effort on quantitative than qualitative criteria, so we don't understand the paths/interactions between components of the circuit as well -> we don't understand s inhibition attention and we don't understand some of the specific information that's being moved around
+% - future work (basically the same thing as limitations of work): bigger models, different tasks, layernorm and mlps, more focus on paths. 
+% - sparse vs distributed behaviors. name movers are distributed, s-inhibition heads seem sparse. unclear why exactly.
+
+
+
+% OLD
+%A major motivation for this work was to gain evidence that mechanistic explanations for large language models is possible. Does this approach scale? In initial analyses with GPT-2 medium, we find that GPT-2 medium also has a sparse set of heads directly influencing the logits. However, not all of these heads attend to IO and S, suggesting more complex behavior than the Name Movers Heads i GPT-2 small. Furthering this investigation is an exciting line of future work. 
+\begin{comment}
+After completing this work, we learned several lessons useful for future interpretability efforts. We
+found that specifying a behavior and representative distribution for this behavior is a fundamental
+difficulty. For this reason, we think algorithmic tasks, as opposed to statistical heuristics, are easier
+to interpret because they impose a clearer structure on model internals. For the circuit discovery
+process, we introduced a technique for tracing the information flow between nodes called path
+patching. This technique is particularly well suited for algorithmic tasks that have input schemas
+(Appendix D) because they suggest relevant baseline distributions for patching and information flow
+to follow.
+In this work, we isolated, understood and validated a set of attention heads in GPT-2 small composed
+in a circuit that identifies indirect objects. However, there are still several components we do not
+understand, including the attention patterns of the S-Inhibition Heads, and the effect of MLPs and
+layer norms, among others. We hope that our work spurs further efforts in mechanistic explanations
+of larger language models computing different natural language tasks.
+\end{comment}
+%OLD OLD
+% In this work, we discover, understand and verify a circuit in GPT-2 small that explains how the model identifies indirect objects. We propose three criteria to verify that an explanation of neural network behavior is correct, and verify that our circuit meets these criteria. Our work shows that an understanding of how language models perform tasks in natural language is possible. In particular, it shows that indirect object identification is a sparse behavior in GPT-2, using only 1.5\% of the outputs of attention heads in the network, and such outputs have human-understandable meanings.
+
+% There are limitations to the granularity of our explanation: we would like to have a greater understanding of the MLPs and the directions in the residual stream, for example. Additionally, we think that it's possible that our criteria could be formulated differently, and further research into the rigor of explanations of neural network behavior could be valuable. We hope that our work invites more research into further tasks that language models perform, larger models that perform such tasks and whether different models implement tasks in the same way, or in diverse ways.

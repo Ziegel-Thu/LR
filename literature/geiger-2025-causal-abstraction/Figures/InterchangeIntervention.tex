@@ -1,0 +1,300 @@
+
+\begin{tikzpicture}[thick,scale=0.6, every node/.style={scale=0.6}]
+\def\scalex{3.5}
+\def\scaley{1.95}
+\def\opac{0.2}
+\Large
+
+\def\startx{0}
+\def\starty{-1}
+
+\foreach \xshift in {0.5,2.5}{
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {4.5}{
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=16pt,inner sep=0pt] () at (\xshift *\scalex +  \startx,-0.316*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {6.5}{
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\def\starty{-0.5}
+
+\node[draw, ellipse,  minimum width=380, minimum height=54pt] (piV1) at ( 1.5 * \scalex+ \startx,1.25 * \scaley + \starty) {};
+
+\node (label) at (4 * \scalex+ \startx,3.25 * \scaley) {\Huge $\texttt{False}$};
+
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out) at (3 * \scalex+ \startx,2.75 * \scaley) {\Large $\outneuronval_{\mathsf{True}}$};
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out2) at (4 * \scalex+ \startx,2.75 * \scaley) {\Large $\outneuronval_{\mathsf{False}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT00) at (0 * \scalex+ \startx,0 * \scaley) {$\inneuronval_1$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT01) at (1 * \scalex + \startx,0 * \scaley) {$\inneuronval_2$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT02) at (2 * \scalex+ \startx,0 * \scaley) {$\inneuronval_3$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT03) at (3 * \scalex + \startx,0 * \scaley) {$\inneuronval_4$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT04) at (4 * \scalex+ \startx,0 * \scaley) {$\inneuronval_5$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT05) at (5 * \scalex+ \startx ,0 * \scaley) {$\inneuronval_6$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT06) at (6 * \scalex+ \startx,0 * \scaley) {$\inneuronval_7$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT07) at (7 * \scalex+ \startx ,0 * \scaley) {$\inneuronval_8$};
+
+\foreach \row in { 1,2}
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\node[fill=red!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT\row\col) at (\col * \scalex+ \startx,\row * \scaley) {$\hiddenneuronval_{(\row, \col)}$ };
+}
+
+
+
+
+
+
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\foreach \coll in {0,1,2,3,4,5,6,7}{
+\draw[opacity=0.3, ->] (BERT0\col.north) to (BERT1\coll.south);
+\draw[opacity=0.3, ->] (BERT1\col.north) to (BERT2\coll.south);
+}
+}
+
+
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out.south);
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out2.south);
+}
+
+
+\def\startx{6.9}
+
+\def\scaley{3}
+
+
+\def\scalex{3.5}
+\def\scaley{2}
+
+
+\def\starty{10}
+
+
+
+    
+
+
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (A) at (0+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (B) at (1*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (C) at (2*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (D) at (3*\scalex+ \startx,0+ \starty) {};
+
+
+\node[fill=red!20, draw, ellipse, minimum size=20pt] (E) at (0.5*\scalex+ \startx,0.5*\scaley+ \starty) {\texttt{True}};
+
+
+
+\node[fill=red!20, draw, ellipse, minimum size=20pt] (F) at (2.5*\scalex + \startx,0.5*\scaley+ \starty) {\texttt{False}};
+
+
+
+\node[fill=yellow!20, draw, ellipse, minimum size=20pt] (G) at (1.5*\scalex + \startx,1*\scaley+ \starty) {\texttt{False}};
+
+
+
+
+\def\starty{10.54}
+\def\opac{1.0}
+
+
+
+\foreach \xshift in {0,1}{
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {2}{
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=16pt,inner sep=0pt] () at (\xshift *\scalex +  \startx,-0.309*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {3}{
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + 0*\scalex+ \startx,-0.3*\scaley+ \starty) {};
+}
+
+
+
+
+
+
+\draw [->,opacity=\opac] (A) -- (E);
+\draw [->,opacity=\opac] (B) -- (E);
+\draw [->,opacity=\opac] (C) -- (F);
+\draw [->,opacity=\opac] (D) -- (F);
+\draw [->,opacity=\opac] (E) -- (G);
+\draw [->,opacity=\opac] (F) -- (G);
+
+
+
+
+
+
+
+
+
+
+\def\scalex{3.5}
+\def\scaley{1.95}
+\def\opac{0.2}
+\Large
+
+\def\startx{28}
+\def\starty{-1}
+
+\foreach \xshift in {0.5}{
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {2.5}{
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {4.5,6.5}{
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=16pt,inner sep=0pt] () at (\xshift *\scalex +  \startx,-0.316*\scaley+ \starty) {};
+}
+
+\def\starty{-0.5}
+
+\node[draw, ellipse,  minimum width=380, minimum height=54pt] (pi2V1) at ( 1.5 * \scalex+ \startx,1.25 * \scaley + \starty) {};
+
+\node (label) at (3 * \scalex+ \startx,3.25 * \scaley) {\Huge $\texttt{True}$};
+
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out) at (3 * \scalex+ \startx,2.75 * \scaley) {\Large $\outneuronval^*_{\mathsf{True}}$};
+\node[fill=yellow!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt](out2) at (4 * \scalex+ \startx,2.75 * \scaley) {\Large $\outneuronval^*_{\mathsf{True}}$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT00) at (0 * \scalex+ \startx,0 * \scaley) {$\inneuronval'_1$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT01) at (1 * \scalex + \startx,0 * \scaley) {$\inneuronval'_2$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT02) at (2 * \scalex+ \startx,0 * \scaley) {$\inneuronval'_3$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT03) at (3 * \scalex + \startx,0 * \scaley) {$\inneuronval'_4$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT04) at (4 * \scalex+ \startx,0 * \scaley) {$\inneuronval'_5$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT05) at (5 * \scalex+ \startx ,0 * \scaley) {$\inneuronval'_6$};
+
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT06) at (6 * \scalex+ \startx,0 * \scaley) {$\inneuronval'_7$};
+\node[fill=green!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT07) at (7 * \scalex+ \startx ,0 * \scaley) {$\inneuronval'_8$};
+
+\foreach \row in { 1}
+\foreach \col in {0,1,2,3}{
+\node[fill=red!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT\row\col) at (\col * \scalex+ \startx,\row * \scaley) {$\hiddenneuronval_{(\row, \col)}$ };
+}
+
+\foreach \row in { 1}
+\foreach \col in {4,5,6,7}{
+\node[fill=blue!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT\row\col) at (\col * \scalex+ \startx,\row * \scaley) { $\hiddenneuronval'_{(\row, \col)}$};
+}
+
+\foreach \row in { 2}
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\node[fill=purple!20, draw, rectangle, rounded corners=3pt, minimum width=40pt, minimum height=20pt] (BERT\row\col) at (\col * \scalex+ \startx,\row * \scaley) {$\hiddenneuronval^*_{(\row, \col)}$ };
+}
+
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\foreach \coll in {4,5,6,7}{
+\draw[opacity=0.3, ->] (BERT0\col.north) to (BERT1\coll.south);
+}
+}
+
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\foreach \coll in {0,1,2,3,4,5,6,7}{
+\draw[opacity=0.3, ->] (BERT1\col.north) to (BERT2\coll.south);
+}
+}
+
+
+\foreach \col in {0,1,2,3,4,5,6,7}{
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out.south);
+\draw[opacity=0.3, ->] (BERT2\col.north) to (out2.south);
+}
+
+
+
+\def\startx{32.9}
+
+\def\scaley{3}
+
+
+\def\scalex{3.5}
+\def\scaley{2}
+
+\def\starty{10}
+
+
+
+    
+
+
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (A) at (0+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (B) at (1*\scalex+ \startx,0+ \starty) {};
+    
+\node[fill=green!20, draw, circle, minimum size=40pt] (C) at (2*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=40pt] (D) at (3*\scalex+ \startx,0+ \starty) {};
+
+
+\node[fill=red!20, draw, ellipse, minimum size=20pt] (E2) at (0.5*\scalex+ \startx,0.5*\scaley+ \starty) {\texttt{True}};
+
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (F) at (2.5*\scalex + \startx,0.5*\scaley+ \starty) {\texttt{True}};
+
+
+
+\node[fill=yellow!20, draw, ellipse, minimum size=20pt] (G) at (1.5*\scalex + \startx,1*\scaley+ \starty) {\texttt{True}};
+
+\def\starty{10.54}
+\def\opac{1.0}
+
+\foreach \xshift in {0}{
+    \node[fill=green!80, draw,regular polygon, regular polygon sides=4, minimum size=10pt] () at (\xshift *\scalex + 0*\scalex+ \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {1}{
+    \node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (\xshift *\scalex + \startx,-0.3*\scaley+ \starty) {};
+}
+
+\foreach \xshift in {2,3}{
+    \node[fill=orange!80, draw,regular polygon, regular polygon sides=3, minimum size=16pt,inner sep=0pt] () at (\xshift *\scalex +  \startx,-0.309*\scaley+ \starty) {};
+}
+
+
+
+
+
+
+
+\draw [->,opacity=\opac] (A) -- (E2);
+\draw [->,opacity=\opac] (B) -- (E2);
+\draw [->,opacity=\opac] (C) -- (F);
+\draw [->,opacity=\opac] (D) -- (F);
+\draw [->,opacity=\opac] (E2) -- (G);
+\draw [->,opacity=\opac] (F) -- (G);
+
+
+
+
+
+
+
+
+
+
+
+\draw[dashed,  ->, thick] (E) to[out=7, in=170] (E2);
+\draw[dashed, ->, thick] (piV1) to[out=20, in=160] (pi2V1);
+
+
+
+
+\end{tikzpicture}

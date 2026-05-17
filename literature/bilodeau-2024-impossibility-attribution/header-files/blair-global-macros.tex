@@ -1,0 +1,534 @@
+%
+%
+%
+
+%
+%
+\usepackage{
+	amsmath,
+	amsthm,
+	amssymb,
+	wrapfig,
+	cases,
+	mathtools,
+	thmtools,
+	array,
+	bbm,
+	bm,
+	subfigure,
+	makecell,
+	esvect,
+	mathrsfs,
+	breqn,
+	booktabs,
+	upgreek,
+	changepage,
+	dsfont,
+	fixme,
+	listings,
+	multirow,
+	xargs,
+	xstring,
+	multicol,
+	graphicx,
+	float,
+	color,
+	algpseudocode,
+	indentfirst,
+	accents,
+	ifthen,
+	wasysym,
+	tikz,
+	pgf,
+	lmodern,
+	authblk,
+	}
+
+%
+%
+\usepackage[utf8]{inputenc}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[hyperfootnotes=false, hidelinks]{hyperref}
+
+\newcommand{\manualendproof}{\hfill\qedsymbol\\[2mm]}
+
+\usepackage{paralist}
+\usepackage{enumitem}
+\renewenvironment{enumerate}[1]{\begin{compactenum}#1}{\end{compactenum}}
+\setlist[itemize]{noitemsep, topsep=-\topsep}
+
+\usetikzlibrary{calc, positioning,shapes,arrows.meta,automata,positioning,backgrounds,fit}
+\newcommand{\tikzmark}[1]{\tikz[baseline,remember picture] \coordinate (#1) {};}
+
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+
+
+%
+%
+\renewcommand{\appendixname}{}
+
+%
+%
+\usepackage{xpatch}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{crossreftools}
+\pdfstringdefDisableCommands{%
+    \let\Cref\crtCref
+    \let\cref\crtcref
+}
+\newcommand{\creflastconjunction}{, and\nobreakspace}
+\hypersetup{%
+    bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\crefname{figure}{Figure}{Figures}
+\crefname{subsection}{Section}{Sections}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{informal}{Informal Theorem}{Informal Theorems}
+\crefname{example}{Example}{Examples}
+\crefname{property}{Property}{Properties}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{appassumption}{Assumption}{Assumptions}
+
+%
+%
+\declaretheorem[name=Theorem]{theorem}
+\declaretheorem[name=Informal Theorem]{informal}
+
+\declaretheorem[sibling=theorem,name=Lemma]{lemma}
+\declaretheorem[sibling=theorem,name=Proposition]{proposition}
+\declaretheorem[sibling=theorem,name=Corollary]{corollary}
+\declaretheorem[sibling=theorem,name=Property]{property}
+\declaretheorem[sibling=theorem,name=Conjecture]{conjecture}
+%
+\declaretheorem[sibling=theorem,name=Definition]{definition}
+\declaretheorem[name=Assumption]{assumption}
+\declaretheorem[sibling=theorem,name=Assumption]{appassumption}
+\declaretheorem[name=Assumption, numbered=no]{assumption*}
+\declaretheorem[qed=$\triangleleft$,sibling=theorem,name=Example]{example}
+\declaretheorem[qed=$\triangleleft$,sibling=theorem,name=Remark]{remark}
+\declaretheorem[qed=$\triangleleft$,sibling=theorem]{fact}
+
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\numberwithin{equation}{section}
+\numberwithin{theorem}{section}
+\numberwithin{lemma}{section}
+\numberwithin{remark}{section}
+\numberwithin{proposition}{section}
+\numberwithin{definition}{section}
+\numberwithin{conjecture}{section}
+\numberwithin{example}{section}
+\numberwithin{corollary}{section}
+\numberwithin{appassumption}{section}
+
+%
+%
+%
+
+%
+%
+
+%
+\makeatletter
+\renewcommand{\maketag@@@}[1]{\hbox{\m@th\normalsize\normalfont#1}}%
+\makeatother
+
+%
+\makeatletter
+\let\reftagform@=\tagform@
+\def\tagform@#1{\maketag@@@{\ignorespaces\textcolor{gray}{(#1)}\unskip\@@italiccorr}}
+\renewcommand{\eqref}[1]{\textup{\reftagform@{\ref{#1}}}}
+\makeatother
+
+%
+%
+%
+
+%
+%
+\providecommand{\AA}{\mathbb{A}}
+\newcommand{\BB}{\mathbb{B}}
+\newcommand{\CC}{\mathbbm{C}}
+\newcommand{\DD}{\mathbbm{D}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\GG}{\mathbb{G}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\II}{\mathbb{I}}
+\newcommand{\JJ}{\mathbb{J}}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\LL}{\mathbb{L}}
+\newcommand{\MM}{\mathbb{M}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\OO}{\mathbb{O}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\renewcommand{\SS}{\mathbb{S}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\UU}{\mathbb{U}}
+\newcommand{\VV}{\mathbb{V}}
+\newcommand{\WW}{\mathbb{W}}
+\newcommand{\XX}{\mathbb{X}}
+\newcommand{\YY}{\mathbb{Y}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcommand{\One}{\mathbbm{1}}
+\newcommand{\Two}{\mathbbm{2}}
+\newcommand{\Three}{\mathbbm{3}}
+\newcommand{\Four}{\mathbbm{4}}
+\newcommand{\Five}{\mathbbm{5}}
+\newcommand{\Six}{\mathbbm{6}}
+\newcommand{\Seven}{\mathbbm{7}}
+\newcommand{\Eight}{\mathbbm{8}}
+\newcommand{\Nine}{\mathbbm{9}}
+\newcommand{\Zero}{\mathbbm{0}}
+
+%
+%
+\newcommand{\Aa}{\mathcal{A}}
+\newcommand{\Bb}{\mathcal{B}}
+\newcommand{\Cc}{\mathcal{C}}
+\newcommand{\Dd}{\mathcal{D}}
+\newcommand{\Ee}{\mathcal{E}}
+\newcommand{\Ff}{\mathcal{F}}
+\newcommand{\Gg}{\mathcal{G}}
+\newcommand{\Hh}{\mathcal{H}}
+\newcommand{\Ii}{\mathcal{I}}
+\newcommand{\Jj}{\mathcal{J}}
+\newcommand{\Kk}{\mathcal{K}}
+\newcommand{\Ll}{\mathcal{L}}
+\newcommand{\Mm}{\mathcal{M}}
+\newcommand{\Nn}{\mathcal{N}}
+\newcommand{\Oo}{\mathcal{O}}
+\newcommand{\Pp}{\mathcal{P}}
+\newcommand{\Qq}{\mathcal{Q}}
+\newcommand{\Rr}{\mathcal{R}}
+\newcommand{\Ss}{\mathcal{S}}
+\newcommand{\Tt}{\mathcal{T}}
+\newcommand{\Uu}{\mathcal{U}}
+\newcommand{\Vv}{\mathcal{V}}
+\newcommand{\Ww}{\mathcal{W}}
+\newcommand{\Xx}{\mathcal{X}}
+\newcommand{\Yy}{\mathcal{Y}}
+\newcommand{\Zz}{\mathcal{Z}}
+
+%
+%
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\two}{\mathbf{2}}
+\newcommand{\three}{\mathbf{3}}
+\newcommand{\four}{\mathbf{4}}
+\newcommand{\five}{\mathbf{5}}
+\newcommand{\six}{\mathbf{6}}
+\newcommand{\seven}{\mathbf{7}}
+\newcommand{\eight}{\mathbf{8}}
+\newcommand{\nine}{\mathbf{9}}
+\newcommand{\zero}{\mathbf{0}}
+
+%
+%
+\newcommand{\eps}{\varepsilon}
+\newcommand{\gam}{\vargamma}
+
+%
+%
+%
+
+%
+%
+%
+\def\[#1\]{\begin{equation}\begin{aligned}#1\end{aligned}\end{equation}}
+\def\*[#1\]{\begin{equation*}\begin{aligned}#1\end{aligned}\end{equation*}}
+
+\def\s*[#1\s]{\small\begin{align*}#1\end{align*}\normalsize}
+
+%
+%
+\newcommand{\lcr}[3]{\left #1 #2 \right #3} %
+\newcommand{\lcrx}[4][{-1}]{ 
+	\IfEq{#1}{-1}{\left #2 {{{{#3}}}} \right #4}{
+   	\IfEq{#1}{0}{#2 {{{{#3}}}} #4}{
+	\IfEq{#1}{1}{\bigl #2 {{{{#3}}}} \bigr #4}{
+	\IfEq{#1}{2}{\Bigl #2 {{{{#3}}}} \Bigr #4}{
+	\IfEq{#1}{3}{\biggl #2 {{{{#3}}}} \biggr #4}{
+	\IfEq{#1}{4}{\Biggl #2 {{{{#3}}}} \Biggr #4}{
+    \GenericWarning{"4th argument to lcrx must be -1, 0, 1, 2, 3, or 4"}
+    }}}}}}} %
+
+%
+%
+\newcommand{\ol}{\overline}
+\newcommand{\ul}{\underline}
+\newcommand{\mb}{\mathbf}
+\newcommand{\upper}[1]{^{(#1)}}
+
+%
+%
+%
+
+
+%
+%
+\newcommand{\cPP}[1]{
+ \PP^{#1}}  %
+
+\newcommand{\cEE}[1]{
+ \EE^{#1}} %
+ 
+%
+%
+%
+
+\newcommand{\cExp}[2][{-1}]{\mathop{\EE}_{#2}^{#1}}
+\newcommand{\cPr}[2][{-1}]{\mathop{\PP}_{#2}^{#1}}
+
+%
+\DeclareMathOperator*{\Cov}{Cov} %
+\DeclareMathOperator*{\Corr}{Corr} %
+\DeclareMathOperator*{\Conv}{Conv} %
+\DeclareMathOperator*{\RankCorr}{RankCorr} %
+\DeclareMathOperator*{\Var}{Var} %
+\DeclareMathOperator*{\sdev}{StdDev} %
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\Exp}{\EE}
+%
+\newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}} %
+\newcommand{\prodmeas}[1]{^{\otimes #1}}
+
+%
+%
+%
+%
+\newcommand{\negsetdelim}{:}
+\newcommand{\setdelim}{\ : \ }
+\newcommand{\Bigsetdelim}{\ : \ }
+\newcommand{\Biggsetdelim}{\ : \ }
+\newcommand{\negcondsym}{\vert}
+\newcommand{\condsym}{\ \vert \ }
+\newcommand{\Bigcondsym}{\ \Big\vert \ }
+\newcommand{\Biggcondsym}{\ \Bigg\vert \ }
+\newcommand{\iid}{i.i.d.}
+\newcommand{\IID}{I.I.D.}
+\newcommand{\as}{\text{a.s.}}
+
+
+%
+%
+\newcommand{\stT}{\ \text{\upshape s.t.}\ }
+\newcommand{\andT}{\ \text{\upshape and}\ }
+\newcommand{\orT}{\ \text{\upshape or}\ }
+\newcommand{\whereT}{\ \text{\upshape where}\ }
+\newcommand{\withT}{\ \text{\upshape with}\ }
+
+
+%
+%
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\ind}[1]{\II\{#1\}} %
+\newcommand{\id}{\text{id}}
+\def\multiset#1#2{\ensuremath{\left(\kern-.3em\left(\genfrac{}{}{0pt}{}{#1}{#2}\right)\kern-.3em\right)}}
+
+
+%
+%
+\DeclareMathOperator*{\argmin}{\arg\min} %
+\DeclareMathOperator*{\argmax}{\arg\max} %
+\DeclareMathOperator*{\esssup}{\text{ess}\sup} %
+\DeclareMathOperator*{\essinf}{\text{ess}\inf} %
+
+%
+\DeclareMathOperator*{\newlim}{\mathrm{lim}\vphantom{\mathrm{infsup}}}
+\DeclareMathOperator*{\newmin}{\mathrm{min}\vphantom{\mathrm{infsup}}}
+\DeclareMathOperator*{\newmax}{\mathrm{max}\vphantom{\mathrm{infsup}}}
+\DeclareMathOperator*{\newinf}{\mathrm{inf}\vphantom{\mathrm{infsup}}}
+\DeclareMathOperator*{\newsup}{\mathrm{sup}\vphantom{\mathrm{infsup}}}
+\renewcommand{\lim}{\newlim}
+\renewcommand{\min}{\newmin}
+\renewcommand{\max}{\newmax}
+\renewcommand{\inf}{\newinf}
+\renewcommand{\sup}{\newsup}
+
+
+%
+%
+\newcommand{\Tr}{^\text{\tiny T}} %
+\newcommand{\tr}{\mathrm{Tr}} %
+\newcommand{\adj}{^{\dag}} %
+\DeclareMathOperator{\spec}{\sigma} %
+\DeclareMathOperator{\diag}{diag} %
+\DeclareMathOperator{\rank}{rank} %
+
+
+%
+%
+\newcommand{\dee}{\mathrm{d}} %
+\newcommand{\grad}{\nabla} %
+\newcommand{\laplace}{\Delta} %
+\newcommand{\hess}{\grad^2} %
+\DeclareMathOperator*{\divergence}{div} %
+\newcommand{\jacobian}{J}
+\newcommand{\conv}{*}
+
+
+
+%
+%
+\newcommand{\rnderiv}[2]{\frac{\dee #1}{\dee #2}}
+\DeclareMathOperator{\supp}{Support}
+
+
+%
+%
+\newcommand{\distto}{\rightsquigarrow}
+\newcommand{\disttosk}{\Rightarrow}
+\newcommand{\universe}{\Omega}
+
+\newcommand{\distas}{\sim}
+\newcommand{\distiidas}{\stk{\distas}{iid}}
+\newcommand{\distindas}{\stk{\distas}{ind}}
+
+\newcommand{\pushfwdmeas}[2]{{{#1}_{\sharp} #2}}
+\newcommand{\Law}{\Ll}
+\newcommand{\cLaw}[1]{\Law^{#1}} %
+\newcommand{\kernels}{\Kk}
+
+
+%
+%
+\newcommand{\poissondist}{\mathrm{Pois}}
+\newcommand{\negbinomialdist}{\mathrm{NBin}}
+\newcommand{\binomialdist}{\mathrm{Bin}}
+\newcommand{\bernoullidist}{\mathrm{Bernoulli}}
+\newcommand{\rademacherdist}{\mathrm{Rad}}
+\newcommand{\betadist}{\mathrm{Beta}}
+\newcommand{\geometricdist}{\mathrm{Geom}}
+\newcommand{\hypergeometricdist}{\mathrm{HGeom}}
+\newcommand{\exponentialdist}{\mathrm{Exp}}
+\newcommand{\gammadist}{\mathrm{Gamma}}
+\newcommand{\normaldist}{\mathrm{Gaussian}}
+\newcommand{\lognormaldist}{\mathrm{LogN}}
+\newcommand{\uniformdist}{\mathrm{Unif}}
+
+
+%
+%
+\newcommand{\rbra}[2][{-1}]{\lcrx[#1] ( {#2} ) }
+\newcommand{\cbra}[2][{-1}]{\lcrx[#1] \{ {#2} \} }
+\newcommand{\sbra}[2][{-1}]{\lcrx[#1] [ {#2} ] }
+
+\newcommand{\abs}[2][{-1}]{\lcrx[#1] \vert {#2} \vert }
+\newcommand{\set}[2][{-1}]{\lcrx[#1] \{ {#2} \}}
+\newcommand{\floor}[2][{-1}]{\lcrx \lfloor {#2} \rfloor}
+\newcommand{\ceil}[2][{-1}]{\lcrx[#1] \lceil {#2} \rceil}
+\newcommand{\norm}[2][{-1}]{\lcrx[#1] \Vert {#2} \Vert}
+\newcommand{\inner}[3][{-1}]{\lcrx[#1] \langle {{#2},\ {#3}} \rangle}
+\newcommand{\card}[2][{-1}]{\lcrx[#1] \vert {#2} \vert }
+
+
+%
+%
+\newcommand{\defas}{\overset{\mathrm{def}}{=}}  %
+\newcommand{\disteq}{\overset{d}{=}}
+
+
+%
+%
+\newcommand{\Nats}{\NN}
+\newcommand{\NatsO}{\Nats\cup\set{0}}
+\newcommand{\Ints}{\ZZ}
+\newcommand{\Rationals}{\QQ}
+\newcommand{\Rats}{\Rationals}
+\newcommand{\Reals}{\RR}
+\newcommand{\ExtReals}{\overline{\Reals}}
+\newcommand{\PosInts}{\Ints_+}
+\newcommand{\PosReals}{\Reals_+}
+\newcommand{\Measures}{\mathcal{M}}
+\newcommand{\ProbMeasures}{\mathcal{M}_1}
+
+\newcommand{\range}[2][{1}]{
+	\IfEq{#1}{1}{\sbra{#2}}{\sbra{#2}_{#1}}}
+\newcommand{\rangeO}[2][{0}]{
+	\IfEq{#1}{0}{\sbra{#2}_0}{\sbra{#2}_{#1}}}
+
+
+\newcommand{\ointer}[2][{-1}]{\lcrx[#1] ( {#2} ) }
+\newcommand{\cinter}[2][{-1}]{\lcrx[#1] [ {#2} ] }
+\newcommand{\ocinter}[2][{-1}]{\lcrx[#1] ( {#2} ] }
+\newcommand{\cointer}[2][{-1}]{\lcrx[#1] [ {#2} ) }
+	
+
+%
+%
+\newcommand{\PowerSet}{\mathcal{P}}
+
+\newcommand{\union}{\cup}
+\newcommand{\Union}{\bigcup}
+\newcommand{\djunion}{\sqcup}
+\newcommand{\djUnion}{\bigsqcup}
+
+\newcommand{\intersect}{\cap}
+\newcommand{\Intersect}{\bigcap}
+
+\newcommand{\vol}{\mathrm{Vol}}
+\newcommand{\diam}{\mathrm{diam}}
+\DeclareMathOperator{\proj}{proj}
+
+\newcommand{\isomporphic}{\cong}
+
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\codomain}{codom}
+
+\DeclareMathOperator{\interior}{interior}
+\newcommand{\boundary}{\partial}
+

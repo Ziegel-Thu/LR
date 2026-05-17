@@ -1,0 +1,40 @@
+\begin{tikzpicture}[scale=0.6, every node/.style={scale=0.6}]
+\def\scalex{2.1}
+\def\scaley{2}
+\def\startx{0}
+\def\starty{0}
+\def\opac{1.0}
+\node[fill=green!20, draw, circle, minimum size=20pt] (A) at (0+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (B) at (1*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (C) at (2*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=green!20, draw, circle, minimum size=20pt] (D) at (3*\scalex+ \startx,0+ \starty) {};
+
+
+\node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (0+ \startx,0+ \starty) {};
+
+\node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (1*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (2*\scalex+ \startx,0+ \starty) {};
+
+\node[fill=purple!80, draw,regular polygon, regular polygon sides=5, minimum size=10pt] () at (3*\scalex+ \startx,0+ \starty) {};
+
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (E) at (0.5*\scalex+ \startx,0.5*\scaley+ \starty) {\texttt{True}};
+
+\node[fill=blue!20, draw, ellipse, minimum size=20pt] (F) at (2.5*\scalex + \startx,0.5*\scaley+ \starty) {\texttt{True}};
+
+
+\node[fill=yellow!20, draw, ellipse, minimum size=20pt] (G) at (1.5*\scalex + \startx,1*\scaley+ \starty) {\texttt{True}};
+
+
+
+\draw [->,opacity=\opac] (A) -- (E);
+\draw [->,opacity=\opac] (B) -- (E);
+\draw [->,opacity=\opac] (C) -- (F);
+\draw [->,opacity=\opac] (D) -- (F);
+\draw [->,opacity=\opac] (E) -- (G);
+\draw [->,opacity=\opac] (F) -- (G);
+\end{tikzpicture}

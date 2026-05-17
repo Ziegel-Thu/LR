@@ -1,0 +1,713 @@
+%
+
+%
+\newcommand{\pw}[1]{\textcolor{blue}{[PW: #1]}}
+%
+\newcommand{\bk}[1]{\textcolor{violet}{[BK: #1]}}
+
+
+\definecolor{googleblue}{RGB}{66,133,244}
+\definecolor{googlered}{RGB}{219,68,55}
+\definecolor{googleyellow}{RGB}{244,180,0}
+\definecolor{googlegreen}{RGB}{15,157,88}
+
+
+%
+%
+%
+
+\newcommand{\scarequo}[1]{``{#1}''}
+
+\newcommand{\inputspacename}{input space}
+\newcommand{\inputspaceName}{Input space}
+\newcommand{\inputspacenames}{input spaces}
+\newcommand{\inputspaceNames}{Input spaces}
+
+\newcommand{\localname}{local}
+\newcommand{\localName}{Local}
+
+\newcommand{\semilocalname}{semi-local}
+\newcommand{\semilocalName}{Semi-local}
+
+\newcommand{\outputspacename}{output space}
+\newcommand{\outputspaceName}{Output space}
+\newcommand{\outputspacenames}{output spaces}
+\newcommand{\outputspaceNames}{Output spaces}
+
+\newcommand{\valuebasedname}{zeroth order}
+\newcommand{\gradbasedname}{first order}
+\newcommand{\modelbasedname}{model-based}
+\newcommand{\saliencybasedname}{saliency-based}
+
+\newcommand{\dgpname}{data-generating process}
+\newcommand{\dgpName}{Data-generating process}
+\newcommand{\dgpnames}{data-generating processes}
+\newcommand{\dgpNames}{Data-generating processes}
+
+\newcommand{\datasetname}{dataset}
+\newcommand{\datasetName}{Dataset}
+\newcommand{\datasetnames}{datasets}
+\newcommand{\datasetNames}{Datasets}
+
+\newcommand{\fieldname}{interpretable machine learning}
+\newcommand{\fieldName}{Interpretable machine learning}
+
+\newcommand{\fieldnameshort}{interpretability}
+\newcommand{\fieldNameshort}{Interpretability}
+
+%
+%
+%
+%
+\newcommand{\covname}{feature}
+\newcommand{\covName}{Feature}
+\newcommand{\covnames}{features}
+\newcommand{\covNames}{Features}
+
+\newcommand{\intuitive}{(Informal)}
+
+\newcommand{\obsname}{example}
+\newcommand{\obsName}{Example}
+\newcommand{\obsnames}{examples}
+\newcommand{\obsNames}{Examples}
+
+\newcommand{\radiusname}{radius}
+
+\newcommand{\salmapname}{saliency map}
+\newcommand{\salmapName}{Saliency map}
+\newcommand{\salmapnames}{saliency maps}
+\newcommand{\salmapNames}{Saliency maps}
+
+\newcommand{\dataname}{response}
+\newcommand{\dataName}{Response}
+\newcommand{\datanames}{responses}
+\newcommand{\dataNames}{Responses}
+
+\newcommand{\mentalmodname}{mental model}
+\newcommand{\mentalmodName}{Mental model}
+\newcommand{\mentalmodnames}{mental models}
+
+\newcommand{\sampcompname}{sample complexity}
+\newcommand{\sampcompName}{Sample complexity}
+\newcommand{\sampcompNAME}{Sample Complexity}
+
+
+\newcommand{\classname}{class}
+\newcommand{\className}{Class}
+\newcommand{\classnames}{classes}
+\newcommand{\classNames}{Classes}
+
+\newcommand{\algoname}{algorithm}
+\newcommand{\algoName}{Algorithm}
+\newcommand{\algonames}{algorithms}
+\newcommand{\algoNames}{Algorithms}
+
+\newcommand{\queryalgoname}{query \algoname{}}
+\newcommand{\queryalgonames}{query \algonames{}}
+\newcommand{\queryalgoName}{Query \algoname{}}
+
+\newcommand{\binaryalgoname}{hypothesis test}
+\newcommand{\binaryalgoName}{Hypothesis test}
+\newcommand{\binaryalgonames}{hypothesis tests}
+
+\newcommand{\modelname}{model}
+\newcommand{\modelName}{Model}
+\newcommand{\modelnames}{models}
+\newcommand{\modelNames}{Models}
+
+\newcommand{\behaviourname}{behaviour}
+\newcommand{\behaviournames}{behaviours}
+\newcommand{\behaviourName}{Behaviour}
+%
+%
+%
+%
+
+\newcommand{\countbehaviourname}{counterfactual \behaviourname{}}
+\newcommand{\countmodbehaviourname}{counterfactual \modbehaviourname{}}
+\newcommand{\countmodbehaviourName}{Counterfactual \modbehaviourname{}}
+\newcommand{\countmodbehaviourNAME}{Counterfactual \modbehaviourNAME{}}
+
+\newcommand{\modbehaviourname}{\modelname{} \behaviourname{}}
+\newcommand{\modsbehaviourname}{\modelname{}'s \behaviourname{}}
+\newcommand{\modbehaviourName}{\modelName{} \behaviourname{}}
+\newcommand{\modbehaviournames}{\modelname{} \behaviournames{}}
+\newcommand{\modbehaviourNAME}{\modelName{} \behaviourName{}}
+\newcommand{\modbehaviourNAMEs}{\modelName{} \behaviourNames{}}
+
+\newcommand{\methodname}{method}
+\newcommand{\methodName}{Method}
+\newcommand{\methodnames}{methods}
+\newcommand{\methodNames}{Methods}
+
+\newcommand{\queryname}{query}
+\newcommand{\queryName}{Query}
+\newcommand{\querynames}{queries}
+\newcommand{\queryNames}{Queries}
+\newcommand{\querynamed}{queried}
+
+\newcommand{\username}{user}
+\newcommand{\userName}{User}
+\newcommand{\usernames}{users}
+\newcommand{\userNames}{Users}
+
+\newcommand{\hypname}{hypothesis}
+\newcommand{\hypName}{Hypothesis}
+\newcommand{\hypnames}{hypotheses}
+
+\newcommand{\hyptestname}{hypothesis test}
+\newcommand{\hyptestName}{Hypothesis test}
+\newcommand{\hyptestnames}{hypothesis tests}
+\newcommand{\hyptestNAME}{Hypothesis Test}
+\newcommand{\hyptestNAMEs}{Hypothesis Tests}
+\newcommand{\hyptestnaming}{hypothesis testing}
+\newcommand{\hyptestNAMing}{Hypothesis Testing}
+
+\newcommand{\inputassn}{sufficiently supported}
+
+\newcommand{\oraclename}{oracle}
+
+%
+%
+%
+%
+%
+%
+
+\newcommand{\oraclehyptestname}{\covname{}-\attname{} hypothesis test}
+\newcommand{\oraclehyptestName}{\covName{}-\attname{} hypothesis test}
+\newcommand{\oraclehyptestnames}{\covname{}-\attname{} hypothesis tests}
+\newcommand{\oraclehyptestNAME}{\covName{}-\attName{} Hypothesis Test}
+\newcommand{\oraclehyptestNAMEs}{\covName{}-\attName{} Hypothesis Tests}
+\newcommand{\oraclehyptestnaming}{\covname{}-\attname{} hypothesis testing}
+
+\newcommand{\samphyptestname}{\queryname{} hypothesis test}
+\newcommand{\samphyptestName}{\queryName{} hypothesis test}
+\newcommand{\samphyptestnames}{\queryname{} hypothesis tests}
+\newcommand{\samphyptestNAME}{\queryName{} Hypothesis Test}
+\newcommand{\samphyptestNAMEs}{\queryName{} Hypothesis Tests}
+\newcommand{\samphyptestnaming}{\queryname{} hypothesis testing}
+
+\newcommand{\nullname}{null hypothesis}
+\newcommand{\nullName}{Null hypothesis}
+\newcommand{\nullnames}{null hypotheses}
+
+\newcommand{\simpassn}{Assumption in plain English}
+\newcommand{\simpthm}{Theorem in plain English}
+
+\newcommand{\bothhypnames}{null and alternate hypotheses}
+
+\newcommand{\altname}{alternate hypothesis}
+\newcommand{\altName}{Alternate hypothesis}
+\newcommand{\altnames}{alternate hypotheses}
+
+\newcommand{\signame}{significance}
+\newcommand{\powname}{power}
+\newcommand{\sensname}{sensitivity}
+\newcommand{\specname}{specificity}
+
+\newcommand{\proxyname}{proxy}
+\newcommand{\proxyName}{Proxy}
+\newcommand{\proxynames}{proxies}
+\newcommand{\proxyNames}{Proxies}
+
+\newcommand{\attname}{attribution}
+\newcommand{\attName}{Attribution}
+\newcommand{\attnames}{attributions}
+
+\newcommand{\optattname}{optimal \attname{}}
+\newcommand{\optattName}{Optimal \attname{}}
+
+\newcommand{\querysetname}{query-set}
+\newcommand{\querysetName}{Query-set}
+\newcommand{\querysetnames}{query-sets}
+\newcommand{\querysetNames}{Query-sets}
+
+\newcommand{\valquerysetname}{value \querysetname{}}
+\newcommand{\valquerysetName}{Value \querysetname{}}
+\newcommand{\valquerysetnames}{value \querysetnames{}}
+\newcommand{\valquerysetNames}{Value \querysetnames{}}
+
+\newcommand{\gradquerysetname}{gradient \querysetname{}}
+\newcommand{\gradquerysetName}{Gradient \querysetname{}}
+\newcommand{\gradquerysetnames}{gradient \querysetnames{}}
+\newcommand{\gradquerysetNames}{Gradient \querysetnames{}}
+
+\newcommand{\recoursename}{recourse sensitive}
+\newcommand{\recourseName}{Recourse sensitive}
+\newcommand{\recourseNAME}{Recourse Sensitive}
+
+\newcommand{\continuousname}{continuous}
+\newcommand{\continuousName}{Continuous}
+\newcommand{\continuousnames}{continuity}
+
+\newcommand{\sensitivename}{\covname{} sensitive}
+\newcommand{\sensitiveName}{\covName{} sensitive}
+\newcommand{\sensitiveNAME}{\covName{} Sensitive}
+\newcommand{\sensitivenames}{\covname{} sensitivity}
+
+\newcommand{\completename}{complete}
+\newcommand{\completeName}{Complete}
+\newcommand{\completenames}{completeness}
+\newcommand{\completeNames}{Completeness}
+
+\newcommand{\basename}{baseline}
+\newcommand{\baseName}{Baseline}
+\newcommand{\basenames}{baselines}
+
+\newcommand{\basedepname}{\basename{} dependent}
+
+\newcommand{\distdepname}{distribution dependent}
+
+\newcommand{\baselinename}{\basename{} zeroed}
+\newcommand{\baselineName}{\baseName{} zeroed}
+\newcommand{\baselineNAME}{\baseName{} Zeroed}
+\newcommand{\baselinenames}{\basename{} zeroing}
+
+\newcommand{\implementname}{implementation invariant}
+\newcommand{\implementName}{Implementation invariant}
+\newcommand{\implementNAME}{Implementation Invariant}
+\newcommand{\implementnames}{implementation invariance}
+
+\newcommand{\linearname}{linear}
+\newcommand{\linearName}{Linear}
+\newcommand{\linearnames}{Linearity}
+
+%
+%
+%
+%
+\newcommand{\additivename}{linear}
+\newcommand{\additiveName}{Linear}
+\newcommand{\additivenames}{linearity}
+\newcommand{\additiveNames}{Linearity}
+
+%
+%
+%
+%
+%
+\newcommand{\fieldmethodname}{\covname{} \attname{} \methodname{}}
+\newcommand{\fieldmethodName}{\covName{} \attname{} \methodname{}}
+\newcommand{\fieldmethodNAME}{\covName{} \attName{} \methodName{}}
+\newcommand{\fieldmethodnames}{\covname{} \attname{} \methodnames{}}
+\newcommand{\fieldmethodNames}{\covName{} \attname{} \methodnames{}}
+
+\newcommand{\defname}{definition}
+\newcommand{\defName}{Definition}
+\newcommand{\defnames}{definitions}
+\newcommand{\defNames}{Definitions}
+
+%
+%
+%
+%
+%
+%
+%
+%
+\newcommand{\pracname}{user}
+\newcommand{\pracnames}{users}
+\newcommand{\pracName}{User}
+\newcommand{\pracNames}{Users}
+
+\newcommand{\groundname}{ground truth}
+\newcommand{\groundName}{Ground truth}
+\newcommand{\groundNAME}{Ground Truth}
+
+
+\newcommand{\expname}{explainer}
+
+\newcommand{\advname}{adversary}
+
+%
+%
+%
+%
+%
+%
+\newcommand{\fielddefname}{\covname{} \attname{} \methodname{}}
+\newcommand{\fielddefName}{\covName{} \attname{} \methodname{}}
+\newcommand{\fielddefNAME}{\covName{} \attName{} \methodName{}}
+\newcommand{\fielddefNAMEs}{\covName{} \attName{} \methodNames{}}
+\newcommand{\fielddefnames}{\covname{} \attname{} \methodnames{}}
+\newcommand{\fielddefNames}{\covName{} \attname{} \methodnames{}}
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+%
+%
+
+%
+%
+%
+%
+
+\newcommand{\taskname}{task}
+\newcommand{\taskName}{Task}
+\newcommand{\tasknames}{tasks}
+\newcommand{\taskNames}{Tasks}
+
+\newcommand{\fieldtaskname}{\covname{} \attname{} \taskname{}}
+\newcommand{\fieldtaskName}{\covName{} \attname{} \taskname{}}
+\newcommand{\fieldtasknames}{\covname{} \attname{} \tasknames{}}
+\newcommand{\fieldtaskNames}{\covName{} \attname{} \tasknames{}}
+\newcommand{\fieldtaskNAME}{\covName{} \attName{} \taskName{}}
+\newcommand{\fieldtaskNAMEs}{\covName{} \attName{} \taskNames{}}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+\newcommand{\downtaskname}{end-task}
+\newcommand{\downtaskName}{End-task}
+\newcommand{\downtaskNAME}{End-Task}
+\newcommand{\downtasknames}{end-tasks}
+\newcommand{\downtaskNames}{End-tasks}
+\newcommand{\downtaskNAMEs}{End-Tasks}
+
+%
+%
+%
+%
+%
+%
+
+\newcommand{\zeroagnosticname}{zeroth-order \modelname{} agnostic}
+\newcommand{\zeroagnosticName}{Zeroth-order \modelname{} agnostic}
+\newcommand{\zeroagnosticNAME}{Zeroth-Order \modelName{} Agnostic}
+
+\newcommand{\firstagnosticname}{first-order \modelname{} agnostic}
+\newcommand{\firstagnosticName}{First-order \modelname{} agnostic}
+\newcommand{\firstagnosticNAME}{First-Order \modelName{} Agnostic}
+
+\newcommand{\bothagnosticname}{\modelname{} agnostic}
+\newcommand{\bothagnosticName}{\modelName{} agnostic}
+\newcommand{\bothagnosticNAME}{\modelName{} Agnostic}
+
+\newcommand{\distagnosticname}{problem agnostic}
+
+\newcommand{\depagnosticname}{dependence agnostic}
+
+\newcommand{\newname}{explanation-calibrator}
+\newcommand{\newName}{Explanation-calibrator}
+\newcommand{\newnames}{explanation-calibrators}
+\newcommand{\newNames}{Explanation-calibrators}
+
+\newcommand{\intname}{interpretable}
+\newcommand{\intName}{Interpretable}
+
+\newcommand{\intnamen}{interpretation}
+\newcommand{\intNamen}{Interpretation}
+\newcommand{\intnamens}{interpretations}
+\newcommand{\intNamens}{Interpretations}
+
+%
+%
+%
+\newcommand{\covspace}{\Xx}
+\newcommand{\covnbhd}{\Bb}
+\newcommand{\dataspace}{\Yy}
+\newcommand{\modelspace}{\Ff}
+\newcommand{\modelspacedum}{\Gg}
+\newcommand{\inputspace}{\Ii}
+\newcommand{\expspace}{\Ee} 
+\newcommand{\genexpspace}{\expspace_\star} 
+\newcommand{\expmethodspace}{\mathbb{T}}
+\newcommand{\discspace}{\Sigma} 
+\newcommand{\gendiscspace}{\Sigma_\star} 
+\newcommand{\queryspace}{\Qq}
+\newcommand{\valqueryspace}[1]{\overline{\queryset}_{#1}}
+\newcommand{\gradqueryspace}[1]{\overline{\queryset}_{\grad \! #1}}
+\newcommand{\genReals}{\Reals_\star}
+\newcommand{\gendataspace}{\dataspace_\star}
+\newcommand{\expparamspace}{\Theta}
+\newcommand{\modelparamspace}{\MM}
+\newcommand{\probspace}{\Pp}
+\newcommand{\agreeset}{\Ff}
+
+\newcommand{\restrict}[1]{\lvert_{#1}\,}
+\newcommand{\pwiselin}[1]{\Ll^{#1}}
+\newcommand{\numpiece}{m}
+\newcommand{\polytope}{V}
+
+%
+%
+%
+\newcommand{\jointdist}{\mu}
+\newcommand{\covdist}{\jointdist}
+\newcommand{\covdistdum}{\nu}
+
+
+%
+%
+%
+\newcommand{\covdim}{p}
+\newcommand{\datadim}{q}
+\newcommand{\expdim}{d}
+\newcommand{\modeldim}{N}
+\newcommand{\numqueries}{m}
+\newcommand{\threshval}{\alpha}
+\newcommand{\regval}{\lambda}
+
+\newcommand{\recoursetask}{\mathrm{Recourse}}
+\newcommand{\spurioustask}{\mathrm{Spurious}}
+
+%
+%
+%
+\newcommand{\linparam}{\beta}
+\newcommand{\linparamleft}{\beta^{\text{\tiny L}}}
+\newcommand{\linparamright}{\beta^{\text{\tiny R}}}
+\newcommand{\linparamdum}{\linparam'}
+\newcommand{\modparam}{\theta}
+\newcommand{\modparamdum}{\modparam'}
+\newcommand{\perturblocdiff}[2]{\eta_{#1,#2}^{>}}
+\newcommand{\perturblocsame}[2]{\eta_{#1,#2}^{\leq}}
+\newcommand{\perturbdum}{\eta}
+\newcommand{\perturbrad}{r}
+\newcommand{\perturbset}{A}
+
+%
+%
+%
+\newcommand{\NaN}{\text{\upshape NaN}}
+\newcommand{\covobs}{X}
+\newcommand{\covshiftobs}{\hat{X}}
+\newcommand{\covval}{x}
+\newcommand{\covvalu}{u}
+\newcommand{\covvalv}{v}
+\newcommand{\baseval}{\bar{\covval}}
+\newcommand{\covexpval}{x^{\circ}}
+\newcommand{\covleft}{x^{\text{\tiny L}}}
+\newcommand{\covright}{x^{\text{\tiny R}}}
+\newcommand{\modelleft}{\model^{\text{\tiny L}}}
+\newcommand{\modelright}{\model^{\text{\tiny R}}}
+\newcommand{\covvaldum}{x'}
+\newcommand{\covmean}{m}
+\newcommand{\covbias}{b}
+\newcommand{\covprob}{\tau}
+\newcommand{\covconst}{c}
+\newcommand{\covthresh}{\alpha}
+\newcommand{\covmom}{v^2}
+\newcommand{\covvar}{\sigma^2}
+\newcommand{\covobsdum}{\covobs'}
+\newcommand{\covref}{\overline\covobs}
+\newcommand{\covrefval}{\overline\covval}
+\newcommand{\dataobs}{Y}
+\newcommand{\dataval}{y}
+\newcommand{\gradval}{h}
+\newcommand{\dataref}{\overline\dataobs}
+\newcommand{\dataobsdum}{\dataobs'}
+\newcommand{\noiseobs}{\tilde\dataobs}
+\newcommand{\noiseprob}{\tilde p}
+\newcommand{\fullobs}{Z}
+\newcommand{\fullval}{z}
+\newcommand{\fullobsdum}{\fullobs'}
+\newcommand{\fullvaldum}{\fullval'}
+\newcommand{\query}{q}
+\newcommand{\expval}{\phi}
+\newcommand{\expvaldum}{\expval'}
+\newcommand{\discval}{s}
+\newcommand{\discvaldum}{\discval'}
+\newcommand{\queryset}{\Qq}
+\newcommand{\valqueryset}[1]{\queryset_{#1}}
+\newcommand{\gradqueryset}[1]{\queryset_{\grad \! #1}}
+\newcommand{\querysetdum}{\queryset'}
+\newcommand{\featuresub}{\Ss}
+\newcommand{\featuresubcorr}{\Ss_{\text{\tiny C}}}
+\newcommand{\distsym}{\pi}
+\newcommand{\zerovec}{\mb{0}}
+\newcommand{\dataset}{D}
+\newcommand{\functionset}{A}
+\newcommand{\shapwt}{\omega}
+
+%
+%
+%
+\newcommand{\feat}[1]{_{#1}}
+\newcommand{\local}[1]{^{#1}}
+\newcommand{\comp}[1]{{#1}^{\text{\tiny c}}}
+\newcommand{\timeind}[1]{^{(#1)}}
+\newcommand{\lipind}[1]{^{#1}}
+\newcommand{\subspaceset}[1]{2^{#1}}
+\DeclareMathOperator*{\AbsNorm}{AbsNorm} %
+\newcommand{\deltameas}[1]{\delta_{#1}}
+\newcommand{\ball}[2]{\Bb(#2;#1)}
+\newcommand{\leftind}{^{\text{\tiny L}}}
+\newcommand{\rightind}{^{\text{\tiny R}}}
+
+%
+%
+%
+\newcommand{\defhelper}[1]{{\upshape #1}}
+\newcommand{\lime}{\defhelper{LIME}}
+\newcommand{\shap}{\defhelper{SHAP}}
+\newcommand{\condshap}{\defhelper{CondSHAP}}
+\newcommand{\condshapshort}{\defhelper{C-SHAP}}
+\newcommand{\vanillagrad}{\defhelper{Gradient}}
+\newcommand{\vanillagradshort}{\defhelper{Grad}}
+\newcommand{\smoothgrad}{\defhelper{SmoothGrad}}
+\newcommand{\smoothgradshort}{\defhelper{SG}}
+\newcommand{\intgrad}{\defhelper{Integrated Gradients}}
+\newcommand{\intgradshort}{\defhelper{IG}}
+\newcommand{\deeplift}{\defhelper{DeepLift}}
+\newcommand{\gradcam}{GradCam}
+\newcommand{\guidedbp}{Guided Backprop}
+\newcommand{\genshapname}{generalized Shapley values}
+\newcommand{\genshapShort}{GenSHAP}
+\newcommand{\singperturb}{Individual Perturbation}
+\newcommand{\singperturbshort}{IP}
+\newcommand{\jointperturb}{Joint Perturbation}
+\newcommand{\jointperturbshort}{JP}
+\newcommand{\occlusion}{Occlusion}
+\newcommand{\occlusionshort}{Occ}
+\newcommand{\comprehensive}{Most Comprehensive}
+\newcommand{\comprehensiveshort}{Comp}
+\newcommand{\sufficient}{Most Sufficient}
+\newcommand{\sufficientshort}{Suff}
+\newcommand{\compsuff}{Most Comprehensive and Sufficient}
+\newcommand{\compsuffshort}{CompSuff}
+\newcommand{\decisionflip}{Best Decision Flip}
+\newcommand{\decisionflipshort}{DF}
+\newcommand{\decisionflipfrac}{Best Decision Flip Fraction}
+\newcommand{\decisionflipfracshort}{DFF}
+\newcommand{\deleterank}{Highest Deletion Rank Correlation}
+\newcommand{\deleterankshort}{RankDel}
+\newcommand{\insertrank}{Highest Insertion Rank Correlation}
+\newcommand{\insertrankshort}{RankIns}
+\newcommand{\maxprob}{Maximal \obsName{}}
+\newcommand{\maxprobshort}{Max}
+
+
+%
+%
+%
+\newcommand{\intmetric}{\Ii} 
+\newcommand{\faithmetric}{\rho} 
+\newcommand{\discmetric}{\sigma} 
+\newcommand{\qualmetric}{\ell}
+\newcommand{\gennorm}[1]{\norm{#1}_{\star}}
+\newcommand{\optmetric}{\Psi}
+\newcommand{\TVdist}{d_{\scriptscriptstyle\mathrm{TV}}}
+\newcommand{\loss}{\ell}
+\newcommand{\regularizer}{\Omega}
+\newcommand{\robustmetric}{L}
+\newcommand{\disagreemetric}{\Gamma}
+\newcommand{\utility}{u}
+
+%
+%
+%
+\newcommand{\model}{f}
+\newcommand{\modeldum}{g}
+\newcommand{\modeldumm}{h}
+\newcommand{\modelref}{f_0}
+\newcommand{\newmethod}{\mathfrak{m}}
+\newcommand{\threshoracle}[1]{\expmethod^{\text{\upshape \tiny Th}}_{#1}}
+\newcommand{\regoracle}[1]{\expmethod^{\text{\upshape \tiny Reg}}_{#1}}
+\newcommand{\genoracle}{\expmethod^{\text{\upshape \tiny Opt}}}
+\newcommand{\attmethod}{\tau}
+\newcommand{\optatt}{\attmethod^{\text{\upshape \tiny Opt}}}
+\newcommand{\algo}{\Aa}
+\newcommand{\domainshift}{\psi}
+\newcommand{\featureshift}{\mathrm{f}}
+\newcommand{\shaprv}[3]{\nu_{#1}(#2;#3)}
+\newcommand{\intapprox}{{\hat I}^{\text{\upshape\tiny Int}}}
+
+
+%
+%
+%
+\newcommand{\queryalgo}{\mathbf{q}}
+\newcommand{\binaryalgo}{\mathfrak{b}}
+\newcommand{\oraclehyptest}{\mathbf{h}}
+\newcommand{\samphyptest}{\mathbf{s}}
+\newcommand{\samphyptestoracle}{\samphyptest^*}
+\newcommand{\samphyprv}[3]{\mathbf{T}\feat{\! #1,#2}\timeind{#3}}
+\newcommand{\samphypPP}[3]{\PP\feat{\! #1,#2}\timeind{#3}}
+\newcommand{\querysample}{\mathfrak{s}}
+\newcommand{\outscale}{\eps}
+\newcommand{\inscale}{\delta}
+\newcommand{\randsign}{\sigma}
+\newcommand{\inoutratio}{r}
+\newcommand{\lipconst}{L}
+\newcommand{\lipdef}{\mathrm{Lip}}
+\newcommand{\cube}{h}
+\newcommand{\cubealt}{h^*}
+\newcommand{\sampcompevent}{\Aa}
+\newcommand{\outbase}{\alpha}
+
+\newcommand{\covvalalt}{\covval^*}
+
+\newcommand{\numer}{N}
+\newcommand{\denom}{M}
+
+%
+%
+%
+\newcommand{\nullind}{\timeind{0}}
+\newcommand{\altind}{\timeind{1}}
+\newcommand{\nullhyp}{\mathrm{H}\nullind}
+\newcommand{\althyp}{\mathrm{H}\altind}
+\newcommand{\nullprob}{\PP\nullind}
+\newcommand{\altprob}{\PP\altind}
+\newcommand{\typeAsym}{\alpha}
+\newcommand{\typeBsym}{\beta}
+\newcommand{\powsym}{\mathrm{Pow}}
+\newcommand{\sigsym}{\mathrm{Sig}}
+\newcommand{\specsym}{\mathrm{Spec}}
+\newcommand{\senssym}{\mathrm{Sens}}
+\newcommand{\sampspecsym}{\mathrm{Spec}}
+\newcommand{\sampsenssym}{\mathrm{Sens}}
+
+%
+%
+%
+\newcommand{\methodhelp}[1]{^{\text{\tiny\upshape #1}}}
+\newcommand{\expmethod}{\hat{\Phi}}
+\newcommand{\expdef}{\Phi}
+\newcommand{\expfunc}{\nu}
+\newcommand{\exprankdef}{r}
+\newcommand{\genshapmethod}[1]{\expmethod^{\text{\tiny\upshape\genshapShort}(#1)}}
+\newcommand{\vanillagradmethod}{\expmethod\methodhelp{\vanillagradshort}}
+\newcommand{\limemethod}[2]{\expmethod^{\text{\tiny\upshape\lime}(#1,#2)}}
+\newcommand{\intgradmethod}[1]{\expmethod^{\text{\tiny\upshape\intgradshort}(#1)}}
+\newcommand{\singperturbmethod}[1]{\expmethod^{\text{\tiny\upshape\singperturbshort}(#1)}}
+\newcommand{\jointperturbmethod}[1]{\expmethod^{\text{\tiny\upshape\jointperturbshort}(#1)}}
+
+%
+%
+%
+\newcommand{\defhelp}[1]{^{\text{\tiny\upshape #1}}}
+\newcommand{\limedef}{\expdef\defhelp{\lime{}}}
+\newcommand{\vanillagraddef}{\expdef\defhelp{\vanillagradshort}}
+\newcommand{\intgraddef}{\expdef\defhelp{\intgradshort}}
+\newcommand{\shapdef}{\expdef\defhelp{\shap}}
+\newcommand{\condshapdef}{\expdef\defhelp{\condshapshort}}
+\newcommand{\smoothgraddef}{\expdef\defhelp{\smoothgradshort}}
+\newcommand{\occlusiondef}{\expdef\defhelp{\occlusionshort}}
+\newcommand{\maxprobdef}{\expdef\defhelp{\maxprobshort}}
+\newcommand{\comprehensivedef}[1]{\expdef^{\text{\tiny\upshape\comprehensiveshort}(#1)}}
+\newcommand{\sufficientdef}[1]{\expdef^{\text{\tiny\upshape\sufficientshort}(#1)}}
+\newcommand{\compsuffdef}[1]{\expdef^{\text{\tiny\upshape\compsuffshort}(#1)}}
+\newcommand{\decisionflipdef}[1]{\expdef^{\text{\tiny\upshape\decisionflipshort}(#1)}}
+\newcommand{\decisionflipfracdef}[1]{\expdef^{\text{\tiny\upshape\decisionflipfracshort}(#1)}}
+\newcommand{\deleterankdef}[1]{\expdef^{\text{\tiny\upshape\deleterankshort}(#1)}}
+\newcommand{\insertrankdef}[1]{\expdef^{\text{\tiny\upshape\insertrankshort}(#1)}}

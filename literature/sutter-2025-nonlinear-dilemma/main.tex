@@ -1,0 +1,854 @@
+\documentclass{article}
+
+\usepackage[final]{neurips_2025}
+
+\usepackage[utf8]{inputenc} %
+\usepackage[T1]{fontenc}    %
+\usepackage[breaklinks]{hyperref}       %
+\usepackage{url}            %
+\usepackage{booktabs}       %
+\usepackage{amsfonts}       %
+\usepackage{nicefrac}       %
+\usepackage[nopatch=footnote]{microtype}      %
+\usepackage[dvipsnames]{xcolor}         %
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{paralist}
+\usepackage{amssymb}%
+\usepackage{pifont}%
+\PassOptionsToPackage{hyphens}{url}
+
+\graphicspath{ {./images/} }
+
+\usepackage[frozencache,cachedir=minted-cache]{minted}
+\setminted[python]{breaklines, framesep=2mm, fontsize=\footnotesize, numbersep=5pt}
+
+\maxdeadcycles=1000  %
+
+\definecolor{darkblue}{rgb}{0, 0, 0.5}
+\hypersetup{colorlinks=true, citecolor=darkblue, linkcolor=darkblue, urlcolor=darkblue}
+
+\input{preamble}
+
+\newcommand*{\circled}[1]{\tikz[baseline=(char.base)]{
+        \node[shape=circle,draw,thick,inner sep=1pt] (char) {\normalfont{\small #1}};}}
+\DeclareMathOperator*{\myforall}{\forall}
+
+\title{The Non-Linear Representation Dilemma: Is Causal Abstraction Enough for Mechanistic Interpretability?}
+
+\newcommand{\epflid}{{\includegraphics[scale=0.032]{assets/epfl_logo.png}}}
+\newcommand{\ethid}{{\includegraphics[scale=0.028]{assets/eth_logo.png}}}
+\newcommand{\epflemailadress}[1]{\href{mailto:#1@cam.ac.uk}{#1}}
+\newcommand{\ethemailadress}[1]{\href{mailto:#1@inf.ethz.ch}{#1}}
+
+\author{
+    Denis Sutter,$^\ethid$
+    Julian Minder,$^\epflid$ 
+    Thomas Hofmann,$^\ethid$ 
+    Tiago Pimentel\,$^\ethid$ \\
+    \textsuperscript{\ethid}ETH Z\"urich \quad
+    \textsuperscript{\epflid}EPFL \\
+    {\myemph{\href{mailto:densutter@ethz.ch}{densutter}@ethz.ch},\,\, \myemph{\href{mailto:julian.minder@epfl.ch}{julian.minder}@epfl.ch},\,\, \myemph{\{\ethemailadress{thomas.hofmann}, \ethemailadress{tiago.pimentel}\}@inf.ethz.ch}} \\
+    %
+    \begin{tblr}{colspec = {Q[c,m] Q[c,m]}, colsep=10pt, stretch=0}
+        \cincludegraphics[width=1.1em, keepaspectratio]{assets/github-mark.png} {\fontsize{11pt}{11.5pt}\selectfont\href{https://github.com/densutter/non-linear-representation-dilemma}{\myemph{densutter/non-linear-representation-dilemma}}}
+    \end{tblr}\vspace{-20pt}
+}
+
+\newcommand{\citeposs}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+\newcommand{\prob}{p}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\nx}{x}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\calY}{\mathcal{Y}}
+\newcommand{\bytrue}{\widetilde{y}}
+\newcommand{\mytask}{\mathtt{T}}
+\newcommand{\ptask}{\prob_{\mathtt{T}}}
+\newcommand{\ftask}{\mathtt{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\alphabet}{\Sigma}
+\newcommand{\sentnegative}{\mathtt{neg}}
+\newcommand{\sentpositive}{\mathtt{pos}}
+
+\newcommand{\phuman}{\prob_{\mathtt{H}}}
+
+\mycgmacro{\dacg}{\mathcal{G}}
+\mycgmacro{\alg}{\mathtt{A}}
+\mycgmacro{\algfuncbase}{f}
+\mycgmacro{\algfunc}{\algfuncbase_{\alg}}
+\newcommand{\algfuncnode}[1]{\algfuncbase_{\alg}^{#1}}
+\newcommand{\nodesset}{\dacg_{\mathtt{nodes}}}
+\newcommand{\edgesset}{\dacg_{\mathtt{edges}}}
+\newcommand{\nodesspace}{\mathcal{N}}
+\newcommand{\parents}{\mathtt{par}_{\alg}}
+\newcommand{\nodevalue}{v}
+\newcommand{\nodesvalues}{\mathbf{v}}
+\newcommand{\nodesvalueset}{\mathbf{V}}
+\mycgmacro{\node}{\eta}
+\mycgmacro{\nodes}{\boldsymbol{\eta}}
+\newcommand{\nodesinput}{\nodes_{\bx}}
+\newcommand{\nodeinput}{\nodes_{\nx}}
+\newcommand{\nodeinputint}{\nodes_{\nx'}}
+\newcommand{\nodesoutput}{\nodes_{\by}}
+\newcommand{\nodesinner}{\nodes_{\mathtt{inner}}}
+
+\mycgmacro{\CG}{\mathcal{G}}
+\mycgmacro{\pcg}{\prob_{\CG}}
+
+\newcommand{\RationalNumbers}{\mathbb{R}}
+\newcommand{\NaturalNumbers}{\mathbb{N}}
+
+\newcommand{\lfalse}{\mathtt{false}}
+\newcommand{\ltrue}{\mathtt{true}}
+\newcommand{\ytrue}{\bar{y}}
+
+\mydnnmacro{\dnn}{\mathtt{N}}
+\newcommand{\hiddenspace}{\mathcal{H}}
+\newcommand{\func}{f}
+\mydnnmacro{\dnnfuncbase}{\func}
+\mydnnmacro{\dnnfunc}{\dnnfuncbase_{\dnn}}
+\newcommand{\dnnfunclayer}[1]{\dnnfuncbase_{\dnn}^{#1}}
+\newcommand{\dnnmlpfunclayer}[1]{\dnnfuncbase_{\dnn_{\mathtt{MLP}}}^{#1}}
+
+\newcommand{\layer}{\ell}
+\newcommand{\hiddenstates}{\mathbf{h}}
+\mydnnmacro{\pdnn}{\prob_{\dnn}}
+\newcommand{\pdnncausal}{{\textcolor{\colourdnn}{\prob}}^{\causalmap}_{\dnn}}
+\newcommand{\nlayers}{L}
+\newcommand{\mlpweights}{\mathbf{W}}
+\newcommand{\mlpbias}{\mathbf{b}}
+\newcommand{\nonlinearity}{\sigma}
+\newcommand{\selfattention}{\mathtt{attn}}
+\newcommand{\transformerblock}{\mathtt{transblock}}
+\newcommand{\layerNorm}{\mathtt{LN}}
+\newcommand{\singleheadattention}{\mathtt{sing\_att}}
+\newcommand{\concat}{\mathtt{concat}}
+\newcommand{\splitfn}{\mathtt{split}}
+\newcommand{\head}{\boldsymbol \eta}
+\newcommand{\mlpfunc}{\mathtt{mlp}}
+\newcommand{\gaussian}{\mathtt{Gaussian}}
+\newcommand{\stddev}{\Sigma}
+\newcommand{\softmax}{\mathtt{softmax}}
+\newcommand{\embeddings}{\mathbf{e}}
+\newcommand{\lossfunc}{\mathcal{L}}
+\newcommand{\dataset}{\mathcal{D}}
+\newcommand{\dimension}{d}
+\mydnnmacro{\neuronset}{\boldsymbol{\psi}}
+\mydnnmacro{\neuron}{\psi}
+\mydnnmacro{\Hiddenstates}{\mathbf{H}}
+
+\newcommand{\algname}[1]{\texttt{\fontsize{9pt}{9pt}\selectfont#1}}
+\newcommand{\algbothequality}{\algname{both equality relations}\xspace}
+\newcommand{\algleftequality}{\algname{left equality relation}\xspace}
+\newcommand{\algidentityoffirst}{\algname{identity of first argument}\xspace}
+\newcommand{\algabab}{\algname{ABAB-ABBA}\xspace}
+\newcommand{\alganorand}{\algname{And-Or-And}\xspace}
+\newcommand{\algandor}{\algname{And-Or}\xspace}
+
+\newcommand{\isequalsubscript}{==}
+\newcommand{\isequal}{==}
+
+\newcommand{\inductioncircle}[1]{{\color{MidnightBlue}\circled{\textbf{#1}}}}
+\newcommand{\emptyintervention}{\emptyset}
+\newcommand{\mathcomment}[1]{\text{\textcolor{gray}{#1}}}
+\newcommand{\rotf}{\rotatebox[origin=c]{180}{$f$}}
+\mydnnmacro{\dnninvfuncbase}{\reflectbox{$f$}}
+\newcommand{\dnninvfunclayer}[1]{\dnninvfuncbase_{\dnn}^{#1}}
+
+\newcommand{\causalmap}{\phi}
+\newcommand{\interventionsize}{\lvert \neuronset^{\causalmap}_\node \rvert}
+\newcommand{\causalmaps}{\boldsymbol{\phi}}
+\newcommand{\alignmentpartition}{\Pi}
+\newcommand{\alignmentvaluefunc}{\pi}
+\newcommand{\project}{\mathbf{P}}
+\newcommand{\matrixidentity}{\mathbf{I}}
+\newcommand{\matrixones}{\mathbf{1}}
+\newcommand{\exacttransItrans}{\omega}
+\newcommand{\exacttransValtrans}{\tau}
+
+\newcommand{\abstractionmap}{\tau}
+\mydnnmacro{\hiddenspacefull}{\boldsymbol{\hiddenspace}}
+\mycgmacro{\nodesspacefull}{\boldsymbol{\nodesspace}}
+\newcommand{\interventionsset}{\boldsymbol{\mathcal{I}}}
+\newcommand{\interventionmap}{\omega_{\abstractionmap}}
+
+\usepackage{etoolbox}
+\usepackage{titlesec}
+
+\newcommand{\zerodisplayskips}{%
+  \setlength{\abovedisplayskip}{0.4em}%
+  \setlength{\belowdisplayskip}{0.4em}}%
+  %
+  %
+\appto{\normalsize}{\zerodisplayskips}
+\appto{\small}{\zerodisplayskips}
+\appto{\footnotesize}{\zerodisplayskips}
+
+\titlespacing{\paragraph}{0pt}{0.5ex plus 0.3ex minus .2ex}{1em}
+
+\titlespacing{\section}{0pt}{0.6ex plus 0.3ex minus .2ex}{0.4ex}
+\titlespacing{\subsection}{0pt}{0.5ex plus 0.3ex minus .2ex}{0.3ex}
+\titlespacing{\subsubsection}{0pt}{0.5ex plus 0.3ex minus .2ex}{0.3ex}
+\setlength{\belowcaptionskip}{-8pt}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    The concept of \defn{causal abstraction} got recently popularised to demystify the opaque decision-making processes of machine learning models; in short, a neural network can be \defn{abstracted} as a higher-level algorithm if there exists a function which allows us to map between them.
+    Notably, most interpretability papers implement these maps as linear functions, motivated by the \defn{linear representation hypothesis}: the idea that features are encoded linearly in a model's representations. 
+    However, this linearity constraint is not required by the definition of causal abstraction.
+    In this work, we critically examine the concept of causal abstraction by considering arbitrarily powerful alignment maps.
+    In particular, we prove that under reasonable assumptions, \emph{any} neural network can be mapped to \emph{any} algorithm, rendering this unrestricted notion of causal abstraction trivial and uninformative.
+    We complement these theoretical findings with empirical evidence, demonstrating that it is possible to perfectly map models to algorithms even when these models are incapable of solving the actual task; e.g.,
+    on an experiment using randomly initialised language models, our alignment maps reach 100\% interchange-intervention accuracy on the indirect object identification task.
+    This raises the \defn{non-linear representation dilemma}: 
+    if we lift the linearity constraint imposed to alignment maps in causal abstraction analyses, we are left with no principled way to balance the inherent trade-off between these maps' complexity and accuracy.
+    Together, these results suggest an answer to our title's question: causal abstraction is \emph{not} enough for mechanistic interpretability, as it becomes vacuous without assumptions about how models encode information. 
+    Studying the connection between this information-encoding assumption and causal abstraction should lead to exciting future work.\looseness=-1
+\end{abstract}
+
+\vspace{-10pt}
+\section{Introduction}
+
+The increasing popularity of machine learning (ML) models has led to a surge in their deployment across various industries. 
+However, the lack of interpretability in these models raises significant concerns, particularly in high-stakes applications where understanding the decision-making process is crucial \citep{Goodman2016EUregulations,tonekaboni2019clinicianswantcontextualizingexplainable,Zhu2020MultimediaIntelligence,Gao2023InterpretabilityofMachine}.
+Unsurprisingly, this opacity has motivated a multitude of research on mechanistic (or causal) interpretability, which tries to analyse and understand the hidden algorithms that underlie these models \citep{olah2020zoom,elhage2021mathematical,mueller2024questrightmediatorhistory,ferrando2024primerinnerworkingstransformerbased,sharkey2025openproblemsmechanisticinterpretability}.\looseness=-1
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/Figure1.pdf}
+    \vspace{-8pt}
+    \caption{A visualisation of what happens when analysing causal abstractions with increasingly complex alignment maps $\causalmap$. The more complex $\causalmap$ is, the higher the intervention accuracy---and, consequently, the stronger the algorithm--DNN alignment. In \cref{theorem:existing_causalmap_for_any_algorithm}, we show that given arbitrarily complex alignment maps, we can always find a perfect alignment (under reasonable assumptions).\looseness=-1}
+    \label{fig:figure_1}
+    \vspace{-5pt}
+\end{figure}
+
+A promising approach to address this challenge is \defn{causal abstraction} \citep{Beckers2018AbstractingCM,Geiger2023CausalAA}, which tries to map the behaviour of a model to a higher-level (and conceptually simpler) algorithm which solves the task.
+At the core of this concept is the idea that if an intervention is found to change a model's behaviour in a way that aligns with a specific algorithm, then that algorithm can be considered implemented by the model.
+Recent research, however, has raised considerable issues with this approach \citep[e.g.,][]{Makelov2023IsTT,Mueller2024MissedCA,Sun2025HyperDASTA}. 
+Among those, \citet{meloux2025everything} notes that a model's causal abstraction is not necessarily unique, showing that many algorithms can be aligned to the same neural network. 
+Additionally, most work on causal abstraction \citep{wu2023interpretability,Geiger2023FindingAB,minder2025controllable, Sun2025HyperDASTA} implicitly assumes information is linearly encoded in models' representations, relying on the \defn{linear representation hypothesis} \citep{alain2018understanding,bolukbasi2016lsh}.
+Linearity, however, is not required by the definition of causal abstraction \citep{Beckers2018AbstractingCM} and increasing evidence suggests that not all representations may be linearly encoded \citep{white-etal-2021-non,olah2024linear,Mueller2024MissedCA,Csordas2024RecurrentNN,Engels2024NotAL,engels2025decomposingdarkmattersparse,kantamneni2025languagemodelsusetrigonometry}.\looseness=-1
+
+In this paper, we first prove that, once we drop the linearity constraint, \emph{any} model can be perfectly mapped to \emph{any} algorithm under relatively weak assumptions---e.g., hidden activation's input-injectivity and output-surjectivity, which we will define formally.
+This renders causal abstraction vacuous when used without constraints.
+If we restrict alignment maps to only consider, e.g., linear functions, this problem does not arise though.
+It follows that causal abstraction implicitly relies on strong assumptions about how features are encoded in deep neural networks (DNNs), and becomes trivial without such assumptions.
+This puts us at an impasse: we may want to rely on stronger notions of causal abstraction which may leverage non-linearly encoded information, but this may make our analyses vacuous; we call this the \defn{non-linear representation dilemma} (schematised in \cref{fig:figure_1}).
+
+To empirically validate our theoretical results, we reproduce the original distributed alignment search (DAS) experiments \citep{Geiger2023FindingAB}, but while leveraging more complex alignment maps. 
+We find that key empirical patterns they observed---such as the first layer being easier to map to the tested algorithms in a hierarchical equality task---vanish when we use more powerful maps. 
+Additionally, we find that we can achieve over 80\% interchange intervention accuracy (IIA) using non-linear alignment maps in randomly initialised models.
+Extending our experiments to language models from the Pythia suite \citep{biderman2023pythia}, we show that near-perfect maps can be found for randomly initialised models in the indirect object identification (IOI) task \citep{wang2023interpretability}; notably, as training progresses, the complexity of the alignment maps needed to achieve perfect IIA in this task decreases. 
+Overall, our results show that causal abstraction, while promising in theory, suffers from a fundamental limitation: without \textit{a priori} constraints on the used alignment maps, it becomes vacuous as a method for understanding neural networks.\looseness=-1
+
+\section{Background}\label{sec:background}
+\newcommand{\Argmax}[2]{\mathtt{argmax}_{#1}(#2)}
+
+In this section, we formally define algorithms (\cref{sec:algorithm}) and deep neural networks (\cref{sec:dnn}).
+These will then be used to define a causal abstraction (\cref{sec:causal_abstraction}).
+First, we formalise a task as a function $\ftask: \calX \to \calY$, where $\bx \in \calX$ represents a set of input features and $\by \in \calY$ denotes the corresponding output.
+
+\vspace{-2pt}
+\subsection{Algorithms} \label{sec:algorithm}
+\vspace{-1pt}
+
+\newcommand{\partialsmall}{\prec}
+\newcommand{\partialsmallalg}{\prec_{\alg}}
+\newcommand{\partialsmalldnn}{\prec_{\dnn}}
+\newcommand{\constants}{\mathbf{c}}
+\newcommand{\constant}{c}
+\newcommand{\nodesall}{\nodes_{\mathtt{all}}}
+
+Given a task $\ftask$, we may hypothesise different ways it can be solved.
+We term each such hypothesis an algorithm\footnote{“Algorithm” here need not match a formal definition as, e.g., the considered functions may be uncomputable.} $\alg$, which we represent as a deterministic causal model---a directed acyclic graph that implements a function $\algfunc: \calX \to \calY$.\footnote{\citet{Geiger2023CausalAA} also considers cyclic deterministic causal models and \citet{Beckers2018AbstractingCM} considers cyclic and stochastic causal models. We leave the expansion of our work to such models for future work.\looseness=-1}
+These causal models have a set of nodes $\nodesall$ which can be decomposed into three disjoint sets: (i) input nodes $\nodesinput$ representing elements in $\bx$,
+(ii) output nodes $\nodesoutput$ representing elements in $\by$,
+and
+(iii) inner nodes $\nodesinner$
+representing intermediate variables used in the computation of $\algfunc$.
+As we focus on acyclic causal models, the edges in this graph induce a partial ordering on nodes $\nodesinput \partialsmall \nodesinner \partialsmall \nodesoutput$.
+Let $\nodevalue_\node$ denote the value held by node $\node$, and let $\nodesvalues_\nodes$ denote values taken by the set of nodes $\nodes$.
+The set of incoming edges to a node $\node$ represent a direct causal relationship between that node and its parents $\parents(\node)$, denoted: $\nodevalue_{\node} = \algfuncnode{\node}(\nodesvalues_{\parents(\node)})$.
+We can compute algorithm $\algfunc$
+by iteratively solving the value of its nodes while respecting their partial ordering:\looseness=-1
+\begin{align}
+    \nodesvalues_{\nodesinput} \defeq \bx, \qquad\quad 
+    \mathop{\forall}_{\node \in \nodesinner \cup \nodesoutput}
+    \nodevalue_{\node} = \algfuncnode{\node}(\nodesvalues_{\parents(\node)}), \qquad\quad
+    \algfunc(\bx) \defeq \nodesvalues_{\nodesoutput}
+    %
+    %
+\end{align}
+where we define $\nodesvalues_{\nodesinput}$ to be the input value $\bx$, and take the value of the output nodes $\nodesvalues_{\nodesoutput}$ as our algorithm's output.
+Importantly, for an algorithm $\alg$ to represent a task $\ftask$, its output under ``normal'' operation must be $\algfunc(\bx) = \ftask(\bx)$.
+For an example of a task and related algorithms, see \cref{subsubsec:hierarchical_equality_details}.
+
+\newcommand{\interventions}{\mathbf{I}}
+\newcommand{\interventionsalg}{\interventions_{\alg}}
+\newcommand{\interventionsdnn}{\interventions_{\dnn}}
+
+These causal models, however, allow us to go beyond ``normal'' operations and investigate the behaviour of our algorithm under counterfactual settings.
+We can, for instance, investigate what its behaviour would be if we enforce a node $\node'$'s
+value to be a constant $\nodevalue_{\node'} = \constant$, which we write as:
+\begin{align}
+    \nodesvalues_{\nodesinput} = \bx, \quad\,\, 
+    \nodevalue_{\node'} = \constant, \quad\,\, 
+    \mathop{\forall}_{\node \in (\nodesinner\cup \nodesoutput)\setminus\{\node'\}}\!\!\!\!
+    \nodevalue_{\node} = \algfuncnode{\node}(\nodesvalues_{\parents(\node)}), \quad\,\,
+    \algfunc(\bx, (\nodevalue_{\node'} \leftarrow \constant)) = \nodesvalues_{\nodesoutput}
+\end{align}\\[-5pt]
+Now, let $\algfuncnode{:\node}(\bx)$ represent a function which runs our algorithm with input $\bx$ until it reaches node $\node$, outputting its value $\nodevalue_{\node}$.
+We can use such interventions to investigate the behaviour of algorithm $\alg$ under input $\bx$, when node $\node'$ is forced to assume the value it would have under $\bx'$ as: \smash{$\algfunc(\bx, (\nodevalue_{\node'} \leftarrow \algfuncnode{:\node'}(\bx')))$}.
+Now, let $\interventionsalg$ be a multi-node intervention, e.g., 
+\smash{$\interventionsalg = (\nodesvalues_{\nodes'} \leftarrow \constants')$} where 
+\smash{$\nodes' = [\node', \node'']$} and $\constants' = [\algfuncnode{:\node'}(\bx'), \constant]$.
+We can observe how our model operates under those interventions by running $\algfunc(\bx, \interventionsalg)$. 
+See \cref{sec:pseudo_code_intervention} for  a pseudo-code implementation.\looseness=-1
+
+\subsection{Deep Neural Networks}
+\label{sec:dnn}
+
+\newcommand{\layerdim}[1]{\lvert \neuronset_{#1} \rvert}
+\newcommand{\bxdata}{\bx^{(n)}}
+\newcommand{\bydata}{\by^{(n)}}
+Deep neural networks (DNNs) are the driving force behind recent advances in ML and can be defined as a sequence of functions \smash{$\dnnfunclayer{\layer}: \hiddenspace_{\neuronset_{\layer}} \to \hiddenspace_{\neuronset_{\layer+1}}$}, where $\neuronset_{\layer}$ denotes the set of neurons in layer $\layer$ and $\hiddenspace_{\neuronset_{\layer}}$ is the corresponding vector space. 
+A DNN $\dnn$ with $\nlayers$ layers can be specified as follows:
+\begin{align}
+    \hiddenstates_{\neuronset_{1}} = \dnnfunclayer{0}(\bx), \qquad
+    \hiddenstates_{\neuronset_{\layer+1}} = \dnnfunclayer{\layer}(\hiddenstates_{\neuronset_{\layer}}), \qquad
+    \pdnn(\by \mid \bx) = \dnnfunclayer{\nlayers}(\hiddenstates_{\neuronset_{\nlayers}})
+\end{align}
+where $\hiddenstates_{\neuronset_{\layer}}$ denotes the vector of activations for neurons $\neuronset_{\layer}$. 
+We focus on DNNs with real-valued neurons and probabilistic outputs, so that \smash{$\hiddenspace_{\neuronset_{0}} = \calX$, $\hiddenspace_{\neuronset_{\ell}} = \R^{\layerdim{\ell}}$} and \smash{$\hiddenspace_{\neuronset_{\nlayers+1}} = \Delta^{|\calY|-1}$}.
+We define \smash{$\dnnfunclayer{\neuronset'}(\bx')$} as the function that computes the activations of the subset of neurons $\neuronset'$ when the network is evaluated on input $\bx'$. In particular, \smash{$\dnnfunclayer{\neuronset_{\layer}}(\bx)$} returns the activations at layer $\layer$ for input $\bx$. Thus, the standard computation of the DNN corresponds to evaluating \smash{$\pdnn(\by \mid \bx) = \dnnfunclayer{\neuronset_{\nlayers+1}}(\bx)$.}
+This formulation allows us to instantiate common architectures, such as multi-layer perceptrons (MLPs) or transformers, by specifying the form of each \smash{$\dnnfunclayer{\layer}$} and the structure of the neuron sets $\neuronset_{\layer}$.
+The parameters of these models are typically optimised to minimise the cross-entropy loss.
+
+Notably, similarly to the algorithms above, a DNN's architecture induces a partial ordering on its neurons, respecting the order in which they are computed $\neuronset_{0} \partialsmall \neuronset_{\layer} \partialsmall \neuronset_{\nlayers}$.
+We can thus analogously define a \defn{DNN intervention} as follows:
+given a set of neurons $\neuronset$ in the network and a corresponding set of values $\constants_{\neuronset}$, we denote the intervention by
+\smash{$\dnnfunclayer{\neuronset_{\nlayers\!+\!1}}\big(\bx,\, (\hiddenstates_{\neuronset} \leftarrow \constants_{\neuronset})\big)$}.
+This notation means that, during the forward computation of the DNN, the activations of the neurons in $\neuronset$ are fixed to the specified values $\constants_{\neuronset}$, while the rest of the network operates as usual.
+
+\section{Causal Abstraction}
+\label{sec:Causal_Abstraction}
+\label{sec:causal_abstraction}
+
+\newcommand{\nodesint}{\nodes_{\mathtt{int}}}
+\newcommand{\neuronsetint}{\neuronset_{\mathtt{int}}}
+\newcommand{\neuronsetintcausal}{\neuronset_{\mathtt{int}}^\causalmap}
+\mycgmacro{\uselesspartition}{\!\bot}
+
+To define causal abstraction, we will base ourselves on the definitions in \citet{Beckers2018AbstractingCM} and \citet{Geiger2023CausalAA}.
+Let an \defn{abstraction map} be defined as $\abstractionmap: \hiddenspacefull \to \nodesspacefull$, where $\hiddenspacefull$ and $\nodesspacefull$ are, respectively, the Cartesian products of the hidden state-spaces in a neural network $\dnn$ (i.e., $\neuronsetint \defeq \neuronset_{1:}$), and the node value-spaces  in an algorithm $\alg$ (i.e., $\nodesint \defeq \nodesinner\cup\nodesoutput$), both excluding the inputs $\neuronset_0$ and $\nodesinput$.
+In words, an abstraction map translates the inner states of a neural network into an algorithms' inner states.
+Now, consider the DNN intervention $\interventionsdnn = \hiddenstates_{\neuronset} \leftarrow \constants_{\neuronset}$ 
+and the algorithm intervention $\interventionsalg = \nodesvalues_{\nodes} \leftarrow \constants_{\nodes}$. 
+Further, let $\hiddenspacefull_{\hiddenstates_{\neuronset} = \constants_{\neuronset}}$ be the set of states 
+in a DNN for which $\hiddenstates_{\neuronset} = \constants_{\neuronset}$ holds, and equivalently for $\nodesspacefull_{\nodesvalues_{\nodes} = \constants_{\nodes}}$.
+Under abstraction map $\abstractionmap$, we can define an intervention map as:\looseness=-1
+\begin{align}\label{eq:interventionmap}
+    \interventionmap(\hiddenstates_{\neuronset} \leftarrow \constants_{\neuronset}) = \left\{\begin{array}{lr}
+         \nodesvalues_{\nodes} \leftarrow \constants_{\nodes} & 
+         \,\,\mathtt{if}\,\, \nodesspacefull_{\nodesvalues_{\nodes} = \constants_{\nodes}} = \{\tau(\hiddenstates) \mid \hiddenstates \in \hiddenspacefull_{\hiddenstates_{\neuronset} = \constants_{\neuronset}}\} \\
+         \mathtt{undefined} & \mathtt{else}
+    \end{array}\right.
+\end{align}
+
+Intuitively, $\interventionmap$ maps a DNN intervention $\interventionsdnn$ to an algorithmic one $\interventionsalg$ if the sets of states they induce on $\dnn$ and $\alg$, respectively, are the same.
+Further, let $\interventionsset_{\alg}$ be a set of interventions $\interventionsalg$ 
+which can be performed on algorithm $\alg$.
+We can use $\interventionmap$ to derive a set of equivalent DNN interventions as:
+\begin{align}
+    \interventionsset_{\dnn} = \{
+    \hiddenstates_{\neuronset} \leftarrow \constants_{\neuronset} \mid
+    \nodesvalues_{\nodes} \leftarrow \constants_{\nodes} \in \interventionsset_{\alg}, 
+    \omega_{\abstractionmap}(\hiddenstates_{\neuronset} \leftarrow \constants_{\neuronset}) = \nodesvalues_{\nodes} \leftarrow \constants_{\nodes}\}
+\end{align}
+Given these definitions, we now put forward a first notion of causal abstraction.
+
+\begin{definition}[\textbf{from \citealp{Beckers2018AbstractingCM}}]\label{def:tauabstraction}
+    An algorithm $\alg$ is a \defn{$\boldsymbol{\abstractionmap}$-abstraction} of a  neural network $\dnn$ iff:
+    %
+    %
+        $\abstractionmap$ is surjective;
+        $\interventionsset_{\alg} = \omega_\abstractionmap(\interventionsset_{\dnn})$;\footnote{We overload function $\interventionmap$ here, with $\interventionmap(\interventionsset_{\dnn})$ simply applying $\interventionmap$ elementwise to the interventions in set $\interventionsset_{\dnn}$.} and
+        %
+        there exists a surjective $\abstractionmap_{\nodesinput}$ such that:
+        \begin{align}
+            \myforall\nolimits_{\substack{\bx\in\calX \\\interventionsdnn\in\interventionsset_{\dnn}}}:\  \abstractionmap(\dnnfunclayer{\neuronsetint}(\bx,\interventionsdnn))=\algfuncnode{:\nodesint}(\abstractionmap_{\nodesinput}(\bx),\interventionsalg)\quad\mathtt{ where }\,\,\interventionsalg=\interventionmap(\interventionsdnn)
+        \end{align}
+        %
+    %
+\end{definition}
+In words, the first condition in this definition enforces that all states in an algorithm are needed to abstract the DNN, while the second and third enforce that interventions in the algorithm have the same effect as interventions in the DNN.
+We further say that $\alg$ is a \defn{strong $\boldsymbol{\abstractionmap}$-abstraction} of $\dnn$ if it is a $\abstractionmap$-abstraction and $\interventionsset_{\alg}$ is maximal, meaning that any intervention is allowed on 
+algorithm $\alg$.
+However, while strong $\abstractionmap$-abstractions give us a notion of equivalence between algorithms and DNNs, the maps $\abstractionmap$ may be highly entangled and provide little intuition about the DNN's behaviour.
+To ensure algorithmic information is disentangled in the DNN, we say $\abstractionmap$ is a \defn{constructive abstraction map} if there exists a partition of $\dnn$'s neurons $\{\neuronset_{\node} \mid \node \in \nodesint\} \cup \{\neuronset_{\uselesspartition}\}$---where $\neuronset_{\node}$ are non-empty---and there exist maps $\abstractionmap_{\node}$ such that $\abstractionmap$ is equivalent to the block-wise application of $\abstractionmap_{\node}(\hiddenstates_{\neuronset_{\node}})$.
+In other words, constructive abstraction maps compute the value $\nodevalue_{\node}$ of each node $\node \in \nodesint$ in $\alg$ using non-overlapping sets of neurons $\neuronset_{\node}$ from $\dnn$, with set $\neuronset_{\uselesspartition}$ being left unused.
+We now define a second notion of causal abstraction.\looseness=-1
+
+\begin{definition}[\textbf{from \citealp{Beckers2018AbstractingCM}}]
+An algorithm $\alg$ is a \defn{constructive abstraction} of a neural network $\dnn$ iff there exists an $\abstractionmap$:
+for which $\alg$ is a strong $\abstractionmap$-abstraction of $\dnn$;
+and $\abstractionmap$ is constructive.\looseness=-1
+\end{definition}
+
+As we will deal with algorithm--DNN pairs which share the same input and output spaces, we will impose an additional constraint on $\abstractionmap$---one that is not present in \citeposs{Beckers2018AbstractingCM} definition.
+Namely, we restrict: $\neuronset_{\nodesinput}$ to be the neurons in layer zero and $\abstractionmap_{\nodesinput}$ to be the identity; and $\neuronset_{\nodesoutput}$ to be the neurons in layer $\nlayers+1$ and $\abstractionmap_{\nodesoutput}$ to be the $\argmax$ operation.\footnote{We note that this implies algorithm $\alg$ and network $\dnn$ must have the same outputs on the input set $\calX$.}
+
+\subsection{Information Encoding in Neural Networks}
+\label{sec:Information_encoding_in_dnns}
+
+The definition of constructive abstraction above maps non-overlapping sets of neurons in $\dnn$, i.e., $\neuronset_{\node}$, to nodes in $\alg$, i.e., $\node$.
+However, much research in ML interpretability highlights that concept information is not always neuron-aligned and that neurons are often polysemantic \citep{olah2017feature, olah2020zoom, arora-etal-2018-linear, elhage2022superposition}.
+In fact, there is a large debate about how information is encoded in DNNs.
+We highlight what we see as the three most prominent hypotheses here.
+\begin{definition}
+    The \textbf{privileged bases hypothesis} \citep{elhage2023privileged} argues that neurons form privileged bases to encode information in a neural network.
+\end{definition}
+Most evidence in favour of this hypothesis comes from indirect evidence: i.e., the presence of neuron-aligned outlier features or activations in DNNs \citep{kovaleva-etal-2021-bert,elhage2023privileged,he2024understanding,sun2024massive}.
+Going back to 2015, \citet{karpathy2015unreasonable} already showed that a single neuron in a language model could carry meaningful information.
+Importantly, this hypothesis is consistent with the notion of constructive abstraction above, as it argues each node $\node$'s information should be encoded in separate, non-overlapping sets of neurons.
+Several researchers, however, question the special status of neurons assumed by this hypothesis, assuming instead that information is encoded in linear subspaces of the representation space, of which neurons are only a special case.\looseness=-1
+\begin{definition}
+    The \textbf{linear representation hypothesis} \citep{alain2018understanding} argues that information is encoded in linear subspaces of a neural network.
+\end{definition}
+A large literature has developed, backed by the linear representation hypothesis, including: concept erasure methods \citep{ravfogel-etal-2020-null,ravfogel2022linear}, probing methodologies \citep{elazar2021amnesic,ravfogel-etal-2021-counterfactual,lasri-etal-2022-probing}, and work on disentangling activations \citep{yun-etal-2021-transformer,elhage2022superposition,huben2024sparse, templeton2024scaling}.
+Some, however, still question this idea that all information must be encoded linearly in DNNs: as neural networks implement non-linear functions, there is no a priori reason for why information should be linearly encoded in them \citep{conneau-etal-2018-cram,hewitt-liang-2019-designing,pimentel-etal-2020-information,pimentel-etal-2020-pareto,pimentel-etal-2022-attentional}.
+Further, recent research presents strong evidence that some concepts are indeed non-linearly encoded in DNNs \citep{white-etal-2021-non,pimentel-etal-2022-attentional,olah2024linear,Csordas2024RecurrentNN,Engels2024NotAL,engels2025decomposingdarkmattersparse,kantamneni2025languagemodelsusetrigonometry}.
+\begin{definition}
+    The \textbf{non-linear representation hypothesis} \citep{pimentel-etal-2020-information} argues that information may be encoded in arbitrary non-linear subspaces of a neural network.
+\end{definition}
+
+\subsection{Distributed Causal Abstractions}
+
+Following the discussion above, the definition of constructive abstraction may be too strict, as it assumes $\abstractionmap$ must decompose across neurons---and thus that node information is encoded in non-overlapping neurons.
+With this in mind, \citet{Geiger2023CausalAA,Geiger2023FindingAB} proposed the notion of distributed interventions: they expose the subspaces where node information is encoded in a DNN $\dnn$ by applying a bijective function to its hidden states; this function's output is then itself a constructive abstraction of algorithm $\alg$.
+Here, we make this notion a bit more formal.\looseness=-1
+
+We define $\abstractionmap$ as a \defn{distributed abstraction map} if the following two conditions hold.
+First, there exists a bijective function $\causalmap$---termed here an \defn{alignment map}---that maps the inner neurons $\neuronsetint$ of $\dnn$ block-wise to an equal-sized set of \defn{latent variables} $\neuronsetintcausal$, in a manner that respects the partial ordering of computations in the network. 
+Specifically, for each layer $\ell$, there exists a bijection \smash{$\causalmap_{\layer}: \R^{\layerdim{\layer}} \to \R^{\layerdim{\layer}}$} on its neurons such that $\causalmap$ is defined as the concatenation of these layer-wise bijections.
+Similarly to the neurons' activation $\hiddenstates_{\neuronset}$, we will denote latent variables as $\hiddenstates_{\neuronset^{\causalmap}} = \causalmap(\hiddenstates_{\neuronset})$.
+Second, there exists a partition  
+\smash{$\{\neuronset^{\causalmap}_{\node} \mid \node \in \nodesint\} \cup \{\neuronset^{\causalmap}_{\uselesspartition}\}$} of the resulting latent variables  $\neuronsetintcausal$--- where \smash{$\neuronset^{\causalmap}_{\node}$} are non-empty---and a set of maps $\abstractionmap_{\node}$ such that
+$\abstractionmap$ is equivalent to the block-wise application of \smash{$\abstractionmap_{\node}(\hiddenstates_{\neuronset^{\causalmap}_{\node}})$}.
+In words, a distributed abstraction map computes the value \smash{$\nodevalue_{\node}$} of each node \smash{$\node \in \nodesint$} in $\alg$ using non-overlapping partitions of latent variables \smash{$\neuronset^{\causalmap}_{\node}$} from $\dnn$, with partition \smash{$\neuronset^{\causalmap}_{\uselesspartition}$} remaining unused.\looseness=-1
+
+Given an alignment map $\causalmap$, we can perform distributed interventions: \smash{$\hiddenstates_{\neuronset^\causalmap_\node} \leftarrow \constants_{\neuronset^\causalmap_\node}$}.
+These interventions are performed by first mapping the hidden state \smash{$\hiddenstates_{\neuronset}$} to the latent variables \smash{$\hiddenstates_{\neuronset^{\causalmap}} = \causalmap(\hiddenstates_{\neuronset})$}, intervening on a subset \smash{$\neuronset^{\causalmap}_\node$} by replacing \smash{$\hiddenstates_{\neuronset^{\causalmap}_\node}$} with desired values $\constants_{\neuronset^{\causalmap}_\node}$, and then mapping these intervened latent variables back to the original neuron base via $\hiddenstates_{\neuronset}' = \causalmap^{-1}(\hiddenstates_{\neuronset^{\causalmap}}')$. 
+Thus, interventions are applied in the latent space defined by $\causalmap$, generalising privileged-bases interventions to arbitrary (possibly non-linear) subspaces.
+We are now in a position to define distributed abstractions.
+
+\begin{definition}\label{definition:distributed_constructive_abstraction}
+An algorithm $\alg$ is a \defn{distributed abstraction} of a neural network $\dnn$ iff there exists an $\abstractionmap$:
+for which $\alg$ is a strong $\boldsymbol{\abstractionmap}$-abstraction of $\dnn$;
+and $\abstractionmap$ is a distributed abstraction map.
+\end{definition}
+
+Finally, we note that the set of all possible interventions $\interventionsset_\alg$ and $\interventionsset_{\dnn}$ may be hard to analyse in practice.
+\citet{Geiger2023FindingAB} thus restrict their analyses to what we term here \defn{input-restricted interventions}:
+the set of interventions which are themselves producible by a set of other input-restricted interventions.
+In other words, we restrict interventions $\hiddenstates_{\neuronset'} \leftarrow \constants_{\neuronset'}$ 
+ (where $\neuronset'\subseteq\neuronsetint$ or $\neuronset'\subseteq\neuronsetintcausal$) 
+and $\nodesvalues_{\nodes'} \leftarrow \constants_{\nodes'}$ 
+ %
+to $\constants_{\neuronset'}$ and $\constants_{\nodes'}$ which are a product of other input-restricted interventions, e.g., \smash{$\constants_{\neuronset'} = \dnnfunclayer{\neuronset'}(\bx')$} or \smash{$\constants_{\nodes'} = \algfuncnode{:\nodes'}(\bx', (\nodesvalues_{\nodes''} \leftarrow \algfuncnode{:\nodes''}(\bx'')))$}.
+This leads to the definition of \defn{input-restricted \boldsymbol{$\abstractionmap$}-abstraction}: a weakened notion of strong $\abstractionmap$-abstraction, where intervention sets are restricted to input-restricted interventions.
+Finally, we define an analogous version of distributed abstraction, which is input-restricted; this is the notion typically used in practice by machine learning practitioners.\looseness=-1
+
+\begin{definition}[\textbf{inspired by \citealp{Geiger2023FindingAB}}]\label{definition:input_restricted_constructive_abstraction}
+An algorithm $\alg$ is an \defn{input-restricted distributed abstraction}
+of a neural network $\dnn$ iff there exists an $\abstractionmap$:
+for which $\alg$ is an input-restricted $\boldsymbol{\abstractionmap}$-abstraction of $\dnn$;
+and $\abstractionmap$ is a distributed abstraction map.
+\end{definition}
+
+\newcommand{\calV}{\mathcal{V}}
+
+A visual representation of how these causal abstraction definitions are related is given in \cref{app:visualization_causal_abstraction} as \cref{fig:visualization_causal_abstraction}.
+Finally, we further introduce \textbf{input-restricted \boldsymbol{$\calV$}-abstractions}: input-restricted distributed abstractions for which we restrict alignment maps $\causalmap$ to be in a specific variational family $\calV$.
+The case of linear alignment maps, will be particular important here---as it relates to the linear representation hypothesis---and we will thus explicitly label it as \defn{input-restricted linear abstraction}.\looseness=-1
+
+\subsection{Finding Distributed Abstractions}
+\label{subsec:Finding_Distributed_Constructive_Abstractions}
+\vspace{-2pt}
+
+\newcommand{\nodesintervened}{\overline{\nodes}}
+\newcommand{\xnode}{\bx_{\node}}
+\mycgmacro{\notintervened}{\emptyset}
+\newcommand{\xnotintervened}{\bx_{\notintervened}}
+
+\newcommand{\xnodedata}{\xnodedata^{(n)}}
+\newcommand{\xnotinterveneddata}{\xnotintervened^{(n)}}
+\newcommand{\nodesinterveneddata}{\nodesintervened^{(n)}}
+\newcommand{\interventiondata}{\interventions^{(n)}}
+\newcommand{\bXintervened}{\mathbf{X}^{\nodesintervened}}
+\newcommand{\powerset}{\mathcal{P}}
+
+How do we evaluate if an algorithm is an input-restricted distributed abstraction of a DNN?
+\citet{Geiger2023FindingAB} proposes an efficient method to answer this, called distributed alignment search (DAS).
+Before applying DAS, one must assume a partitioning $\{\neuronset^{\causalmap}_{\node} \mid \node \in \nodesint\} \cup \{\neuronset^{\causalmap}_{\uselesspartition}\}$ which  remains fixed during the method's application; we term \smash{$|\neuronset^{\causalmap}_{\node}|$} the \defn{intervention size}.
+The principle behind DAS is then to leverage the constraint on $\tau_{\nodesoutput}$, which is fixed as: \smash{$\nodesvalues_{\nodesoutput} = \argmax_{\by \in \calY} \pdnn(\by \mid \bx)$} since
+\smash{$\pdnn(\by \mid \bx) = \hiddenstates_{\neuronset_{\nlayers\!+\!1}}$}.
+Given this constraint, we can initialise a parametrised function $\causalmap$, which we train to predict this equality under possible interventions; this is done via gradient descent, minimising the cross-entropy between the DNN and the algorithm.
+Specifically, we first select a set of nodes to be intervened $\nodesintervened \in \powerset(\nodesinner)$, where $\powerset$ is a function that takes the powerset of a set, along with corresponding counterfactual inputs $\xnode \in \calX$ for each $\node \in \nodesintervened$ and a base input $\xnotintervened \in \calX$.
+We then define the following two interventions:
+\begin{align}
+    \smash{\interventions_{\dnn} = \big[\hiddenstates_{\neuronset^{\causalmap}_{\node}}\big]_{\node \in \nodesintervened} \leftarrow \big[\dnnfunclayer{\neuronset^\causalmap_\node}(\xnode)\big]_{\node \in \nodesintervened}} 
+    \quad \texttt{and} \quad
+    \smash{\interventions_{\alg} = \big[\nodesvalues_{\node}\big]_{\node \in \nodesintervened} \leftarrow \big[\algfuncnode{:\node}(\xnode)\big]_{\node\in \nodesintervened}}
+\end{align}
+Finally, we run our algorithm under base input $\xnotintervened$ and intervention $\interventions_{\alg}$ to get a ground truth output: $\by = \algfunc(\xnotintervened, \interventions_{\alg})$.
+Repeating this process $N$ times, we build a dataset $\dataset = \{(\xnotinterveneddata, \interventiondata_{\dnn}, \bydata)\}_{n=1}^{N}$ on which we can train the alignment map $\causalmap$ such that the DNN matches the algorithm:
+\begin{align} \label{eq:loss_das}
+    \lossfunc = - \!\!\!\! \sum_{(\xnotinterveneddata, \interventiondata_{\dnn}, \bydata) \in \dataset} \!\!\!\! \log \pdnncausal(\bydata \mid \xnotinterveneddata,\interventiondata_{\dnn}), \quad
+    \mathtt{where}\quad
+    \pdnncausal(\by \mid \xnotintervened, \interventions_{\dnn}) = \dnnfunc(\xnotintervened, \interventions_{\dnn})
+    %
+    %
+    %
+    %
+\end{align}
+Notably, DAS mostly ignores how function $\abstractionmap$ is constructed, relying solely on the assumed definition of $\abstractionmap_{\nodesoutput}$.
+Finding a low-loss alignment map $\causalmap$ is then assumed as sufficient evidence that $\alg$ is an input-restricted distributed abstraction of $\dnn$.
+
+\vspace{-3pt}
+\section{Unbounded Abstractions are Vacuous} \label{sec:main_theorem}
+\vspace{-2pt}
+
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\noninter}{\text{\ding{117}}}%
+\newcommand{\inter}{\text{\ding{118}}}%
+
+\newcommand{\crossproduct}{\prod}
+
+\newcommand{\LastInterventionLayer}{\hat{\layer}}
+\newcommand{\AllActivationsLayer}{\hiddenspace_{\neuronset_{\layer}}}
+\newcommand{\AllActivationsLayerH}[1]{\hiddenspace_{\neuronset_{#1}}}
+\newcommand{\AllActivationsLayerClass}{\hiddenspace_{\neuronset_{\layer}}^{(\class)}}
+\newcommand{\AllActivationsLayerClassSub}{\hat{\hiddenspace}_{\neuronset_{\layer}}^{(\class)}}
+\newcommand{\AllActivationsLayerClassSubH}[2]{\hat{\hiddenspace}_{\neuronset_{#1}}^{(#2)}}
+\newcommand{\AllInpIntActivationsLayer}{\hiddenspace_{\neuronset_{\layer}}^{\noninter}}
+\newcommand{\AllInpIntActivationsLayerH}[1]{\hiddenspace_{\neuronset_{#1}}^{\noninter}}
+
+\newcommand{\AllInpIntActivationsLayerIntervenedH}[1]{\bar{\hiddenspace}_{\neuronset_{#1}}}
+\newcommand{\AllLatentVaraiblesIntervenedH}[1]{\hat{\hiddenspace}_{\neuronset^{\causalmap}_{#1}}}
+
+\newcommand{\AllInpIntActivationsLayerTwo}{\hiddenspace_{\neuronset_{\layer}}^{\inter}}
+\newcommand{\AllInpIntActivationsLayerTwoH}[1]{\hiddenspace_{\neuronset_{#1}}^{\inter}}
+\newcommand{\AllInpIntTransformedActivationsLayer}{\hiddenspace_{\neuronset^{\causalmap}_{\layer}}}
+\newcommand{\AllInpIntTransformedActivationsLayerOneH}[1]{\hiddenspace^{\noninter}_{\neuronset^\causalmap_{#1}}}
+\newcommand{\AllInpIntTransformedActivationsLayerTwoH}[1]{\hiddenspace^{\inter}_{\neuronset^\causalmap_{#1}}}
+
+\newcommand{\MLPPredictedClass}{c}
+\newcommand{\featurefunc}{g}
+\newcommand{\nodemap}{\mathtt{nodemap}}
+\newcommand{\bystar}{{\by^{\star}}}
+\newcommand{\class}{\bystar}
+
+In this section, we provide our main theorem: that under reasonable assumptions, \emph{any} algorithm $\alg$ can be shown to be an input-restricted distributed abstraction of \emph{any} DNN $\dnn$, making this notion of causal abstraction vacuous.
+To show that, we need a few assumptions (for their formal definition, see \cref{appsec:Linear_Representation_Hypothesis_vs_DAS}). 
+Our first assumption (\cref{assumption:Countable_infinite}) is that we have a \defn{countable input-space} $\calX$.
+While this may not hold in general, it holds for common applications such as language modelling (where the input-space is the countably infinite set of finite strings) or computer vision (where the input-space is a countable union of pixels, which can assume a finite set of values).
+The second assumption
+(\cref{assumption:injectivity}) is that DNNs are \defn{input-injective in all layers}: i.e., $\dnnfunclayer{\neuronset_\layer}$ is injective for all layers.
+This guarantees that no information about a DNN's input $\bx$ is lost when computing the hidden states $\hiddenstates_{\neuronset_\layer}$.
+This assumption is also present in prior work \citep[e.g.,][]{pimentel-etal-2020-information} and we show in \cref{app:injectivity_Transformer}---assuming real-valued weights and activations---that this is almost surely true for transformers at initialisation.\footnote{
+Also see \citet{nikolaou2025languagemodelsinjectiveinvertible}, who show almost sure injectivity holds for transformers throughout training.\looseness=-1}
+Due to floating point precision and neural collapse \citep{Papyan_2020}, it is likely not to hold fully in practice; however, it still seems to be well-approximated in many empirical settings \citep[and \cref{appsec:MLP_Injectivity_in_Hierarchical_Equality_Task}]{morris-etal-2023-text}. 
+The third assumption (\cref{assumption:surjectivety}) is  \defn{strict output-surjectivity in all layers}.
+This assumption guarantees that in each layer there is at least one choice of $\hiddenstates_{\neuronset_{\layer}}$ that will produce the desired output.
+Notably, this assumption may not hold in theory, due to issues like the softmax-bottleneck \citep{yang2018breaking}.
+In practice, however, even with large vocabulary sizes, it seems that almost all outputs can still be produced by language models \citep{grivas-etal-2022-low} which is sufficient for these DNNs to be abstracted by many algorithms.
+Our fourth assumption (\cref{assumption:minimalrequirements}) is that the \defn{algorithm $\alg$ and DNN $\dnn$ have matchable partial-orderings}, meaning that there is a partitioning of neurons in $\dnn$ which would match the partial-ordering of nodes in $\alg$; this is likely to be the case for most reasonable algorithms given the size of state-of-the-art deep neural networks.
+Finally, our last assumption (\cref{assumption:dnnalgsolve}) is that the \defn{DNN $\dnn$ solves the given task} $\ftask$. 
+We believe this assumption to be reasonable, as it would be impractical in practice to evaluate a neural network that does not perform the task correctly.\footnote{If the model does not solve the task, perfect IIA is impossible since non-intervened inputs yield incorrect outputs. Thus, assuming the model solves the task is necessary. In practice, however, even when the DNN is imperfect, an alignment map could produce correct outputs for all intervened inputs, achieving near-perfect IIA scores.\looseness=-1}
+Given these assumptions, we can now present our main theorem.\looseness=-1
+
+\begin{restatable}{thm}{existingcausalmapforanyalgorithm}\label{theorem:existing_causalmap_for_any_algorithm}
+    Given any algorithm $\alg$ and any neural network $\dnn$ such that  \cref{assumption:injectivity,assumption:Countable_infinite,assumption:surjectivety,assumption:minimalrequirements,assumption:dnnalgsolve} hold, we can show that $\alg$ is an input-restricted distributed abstraction of $\dnn$.
+\end{restatable}
+\vspace{-10pt}
+
+\begin{proof}
+    We refer to \cref{appsec:Linear_Representation_Hypothesis_vs_DAS} for the proof.
+\end{proof}
+
+\vspace{-5pt}
+\section{Experimental Setup}
+\vspace{-2pt}
+
+\newcommand{\TrainingSet}{\dataset_{\mathtt{train}}}
+\newcommand{\EvalSet}{\dataset_{\mathtt{eval}}}
+\newcommand{\TestingSet}{\dataset_{\mathtt{test}}}
+\newcommand{\TrainingSetDAS}{\dataset_{\mathtt{train}}^{\mathtt{DAS}}}
+\newcommand{\EvalSetDAS}{\dataset_{\mathtt{eval}}^{\mathtt{DAS}}}
+\newcommand{\TestingSetDAS}{\dataset_{\mathtt{test}}^{\mathtt{DAS}}}
+
+\newcommand{\orthogonalmatrix}{\mlpweights_{\mathtt{orth}}}
+\newcommand{\causalmapidentity}{\causalmap^{\mathtt{id}}}
+\newcommand{\Rotation}{\causalmap^{\mathtt{lin}}}
+\newcommand{\RevNet}{\causalmap^{\mathtt{nonlin}}}
+\newcommand{\zeromatrix}{\mathbf{0}}
+\newcommand{\RevNetHiddenDim}{\dimension_{\mathtt{h}}}
+\newcommand{\RevNetBlocks}{K}
+
+Building on the previous section's proof that alignment maps between DNNs and algorithms always exist, we now demonstrate their practical learnability and how increasingly complex alignment maps reveal various causal abstractions for different tasks, even on DNNs that do not solve them.
+
+\newcommand{\IIA}{\mathtt{IIA}}
+\newcommand{\revnetfunc}{\mathtt{revnet}}
+\newcommand{\revnetlayers}{\nlayers_{\mathrm{rn}}}
+\newcommand{\revnetdim}{\dimension_{\mathrm{rn}}}
+\newcommand{\nonlinearname}{non-linear\xspace}
+
+\paragraph{Alignment Maps.}
+To assess how 
+ complexity impacts causal-abstraction analyses, we explore three ways to parameterise $\causalmap$.
+First, we will consider the simplest \defn{identity maps}: $\causalmapidentity(\hiddenstates) = \hiddenstates$.
+This is the least expressive $\causalmap$ we consider, and if we find that $\alg$ abstracts $\dnn$ under this map, we can say that $\alg$ is a constructive abstraction of $\dnn$; further, this map implicitly assumes the privileged bases hypothesis.
+For $\causalmapidentity$, we greedily search for the optimal partition $\{\neuronset^\causalmap_\node \mid \node \in \nodesint\}$ (instead of keeping it fixed) by iteratively adding neurons to them. 
+For all $\nodesinner$ simultaneously, one neuron is added at a time for each $\neuronset^\causalmap_\node$, up to a maximum allowed intervention size; these neurons are chosen to minimise the loss in \cref{eq:loss_das}.
+Second, we will consider \defn{linear maps}: $\Rotation(\hiddenstates) = \orthogonalmatrix\hiddenstates$, where $\orthogonalmatrix \in \R^{\dimension_{\layer} \times \dimension_{\layer}}$ is an orthogonal matrix.
+This is the type of alignment map originally considered by \citet{Geiger2023FindingAB}\footnote{We note that, while \citet{Geiger2023FindingAB} describe the used $\causalmap$ as a rotation, their pyvene \citep{wu-etal-2024-pyvene} implementation uses orthogonal matrices. This, however, makes no difference in the power of the alignment map.\looseness=-1}, and implicitly assumes the linear representation hypothesis, evaluating input-restricted linear abstractions.
+Finally, we consider \defn{\nonlinearname maps}:
+$\RevNet(\hiddenstates) = \revnetfunc[\revnetlayers, \revnetdim](\hiddenstates)$, where $\revnetfunc[\revnetlayers, \revnetdim]$ is a reversible residual network \citep[RevNet;][]{Gomez2017TheRR} with $\revnetlayers$ layers and hidden size $\revnetdim$.
+We can modulate the complexity of this final map by increasing $\revnetlayers$ and $\revnetdim$, assuming the non-linear representation hypothesis.
+We note that all three maps are bijective and easily invertible.\looseness=-1
+
+\paragraph{Evaluation Metric.}
+We evaluate the effectiveness of an alignment map $\phi$ using the \defn{interchange intervention accuracy} (IIA) metric proposed by \citet{Geiger2023FindingAB}. 
+For a held out test set $\dataset_{\mathtt{test}}$ with the same structure as the training set $\dataset$ defined in \Cref{subsec:Finding_Distributed_Constructive_Abstractions}, we compute the accuracy of our model (i.e., \smash{$\argmax_{\by'\in \calY} \pdnncausal(\by' \mid \xnotinterveneddata,\interventiondata_{\dnn})$}) when predicting the intervened \smash{$\bydata = \algfunc(\xnotinterveneddata, \interventionsalg^{(n)})$}.
+We compare this to the DNN's accuracy on the test set $\dataset_{\mathtt{test}}$ without interventions.%
+
+\subsection{Tasks, Algorithms, and DNNs.}
+
+\newcommand{\somename}{\mathtt{Name}}
+\newcommand{\subject}{\mathtt{S}}
+\newcommand{\indirectobject}{\mathtt{IO}}
+\newcommand{\sometext}{\mathtt{[Text]}}
+\newcommand{\exampletext}[1]{\emph{"#1"}}
+\newcommand{\colored}[2]{\textcolor{#1}{#2}}
+
+\paragraph{Hierarchical equality task (\citet{Geiger2023FindingAB}).}
+We will showcase our results primarily on this task.
+Let $\bx = \bx_1 \circ \bx_2 \circ \bx_3 \circ \bx_4$ be a 16-dimensional vector, and $\bx_1$ to $\bx_4$ each be 4-dimensional vectors, where $\circ$ represents vector concatenation.
+Further, let $\calX = [-.5, .5]^{16}$.
+This task consists of evaluating:
+$\by = (\bx_1 == \bx_2) == (\bx_3 == \bx_4)$.
+As our DNN $\dnn$, we investigate a 3-layer multi-layer perceptron (MLP) with hidden size $16$, trained to perform this task; we describe this DNN, and its training procedure in more detail in \Cref{subsubsec:hierarchical_equality_details}.
+Finally, we explore three algorithms for this task.
+The \algbothequality algorithm first computes the two equalities ($\nodevalue_{\node_1} = (\bx_1==\bx_2)$ and $\nodevalue_{\node_2} = (\bx_3==\bx_4)$) separately; it then determines whether they are equivalent as a second step. 
+The \algleftequality algorithm first computes the left equality ($\nodevalue_{\node_1} = (\bx_1==\bx_2)$), and then determines in a single step if this is equivalent to $(\bx_3==\bx_4)$.
+Finally, the \algidentityoffirst algorithm assumes we copy the first input to a node ($\nodevalue_{\node_1} = \bx_1$) and then compute the output directly.
+These three algorithms are more rigorously defined in \cref{subsubsec:hierarchical_equality_details}.
+
+\paragraph{Indirect object identification (IOI) task.}
+In a second set of experiments, we explore this task, inspired by \citet{wang2023interpretability} and using the dataset of \citet{fahamu_2022}. 
+This task is more realistic and relies on larger (language) models.
+Here, inputs $\bx\in\calX$ are strings where two people are first introduced, and later one of them assumes the role of subject ($\subject$), giving or saying something to the other, the indirect object ($\indirectobject$).
+The task is then to predict the first token of the $\indirectobject$, with the output set $\calY$ containing the first token of each person's name. 
+E.g., $\bx\!=\!\text{``}\mathtt{Friends\ Juana\ and\ Kristi\ found\ a\ mango\ at\ the\ bar.\ Kristi\ gave\ it\ to}$'' and $\by\!=\!\text{``}\mathtt{Juana}$''.
+As our DNN, we use models from the Pythia suite \citep{biderman2023pythia} across different sizes (from 31M to 410M parameters) and training stages.
+We evaluate the \algabab algorithm where, given two names A and B, an inner node $\nodevalue_{\node_1}$ captures if the sentence structure is ABAB (e.g., ``A and B ... A gave to B'') or ABBA (e.g., ``A and B ... B gave to A''), and the algorithm outputs prediction B if $\nodevalue_{\node_1}$ is ABAB and A otherwise.
+This algorithm is more rigorously defined in \cref{app:ioi_task}.
+
+\section{Experiments and Results}\label{sec:Results}
+
+We now proceed with our empirical study, applying alignment maps of varying complexity on both ``toy'' and real neural networks to evaluate their effects on the causal abstraction method DAS.\looseness=-1
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/hierarchical_equality_FullyTrained_combined.pdf}
+    \vspace{-20pt}
+    \caption{IIA in the hierarchical equality task for causal abstractions trained with different alignment maps $\causalmap$. The figure shows results for all three analysed algorithms for this task.
+    %
+    The bars represent the max IIA across 10 runs with different random seeds. The black lines represent mean IIA with 95\% confidence intervals. The $\interventionsize$ denotes the intervention size per node. Without interventions, all DNNs reach almost perfect accuracy (>0.99). The used $\RevNet$ uses $\revnetlayers=10$ and $\revnetdim=16$.}
+    \label{fig:hierarchical_eq}
+\end{figure}
+
+\vspace{-1pt}
+\paragraph{Hierarchical equality task, main results.\footnote{As an additional task similar to hierarchical equality, we also explore the \defn{distributive law task} in \Cref{app:dl}.}}
+\Cref{fig:hierarchical_eq} presents IIA results across different alignment maps $\phi$ for all three algorithms. 
+As expected, the identity map $\causalmapidentity$ generally results in the worst performance.
+Using linear alignments ($\Rotation$), we observe patterns consistent with \citet{Geiger2023FindingAB}: 
+IIA for \algbothequality and \algleftequality decreases substantially in the third layer, indicating information becomes difficult to manipulate using linear transformations at deeper layers.
+With the \nonlinearname alignment ($\RevNet$), this layer-dependent degradation vanishes, yielding near-optimal IIA across all layers.
+Consequently, while assuming linear representations seems to enable us to identify the location of certain variables in our DNN, many of these insights fail to generalise when more powerful non-linear alignment maps are employed.
+The \algidentityoffirst algorithm's IIA consistently hovers around 50\% for $\causalmapidentity$, $\Rotation$ and $\RevNet$. 
+Additional experiments (\cref{appsec:MLP_Injectivity_in_Hierarchical_Equality_Task}) suggest this is caused by insufficient capacity of the used $\revnetfunc$ model, as the identity of $\bx_1$ seems to be encoded in the model's hidden states.\looseness=-1
+
+\vspace{-1pt}
+\paragraph{Hierarchical equality task, exploring $\RevNet$'s complexity.}
+\Cref{fig:mlp_training_progression} (left) illustrates how varying the hidden size $\revnetdim$ and intervention size $\interventionsize$ affects IIA with the \algbothequality algorithm on layer 1 of our MLP.
+\Cref{fig:mlp_training_progression} (right) shows IIA evolution as alignment complexity increases throughout the MLP's training (evaluated on its layer 1).
+Remarkably, even with randomly initialised DNNs, we achieve over $80\%$ IIA using the most complex alignment map.
+As training progresses, simpler alignment maps gradually attain higher IIA values.
+Additional results in \Cref{app:heq_additional_results} extend these findings to other MLP layers, intervention sizes, and algorithms, consistently revealing similar patterns that reinforce our conclusion about the impact of alignment map complexity on IIA dynamics.\looseness=-1
+
+\begin{figure}[t]
+    \hfill
+    \begin{subfigure}[t!]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/hidden_size_Both_Equality_Relations_Layer_1.pdf}
+        %
+        %
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t!]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/training_progression_Both_Equality_Relations_Layer_1_Intervetion_Size_8.pdf}
+        %
+        %
+    \end{subfigure}
+    \hfill
+    \vspace{-5pt}
+    \caption{IIA of alignment between the \algbothequality algorithm and an MLP, with interventions at layer 1.
+    Left: 
+    Mean IIA over 5 seeds using $\RevNet$ ($\revnetlayers=1$) on the trained DNN.
+    Performance improves with larger hidden dimension $\revnetdim$ and intervention size \smash{$\interventionsize$}. 
+    Right: 
+    Maximum IIA across 5 seeds using $\Rotation$ and $\RevNet$ with \smash{$\interventionsize=8$}.
+    Complex alignment maps achieve high IIA even with randomly initialised DNNs, while simpler maps gradually improve as training progresses.}
+    \label{fig:mlp_training_progression}
+\end{figure}
+
+\vspace{-1pt}
+\paragraph{Indirect object identification task, main results.}
+\Cref{fig:pythia_combined} (left) presents the results of trying to find causal abstractions between the \algabab algorithm and Pythia language models, exploring how model size affects alignment capabilities.
+Notably, despite only the larger models (160M and 410M parameters) successfully learning the IOI task, we can align the algorithm to models of all sizes---including the 31M and 70M parameter models that fail to learn the task. 
+Further, and somewhat surprisingly, this alignment is perfect even for randomly initialised models across all sizes; smaller fully trained models (31M, 70M), though, show slightly reduced alignment accuracy.
+This reduction may stem from these smaller models 
+saturating late in training \citep{godey2024why}, becoming highly anisotropic and
+making it harder for $\RevNet$ to access the information needed to match the algorithm.
+
+\vspace{-1pt}
+\paragraph{Indirect object identification task, exploring $\RevNet$'s complexity.}
+\Cref{fig:pythia_combined} (right) illustrates the interplay between model training progression and algorithmic alignment for the Pythia with 410M parameters.
+Notably, while this model begins to acquire task proficiency only around training step 3000 (as indicated by model accuracy), employing an 8-layer $\RevNet$ as alignment map yields near-perfect IIA across all training steps, including for randomly initialised models. 
+This pattern partially extends to a 4-layers $\RevNet$ configuration; however, there is a noticeable dip in IIA at step 1000 for this configuration, which may be due to the model over-fitting to unigram statistics \citep{changbergen2022word,belrose2024neural} at this point---thereby making context (and hidden states) be mostly ignored when producing model outputs.
+Interestingly, as training advances, even less complex alignment maps (1- and 2-layer $\RevNet$) eventually attain perfect alignment. 
+In contrast, linear maps only approximate perfect alignment in the fully trained model, following a similar trend to the DNN's performance.\looseness=-1
+
+\section{Discussion}
+
+Our results show that when we lift the assumption of linear representations, sufficiently complex alignment maps can achieve near-perfect alignment across all models---regardless of their ability to solve the underlying task.
+This provides compelling evidence for the non-linear representation dilemma, suggesting causal alignment may be possible even when the model lacks task capability.
+We now discuss our results in the context of prior literature, with additional related work in \cref{appsec:Additional_Related_Work}.
+
+\vspace{-2pt}
+\paragraph{Causal Abstraction is not Enough.} 
+Causal abstraction \citep{Geiger2023CausalAA} has gained traction as a theoretical framework for mechanistic interpretability, promising to overcome probing limitations by analysing DNN behaviour through interventions: if you intervene on a DNN's representations and its behaviour changes in a predictable way, you have identified how the DNN ``truly'' encodes that feature \citep{elazar2021amnesic,ravfogel-etal-2021-counterfactual,lasri-etal-2022-probing}.
+Recent critiques of causal abstraction \citep[e.g.,][]{Mueller2024MissedCA} highlight practical shortcomings, including the non-uniqueness of identified algorithms \citep{meloux2025everything} and the risk of ``interpretability illusions'' \citep{Makelov2023IsTT}.
+Despite counterarguments to some of these critiques \citep{wu2024replymakelovetal,Jorgensen2025WhatIC}, concerns have emerged that methods based on causal abstraction may introduce new information rather than accurately reflect the behaviour of the DNN \citep{wu2023interpretability,Sun2025HyperDASTA}; as an example, causal abstraction methods applied to random models sometimes yield above-chance performance \citep{Geiger2023FindingAB,arora-etal-2024-causalgym}. 
+By examining the implications of assuming arbitrary complex ways in which features may be encoded in a DNN, we show that nearly any neural network can be aligned to any algorithm.
+Together, our results thus suggest that the shift in interpretability research to causal abstractions does not, by itself, resolve the core challenge of understanding how representations are encoded.
+Additionally, we note that early causal abstraction methods \citep{Geiger2021CausalAO} implicitly rely on the privileged bases hypothesis, while recent advancements \citep{Geiger2023FindingAB} rely on the linear representation hypothesis instead.
+
+\begin{figure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/pythia/pythia_sizes.pdf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/pythia/pythia410m.pdf}
+    \end{subfigure}
+    \hfill
+    \vspace{-10pt}
+    \caption{IIA of alignment between \algabab algorithm and Pythia language models. 
+    Left: IIA across model sizes at initialisation (Init.) or after full training (Full), with intervention at the middle layer.
+    Right: IIA with increasingly complex alignment maps during \emph{Pythia-410m}'s training.
+    Results show complex alignment maps yield near-perfect IIA. All $\RevNet$ use $\revnetdim=64$.}
+    \label{fig:pythia_combined}
+\end{figure}
+
+\vspace{-2pt}
+\paragraph{Balancing the Accuracy vs.\ Complexity of $\causalmap$.} 
+Diagnostic probing was a previously popular method for interpretability research \citep{alain2018understanding}, where a \defn{probe} was applied to the hidden representations of a DNN and trained to predict a specific variable.
+Notably, the architecture chosen for this probe implicitly reflected assumptions about representation encoding, and the absence of a universally accepted model for representation encoding precluded a theoretically founded choice of probe architecture \citep{belinkov-2022-probing}.
+The debate regarding the trade-off between probing complexity and accuracy \citep{hewitt-liang-2019-designing, pimentel-etal-2020-information, pimentel-etal-2020-pareto,voita-titov-2020-information} underscores the risk of complex probes merely memorising variable-specific relations, instead of revealing which information the DNN ``truly'' encodes and uses.
+In this paper, we revive this debate by showing a clear analogue in causal abstraction methodologies: the effect of $\causalmap$'s complexity on IIA.
+Unfortunately, this debate was never solved by the probing literature, and solutions ranged from:
+controlling for the probe's memorisation capacity \citep{hewitt-liang-2019-designing},\footnote{Notably, this method was previously applied to causal abstraction analysis by \citet{arora-etal-2024-causalgym}.}
+explicitly measuring a probe's complexity accuracy trade-off \citep{pimentel-etal-2020-pareto},
+training minimum description length probes \citep{voita-titov-2020-information}, or leveraging unsupervised probes \citep{burns2023discovering}.\footnote{The complexity---accuracy trade-off in probing arises mainly in supervised settings, where more complex probes can extract richer features from model representations. Unsupervised probing avoids this, lacking the supervision that enables such ``gerrymandered'' mappings.}\looseness=-1
+
+\vspace{-1pt}
+\paragraph{The Role of Generalisation.}
+We now highlight that \Cref{theorem:existing_causalmap_for_any_algorithm} provides an existence proof for a perfect abstraction map (thus guaranteeing perfect IIA) between a DNN and an algorithm.
+This existence proof, however, leverages complex interactions between the intervened hidden states and the DNN's structure, requiring perfect information about both and thus representing a form of extreme overfitting.
+Crucially, 
+this theorem offers no guarantees regarding the learnability of the alignment map $\causalmap$ from limited data or its generalisation to unseen inputs.
+This gap between theoretical existence and practical learnability becomes evident in practise.
+For instance, in an additional experiment on the IOI task (in \Cref{app:ioi_additional_results}), we show that when training and test sets contain disjoint sets of names, the learned alignment map fails to generalise, resulting in low IIA on the test set.
+This suggests that generalisation should play a crucial role in causal abstraction analysis, as the ability to learn abstraction maps that transfer beyond training data seems fundamental to interpreting a model, distinguishing a genuine understanding about its inner workings from mere training pattern memorisation.\looseness=-1
+
+\vspace{-1pt}
+\paragraph{Investigating Representation Encoding in DNNs.} 
+How neural networks encode variables/concepts is a long-standing question in interpretability, with three main hypotheses standing out: the privileged bases, linear representation, and non-linear representation hypotheses (see \cref{sec:Information_encoding_in_dnns}).
+One way to try to distinguish between these hypotheses is with causal abstraction analyses, but what can we learn about these hypotheses if our methods themselves rely on them as assumptions?
+One solution could be to compare results using $\causalmap$ with different architectures.
+Our \cref{fig:pythia_combined} (right), for instance, shows that while $\RevNet$ achieves consistently near-perfect results throughout model training, $\Rotation$ accompanies the actual DNN's performance more closely.
+Intuitively, we may thus be inclined to support the linear representation hypothesis here.
+We (the authors), however, cannot make this intuition formal to justify why we believe this is the case.
+Furthermore, $\Rotation$ still manages to sometimes achieve IIA higher than the DNN's accuracy, implying it may also ``learn the task''.
+We expect future work will propose novel methodologies to analyse information encoding and try to answer these questions.
+
+\section{Conclusion}
+
+This paper critically examines causal abstraction in machine learning, when no assumptions are imposed on how representations are encoded. We show that, under mild conditions, any algorithm can be perfectly aligned with any DNN, leading to the non-linear representation dilemma. 
+Empirical validation through experiments on the hierarchical equality and the indirect object identification tasks corroborate our theoretical insights, demonstrating near perfect IIA even in randomly initialised DNNs.
+So, \emph{what should you do if you want to perform a causal analysis of your DNN?}
+We believe that it must be decided on a case-by-case basis. 
+If you have reason to believe the linear representation hypothesis holds for the features you wish to extract, constraining $\causalmap$ to linear functions may be advised.
+If you do not, however, you may face the non-linear representation dilemma, and be forced to investigate some kind of trade-off between $\causalmap$'s accuracy and complexity.
+
+\paragraph{Limitations.}
+Our proof that any algorithm can be aligned with any DNN (\cref{theorem:existing_causalmap_for_any_algorithm}) relies on a form of overfitting. 
+Yet, our experiments show that the learned alignment maps $\causalmap$ generalise to unseen test data;
+studying the factors behind this generalisation would be valuable. 
+Further, our theorem relies on two strong assumptions: input-injectivity (\cref{assumption:injectivity}) and strict output-surjectivity (\cref{assumption:surjectivety}) in all layers. While we justify both, there are settings---related to, e.g., the softmax bottleneck---where they may fail; studying these failure modes could clarify our assumptions' limitations.\looseness=-1
+
+\section*{Contributions}
+
+Denis Sutter led the project,
+implemented the base version of the DAS code, conducted the MLP experiments and derived the base proof of \Cref{theorem:existing_causalmap_for_any_algorithm} as well as the proof of \Cref{thm:injectivity}.
+Julian Minder implemented and ran the language model experiments, produced all plots, 
+and helped refine the proof of \Cref{thm:injectivity}. 
+Thomas Hofmann provided guidance throughout the project. 
+Tiago Pimentel supervised the project, giving initial intuitions for the proofs in both \Cref{theorem:existing_causalmap_for_any_algorithm} and \Cref{thm:injectivity}, refining the proof of \Cref{theorem:existing_causalmap_for_any_algorithm}, and defining the main notation in the paper, integrating feedback from Denis and Julian.
+All authors wrote the paper together.\looseness=-1
+
+\section*{Acknowledgments}
+
+This work was mostly done in the Data Analytics Lab at ETH Z\"urich.
+We would like to thank Pietro Lesci, Julius Cheng, Marius Mosbach, Chris Potts, and Atticus Geiger for their thoughtful feedback. 
+We would also like to thank Frederik Hytting Jørgensen for bringing to our attention a mistake in our original \cref{def:tauabstraction} and for his feedback on our manuscript.
+We thank Zhengxuan Wu and Kevin Du for early discussions related to the ideas presented here.
+We are grateful to the Data Analytics Lab at ETH for providing access to their computing cluster. 
+Julian Minder is supported by the ML Alignment Theory Scholars (MATS) program. 
+Denis Sutter gratefully acknowledges the financial support of his parents, Renate and Wendelin Sutter, throughout his graduate studies, during which this work was carried out, as well as the technical support of Urban Moser and Leo Schefer.
+
+\bibliography{biblio.bib}
+\bibliographystyle{acl_natbib}
+
+\clearpage
+
+\appendix
+
+\input{appendix.tex}
+
+\end{document}
