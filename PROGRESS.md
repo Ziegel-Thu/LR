@@ -4,7 +4,6 @@
 
 | 任务 | 节点 | tmux session | 启动时间 | 预计耗时 | 备注 |
 |------|------|-------------|---------|---------|------|
-| exp-005 Phase 2 adversarial construction | 本地 | exp005 | 05-17 15:14 | ~20min | Bilodeau worst-case 验证 |
 | exp-003 Phase 1 分析（CKA/kNN） | jiagpu | — | 待启动 | ~1h | 代码已 push |
 
 ## ✅ 已完成
