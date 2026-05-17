@@ -4,68 +4,60 @@
 
 神经网络表征的数学结构——度量、几何、信息论、可解释性
 
-## 当前阶段
+## 当前阶段：寻找创新点
 
-从方向探索转入两条主线：
-1. **实证线**：跨架构收敛 (exp-003) 和量化相变 (exp-002) 的 scaling
-2. **理论线**：表征分析不可能性定理——worst-case vs average-case gap
+从方向探索转向锁定问题。之前试过多个方向（不可能性定理、additivity tax、ID→泛化等），获得了领域直觉，但还没找到足够有新意的研究问题。
 
-## 已完成
+**当前策略**：先系统搜索领域主体文献，建立全面 overview，再从中寻找：
+- 未被解释好的实验现象
+- 不同论文结论之间的矛盾
+- 可能的统一 / 连接 / 发现 / 泛化
+- 有待发现的新现象
 
-### 文献与调研
-- DR-001~008: 全景地图、开放问题、实验设计、统一框架
-- 精读: Klabunde (similarity survey), Ehrlich (PID), Braun (function-representation dissociation)
-- DR-008: 五大表征视角 + 六个部分统一框架 + 不可能性定理方向
+## 📋 布置给 jiagpu
 
-### 实验
-- **exp-001 SAE 可识别性** [本地]: 信号弱，搁置
-- **exp-002 量化 × SAE 特征** [本地+jiagpu4]: 4-bit 无损，3→2 bit 剧烈崩溃
-- **exp-003 跨架构柏拉图收敛** [本地 pilot + jiagpu5 Phase 1 表征提取]: z>350，U 形深度曲线
-- **exp-004 ID→泛化** [本地+jiagpu5]: ID 和 acc 非简单负相关（r=0.365），stable rank 更强（r=0.935）
-- **exp-005 Additivity Tax** [本地]: **核心发现——Bilodeau 不可能性是 worst-case only**
-  - Phase 1: 自然训练网络 IGA≈2.0（SHAP works）
-  - Phase 2: Adversarial 构造 IGA≈1.1（Bilodeau 成立）
+| 任务 | 节点 | 状态 | 备注 |
+|------|------|------|------|
+| exp-003 Phase 1 分析: CKA/kNN/shape metric on 410M/1.4B/2.8B | jiagpu5 | 待执行 | 表征已提取（9 个 .pt），分析脚本待写 |
 
-### 理论
-- **impossibility formalization** v1→v3: 四篇论文定理提取 + 统一公理 + mini proof + 审阅修正
-- 核心诊断：additivity（而非 completeness）是不可能性的根源
+## 💻 本地进行中
+
+（当前无）
+
+## 下一步
+
+### 最高优先：文献地图
+- **DR-013**（论文地图）prompt 已写好，覆盖 10 个分支，待发送
+- 回收后：建立领域 overview → 识别薄弱/有机会的分支 → 下载核心论文精读
 
 ### 待回收 DR
-- DR-009: Squeeze Conjecture 数学化（已发）
-- DR-010: 方法互补性 + worst-case gap 量化（已发）
 
----
+| DR | 主题 | 状态 |
+|----|------|------|
+| DR-009 | Squeeze Conjecture 数学化 | 已发，待回复 |
+| DR-010 | 方法互补性 + worst-case gap 量化 | 已发，待回复 |
+| DR-012 | 跨领域不可能性类比 | prompt 已写，未发 |
+| DR-013 | 论文地图（10 分支 overview） | prompt 已写，未发 ← **重心** |
 
-## 下一步计划
+### 可继续推进的实验（非当前重心）
 
-### 理论线：worst-case vs average-case gap（最有论文价值）
-
-| 编号 | 任务 | 依赖 | 节点 | 状态 |
-|------|------|------|------|------|
-| T1 | exp-005 Phase 3: Smoothed analysis — adversarial 模型加扰动，找 IGA 的 phase transition | exp-005 P2 ✅ | 本地 | **待做** |
-| T2 | exp-005 Phase 4: 实际 failure 场景 — 对抗训练 / model editing 后 SHAP 是否失败 | T1 | 服务器 | 待做 |
-| T3 | 定义 "attribution condition number"，量化 avg→worst 距离 | DR-010 | 理论 | 待 DR 回复 |
-| T4 | Squeeze Conjecture: 统一 Bilodeau/Sutter 的复杂度参数 | DR-009 | 理论 | 待 DR 回复 |
-
-### 实证线：跨架构收敛（信号最强）
-
-| 编号 | 任务 | 依赖 | 节点 | 状态 |
-|------|------|------|------|------|
-| E1 | exp-003 Phase 1 分析: CKA/kNN on 410M/1.4B/2.8B reps | 表征已提取 ✅ | jiagpu | **待做** |
-| E2 | exp-003 加 Williams shape metric + PID | E1 | jiagpu | 待做 |
-| E3 | exp-003 Phase 2: 6.9B/7B scale + scaling law 拟合 | E1 | jiagpu | 待做 |
-
-### 实证线：量化相变
-
-| 编号 | 任务 | 依赖 | 节点 | 状态 |
-|------|------|------|------|------|
-| Q1 | exp-002 Phase 2: Pythia scaling ladder (410M→6.9B) | — | jiagpu | 待做 |
-| Q2 | exp-002 Phase 3: GPTQ 对照 + 剪枝对比 | Q1 | jiagpu | 待做 |
-
-### 低优先级
-
-| 编号 | 任务 | 备注 |
+| 任务 | 节点 | 备注 |
 |------|------|------|
-| L1 | RLHF 表征漂移 (DR-007) | 待 exp-003/005 收敛后启动 |
-| L2 | SAE 非唯一性 × Bilodeau 理论 (formalization §6.4) | 待 DR-010 回复 |
-| L3 | 范畴论框架探索 | 长期，待理论线明确后 |
+| exp-002 Phase 2: Pythia scaling ladder | jiagpu | 待做 |
+| exp-003 Phase 2: 6.9B/7B scale | jiagpu | 依赖 Phase 1 分析 |
+
+## 已有探索线索
+
+### 信号最强：跨架构柏拉图收敛 (exp-003)
+- Pilot: z>350，U 形深度曲线，shape metric 与 CKA 排序不一致
+- 需要更多数据和分析来判断是否值得深挖
+
+### 有结论但方向有限：不可能性定理
+- 四篇论文统一公理化（formalization.md），核心：additivity 是不可能性根源
+- exp-005: Bilodeau 不可能性是 worst-case only → 方向 surprise 不够
+- DR-009/010 回复可能带来新思路
+
+### 其他实验结论
+- exp-002: 4-bit 量化无损，3→2 bit 崩溃（可能有趣但需更多 scale）
+- exp-004: stable rank 比 ID 更强的泛化预测器（r=0.935 vs r=0.365）
+- exp-001: SAE 可识别性，信号弱，搁置

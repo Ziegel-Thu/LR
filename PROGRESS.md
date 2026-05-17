@@ -1,41 +1,36 @@
 # 进展记录
 
-## 🔄 正在进行
+## 2026-05-17
 
-| 任务 | 节点 | tmux session | 启动时间 | 预计耗时 | 备注 |
-|------|------|-------------|---------|---------|------|
-| exp-005 Phase 5 GPT-2 验证 | 本地 | exp005 | 05-17 15:32 | ~1h | 真实模型 + 真实 SHAP |
-| exp-003 Phase 1 分析（CKA/kNN） | jiagpu | — | 待启动 | ~1h | 代码已 push |
-
-## ✅ 已完成
-
-### 2026-05-17
-
-- **exp-005 Additivity Tax** [本地] — IG vs SHAP identifiability tradeoff
-  - 意外发现：SHAP 在自然训练网络上 IGA≈2.0（所有 α），Bilodeau 不可能性是 worst-case only
-- **impossibility theorem formalization** [本地] — v1→v3，四篇论文定理提取 + 统一公理系统 + mini proof
-  - formalization_v3.md 已审阅并修正 5 个问题
+- **exp-005 Additivity Tax 全 5 phases** [本地]
+  - Phase 1: 自然网络 IGA≈2.0（所有 α）→ Bilodeau 不可能性是 worst-case only
+  - Phase 2: Adversarial 构造 IGA≈1.1 → worst-case 可触发
+  - Phase 3: Smoothed analysis → 方向错误，扰动让 IGA 下降
+  - Phase 4: Natural→adversarial 插值 → β=1.0 处 sharp transition
+  - Phase 5: GPT-2 small 验证 → 不 conclusive
+  - **结论**：方向 surprise 不够，搁置
+- **impossibility theorem formalization** [本地] — v1→v3，四篇论文定理提取 + 统一公理 + mini proof
+  - 审阅修正 5 个问题；v1/v2 归档至 archive/
+- **exp-003 shape metric** [本地] — pilot 数据上加 Williams shape metric
+  - 发现：shape metric 与 CKA/kNN 排序不一致（position 2/3 reversal）
 - **DR-008 response** 已读 — 五大表征视角 + 六个部分统一框架 + 不可能性定理方向
 - **DR-009/010 prompt** 已写 — Squeeze Conjecture 数学化 / 方法互补性理论
-- **exp-003 表征提取完成** [jiagpu5]：Pythia/Mamba/RWKV 在 410M、1.4B、2.8B 三个规模的 reps 已提取完成
-  - 共 9 个 `.pt` artifact，保存在 `experiments/exp-003-cross-arch-platonic/phase1/data/`
-  - 注意：reps 文件较大且已被 git ignore，不直接推到仓库
+- **DR-011 prompt + response** — 四篇不可能性论文的历史定位分析
+  - 关键洞察：Ackerman-Ben-David "productive rebuttal" 模式
+- **DR-012/013 prompt** 已写 — 跨领域不可能性类比 / 论文地图
+- **jiagpu 分支合并** — exp-004 server 结果 + exp-003 Phase 1 scripts 合入 main
+- **exp-003 表征提取完成** [jiagpu5]：Pythia/Mamba/RWKV 在 410M/1.4B/2.8B 的 reps 已提取
 - **exp-004 Stage 1 完成** [jiagpu5]：ResNet-18/CIFAR-10 weight decay × seed baseline
-  - 21 runs 分 4 shards 在 jiagpu5 并行完成
-  - TwoNN ID vs test accuracy: r=0.365, p=0.104；不支持“ID 越低泛化越好”的简单负相关
-  - Stable rank vs test accuracy: r=0.935, p=5.67e-10；后续干预需要加入 rank/norm 对照
+  - ID vs accuracy: r=0.365（不显著）；Stable rank vs accuracy: r=0.935
 
-### 2026-05-16
+## 2026-05-16
 
-- **exp-002 Phase 1 完成**：Gemma-2 2B + Gemma Scope SAE 权重量化实验
-  - HQQ 量化（8/6/4/3/2 bit），5 层（L0, L5, L12, L17, L23）
-  - 关键发现：4-bit 几乎无损，3→2 bit 剧烈崩溃；中间层最脆弱；稀有特征先崩溃
-  - 硬件：jiagpu4, 8× A40 并行（3 个 bit-width 同时跑）
+- **exp-002 Phase 1 完成** [jiagpu4]：Gemma-2 2B + Gemma Scope SAE 权重量化
+  - 关键发现：4-bit 几乎无损，3→2 bit 剧烈崩溃；中间层最脆弱
 - 搭建 jiagpu4 Python 环境（venv on NVMe SSD）
-- 创建 `jiagpu` 分支
-- 更新 CLAUDE.md 服务器信息
+- 创建 jiagpu 分支
 
-### 2026-05-10
+## 2026-05-10
 
 - 初始化项目结构
 - 建立项目约定
