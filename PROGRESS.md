@@ -2,6 +2,17 @@
 
 ## 2026-05-17 (晚)
 
+- **exp-007 Full Run 完成** [jiagpu4] — Encoding ≠ Use
+  - 11 features × 24 layers, Pythia-1.4B, GPU parallel probe
+  - **Ghost ratio = 70.8%**: 71% 的高准确率 probe 无因果效应
+  - 所有 feature probe acc > 0.95，但 Δloss 大多 < 0.01
+  - 并行改写：20min（旧 sklearn 版本需 3h+）
+  - 首次在真实 LLM 上系统量化 encoding-use gap
+
+- **exp-008 Phase 2 完成** [jiagpu4] — Mamba vs Pythia SAE
+  - MMCS = 0.13（接近随机），0 个特征 overlap > 0.9
+  - 结论：两架构都有 superposition 但特征方向完全不同
+
 - **exp-006 Phase 1 完成** [jiagpu4] — 表征 Scaling Law
   - Pythia 7-scale ladder (70M→6.9B), 7 metrics per model per layer
   - **kNN overlap 是唯一呈 power law 的度量**: β=0.03, R²=0.90
