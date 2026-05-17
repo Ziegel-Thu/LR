@@ -58,6 +58,38 @@ experiments/exp-001-baseline/
 - 每个 agent 只 `git add` 并 commit 自己负责的文件，避免冲突
 - 修改项目规范时先沟通，达成一致后再更新此文件
 
+## 多节点同步
+
+本地（Mac）和服务器（jiagpu）可能同时有 agent 工作。为避免重复劳动和冲突：
+
+### PROGRESS.md 作为实时状态板
+
+PROGRESS.md 除了记录已完成的工作，还要记录**正在进行**的任务。格式：
+
+```markdown
+## 🔄 正在进行
+
+| 任务 | 节点 | tmux session | 启动时间 | 预计耗时 | 备注 |
+|------|------|-------------|---------|---------|------|
+| exp-003 Phase 1 表征提取 | jiagpu5 | exp003 | 05-17 14:00 | ~4h | GPU 0-3 |
+
+## ✅ 已完成
+（按日期倒序）
+```
+
+### 启动/完成任务的流程
+
+1. **启动前**：先 `git pull`，检查 PROGRESS.md 是否有人已在跑同样的任务
+2. **启动后**：立即在"🔄 正在进行"中添加条目，commit
+3. **完成后**：把条目从"正在进行"移到"已完成"，附结果摘要，commit
+4. **失败/中止**：同样更新状态，注明原因
+
+### Push 约定
+
+- 每个 agent 在自己的分支工作（如 `jiagpu`），定期 push
+- 本地 agent 定期 fetch + 检查远程分支的 PROGRESS.md
+- 合并到 main 时由用户或本地 agent 操作
+
 ## Deep Research
 
 每次 deep research 一个子目录，放在 `deepresearch/` 下：
