@@ -34,14 +34,41 @@
 
 **关键参考**：Cloos+ 2024, Harvey+ 2024, Klabunde+ 2023, Williams+ 2021, Kornblith+ 2019
 
-## 分支 2：SAE
+## 分支 2：SAE / Dictionary Learning
 
-- **(2a)** Feature absorption/splitting 说明字典没有收敛到"真"特征集——有没有"真"的？
-- **(2b)** 多维特征（圆环、曲面）挑战"每特征一方向"假设
-- **(2c)** SAE 在因果基准上不如 DAS——捕获的是计算还是相关几何？
-- **(2d)** 评估标准不统一——SAEBench、RAVEL、feature-circuit 排名互相矛盾
+### 未解释现象
+- **(2-P1)** Feature absorption：通用特征被更具体的共现特征吸收——是优化假象（Tang 2024 biconvex 理论的 spurious minima）还是特征层级的自然反映？
+- **(2-P2)** SAE 在因果基准（RAVEL）上不如 DAS——SAE 捕获的是几何相关性还是计算因果结构？没人跟进 Chaudhary 2024
+- **(2-P3)** 4→2-bit 量化悬崖（我们 exp-002）——中间层最脆弱，稀有特征先崩溃，但无机制解释
+- **(2-P4)** 不同种子的 SAE 只共享 30% 特征（Paulo & Belrose）——远低于预期
 
-**关键参考**：Engels+ 2024（多维特征）、Chaudhary+ 2024（SAE vs DAS on RAVEL）、Friedman+ 2024（SAE 理论限制）
+### 未验证假设
+- **(2-A1)** "SAE 特征是正确的分析单元"——多维特征（Engels）、因果失败（Chaudhary）、不可识别性（Friedman）都在挑战
+- **(2-A2)** "更大字典 = 更好特征"——Gao 2024 scaling law 只测重建质量，因果指标可能相反
+- **(2-A3)** "Feature splitting 是问题"——也许 split 后的子特征才是真实粒度
+
+### 已知局限未系统研究
+- **(2-L1)** 所有 SAE 理论基于 1-layer toy model——deep model 跨层 superposition 完全不同
+- **(2-L2)** SAE vs DAS 只在一个 benchmark（RAVEL）上比过——需要系统对比
+- **(2-L3)** Dead feature 的理论含义不明——是字典太大？训练不足？优化陷阱？
+- **(2-L4)** 评估指标（MMCS）和因果有效性相关性极弱（Karvonen 2025）
+
+### 新场景未探索
+- **(2-N1)** **SSM（Mamba/RWKV）上的 SAE——零论文**，低垂果实
+- **(2-N2)** SAE 特征在训练过程中的涌现/死亡（纵向追踪 Pythia checkpoints）
+- **(2-N3)** 量化精度 × SAE 特征的 scaling（我们 exp-002 独有方向）
+- **(2-N4)** 跨模型家族的特征 universality（Llama vs Gemma vs Mistral 的 SAE 特征是否对应？）
+
+### 旧结论可能不成立
+- **(2-O1)** 1-layer toy model 结论 → deep model：残差流 skip connection 使跨层 superposition 完全不同
+- **(2-O2)** Pythia 结论 → frontier model：更大 d_model 可能使 superposition 更松散或更紧密，未知
+- **(2-O3)** 重建质量 scaling law → 因果有效性 scaling law：可能方向相反
+
+### 未形式化直觉
+- **(2-I1)** Superposition 的 packing density 没有估计方法——N 个特征在 d 维空间，N 是多少？
+- **(2-I2)** Dead feature rate 可能是特征总数 N 的估计器：dead% ≈ max(0, d_sae - N) / d_sae
+
+**关键参考**：Elhage+ 2022, Bricken+ 2023, Gao+ 2024, Engels+ 2024, Chaudhary+ 2024, Chanin+ 2024, Tang+ 2024, Paulo & Belrose 2024
 
 ## 分支 3：因果抽象 / Mech Interp
 
