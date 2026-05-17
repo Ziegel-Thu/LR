@@ -22,14 +22,14 @@ EXP_DIR = Path(__file__).resolve().parent.parent
 
 def twonn_id(X: np.ndarray) -> float:
     """TwoNN intrinsic dimension estimator (Facco et al. 2017).
-    Uses NearestNeighbors instead of full distance matrix to avoid O(N^2) memory.
+    Uses KDTree instead of full distance matrix to avoid O(N^2) memory.
     """
-    from sklearn.neighbors import NearestNeighbors
-    nn = NearestNeighbors(n_neighbors=3, algorithm='auto').fit(X)
-    distances, _ = nn.kneighbors(X)
-    # distances[:,0] is self (0), [:,1] is 1st NN, [:,2] is 2nd NN
-    r1 = distances[:, 1]
-    r2 = distances[:, 2]
+    from scipy.spatial import KDTree
+    tree = KDTree(X)
+    # k=3: self + 2 nearest neighbors
+    distances, _ = tree.query(X, k=3)
+    r1 = distances[:, 1]  # 1st NN (0 is self)
+    r2 = distances[:, 2]  # 2nd NN
 
     mask = r1 > 1e-10
     mu = r2[mask] / r1[mask]
