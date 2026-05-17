@@ -22,16 +22,17 @@
 
 ### 任务 2: exp-006 表征 Scaling Law
 - Phase 1 ✅: Pythia 7-scale ladder, kNN power law R²=0.90, β=0.03
-- Phase 2 🔄: 4 tiers × 3 archs 跨架构分析（运行中）
+- Phase 2 ✅: inter-family β=0.056 > intra-family β=0.025 (2.2x faster)
 - Phase 3 待做: representation alignment vs validation loss
 
 ### 任务 3: exp-007 Encoding ≠ Use 量化
-- Pilot 🔄: 4 features × 24 layers (Pythia-1.4B)，probing 进行中
-- 下一步：改成并行 + GPU probe，扩展到 15 features
+- Full Run ✅: Ghost ratio = 70.8%（11 features × 24 layers, Pythia-1.4B）
+- 下一步：加语义特征（需 NLP 标注）、DAS 替代单方向 ablation
 
 ### 任务 4: exp-008 SSM 上的 SAE
 - Phase 1 ✅: Mamba-130M SAE, 80.3% var explained, 0% dead features
-- Phase 2 🔄: Pythia-160M SAE 训练 + MMCS 对比（运行中）
+- Phase 2 ✅: MMCS=0.13, Mamba/Pythia 特征完全不同
+- Phase 3 待做: 规模扩展（Mamba-370M, 1.4B）
 
 ## 💻 本地进行中
 

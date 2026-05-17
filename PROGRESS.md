@@ -2,6 +2,11 @@
 
 ## 2026-05-17 (晚)
 
+- **exp-006 Phase 2 完成** [jiagpu4] — 跨架构 Scaling
+  - 4 规模档 × 3 架构 = 12 pairs
+  - Inter-family β=0.056 vs intra-family β=0.025（2.2x faster）
+  - Transformer↔SSM 对齐比 SSM↔SSM 收敛更快，支持 PRH
+
 - **exp-007 Full Run 完成** [jiagpu4] — Encoding ≠ Use
   - 11 features × 24 layers, Pythia-1.4B, GPU parallel probe
   - **Ghost ratio = 70.8%**: 71% 的高准确率 probe 无因果效应
