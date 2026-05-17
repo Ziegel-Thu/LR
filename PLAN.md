@@ -86,34 +86,33 @@
 - exp-004: stable rank 比 ID 更强的泛化预测器（r=0.935 vs r=0.365）
 - exp-001: SAE 可识别性，信号弱，搁置
 
-## 候选实验方向（17 个）
+## 候选研究方向（17 个，深入分析后）
 
-> 详见 OPEN-PROBLEMS.md（10 个分支 × 全角度分析）
+> 详见 OPEN-PROBLEMS.md（10 个分支 × 全角度分析，376 行）
 
-### Tier 1：最可能出重要发现
-- ① 表征质量 Scaling Law (9d) → **exp-006**
-- ② 为什么 LRH 成立 (4c)
-- ③ 收敛的唯一性 (9a)
-- ⑯ 收敛的选择压力分解 (9b)
+### 🚀 已在服务器跑
 
-### Tier 2：新颖方法论
-- ④ ID 因果干预 (7b)
-- ⑤ 多维特征系统发现 (4a+2b)
-- ⑬ PID 预测因果效果 (6c)
-- ⑮ 预训练表征因果结构 (8c)
+| # | 方向 | 分支 | 实验 |
+|---|------|------|------|
+| 1 | 表征 scaling law | 9 | exp-006 |
+| 2 | Encoding ≠ use 量化 | 5 | exp-007 |
+| 3 | SSM 上的 SAE | 2 | exp-008 |
 
-### Tier 3：实用 Contribution
-- ⑦ SAE 特征稳定性 (2a)
-- ⑧ Faithfulness-Completeness Pareto (3c)
-- ⑨ 概念组合性 (4d)
-- ⑩ 正则内积寻找 (4b)
-- ⑪ 编码≠使用量化 (5a) → **exp-007**
-- ⑫ 跨模型 Lens (5b)
-- ⑭ ID 估计器系统对比 (7a)
+### 📝 值得做但尚未启动
 
-### Tier 4：理论型
-- ⑥ 度量一致性 Phase Transition (1a)
-- ⑰ 表征比较 Kleinberg 式公理化 (10a)
-
-### 新增：低垂果实
-- SSM 上的 SAE → **exp-008**
+| # | 方向 | 分支 | 核心卖点 |
+|---|------|------|---------|
+| 4 | Smoothed impossibility | 10 | 已有 exp-005 数据 + 公理化框架，全新理论方向 |
+| 5 | SSM 上的 LRH | 4 | 零论文，和 exp-008 共享基础设施 |
+| 6 | Steering OOD 边界 | 4 | Tan 2024 发现了但没系统研究 |
+| 7 | Off-distribution intervention 量化 | 3 | 定义 intervention validity score |
+| 8 | 跨模型 lens 迁移 | 5 | 快速实验，如果 work 很亮眼 |
+| 9 | ID 因果干预 | 7 | exp-004 暗示 ID 不是因，可做 debunking |
+| 10 | SAE 作为经验 ICA | 8 | 桥接 SAE 实践和 identifiability 理论 |
+| 11 | PID 预测因果效果 | 6 | 桥接信息论和因果抽象 |
+| 12 | U 形深度曲线机制 | 1 | 所有人观察到但无解释 |
+| 13 | CKA calibration 理论 | 1 | 中间值无可解释含义 |
+| 14 | Ziyin break conditions 验证 | 9 | 论文自己说未验证 |
+| 15 | 多维特征系统扫描 | 4 | Engels 开了头但没系统化 |
+| 16 | Circuit "暗物质" | 3 | IOI 只解释 70%，30% 去哪了 |
+| 17 | Kleinberg 式公理化 | 10 | field-defining 如果做出来 |
