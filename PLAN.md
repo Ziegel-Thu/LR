@@ -48,6 +48,16 @@
 - Ablation baseline 对比：mean vs zero vs resample 三种 baseline 在 IOI 上的 circuit 差异
 - Trivialization baseline：随机 GPT-2 small 在 IOI 上做 circuit discovery，作为 Wang 2022 的对照
 
+### 任务 7: exp-011 PID 预测因果效果（小规模）
+- GPT-2 small 上选 5 个关键 neurons，PID 分解 unique/redundant/synergistic
+- 逐个 ablation，比较 unique info rank vs ablation effect rank
+- 正相关 → info 预测 causation；不相关 → PID 工具价值存疑
+
+### 任务 8: exp-012 几何量对比 + 估计器对比
+- ID vs stable rank vs effective rank vs participation ratio 在多架构多数据集上的泛化预测力对比
+- 同一组表征上跑 TwoNN / MLE(K=10/50/100/500) / GeoMLE 估计器对比
+- 训练过程中 hunchback 演化追踪（Pythia checkpoints）
+
 （当前无——实验走服务器）
 
 ## 下一批实验（3 个并行）
