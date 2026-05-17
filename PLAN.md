@@ -24,6 +24,23 @@
 
 （当前无）
 
+## 下一批实验（3 个并行）
+
+### exp-006: 表征质量 Scaling Law
+- **问题**：表征对齐度是否随规模呈 power law？
+- 无人做过，Pythia ladder + 多架构（Mamba/RWKV）
+- Phase 1 单架构 scaling → Phase 2 多架构收敛 scaling
+
+### exp-007: Encoding ≠ Use 量化
+- **问题**：probe 能解码的信息有多大比例模型实际在用？
+- Braun 2025 给了理论但没人在真实 LLM 上验证
+- 15 特征 × 32 层的 probe accuracy vs ablation effect 散点图
+
+### exp-008: SSM 上的 SAE
+- **问题**：superposition 是 Transformer 特有的还是普遍的？
+- Mamba 上训练 SAE——**零先例**
+- Phase 1 pilot (Mamba-130M) → Phase 2 与 Pythia SAE 对比
+
 ## 下一步
 
 ### 最高优先：文献地图
