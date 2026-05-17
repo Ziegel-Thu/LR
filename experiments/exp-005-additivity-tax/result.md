@@ -40,8 +40,19 @@
 
 对比差 ~0.9，说明远场对消机制虽然数学上可行，但在自然训练的网络中不会自发出现——自然训练的网络的远场行为与局部行为是相关的（由同一个训练目标决定），不会恰好对消。
 
-## 下一步
+## Phase 3: Smoothed Analysis（结果 + 反思）
 
-1. **Smoothed analysis**：在 adversarial 模型上加不同强度的随机扰动，看 IGA 如何从 ~1.1 回升到 ~2.0——找到 phase transition 点
-2. **何时自然出现 adversarial failure**：对抗训练 / RLHF / model editing 后的网络是否更接近 worst-case？
-3. **理论化**：定义 "attribution condition number"，量化从 average-case 到 worst-case 的距离
+在 adversarial 模型上加 Gaussian 扰动（σ = 0 到 10），测 IGA 变化。
+
+| Pair | σ=0 | σ=0.001 | σ=0.01 | σ=0.1 | σ=1.0 | σ=10 |
+|------|:---:|:------:|:-----:|:----:|:----:|:---:|
+| pos vs neg | 1.167 | 1.167 | 1.100 | 1.133 | 1.100 | 1.100 |
+| pos vs flat | 1.633 | 1.567 | 1.200 | 1.100 | 1.100 | 1.100 |
+| quad vs flat | 1.933 | 1.667 | 1.167 | 1.100 | 1.100 | 1.100 |
+
+**预期**：σ↑ → IGA 从 ~1.1 回升到 ~2.0（扰动打破 adversarial 对消）
+**实际**：σ↑ → IGA **下降**到 ~1.1 并保持
+
+**原因**：实验方向搞反了。加噪声使远场随机化 → 两类的 attribution 分布重叠 → 更难区分。正确的 smoothed analysis 应该是：**从自然网络出发，加 adversarial 扰动，看 IGA 何时崩溃**。
+
+**意外收获**：`quad vs flat` 组在 σ=0 时 IGA=1.933，说明 adversarial 构造对局部行为差异大的 pair 不完美——SHAP 差值没完全对消。但 σ=0.01 就足以淹没残余信号。这定量刻画了 adversarial failure 的**脆弱性**。
