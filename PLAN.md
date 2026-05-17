@@ -43,6 +43,11 @@
 - Phase 3: LRH 在 Mamba 上是否成立
 - Phase 4: 概念方向随训练演化（Pythia checkpoints）
 
+### 任务 6: exp-010 因果抽象方法论审计
+- Off-distribution intervention 量化：patching 后算 Mahalanobis distance，画 distance vs IIA 可靠性
+- Ablation baseline 对比：mean vs zero vs resample 三种 baseline 在 IOI 上的 circuit 差异
+- Trivialization baseline：随机 GPT-2 small 在 IOI 上做 circuit discovery，作为 Wang 2022 的对照
+
 （当前无——实验走服务器）
 
 ## 下一批实验（3 个并行）
