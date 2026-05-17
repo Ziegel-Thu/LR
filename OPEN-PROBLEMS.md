@@ -72,12 +72,46 @@
 
 ## 分支 3：因果抽象 / Mech Interp
 
-- **(3a)** 干预产生 off-distribution 激活——怎么处理？（Sun+ 2025 刚开始）
-- **(3b)** 电路只解释小任务，不 scale 到 CoT/reasoning/agent
-- **(3c)** Faithfulness vs completeness **不可同时满足**（Wu+ 2025）
-- **(3d)** SAE 特征图如何变成真正的因果解释？
+### 未解释现象
+- **(3-P1)** Sutter trivialization 的程度梯度：unrestricted alignment → 100% IIA（随机网络也行），但 linear alignment → 训练网络 > 随机网络。这个连续过渡无理论刻画
+- **(3-P2)** IOI circuit 只解释 ~70% 行为——剩余 30% "暗物质"的结构是什么？冗余 backup？其他任务的计算？方法论 artifact？
+- **(3-P3)** SAE features 在 circuit-level 有用（Marks 2024 sparse feature circuits）但 individual feature-level 不如 DAS/prompting（Wu 2025 AxBench）——矛盾
+- **(3-P4)** Denoising patching ≠ noising patching（Zhang & Nanda 2024）——方向性不对称无理论解释
 
-**关键参考**：Geiger+ 2025（统一框架 JMLR）、Wu+ 2025（faithfulness-completeness trade-off）
+### 未验证假设
+- **(3-A1)** "Circuit = Algorithm" 隐喻——Sutter 表明在足够灵活的 alignment 下任何算法都能 align 到任何网络
+- **(3-A2)** "线性 alignment 就一定有意义"——为什么线性是 sweet spot？本身需要论证
+- **(3-A3)** Interchange intervention = 因果测试——off-distribution intervention 使结论可靠性存疑（Sun 2025）
+- **(3-A4)** "Small circuits exist"——从未系统验证适用范围，复杂行为可能本质 distributed
+
+### 已知局限未系统研究
+- **(3-L1)** Off-distribution intervention 的量化——patched activation 离 on-distribution manifold 多远？无人测量
+- **(3-L2)** Faithfulness-Completeness Pareto frontier 的理论基础——可能是 Bilodeau-Sutter squeeze 的实证表现
+- **(3-L3)** Circuit 跨任务一致性——IOI/greater-than/factual recall 的 circuit 是否共享 heads？角色兼容吗？
+- **(3-L4)** 模型规模对 circuit 结构的影响——几乎全在 GPT-2 small 上，无跨规模研究
+
+### 新场景未探索
+- **(3-N1)** 量化网络的因果结构——INT4 量化后 circuit 是否保持？
+- **(3-N2)** Multi-step reasoning / CoT 的 across-token 因果结构
+- **(3-N3)** Vision Transformers 的 circuit structure
+- **(3-N4)** SSM/Mamba 的因果结构——无 attention heads，intervention 定义需适配
+
+### 未形式化直觉
+- **(3-I1)** "正确的分析单元"（heads vs features vs circuits）——什么使一个单位"更好"未定义
+- **(3-I2)** "Circuit residual = 噪声"——70% explained 30% dark matter 的四种可能解读都未被测试
+- **(3-I3)** Prompting > representation steering（Wu 2025）——如果 external API 更好用，internal API 的价值在哪？
+
+### 旧结论可能不成立
+- **(3-O1)** GPT-2 small circuits → 大模型：冗余路径增多、superposition 更密
+- **(3-O2)** Base model patching → RLHF 模型：activation 分布被约束到更窄流形
+- **(3-O3)** Transformer causal abstraction → SSM：框架需要根本适配
+
+### 与我们 impossibility 工作的联系
+- 我们的五公理框架直接适用于 causal abstraction
+- Sutter trivialization = Incompatibility III: {Identifiability + Generality + ¬Finiteness} → ¬Non-triviality
+- Squeeze Conjecture 的实验验证可以定量化 Sutter dilemma
+
+**关键参考**：Geiger+ 2025 JMLR, Sutter+ 2025, Wu+ 2025, Wang+ 2022, Sun+ 2025, Zhang & Nanda 2024, Marks+ 2024
 
 ## 分支 4：线性表征假说 (LRH)
 
