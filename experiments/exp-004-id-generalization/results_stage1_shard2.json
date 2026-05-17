@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "weight_decay": 0.0,
+      "seed": 2,
+      "test_acc": 0.9228,
+      "twonn_id": 18.520930234619,
+      "param_norm": 136.8649992120249,
+      "stable_rank": 8.831181526184082
+    },
+    {
+      "weight_decay": 0.0001,
+      "seed": 0,
+      "test_acc": 0.9311,
+      "twonn_id": 14.702723338262352,
+      "param_norm": 68.94831474730557,
+      "stable_rank": 8.88211441040039
+    },
+    {
+      "weight_decay": 0.0005,
+      "seed": 1,
+      "test_acc": 0.9442,
+      "twonn_id": 10.305931805465455,
+      "param_norm": 30.84215122511438,
+      "stable_rank": 8.876835823059082
+    },
+    {
+      "weight_decay": 0.001,
+      "seed": 2,
+      "test_acc": 0.9442,
+      "twonn_id": 9.576825820491287,
+      "param_norm": 22.6551737904345,
+      "stable_rank": 8.857630729675293
+    },
+    {
+      "weight_decay": 0.01,
+      "seed": 0,
+      "test_acc": 0.8594,
+      "twonn_id": 6.345782555499044,
+      "param_norm": 8.067274317361058,
+      "stable_rank": 8.577754020690918
+    }
+  ],
+  "pearson_r": 0.4344475478415005,
+  "pearson_p": 0.46477434887248126
+}
