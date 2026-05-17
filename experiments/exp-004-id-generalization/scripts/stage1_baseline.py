@@ -5,6 +5,7 @@ Exp-004 Stage 1: ID 与泛化的相关性 Baseline
 对应: experiments/exp-004-id-generalization/plan.md
 """
 
+import gc
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,29 +21,21 @@ EXP_DIR = Path(__file__).resolve().parent.parent
 
 
 def twonn_id(X: np.ndarray) -> float:
-    """TwoNN intrinsic dimension estimator (Facco et al. 2017)."""
-    from scipy.spatial.distance import cdist
-    N = len(X)
-    dists = cdist(X, X)
-    np.fill_diagonal(dists, np.inf)
+    """TwoNN intrinsic dimension estimator (Facco et al. 2017).
+    Uses NearestNeighbors instead of full distance matrix to avoid O(N^2) memory.
+    """
+    from sklearn.neighbors import NearestNeighbors
+    nn = NearestNeighbors(n_neighbors=3, algorithm='auto').fit(X)
+    distances, _ = nn.kneighbors(X)
+    # distances[:,0] is self (0), [:,1] is 1st NN, [:,2] is 2nd NN
+    r1 = distances[:, 1]
+    r2 = distances[:, 2]
 
-    # For each point, get distances to 1st and 2nd nearest neighbor
-    sorted_dists = np.sort(dists, axis=1)
-    r1 = sorted_dists[:, 0]
-    r2 = sorted_dists[:, 1]
-
-    # Avoid division by zero
     mask = r1 > 1e-10
     mu = r2[mask] / r1[mask]
 
-    # MLE estimator
     n = len(mu)
     mu_sorted = np.sort(mu)
-    # Empirical CDF
-    F_emp = np.arange(1, n + 1) / n
-
-    # Fit: log(1 - F) = -(d-1) * log(mu)
-    # Use median estimator for robustness
     d_hat = np.mean(np.log(n / np.arange(n, 0, -1)) / np.log(mu_sorted))
 
     return float(d_hat)
@@ -182,6 +175,10 @@ def main():
             print(f"  TwoNN ID: {r['twonn_id']:.1f}")
             print(f"  Param norm: {r['param_norm']:.1f}")
             results.append(r)
+            # Free memory between runs
+            gc.collect()
+            if device == "mps":
+                torch.mps.empty_cache()
 
     # Summary
     print(f"\n{'='*60}")
