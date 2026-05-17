@@ -1,0 +1,363 @@
+\begin{thebibliography}{55}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Alain \& Bengio(2017)Alain and Bengio]{alain_understanding_2018}
+Guillaume Alain and Yoshua Bengio.
+\newblock Understanding intermediate layers using linear classifier probes.
+\newblock \emph{International Conference on Learning Representations}, 2017.
+
+\bibitem[Alom et~al.(2019)Alom, Taha, Yakopcic, Westberg, Sidike, Nasrin,
+  Hasan, Van~Essen, Awwal, and Asari]{alom_state---art_2019}
+Md~Zahangir Alom, Tarek~M Taha, Chris Yakopcic, Stefan Westberg, Paheding
+  Sidike, Mst~Shamima Nasrin, Mahmudul Hasan, Brian~C Van~Essen, Abdul~AS
+  Awwal, and Vijayan~K Asari.
+\newblock A state-of-the-art survey on deep learning theory and architectures.
+\newblock \emph{Electronics}, 8\penalty0 (3):\penalty0 292, 2019.
+
+\bibitem[Amodei et~al.(2016)Amodei, Olah, Steinhardt, Christiano, Schulman, and
+  Man{\'e}]{amodei_concrete_2016}
+Dario Amodei, Chris Olah, Jacob Steinhardt, Paul Christiano, John Schulman, and
+  Dan Man{\'e}.
+\newblock Concrete problems in ai safety.
+\newblock \emph{arXiv preprint arXiv:1606.06565}, 2016.
+
+\bibitem[Ansuini et~al.(2019)Ansuini, Laio, Macke, and
+  Zoccolan]{ansuini_intrinsic_2019}
+Alessio Ansuini, Alessandro Laio, Jakob~H Macke, and Davide Zoccolan.
+\newblock Intrinsic dimension of data representations in deep neural networks.
+\newblock \emph{Advances in Neural Information Processing Systems}, 32, 2019.
+
+\bibitem[Bac et~al.(2021)Bac, Mirkes, Gorban, Tyukin, and
+  Zinovyev]{bac2021scikit}
+Jonathan Bac, Evgeny~M Mirkes, Alexander~N Gorban, Ivan Tyukin, and Andrei
+  Zinovyev.
+\newblock Scikit-dimension: a python package for intrinsic dimension
+  estimation.
+\newblock \emph{Entropy}, 23\penalty0 (10):\penalty0 1368, 2021.
+
+\bibitem[Beckurts \& Dedekind(1897)Beckurts and
+  Dedekind]{beckurts1897zerlegungen}
+Heinr Beckurts and R~Dedekind.
+\newblock \emph{{\"U}ber Zerlegungen von Zahlen durch ihre gr{\"o}ssten
+  gemeinsamen Theiler}.
+\newblock Springer, 1897.
+
+\bibitem[Bengio et~al.(2013)Bengio, Courville, and
+  Vincent]{bengio_representation_2013}
+Yoshua Bengio, Aaron Courville, and Pascal Vincent.
+\newblock Representation learning: A review and new perspectives.
+\newblock \emph{IEEE transactions on pattern analysis and machine
+  intelligence}, 35\penalty0 (8):\penalty0 1798--1828, 2013.
+
+\bibitem[Bertschinger et~al.(2014)Bertschinger, Rauh, Olbrich, Jost, and
+  Ay]{bertschinger_quantifying_2014}
+Nils Bertschinger, Johannes Rauh, Eckehard Olbrich, J{\"u}rgen Jost, and Nihat
+  Ay.
+\newblock Quantifying unique information.
+\newblock \emph{Entropy}, 16\penalty0 (4):\penalty0 2161--2183, 2014.
+
+\bibitem[Chen et~al.(2018)Chen, Li, Grosse, and Duvenaud]{chen_isolating_2018}
+Ricky~TQ Chen, Xuechen Li, Roger~B Grosse, and David~K Duvenaud.
+\newblock Isolating sources of disentanglement in variational autoencoders.
+\newblock \emph{Advances in neural information processing systems}, 31, 2018.
+
+\bibitem[Cover \& Thomas(2006)Cover and Thomas]{cover2006elements}
+Thomas~M Cover and Joy~A Thomas.
+\newblock Elements of information theory 2nd edition (wiley series in
+  telecommunications and signal processing).
+\newblock \emph{Acessado em}, 2006.
+
+\bibitem[Crampton \& Loizou(2000)Crampton and Loizou]{crampton2000two}
+Jason Crampton and George Loizou.
+\newblock Two partial orders on the set of antichains, 2000.
+
+\bibitem[Crampton \& Loizou(2001)Crampton and Loizou]{crampton2001completion}
+Jason Crampton and George Loizou.
+\newblock The completion of a poset in a lattice of antichains.
+\newblock \emph{International Mathematical Journal}, 1\penalty0 (3):\penalty0
+  223--238, 2001.
+
+\bibitem[Eykholt et~al.(2018)Eykholt, Evtimov, Fernandes, Li, Rahmati, Xiao,
+  Prakash, Kohno, and Song]{eykholt_robust_2015}
+Kevin Eykholt, Ivan Evtimov, Earlence Fernandes, Bo~Li, Amir Rahmati, Chaowei
+  Xiao, Atul Prakash, Tadayoshi Kohno, and Dawn Song.
+\newblock Robust physical-world attacks on deep learning visual classification.
+\newblock In \emph{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pp.\  1625--1634, 2018.
+
+\bibitem[Finn \& Lizier(2018)Finn and Lizier]{finn_pointwise_2018}
+Conor Finn and Joseph~T Lizier.
+\newblock Pointwise partial information decomposition using the specificity and
+  ambiguity lattices.
+\newblock \emph{Entropy}, 20\penalty0 (4):\penalty0 297, 2018.
+
+\bibitem[Fukunaga \& Olsen(1971)Fukunaga and Olsen]{fukunaga1971algorithm}
+Keinosuke Fukunaga and David~R Olsen.
+\newblock An algorithm for finding intrinsic dimensionality of data.
+\newblock \emph{IEEE Transactions on Computers}, 100\penalty0 (2):\penalty0
+  176--183, 1971.
+
+\bibitem[Geiger(2021)]{geiger_information_2021}
+Bernhard~C Geiger.
+\newblock On information plane analyses of neural network classifiers--a
+  review.
+\newblock \emph{IEEE Transactions on Neural Networks and Learning Systems},
+  2021.
+
+\bibitem[Goldfeld et~al.(2019)Goldfeld, Berg, Greenewald, Melnyk, Nguyen,
+  Kingsbury, and Polyanskiy]{goldfeld_estimating_2019}
+Ziv Goldfeld, Ewout van~den Berg, Kristjan Greenewald, Igor Melnyk, Nam Nguyen,
+  Brian Kingsbury, and Yury Polyanskiy.
+\newblock Estimating information flow in deep neural networks.
+\newblock \emph{International Conference on Machine Learning}, 2019.
+
+\bibitem[Goodfellow et~al.(2016)Goodfellow, Bengio, and
+  Courville]{goodfellow2016deep}
+Ian Goodfellow, Yoshua Bengio, and Aaron Courville.
+\newblock \emph{Deep learning}.
+\newblock MIT press, 2016.
+
+\bibitem[Gupta et~al.(2015)Gupta, Agrawal, Gopalakrishnan, and
+  Narayanan]{gupta_deep_2015}
+Suyog Gupta, Ankur Agrawal, Kailash Gopalakrishnan, and Pritish Narayanan.
+\newblock Deep learning with limited numerical precision.
+\newblock In \emph{International conference on machine learning}, pp.\
+  1737--1746. PMLR, 2015.
+
+\bibitem[Gutknecht et~al.(2021)Gutknecht, Wibral, and
+  Makkeh]{gutknecht_bits_2021}
+Aaron~J Gutknecht, Michael Wibral, and Abdullah Makkeh.
+\newblock Bits and pieces: Understanding information decomposition from
+  part-whole relationships and formal logic.
+\newblock \emph{Proceedings of the Royal Society A}, 477\penalty0
+  (2251):\penalty0 20210110, 2021.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he_deep_2015}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pp.\  770--778, 2016.
+
+\bibitem[Hubara et~al.(2017)Hubara, Courbariaux, Soudry, El-Yaniv, and
+  Bengio]{hubara_quantized_2016}
+Itay Hubara, Matthieu Courbariaux, Daniel Soudry, Ran El-Yaniv, and Yoshua
+  Bengio.
+\newblock Quantized neural networks: Training neural networks with low
+  precision weights and activations.
+\newblock \emph{The Journal of Machine Learning Research}, 18\penalty0
+  (1):\penalty0 6869--6898, 2017.
+
+\bibitem[Ince(2017)]{ince_measuring_2017}
+Robin~AA Ince.
+\newblock Measuring multivariate redundant information with pointwise common
+  change in surprisal.
+\newblock \emph{Entropy}, 19\penalty0 (7):\penalty0 318, 2017.
+
+\bibitem[Jiang et~al.(2019)Jiang, Neyshabur, Mobahi, Krishnan, and
+  Bengio]{jiang_fantastic_2019}
+Yiding Jiang, Behnam Neyshabur, Hossein Mobahi, Dilip Krishnan, and Samy
+  Bengio.
+\newblock Fantastic generalization measures and where to find them.
+\newblock In \emph{International Conference on Learning Representations}, 2019.
+
+\bibitem[Kim \& Mnih(2018)Kim and Mnih]{kim_disentangling_2018}
+Hyunjik Kim and Andriy Mnih.
+\newblock Disentangling by factorising.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  2649--2658. PMLR, 2018.
+
+\bibitem[Kleinman et~al.(2020)Kleinman, Achille, Idnani, and
+  Kao]{kleinman_usable_2021}
+Michael Kleinman, Alessandro Achille, Daksh Idnani, and Jonathan Kao.
+\newblock Usable information and evolution of optimal representations during
+  training.
+\newblock In \emph{International Conference on Learning Representations}, 2020.
+
+\bibitem[Kornblith et~al.(2019)Kornblith, Norouzi, Lee, and
+  Hinton]{kornblith_similarity_2019}
+Simon Kornblith, Mohammad Norouzi, Honglak Lee, and Geoffrey Hinton.
+\newblock Similarity of neural network representations revisited.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  3519--3529. PMLR, 2019.
+
+\bibitem[Krizhevsky(2009)]{krizhevsky2009learning}
+Alex Krizhevsky.
+\newblock Learning multiple layers of features from tiny images, 2009.
+
+\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and
+  Hinton]{krizhevsky_imagenet_2017}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock \emph{Advances in neural information processing systems}, 25, 2012.
+
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and
+  Haffner]{lecun_gradient-based_1998}
+Yann LeCun, L{\'e}on Bottou, Yoshua Bengio, and Patrick Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324, 1998.
+
+\bibitem[LeCun et~al.(2015)LeCun, Bengio, and Hinton]{lecun_deep_2015}
+Yann LeCun, Yoshua Bengio, and Geoffrey Hinton.
+\newblock Deep learning.
+\newblock \emph{nature}, 521\penalty0 (7553):\penalty0 436--444, 2015.
+
+\bibitem[Li et~al.(2015)Li, Yosinski, Clune, Lipson, and
+  Hopcroft]{li_convergent_2015}
+Yixuan Li, Jason Yosinski, Jeff Clune, Hod Lipson, and John Hopcroft.
+\newblock Convergent learning: Do different neural networks learn the same
+  representations?
+\newblock In \emph{Feature Extraction: Modern Questions and Challenges}, pp.\
+  196--212. PMLR, 2015.
+
+\bibitem[Lizier et~al.(2018)Lizier, Bertschinger, Jost, and
+  Wibral]{lizier2018information}
+Joseph~T Lizier, Nils Bertschinger, J{\"u}rgen Jost, and Michael Wibral.
+\newblock Information decomposition of target effects from multi-source
+  interactions: Perspectives on previous, current and future work.
+\newblock \emph{Entropy}, 20\penalty0 (4):\penalty0 307, 2018.
+
+\bibitem[Makkeh et~al.(2021)Makkeh, Gutknecht, and
+  Wibral]{makkeh_introducing_2021}
+Abdullah Makkeh, Aaron~J Gutknecht, and Michael Wibral.
+\newblock Introducing a differentiable measure of pointwise shared information.
+\newblock \emph{Physical Review E}, 103\penalty0 (3):\penalty0 032149, 2021.
+
+\bibitem[Morcos et~al.(2018)Morcos, Raghu, and Bengio]{morcos_insights_2018}
+Ari Morcos, Maithra Raghu, and Samy Bengio.
+\newblock Insights on representational similarity in neural networks with
+  canonical correlation.
+\newblock \emph{Advances in Neural Information Processing Systems}, 31, 2018.
+
+\bibitem[Olshausen \& Field(2004)Olshausen and Field]{olshausen_sparse_2004}
+Bruno~A Olshausen and David~J Field.
+\newblock Sparse coding of sensory inputs.
+\newblock \emph{Current opinion in neurobiology}, 14\penalty0 (4):\penalty0
+  481--487, 2004.
+
+\bibitem[Reing et~al.(2021)Reing, Ver~Steeg, and
+  Galstyan]{reing_discovering_2021}
+Kyle Reing, Greg Ver~Steeg, and Aram Galstyan.
+\newblock Discovering higher-order interactions through neural information
+  decomposition.
+\newblock \emph{Entropy}, 23\penalty0 (1):\penalty0 79, 2021.
+
+\bibitem[R{\'e}nyi(1961)]{renyi1961measures}
+Alfr{\'e}d R{\'e}nyi.
+\newblock On measures of entropy and information.
+\newblock In \emph{Proceedings of the Fourth Berkeley Symposium on Mathematical
+  Statistics and Probability, Volume 1: Contributions to the Theory of
+  Statistics}, volume~4, pp.\  547--562. University of California Press, 1961.
+
+\bibitem[Rosas et~al.(2020)Rosas, Mediano, Rassouli, and
+  Barrett]{rosas_operational_2020}
+Fernando~E Rosas, Pedro~AM Mediano, Borzoo Rassouli, and Adam~B Barrett.
+\newblock An operational information decomposition via synergistic disclosure.
+\newblock \emph{Journal of Physics A: Mathematical and Theoretical},
+  53\penalty0 (48):\penalty0 485001, 2020.
+
+\bibitem[Rota(1964)]{rota1964foundations}
+Gian-Carlo Rota.
+\newblock On the foundations of combinatorial theory i. theory of m{\"o}bius
+  functions.
+\newblock \emph{Zeitschrift f{\"u}r Wahrscheinlichkeitstheorie und verwandte
+  Gebiete}, 2\penalty0 (4):\penalty0 340--368, 1964.
+
+\bibitem[Samek et~al.(2017)Samek, Wiegand, and
+  M{\"u}ller]{samek_explainable_2017}
+Wojciech Samek, Thomas Wiegand, and Klaus-Robert M{\"u}ller.
+\newblock Explainable artificial intelligence: Understanding, visualizing and
+  interpreting deep learning models.
+\newblock \emph{arXiv preprint arXiv:1708.08296}, 2017.
+
+\bibitem[Saxe et~al.(2019)Saxe, Bansal, Dapello, Advani, Kolchinsky, Tracey,
+  and Cox]{saxe_information_2019}
+Andrew~M Saxe, Yamini Bansal, Joel Dapello, Madhu Advani, Artemy Kolchinsky,
+  Brendan~D Tracey, and David~D Cox.
+\newblock On the information bottleneck theory of deep learning.
+\newblock \emph{Journal of Statistical Mechanics: Theory and Experiment},
+  2019\penalty0 (12):\penalty0 124020, 2019.
+
+\bibitem[Schick-Poland et~al.(2021)Schick-Poland, Makkeh, Gutknecht, Wollstadt,
+  Sturm, and Wibral]{schick-poland_partial_2021}
+Kyle Schick-Poland, Abdullah Makkeh, Aaron~J Gutknecht, Patricia Wollstadt,
+  Anja Sturm, and Michael Wibral.
+\newblock A partial information decomposition for discrete and continuous
+  variables.
+\newblock \emph{arXiv preprint arXiv:2106.12393}, 2021.
+
+\bibitem[Shannon(1948)]{shannon_mathematical_1948}
+Claude~Elwood Shannon.
+\newblock A mathematical theory of communication.
+\newblock \emph{The Bell system technical journal}, 27\penalty0 (3):\penalty0
+  379--423, 1948.
+
+\bibitem[Shwartz-Ziv \& Tishby(2017)Shwartz-Ziv and
+  Tishby]{shwartz-ziv_opening_2017}
+Ravid Shwartz-Ziv and Naftali Tishby.
+\newblock Opening the black box of deep neural networks via information.
+\newblock \emph{arXiv preprint arXiv:1703.00810}, 2017.
+
+\bibitem[Tax et~al.(2017)Tax, Mediano, and Shanahan]{tax_partial_2017}
+Tycho Tax, Pedro~AM Mediano, and Murray Shanahan.
+\newblock The partial information decomposition of generative neural network
+  models.
+\newblock \emph{Entropy}, 19\penalty0 (9):\penalty0 474, 2017.
+
+\bibitem[Tishby \& Zaslavsky(2015)Tishby and Zaslavsky]{tishby_deep_2015}
+Naftali Tishby and Noga Zaslavsky.
+\newblock Deep learning and the information bottleneck principle.
+\newblock In \emph{2015 IEEE Information Theory Workshop (ITW)}, pp.\  1--5.
+  IEEE, 2015.
+
+\bibitem[Tokui \& Sato(2021)Tokui and Sato]{tokui_disentanglement_2021}
+Seiya Tokui and Issei Sato.
+\newblock Disentanglement analysis with partial information decomposition.
+\newblock \emph{arXiv preprint arXiv:2108.13753}, 2021.
+
+\bibitem[Tsallis(1988)]{tsallis1988possible}
+Constantino Tsallis.
+\newblock Possible generalization of boltzmann-gibbs statistics.
+\newblock \emph{Journal of statistical physics}, 52:\penalty0 479--487, 1988.
+
+\bibitem[Wibral et~al.(2017)Wibral, Finn, Wollstadt, Lizier, and
+  Priesemann]{wibral2017quantifying}
+Michael Wibral, Conor Finn, Patricia Wollstadt, Joseph~T Lizier, and Viola
+  Priesemann.
+\newblock Quantifying information modification in developing neural networks
+  via partial information decomposition.
+\newblock \emph{Entropy}, 19\penalty0 (9):\penalty0 494, 2017.
+
+\bibitem[Wiedemann(1991)]{wiedemann1991computation}
+Doug Wiedemann.
+\newblock A computation of the eighth dedekind number.
+\newblock \emph{Order}, 8\penalty0 (1):\penalty0 5--6, 1991.
+
+\bibitem[Williams \& Beer(2010)Williams and Beer]{williams_nonnegative_2010}
+Paul~L Williams and Randall~D Beer.
+\newblock Nonnegative decomposition of multivariate information.
+\newblock \emph{arXiv preprint arXiv:1004.2515}, 2010.
+
+\bibitem[Xu et~al.(2019)Xu, Zhao, Song, Stewart, and Ermon]{xu_theory_2020}
+Yilun Xu, Shengjia Zhao, Jiaming Song, Russell Stewart, and Stefano Ermon.
+\newblock A theory of usable information under computational constraints.
+\newblock In \emph{International Conference on Learning Representations}, 2019.
+
+\bibitem[Yadav \& Bottou(2019)Yadav and Bottou]{yadav_cold_2019}
+Chhavi Yadav and L{\'e}on Bottou.
+\newblock Cold case: The lost mnist digits.
+\newblock \emph{Advances in neural information processing systems}, 32, 2019.
+
+\bibitem[Yu et~al.(2020)Yu, Wickstr{\o}m, Jenssen, and
+  Principe]{yu_understanding_2020}
+Shujian Yu, Kristoffer Wickstr{\o}m, Robert Jenssen, and Jose~C Principe.
+\newblock Understanding convolutional neural networks with information theory:
+  An initial exploration.
+\newblock \emph{IEEE transactions on neural networks and learning systems},
+  32\penalty0 (1):\penalty0 435--442, 2020.
+
+\end{thebibliography}

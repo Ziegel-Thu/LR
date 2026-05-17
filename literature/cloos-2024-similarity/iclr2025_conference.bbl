@@ -1,0 +1,128 @@
+\begin{thebibliography}{24}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ding et~al.(2021)Ding, Denain, and Steinhardt]{ding2021grounding}
+Frances Ding, Jean-Stanislas Denain, and Jacob Steinhardt.
+\newblock Grounding representation similarity through statistical testing.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~34, 2021.
+
+\bibitem[Freeman et~al.(2013)Freeman, Ziemba, Heeger, Simoncelli, and Movshon]{Freeman2013}
+Jeremy Freeman, Corey~M Ziemba, David~J Heeger, Eero~P Simoncelli, and J~Anthony Movshon.
+\newblock A functional and perceptual signature of the second visual area in primates.
+\newblock \emph{Nature Neuroscience}, 16\penalty0 (7):\penalty0 974--981, July 2013.
+\newblock ISSN 1546-1726.
+
+\bibitem[Harvey et~al.(2023)Harvey, Larsen, and Williams]{harvey2023duality}
+Sarah~E Harvey, Brett~W. Larsen, and Alex~H Williams.
+\newblock Duality of bures and shape distances with implications for comparing neural representations.
+\newblock In \emph{UniReps: the First Workshop on Unifying Representations in Neural Models}, 2023.
+
+\bibitem[Hatsopoulos et~al.(2007)Hatsopoulos, Xu, and Amit]{Hatsopoulos2007}
+Nicholas~G. Hatsopoulos, Qingqing Xu, and Yali Amit.
+\newblock Encoding of movement fragments in the motor cortex.
+\newblock \emph{Journal of Neuroscience}, 27\penalty0 (19):\penalty0 5105–5114, 2007.
+
+\bibitem[Hochreiter \& Schmidhuber(1997)Hochreiter and Schmidhuber]{HochreiterSchmidhuber1997}
+Sepp Hochreiter and Jürgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural computation}, 9:\penalty0 1735--80, 12 1997.
+
+\bibitem[Kingma \& Ba(2017)Kingma and Ba]{kingma2017adam}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization, 2017.
+
+\bibitem[Klabunde et~al.(2023)Klabunde, Schumacher, Strohmaier, and Lemmerich]{klabunde2023similarity}
+Max Klabunde, Tobias Schumacher, Markus Strohmaier, and Florian Lemmerich.
+\newblock Similarity of neural network models: A survey of functional and representational measures, 2023.
+
+\bibitem[Kornblith et~al.(2019)Kornblith, Norouzi, Lee, and Hinton]{Kornblith2019}
+Simon Kornblith, Mohammad Norouzi, Honglak Lee, and Geoffrey Hinton.
+\newblock Similarity of neural network representations revisited, 2019.
+
+\bibitem[Kriegeskorte et~al.(2008{\natexlab{a}})Kriegeskorte, Mur, and Bandettini]{Kriegeskorte2008rsa}
+Nikolaus Kriegeskorte, Marieke Mur, and Peter Bandettini.
+\newblock Representational similarity analysis - connecting the branches of systems neuroscience.
+\newblock \emph{Frontiers in Systems Neuroscience}, 2, 2008{\natexlab{a}}.
+
+\bibitem[Kriegeskorte et~al.(2008{\natexlab{b}})Kriegeskorte, Mur, Ruff, Kiani, Bodurka, Esteky, Tanaka, and Bandettini]{Kriegeskorte2008}
+Nikolaus Kriegeskorte, Marieke Mur, Douglas~A. Ruff, Roozbeh Kiani, Jerzy Bodurka, Hossein Esteky, Keiji Tanaka, and Peter~A. Bandettini.
+\newblock Matching categorical object representations in inferior temporal cortex of man and monkey.
+\newblock \emph{Neuron}, 60\penalty0 (6):\penalty0 1126--1141, 12 2008{\natexlab{b}}.
+
+\bibitem[Lange et~al.(2022)Lange, Kwok, Matelsky, Wang, Rolnick, and Kording]{lange2022neural}
+Richard~D. Lange, Devin Kwok, Jordan Matelsky, Xinyue Wang, David~S. Rolnick, and Konrad~P. Kording.
+\newblock Neural networks as paths through the space of representations, 2022.
+
+\bibitem[Majaj et~al.(2015)Majaj, Hong, Solomon, and DiCarlo]{MajajHong2015}
+Najib~J. Majaj, Ha~Hong, Ethan~A. Solomon, and James~J. DiCarlo.
+\newblock Simple learned weighted sums of inferior temporal neuronal firing rates accurately predict human core object recognition performance.
+\newblock \emph{Journal of Neuroscience}, 35\penalty0 (39):\penalty0 13402--13418, 2015.
+\newblock \doi{10.1523/JNEUROSCI.5181-14.2015}.
+
+\bibitem[Mante et~al.(2013)Mante, Sussillo, Shenoy, and Newsome]{Mante2013}
+Valerio Mante, David Sussillo, Krishna~V. Shenoy, and William~T. Newsome.
+\newblock Context-dependent computation by recurrent dynamics in prefrontal cortex.
+\newblock \emph{Nature}, 503:\penalty0 78–84, Nov 2013.
+
+\bibitem[Miller \& Fumarola(2012)Miller and Fumarola]{KennethMiller2012}
+Kenneth~D. Miller and Francesco Fumarola.
+\newblock Mathematical equivalence of two common forms of firing rate models of neural networks.
+\newblock \emph{Neural Computation}, 24\penalty0 (1):\penalty0 25--31, 2012.
+
+\bibitem[Nayebi et~al.(2018)Nayebi, Bear, Kubilius, Kar, Ganguli, Sussillo, DiCarlo, and Yamins]{nayebi2018task}
+Aran Nayebi, Daniel Bear, Jonas Kubilius, Kohitij Kar, Surya Ganguli, David Sussillo, James~J DiCarlo, and Daniel~L Yamins.
+\newblock Task-driven convolutional recurrent models of the visual system.
+\newblock \emph{Advances in neural information processing systems}, 31, 2018.
+
+\bibitem[Schrimpf et~al.(2018)Schrimpf, Kubilius, Hong, Majaj, Rajalingham, Issa, Kar, Bashivan, Prescott-Roy, Geiger, Schmidt, Yamins, and DiCarlo]{SchrimpfKubilius2018}
+Martin Schrimpf, Jonas Kubilius, Ha~Hong, Najib~J. Majaj, Rishi Rajalingham, Elias~B. Issa, Kohitij Kar, Pouya Bashivan, Jonathan Prescott-Roy, Franziska Geiger, Kailyn Schmidt, Daniel L.~K. Yamins, and James~J. DiCarlo.
+\newblock Brain-score: Which artificial neural network for object recognition is most brain-like?
+\newblock \emph{bioRxiv preprint}, 2018.
+
+\bibitem[Schrimpf et~al.(2020)Schrimpf, Kubilius, Lee, Murty, Ajemian, and DiCarlo]{Schrimpf2020integrative}
+Martin Schrimpf, Jonas Kubilius, Michael~J Lee, N~Apurva~Ratan Murty, Robert Ajemian, and James~J DiCarlo.
+\newblock Integrative benchmarking to advance neurally mechanistic models of human intelligence.
+\newblock \emph{Neuron}, 2020.
+\newblock URL \url{https://www.cell.com/neuron/fulltext/S0896-6273(20)30605-X}.
+
+\bibitem[Siegel et~al.(2015)Siegel, Buschman, and Miller]{Siegel2015}
+Markus Siegel, Timothy~J. Buschman, and Earl~K. Miller.
+\newblock Cortical information flow during flexible sensorimotor decisions.
+\newblock \emph{Science}, 348\penalty0 (6241):\penalty0 1352--1355, 2015.
+\newblock \doi{10.1126/science.aab0551}.
+
+\bibitem[Sucholutsky et~al.(2023)Sucholutsky, Muttenthaler, Weller, Peng, Bobu, Kim, Love, Grant, Groen, Achterberg, Tenenbaum, Collins, Hermann, Oktar, Greff, Hebart, Jacoby, Zhang, Marjieh, Geirhos, Chen, Kornblith, Rane, Konkle, O'Connell, Unterthiner, Lampinen, Müller, Toneva, and Griffiths]{sucholutsky2023getting}
+Ilia Sucholutsky, Lukas Muttenthaler, Adrian Weller, Andi Peng, Andreea Bobu, Been Kim, Bradley~C. Love, Erin Grant, Iris Groen, Jascha Achterberg, Joshua~B. Tenenbaum, Katherine~M. Collins, Katherine~L. Hermann, Kerem Oktar, Klaus Greff, Martin~N. Hebart, Nori Jacoby, Qiuyi Zhang, Raja Marjieh, Robert Geirhos, Sherol Chen, Simon Kornblith, Sunayana Rane, Talia Konkle, Thomas~P. O'Connell, Thomas Unterthiner, Andrew~K. Lampinen, Klaus-Robert Müller, Mariya Toneva, and Thomas~L. Griffiths.
+\newblock Getting aligned on representational alignment, 2023.
+
+\bibitem[Sussillo et~al.(2015)Sussillo, Churchland, Kaufman, and Shenoy]{Sussillo2015}
+David Sussillo, Mark~M Churchland, Matthew~T Kaufman, and Krishna~V Shenoy.
+\newblock A neural network that finds a naturalistic solution for the production of muscle activity.
+\newblock \emph{Nature neuroscience}, 18\penalty0 (7):\penalty0 1025–1033, Jul 2015.
+
+\bibitem[Tang et~al.(2020)Tang, Maddox, Dickens, Diethe, and Damianou]{tang2020similarity}
+Shuai Tang, Wesley~J. Maddox, Charlie Dickens, Tom Diethe, and Andreas Damianou.
+\newblock Similarity of neural networks with gradients, 2020.
+
+\bibitem[Williams(2024)]{williams2024equivalence}
+Alex~H Williams.
+\newblock Equivalence between representational similarity analysis, centered kernel alignment, and canonical correlations analysis.
+\newblock In \emph{UniReps: 2nd Edition of the Workshop on Unifying Representations in Neural Models}, 2024.
+\newblock URL \url{https://openreview.net/forum?id=zMdnnFasgC}.
+
+\bibitem[Williams et~al.(2021)Williams, Kunz, Kornblith, and Linderman]{Williams2021}
+Alex~H. Williams, Erin Kunz, Simon Kornblith, and Scott~W. Linderman.
+\newblock Generalized shape metrics on neural representations.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~34, 2021.
+
+\bibitem[Yamins et~al.(2014)Yamins, Hong, Cadieu, Solomon, Seibert, and DiCarlo]{YaminsHong2014}
+Daniel L.~K. Yamins, Ha~Hong, Charles~F. Cadieu, Ethan~A. Solomon, Darren Seibert, and James~J. DiCarlo.
+\newblock Performance-optimized hierarchical models predict neural responses in higher visual cortex.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 111\penalty0 (23):\penalty0 8619--8624, 2014.
+\newblock \doi{10.1073/pnas.1403112111}.
+
+\end{thebibliography}
