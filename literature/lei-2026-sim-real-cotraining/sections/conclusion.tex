@@ -1,0 +1,32 @@
+\section{Discussions and Future Work}
+
+To understand how co-training works, we present a systematic study that combines theoretical analysis with extensive empirical validation, yielding a unified explanatory framework.
+Within this framework, we identify two intrinsic effects underlying effective co-training: structured representation alignment and importance reweighting.
+The effectiveness of structured representation alignment requires a careful balance between two competing objectives: aligning representations along domain-invariant dimensions to enable transfer, while preserving domain-specific dimensions to maintain adaptability.
+This perspective unifies several existing co-training methods and highlights the effectiveness of a simple combination strategy.
+We further identify the effects of mixing ratios and dataset size, which can help narrow the search space for future large-scale co-training experiments.
+A guideline is provided in Appendix~\ref{appdx: guideline}.
+Overall, we hope that this work sheds light on the mechanisms behind co-training and informs the design of more principled, robust co-training algorithms.
+% The effectiveness of structured representation alignment is rooted in two seemingly contracting forces:
+% The representations should be aligned at domain-invariant dimensions, but also be discernible in domain-specific dimensions at the same time.
+% This can provide a unified perspective towards some of the previous co-training techniques, and we are surprised by the effectiveness of the simple combination.
+% At the same time, we provide a heuristic analysis and define a coarse range of balanced data mixing ratios, which we believe can be a useful starting point for future large-scale co-training experiments, narrowing down the search space.
+% We hope this work offers a valuable perspective to understand the working mechanism of co-training, which can further inspire the design of novel co-training algorithms.
+
+\textbf{Limitations and Future Work.}
+% First, most of our experiments focus on sim-and-sim and sim-and-real co-training settings.
+% While we observe similar trends in other forms of co-training, such as human–robot co-training, validating these findings across a broader range of domains remains an important direction for future work.
+% Second, we show only the ultimate effects of two intrinsic effects, but do not explore their interaction in the dynamic learning process, \textit{i.e.}, how exactly does the mixing ratio shape representation learning.
+% Also we do not consider the influence of limited batch size during training.
+% Third, we examine only the relative relationship of representations, but not the representations themselves, \textit{i.e.} what representation does the model learns exactly.
+% We believe learning more generalizable representations can lead to more efficient structured representation alignment.
+% Fourth, although our study is limited to imitation learning, co-training can be applied to many other learning paradigms, like world modeling or reinforcement learning.
+% We sincerely invite the community to further explore in more diverse settings and test the effectiveness of this paradigm, with the goal of deepening our collective understanding and better usage of co-training.
+First, our empirical study primarily focuses on sim-to-sim and sim-to-real co-training settings. Although we observe qualitatively similar trends in other co-training scenarios, such as human–robot co-training, validating the generality of our findings across a broader range of domains remains an important direction for future work.
+Second, our analysis concentrates on the end effects of the two identified mechanisms, without explicitly characterizing their interaction during the dynamic learning process — particularly how the mixing ratio shapes representation learning over the course of training. In addition, we do not investigate the potential impact of practical factors such as limited batch sizes.
+Third, we study the relative relationships between representations, rather than their intrinsic structure. That is, we do not directly characterize what representations the model ultimately learns. Understanding the nature of these representations, especially those that generalize across domains, may provide further insights into the emergence of structured representation alignment.
+Finally, while our study is grounded in imitation learning, the co-training paradigm is broadly applicable to other learning settings, including world modeling and reinforcement learning. We hope this work encourages further exploration across diverse domains, ultimately contributing to a deeper understanding and more effective use of co-training.
+
+\subsection*{Acknowledgment}
+We would like to thank the Texas Advanced Computing Center (TACC) for its valuable support of computing resources. We also thank Rutav Shah, Huihan Liu, Kevin Lin, and Jake Grigsby at UT Austin Robot Perception and Learning Lab for their fruitful discussions.
+This work was partially supported by the National Science Foundation (FRR-2145283, EFRI-2318065), the Office of Naval Research (N00014-24-1-2550), the DARPA TIAMAT program (HR0011-24-9-0428), and the Army Research Lab (W911NF-25-1- 0065). It was also supported by the Institute of Information \& Communications Technology Planning \& Evaluation (IITP) grant funded by the Korean Government (MSIT) (No. RS-2024-00457882, National AI Research Lab Project).

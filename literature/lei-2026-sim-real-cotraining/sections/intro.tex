@@ -1,0 +1,51 @@
+\section{Introduction}
+\label{sec:intro}
+
+Data scarcity remains a fundamental bottleneck in robotics, motivating the use of inexpensive and abundant surrogate data such as simulation and cross-embodiment data~\cite{bjorck2025gr00t, intelligence2025pi}. 
+Although these data sources contain rich task-relevant information, they introduce substantial domain gaps that make effective knowledge transfer difficult in practice. 
+Recently, a simple \textit{co-training} paradigm — jointly training on in-domain real data and surrogate data with a data mixing ratio $w$ — has demonstrated strong empirical performance across sim-and-real and human-to-robot settings~\cite{cheng2025generalizable, yuan2025motiontrans, kareer2025egomimic, kareer2025emergence}. 
+Despite some work~\cite{wei2025empirical} providing valuable empirical analysis, co-training remains poorly understood: its internal mechanisms are largely treated as a black box, and the factors that govern its effectiveness are unclear.
+
+In this work, we focus on investigating the co-training paradigm as described above, in particular, on \textit{sim-and-real} data, in diffusion-based models, which are representative in modern generative robot policies.~\cite{pan2025much}
+
+
+
+We begin with a theoretical analysis that examines the learning objective induced by jointly mixing data from multiple domains.
+This analysis reveals two intrinsic effects that independently influence co-training performance:
+% \textbf{structured representation alignment} and \textbf{softmax lensing effect}.
+(1) \textbf{\emph{Structured representation alignment}} is characterized by a two-fold property. On one hand, representations become aligned across domains in a domain-invariant subspace, enabling the transfer of task-relevant knowledge. On the other hand, representations retain discernibility with respect to domain-specific factors, allowing actions to adapt to the real world rather than being directly copied from surrogate domains.
+This balance is instrumental for effective co-training, as it determines whether adaptive action transfer is possible.
+(2) \textbf{\emph{Importance reweighting effect}} refers to the domain-dependent logit modulation within action weightings.
+This effect operates locally in the space conditioned on observations and controls how much each training sample from each domain contributes to an action decision during training.
+It is determined by the data mixing ratio $w$, the dataset size $|\mathcal{D}|$ and domain gaps.
+Through controlled toy co-training experiments, we verify the presence of both effects and find that structured representation alignment is the primary factor underlying strong model performance, while the importance reweighting effect plays a modulatory role.
+These findings motivate the following questions:
+
+\textit{
+Do similar effects arise in realistic robot manipulation tasks?
+How can these insights guide the design of more effective co-training algorithms?
+}
+
+
+
+
+In the second part of the paper, we address these questions through comprehensive sim-and-sim and sim-and-real robotic manipulation experiments.
+In end-to-end co-training systems, the data mixing ratio $w$ is typically the only explicit control variable, yet it simultaneously influences both internal effects.
+Empirically, we find that structured representation alignment, in both local and global space, can emerge implicitly within an appropriate range of mixing ratios (which we refer to as ``balanced mixing ratios"), and that its strength exhibits a moderate-to-strong correlation with task success.
+At the same time, preserving domain discernibility is necessary for effective action adaptation to the real world; when this property is lost, performance even shows a negative correlation with representation alignment.
+These observations provide a unified perspective for understanding existing co-training techniques. We benchmark three recent representative co-training techniques on our tasks --- optimal transport-based feature regularization~\cite{cheng2025generalizable, punamiya2025egobridge}, adversarial discriminative domain adaptation~\cite{cai2025n, yuan2025motiontrans}, and classifier-free guidance~\cite{wei2025empirical}. 
+We observe that each method primarily emphasizes only one aspect of structured representation alignment, which often leads to unstable or marginal improvements.
+Motivated by this analysis, we propose a simple combination of co-training techniques that jointly promotes alignment while preserving domain discernibility, and that also offers a more controllable interface for knowledge transfer during inference. This approach yields consistent and substantial improvements over prior methods.
+ In summary, our contributions are as follows.
+\begin{itemize}[leftmargin=*]
+    \item We systematically identify, for the first time, the working mechanisms of co-training through theoretical analysis and experimental support.
+    \item We find that structured representation alignment can be learned implicitly, and validate the effects and requirements of both alignment and discernibility through comprehensive robotic manipulation experiments.
+    \item We benchmark representative co-training techniques through the lens of our analysis, which inspires us to introduce a simple approach that stably improves performance, and opens the door to new algorithm designs.
+\end{itemize}
+
+
+
+
+
+
+

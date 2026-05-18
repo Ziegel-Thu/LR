@@ -1,0 +1,39 @@
+\section{Related Work}
+
+\subsection{Co-Training for Robot Learning}
+Generally, we can define any learning system that utilizes heterogeneous data as co-training.
+To mitigate the gap between limited in-domain robot data and large-scale surrogate data or even multimodal resources, co-training has been employed in numerous studies. 
+Based on the types of large-scale surrogate data, we can coarsely categorize current work into the following three intersecting types: \textit{sim-and-real co-training}, \textit{cross-embodiment co-training}, and \textit{non-robot data co-training}.
+
+\textbf{Sim-and-Real Co-Training.}
+Using simulation as a surrogate data source is a promising way for co-training.
+The main domain gaps include visual and physics gaps, with the physics gap being much more challenging.
+But with the advancement of high-fidelity physics simulators ~\cite{mittal2025isaac, nasiriany2024robocasa, zakka2025mujoco, Genesis} and automated data generation tools ~\cite{mandlekar2023mimicgen, jiang2025dexmimicgen, lin2025constraint}, high-quality and massive robot trajectories can be obtained easily.
+Many works have demonstrated the effectiveness of sim-and-real co-training on challenging manipulation tasks with small diffusion policy models ~\cite{maddukuri2025sim, wei2025empirical, cheng2025generalizable} and even large Vision-Language-Action(VLA) models ~\cite{bjorck2025gr00t, yu2025real2render2real}.
+There are also works ~\cite{barreiros2025careful, jain2025polaris} utilizing relative large-scale real-world data and small amount of simulation data for co-training, so that the performance evaluated in simulation can effectively reflect the performance in real world.
+
+
+\textbf{Cross-Embodiment Co-Training.}
+A large amount of works ~\cite{doshi2024scaling, yang2024pushing, o2024open, intelligence2025pi_, yuan2025motiontrans} have explored using cross-embodiment robot data for co-training, where a single policy is trained with multiple embodiments with a unified architecture and action representation.
+The main domain gaps include the embodiment appearance and the embodiment-physics gap.
+Human data is a special case of them, which can be directly treated as another embodiment.
+These works show that diverse robot pretraining can produce transferable internal representations ~\cite{kareer2025emergence}.
+Some works ~\cite{cai2025n, kareer2025egomimic, punamiya2025egobridge} utilize representation alignment regularization like optimal transport or adversarial discriminator.
+Another line of works ~\cite{xu2025dexumi, lepert2025phantom, lepert2025masquerade} force input data distribution alignment via image editing.
+
+
+\textbf{Non-Robot Data Co-Training.}
+Internet-scale multimodal data without action label is another valuable co-training resource.
+Numerous works ~\cite{intelligence2025pi_, lee2025molmoact, zawalski2024robotic, zitkovich2023rt, cotraininglbm2025} have adopted VL datasets, which contain rich commonsense knowledge, planning and spatial information for co-training in VLAs.
+These works have demonstrated that co-training with VLM data can transfer knowledge from other modalities.
+Also a number of works try to utilize videos for policy co-training.
+Some works ~\cite{kareer2025egomimic, lepert2025masquerade, luo2025being} explicitly extract action labels but with the problem of accuracy;
+some works ~\cite{ye2024latent, zhou2024dino} explores latent action representations by encoding changes between video frames;
+other works ~\cite{li2025unified, zhu2025unified, liang2025video} propose to co-train the action- and actionless video data within a unified architecture.
+
+
+\subsection{Representation Learning in Domain Adaptation}
+Co-training can be also viewed as semi-supervised or unsupervised domain adaptation.
+A central theme in domain adaptation is learning representations that enable knowledge transfer across domains while mitigating distribution shift. 
+Early theoretical work formalized this goal by relating target error to source error and representation-level domain discrepancy, motivating the pursuit of domain-invariant features through shared embeddings or feature transformations~\cite{ben2010theory, mansour2009domain}.    
+Building on this foundation, many practical approaches explicitly align representations across domains, including discrepancy-based methods that minimize statistical distances such as maximum mean discrepancy (MMD)~\cite{long2015learning}, OT-based alignment~\cite{courty2017joint, damodaran2018deepjdot}, and adversarial domain adaptation methods that encourage indistinguishability ~\cite{ganin2016domain, tzeng2017adversarial}. 
