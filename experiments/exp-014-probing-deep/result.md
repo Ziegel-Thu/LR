@@ -91,3 +91,28 @@
 Training 只贡献 3-14%。Architecture 贡献接近 0。Token-level 形态学 probe 本质上是 trivial 的 — 不是模型"学到"的，而是输入的直接属性。
 
 与 exp-007 ghost ratio=71% 一致：不仅因果上无关，来源上也是 trivial。
+
+---
+
+## Phase 3: 三方向 Head-to-Head
+
+### 配置
+- GPT-2 small, 12 layers, 2 concepts (capitalized, plural)
+- 3 directions: linear probe / difference-in-means / loss gradient
+- 测量两两 cosine similarity
+
+### 结果
+
+| 概念 | Probe ↔ DiffMeans | Probe ↔ Gradient | DiffMeans ↔ Gradient |
+|------|-------------------|------------------|---------------------|
+| capitalized | 0.074 | 0.070 | 0.032 |
+| plural | **0.306** | 0.074 | 0.030 |
+
+### 关键发现
+
+1. **Probe 和 DiffMeans 方向大多不对齐** — capitalized 仅 0.074（接近随机）
+2. **plural 例外** — probe↔DiffMeans = 0.31，有一定对齐
+3. **Gradient 方向和所有方向都不对齐** (0.03-0.07) — 再次确认 Phase 1 的发现
+4. **DiffMeans ↔ Gradient 最低** (0.03) — 统计方向和优化方向几乎正交
+
+**解读**：不同方向提取方法给出不同结果。对"简单"概念（capitalized）probe 和 DiffMeans 就已经不一致——更复杂的语义概念差异可能更大。方向选择是 probing 可靠性的关键但被忽视的因素。
