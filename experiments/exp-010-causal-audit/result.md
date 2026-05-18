@@ -46,3 +46,21 @@ Mahalanobis distance of patched activations vs logit diff change — 见图 `aud
 | Baseline matters (ρ<0.3) | ⚠️ 现有 circuit 结论部分依赖 baseline |
 | Trained ≠ random | ✅ Circuit discovery 不是 trivial |
 | Mean ≈ resample (ρ=0.9) | 这两种 baseline 可互换 |
+
+---
+
+## Phase 4: Circuit Dark Matter
+
+### 配置
+- GPT-2 small, IOI, 12 layers × 12 heads + 12 MLPs = 156 components
+
+### 结果
+
+| 指标 | 值 |
+|------|-----|
+| MLP 占比 | **13.9%** |
+| Ablate 10% | 100.4% preserved |
+| Ablate 30% | 71.9% preserved |
+| Ablate 50% | 18.3% preserved |
+
+**MLP 只占 14% — 暗物质不在 MLP 里。** Circuit 高度稀疏：底部 10% 组件完全无贡献，top ~30% 组件承载 72% 信号。暗物质可能是分布式的 head interactions，不是任何单一可定位的组件。
