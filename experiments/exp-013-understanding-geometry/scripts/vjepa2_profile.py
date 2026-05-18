@@ -63,39 +63,31 @@ def main():
     # Generate random "video" inputs and extract hidden states
     print(f"Generating {args.n_samples} random inputs...", flush=True)
     layer_h = {l: [] for l in range(n_layers)}
-    batch_size = 4
+    batch_size = 2  # V-JEPA 2 is memory-heavy
+
+    from transformers import AutoProcessor
+    processor = AutoProcessor.from_pretrained(MODEL_ID, cache_dir=args.cache_dir, trust_remote_code=True)
 
     for i in tqdm(range(0, args.n_samples, batch_size), desc="Cache"):
         bs = min(batch_size, args.n_samples - i)
-        # Random pixel values as input (normalized)
-        pixel_values = torch.randn(bs, n_channels, n_frames, img_size, img_size,
-                                    dtype=torch.float16, device=args.device)
+        # Random videos: list of T frames of (H, W, C) uint8
+        import numpy as np_
+        videos = [[np_.random.randint(0, 255, (img_size, img_size, 3), dtype=np_.uint8)
+                   for _ in range(min(n_frames, 16))] for _ in range(bs)]  # use 16 frames to save memory
+        inputs = processor(videos=videos, return_tensors="pt")
+        pixel_values = inputs["pixel_values_videos"].to(args.device, dtype=torch.float16)
+
         try:
             with torch.no_grad():
                 out = model(pixel_values, output_hidden_states=True)
-            # hidden_states: tuple of (B, n_patches, d_model) per layer
             for l in range(n_layers):
                 h = out.hidden_states[l+1]  # skip embedding
-                # Mean pool over patches
-                pooled = h.mean(dim=1).cpu().float().numpy()  # (B, d_model)
+                pooled = h.mean(dim=1).cpu().float().numpy()
                 layer_h[l].append(pooled)
         except Exception as e:
-            # Try single-frame input
             if i == 0:
-                print(f"  Video input failed: {e}", flush=True)
-                print("  Trying single-frame...", flush=True)
-                pixel_values = torch.randn(bs, n_channels, img_size, img_size,
-                                            dtype=torch.float16, device=args.device)
-                try:
-                    with torch.no_grad():
-                        out = model(pixel_values, output_hidden_states=True)
-                    for l in range(n_layers):
-                        h = out.hidden_states[l+1]
-                        pooled = h.mean(dim=1).cpu().float().numpy()
-                        layer_h[l].append(pooled)
-                except Exception as e2:
-                    print(f"  Single-frame also failed: {e2}", flush=True)
-                    return
+                print(f"  Error: {e}", flush=True)
+                return
 
     for l in range(n_layers):
         layer_h[l] = np.concatenate(layer_h[l], axis=0)
