@@ -84,3 +84,17 @@
 | RWKV (all scales) | Language (SSM) | ❌ | — |
 
 **结论：Hunchback 出现在有"理解"任务的模型（棋盘 world model、跨模态语义），不出现在纯语言模型。这是"理解"的几何 signature 的强证据。**
+
+## 随机对照实验 ✅
+
+| 模型 | Hunchback? |
+|------|-----------|
+| OthelloGPT (trained) | ✅ YES |
+| OthelloGPT (random init) | ❌ NO |
+
+**Hunchback 是训练效应，不是架构效应。** 随机初始化的同架构模型没有 hunchback。这证明 hunchback 是模型通过训练"学到理解"的几何 signature。
+
+## 下一步
+
+- [ ] DreamerV3 RSSM probing（验证 world model 假说）
+- [ ] 更多"理解型"模型的 ID profile

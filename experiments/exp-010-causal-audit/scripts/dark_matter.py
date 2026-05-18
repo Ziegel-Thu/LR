@@ -117,13 +117,13 @@ def main():
             if comp_type == "mlp":
                 l = comp_id
                 def make_mlp_hook(layer=l):
-                    def hook(mlp_out, hk): mlp_out[:, -1, :] = 0; return mlp_out
+                    def hook(mlp_out, hook): mlp_out[:, -1, :] = 0; return mlp_out
                     return hook
                 hooks.append((f"blocks.{l}.hook_mlp_out", make_mlp_hook()))
             else:
                 l, h = comp_id
                 def make_head_hook(head_idx=h):
-                    def hook(z, hk): z[0, -1, head_idx] = 0; return z
+                    def hook(z, hook): z[0, -1, head_idx] = 0; return z
                     return hook
                 hooks.append((f"blocks.{l}.attn.hook_z", make_head_hook()))
 
