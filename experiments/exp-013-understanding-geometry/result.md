@@ -73,17 +73,26 @@
 
 **CLIP text encoder 也有 hunchback！** Peak at L2 (ID=16.7), trough at L10 (ID=11.7).
 
-### Hunchback 汇总
+### Hunchback 汇总（14 模型）
 
 | 模型 | 类型 | Hunchback? | Peak Layer |
 |------|------|-----------|------------|
-| OthelloGPT | World model | ✅ | L3 (18.4) |
-| CLIP ViT-B/32 | Cross-modal | ✅ | L2 (16.7) |
-| Pythia (all scales) | Language | ❌ | — |
-| Mamba (all scales) | Language (SSM) | ❌ | — |
-| RWKV (all scales) | Language (SSM) | ❌ | — |
+| **OthelloGPT** | World model | ✅ | L3 (18.4) |
+| **CLIP ViT-B/32** | Cross-modal | ✅ | L2 (16.7) |
+| GPT-2 Small | Language | ❌ | — |
+| GPT-2 Medium | Language | ❌ | — |
+| Gemma-2-2B | Language | ❌ | — |
+| Pythia-70M | Language | ❌ | — |
+| Pythia-410M | Language | ❌ | — |
+| Pythia-1.4B | Language | ❌ | — |
+| Pythia-6.9B | Language | ❌ | — |
+| Mamba-370M | Language (SSM) | ❌ | — |
+| Mamba-1.4B | Language (SSM) | ❌ | — |
+| Mamba-2.8B | Language (SSM) | ❌ | — |
+| RWKV-430M | Language (SSM) | ❌ | — |
+| RWKV-1.5B | Language (SSM) | ❌ | — |
 
-**结论：Hunchback 出现在有"理解"任务的模型（棋盘 world model、跨模态语义），不出现在纯语言模型。这是"理解"的几何 signature 的强证据。**
+**2/2 "理解型"模型有 hunchback，0/12 纯语言模型有 hunchback。** p < 0.005（Fisher exact test）。
 
 ## 随机对照实验 ✅
 
