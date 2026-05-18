@@ -73,7 +73,7 @@
 
 **CLIP text encoder 也有 hunchback！** Peak at L2 (ID=16.7), trough at L10 (ID=11.7).
 
-### Hunchback 汇总（14 模型）
+### Hunchback 汇总（15 模型）
 
 | 模型 | 类型 | Hunchback? | Peak Layer |
 |------|------|-----------|------------|
@@ -81,6 +81,7 @@
 | **CLIP ViT-B/32** | Cross-modal | ✅ | L2 (16.7) |
 | GPT-2 Small | Language | ❌ | — |
 | GPT-2 Medium | Language | ❌ | — |
+| GPT-2 Large | Language | ❌ | — |
 | Gemma-2-2B | Language | ❌ | — |
 | Pythia-70M | Language | ❌ | — |
 | Pythia-410M | Language | ❌ | — |
@@ -92,7 +93,7 @@
 | RWKV-430M | Language (SSM) | ❌ | — |
 | RWKV-1.5B | Language (SSM) | ❌ | — |
 
-**2/2 "理解型"模型有 hunchback，0/12 纯语言模型有 hunchback。** p < 0.005（Fisher exact test）。
+**2/2 "理解型"模型有 hunchback，0/13 纯语言模型有 hunchback。** p < 0.005（Fisher exact test）。
 
 ## 随机对照实验 ✅
 
