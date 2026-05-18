@@ -23,7 +23,7 @@ os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 
 MODEL_ID = "EleutherAI/pythia-1.4b-deduped"
-N_SENTENCES = 1000; SEQ_LEN = 128; BATCH_SIZE = 8
+N_SENTENCES = 500; SEQ_LEN = 128; BATCH_SIZE = 8
 
 CONCEPTS = {
     "capitalized": lambda strs: np.array([1 if t.lstrip() and t.lstrip()[0].isupper() else 0 for t in strs]),
@@ -45,6 +45,9 @@ def with_retry(fn, label, attempts=5, sleep_s=20):
 
 def twonn_id(X):
     from sklearn.neighbors import NearestNeighbors
+    if len(X) > 2000:
+        idx = np.random.choice(len(X), 2000, replace=False)
+        X = X[idx]
     nn = NearestNeighbors(n_neighbors=3, metric="euclidean").fit(X)
     d, _ = nn.kneighbors(X)
     r1, r2 = d[:,1], d[:,2]
@@ -54,6 +57,9 @@ def twonn_id(X):
 
 
 def stable_rank(X):
+    if len(X) > 2000:
+        idx = np.random.choice(len(X), 2000, replace=False)
+        X = X[idx]
     sv = np.linalg.svd(X - X.mean(0), compute_uv=False)
     s2 = sv**2; return float(s2.sum()/(s2[0]+1e-10))
 
@@ -81,9 +87,13 @@ def process_checkpoint(step, cache_dir, out_dir, device):
     revision = step if step != "main" else None
     print(f"\n{'='*60}\nCheckpoint: {step}\n{'='*60}", flush=True)
 
+    # Always use main tokenizer (checkpoint tokenizers may lack special tokens)
     tokenizer = with_retry(lambda: AutoTokenizer.from_pretrained(
-        MODEL_ID, cache_dir=cache_dir, revision=revision), "tok")
-    if tokenizer.pad_token is None: tokenizer.pad_token = tokenizer.eos_token
+        MODEL_ID, cache_dir=cache_dir), "tok")
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({"pad_token": "[PAD]"})
     model = with_retry(lambda: AutoModelForCausalLM.from_pretrained(
         MODEL_ID, cache_dir=cache_dir, revision=revision,
         torch_dtype=torch.float16, output_hidden_states=True), "model")

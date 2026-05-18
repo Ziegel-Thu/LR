@@ -64,6 +64,44 @@
 
 ---
 
+## Phase 4: 训练动态（概念方向涌现）
+
+### 配置
+- Pythia-1.4B, 7 checkpoints: step 1K/5K/10K/50K/100K/143K/main
+- 5 concepts, difference-in-means at each checkpoint × each layer
+
+### Loss 曲线
+| Step | Val Loss |
+|------|---------|
+| 1K | 7.988 |
+| 5K | 7.126 |
+| 10K | 6.931 |
+| 50K | 6.461 |
+| 100K | 6.357 |
+| 143K | 6.376 |
+
+### 方向涌现：cos(step1K_direction, final_direction)
+
+| 概念 | cos @ step1K |
+|------|-------------|
+| numeric | **0.634** |
+| subword | 0.525 |
+| capitalized | 0.525 |
+| plural | 0.484 |
+| short | 0.370 |
+
+### 关键发现
+
+**概念方向在训练极早期就已部分形成（step 1K, cos=0.37-0.63）。**
+
+- 没有 sharp phase transition — 方向是渐进涌现的
+- `numeric` 方向最早形成（cos=0.63），`short` 最慢（cos=0.37）
+- 这与 loss 曲线一致：loss 也是连续下降而非突变
+
+**解读**：概念编码不是"涌现"的——它从训练一开始就在逐步建立。这挑战了"能力突然涌现"的叙事，至少在 token-level 概念上如此。
+
+---
+
 ## Phase 3: Mamba 上的 LRH
 
 ### 配置
