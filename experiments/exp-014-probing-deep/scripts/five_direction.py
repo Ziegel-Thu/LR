@@ -124,7 +124,7 @@ def main():
                     logits = probe(Xd[idx]).squeeze()
                     loss = nn.BCEWithLogitsLoss()(logits, yd[idx])
                     opt.zero_grad(); loss.backward(); opt.step()
-            w_probe = probe.linear.weight.data.cpu().numpy().flatten()
+            w_probe = probe.weight.data.cpu().numpy().flatten()
             w_probe = w_probe / (np.linalg.norm(w_probe) + 1e-10)
 
             # 2. DiffMeans direction

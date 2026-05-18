@@ -56,8 +56,31 @@
 
 **"理解"的几何 signature 可能就是 hunchback** — 有 world model 的模型有，纯语言模型没有。
 
-## 下一步
+## CLIP ViT-B/32 Text Encoder
 
-- [ ] DreamerV3 RSSM probing（DR-018 最大低垂果实）
-- [ ] 训练好的 vs 随机 OthelloGPT 对照
-- [ ] CLIP ID profile
+### ID Profile
+
+| Layer | TwoNN ID | Stable Rank |
+|-------|----------|-------------|
+| L0 | 14.3 | 1.0 |
+| L1 | 14.3 | 1.0 |
+| **L2** | **16.7** | 1.0 |
+| L3 | 15.4 | 1.0 |
+| L4 | 14.9 | 1.0 |
+| L5 | 11.9 | 1.0 |
+| L10 | 11.7 | 1.1 |
+| L11 | 13.5 | 1.3 |
+
+**CLIP text encoder 也有 hunchback！** Peak at L2 (ID=16.7), trough at L10 (ID=11.7).
+
+### Hunchback 汇总
+
+| 模型 | 类型 | Hunchback? | Peak Layer |
+|------|------|-----------|------------|
+| OthelloGPT | World model | ✅ | L3 (18.4) |
+| CLIP ViT-B/32 | Cross-modal | ✅ | L2 (16.7) |
+| Pythia (all scales) | Language | ❌ | — |
+| Mamba (all scales) | Language (SSM) | ❌ | — |
+| RWKV (all scales) | Language (SSM) | ❌ | — |
+
+**结论：Hunchback 出现在有"理解"任务的模型（棋盘 world model、跨模态语义），不出现在纯语言模型。这是"理解"的几何 signature 的强证据。**

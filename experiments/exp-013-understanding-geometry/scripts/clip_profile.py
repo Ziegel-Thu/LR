@@ -64,10 +64,12 @@ def main():
                            padding="max_length").to(args.device)
         with torch.no_grad():
             out = text_model(**tokens, output_hidden_states=True)
-        # Use CLS token (first position) representation
+        # Mean pool over non-padding positions
+        mask = tokens["attention_mask"].unsqueeze(-1).float()
         for l in range(n_layers):
-            h = out.hidden_states[l+1][:, 0].cpu().float().numpy()  # CLS token
-            layer_h[l].append(h)
+            h = out.hidden_states[l+1].cpu().float()
+            pooled = (h * mask.cpu()).sum(dim=1) / mask.cpu().sum(dim=1).clamp(min=1)
+            layer_h[l].append(pooled.numpy())
 
     for l in range(n_layers):
         layer_h[l] = np.concatenate(layer_h[l], axis=0)
