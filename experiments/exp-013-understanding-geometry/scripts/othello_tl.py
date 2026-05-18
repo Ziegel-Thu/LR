@@ -73,19 +73,34 @@ def apply_move(board, move, player):
     return board
 
 def generate_games(n=500):
+    # OthelloGPT token mapping: 64 squares minus 4 center = 60 playable, mapped to 0-59
+    # Center squares (row,col): (3,3),(3,4),(4,3),(4,4) = flat 27,28,35,36
+    CENTER = {27, 28, 35, 36}
+    SQUARE_TO_TOKEN = {}
+    token_idx = 0
+    for sq in range(64):
+        if sq not in CENTER:
+            SQUARE_TO_TOKEN[sq] = token_idx
+            token_idx += 1
+    # token_idx should be 60
+
     games = []
     for _ in range(n):
         board = np.zeros((8,8), dtype=int)
         board[3,3] = board[4,4] = -1; board[3,4] = board[4,3] = 1
         cur = 1; moves = []; states = [board.copy()]
-        for _ in range(60):
+        for _ in range(58):  # max 58 moves (60 squares - 4 pre-filled + some passes)
             valid = get_valid_moves(board, cur)
             if not valid:
                 cur = -cur; valid = get_valid_moves(board, cur)
                 if not valid: break
             mv = valid[np.random.randint(len(valid))]
             board = apply_move(board, mv, cur)
-            moves.append(mv[0]*8 + mv[1]); states.append(board.copy()); cur = -cur
+            flat_sq = mv[0]*8 + mv[1]
+            token = SQUARE_TO_TOKEN.get(flat_sq)
+            if token is not None:
+                moves.append(token)
+            states.append(board.copy()); cur = -cur
         if len(moves) > 10: games.append({"moves": moves, "states": states})
     return games
 
@@ -124,10 +139,15 @@ def main():
     print(f"  {len(games)} games, avg {np.mean([len(g['moves']) for g in games]):.0f} moves")
 
     # Prepare data: sequences + labels
+    max_seq = model.cfg.n_ctx  # 59 for OthelloGPT
+    print(f"  Max context: {max_seq}", flush=True)
     all_seqs, all_boards, all_feats = [], [], []
     for g in games:
-        for t in range(5, len(g["moves"])):
+        for t in range(5, min(len(g["moves"]), max_seq)):
             seq = g["moves"][:t]
+            # Verify all tokens in range
+            if any(tok >= model.cfg.d_vocab for tok in seq):
+                continue
             board = g["states"][t]
             player = 1 if t%2==0 else -1
             all_seqs.append(torch.tensor(seq, dtype=torch.long))
