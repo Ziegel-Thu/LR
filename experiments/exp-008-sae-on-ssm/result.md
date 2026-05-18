@@ -98,3 +98,17 @@
 | Fire rate | 0.78% | 0.39% |
 
 **SAE scales up smoothly on Mamba.** 0% dead features at both scales.
+
+---
+
+## Full SAE Scaling Summary
+
+| | Mamba-130M | Mamba-370M | Mamba-1.4B |
+|---|-----------|-----------|-----------|
+| d_model | 768 | 1024 | 2048 |
+| d_sae | 4096 | 8192 | 16384 |
+| Var explained | 80.3% | 80.5% | **79.8%** |
+| Dead features | 0/4096 (0%) | 0/8192 (0%) | **4/16384 (0.02%)** |
+| Fire rate (mean) | 0.78% | 0.39% | 0.20% |
+
+**Superposition in Mamba scales smoothly across 10x model size.** Variance explained is remarkably stable (~80%) across all 3 scales. Dead features remain near-zero (only 4/16384 at 1.4B). Fire rate decreases as expected with larger dictionaries.
