@@ -2,6 +2,32 @@
 
 ## 2026-05-17 (晚)
 
+- **exp-009 Phase 3 完成** [jiagpu4] — Mamba LRH
+  - Mamba↔Pythia 概念方向 mean cos ≈ 0（完全不对齐）
+  - 同信息，不同方向 — 与 exp-008 MMCS=0.13 一致
+
+- **exp-010 完成** [jiagpu4] — 因果抽象方法论审计
+  - Zero vs mean ablation ranking ρ=0.27（几乎无关！）
+  - Trained vs random ρ=-0.17（circuit 不是 trivial）
+
+- **exp-011 完成** [jiagpu4] — MI vs 因果效应
+  - Spearman ρ=0.36 (p=0.01)：信息弱预测因果性
+
+- **exp-012 完成** [jiagpu4] — 几何量 benchmark
+  - ID 估计器严重不一致（TwoNN vs MLE-500 ρ=0.11）
+  - 无几何量与 loss 显著相关
+
+- **exp-013 ID Atlas 完成** [jiagpu4]
+  - 10 模型均无 hunchback（ID 单调下降）
+
+- **exp-014 Phase 1+2+4 完成** [jiagpu4]
+  - Phase 1: cos(probe, gradient) ≈ 0.05（梯度不是因果 proxy）
+  - Phase 2: IOI lifecycle — probe@L7, ablation@L9（encoding leads use）
+  - Phase 4: 88-97% probe 信号来自 input bleed-through
+
+- **exp-008 Phase 3 完成** [jiagpu4] — Mamba-370M SAE
+  - 80.5% var, 0/8192 dead — scales smoothly
+
 - **exp-006 Phase 2 完成** [jiagpu4] — 跨架构 Scaling
   - 4 规模档 × 3 架构 = 12 pairs
   - Inter-family β=0.056 vs intra-family β=0.025（2.2x faster）

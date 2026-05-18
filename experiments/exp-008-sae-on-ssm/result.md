@@ -73,7 +73,28 @@
 
 ## 下一步
 
-- [ ] Phase 3: Mamba-370M / 1.4B 上的 SAE scaling
+- [ ] Mamba-1.4B SAE
 - [ ] 更大训练数据 (10M+ tokens)
-- [ ] 手动检查 Mamba 和 Pythia 各自的 top features 语义
-- [ ] 用 activation correlation（而非 weight cosine）做特征对比
+- [ ] 手动检查 top features 语义
+
+---
+
+## Phase 3: Mamba-370M SAE Scaling
+
+### 配置
+| 参数 | 值 |
+|------|-----|
+| 模型 | Mamba-370M (d_model=1024, layer 24/48) |
+| SAE | TopK, d_sae=8192, K=32, 30K steps |
+
+### 结果
+
+| 指标 | Mamba-130M | Mamba-370M |
+|------|-----------|-----------|
+| d_model | 768 | 1024 |
+| d_sae | 4096 | 8192 |
+| Var explained | 80.3% | **80.5%** |
+| Dead features | 0/4096 (0%) | **0/8192 (0%)** |
+| Fire rate | 0.78% | 0.39% |
+
+**SAE scales up smoothly on Mamba.** 0% dead features at both scales.
