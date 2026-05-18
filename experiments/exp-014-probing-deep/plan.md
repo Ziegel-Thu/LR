@@ -92,35 +92,54 @@ Probe 信号有多少来自输入 bleed-through、多少来自模型计算？
 
 ### 方法
 
-**5a. OthelloGPT — 策略 probing**
+**5a. OthelloGPT — 策略 + 多步前瞻 probing**
 - 已知 board state 可 probe（Nanda 2023）
-- 新问题：能否 probe 出"好棋/坏棋"？"局面优势"？"威胁"？
-- 和 random play 对照
+- 新问题：能否 probe 出战略概念？（机动性、frontier discs、稳定边角、中心控制、tile stability）
+- 复制 Jenner 2024 在 Leela 上的双线性 2 步前瞻 probe 到 OthelloGPT
+- 对照：随机走子训练的 OthelloGPT vs 强模型
+- DR-018：Yuan 2025 发现两跳预测 <70%，需验证
 
-**5b. DreamerV3 — Categorical 解剖**
-- 32×32 categorical latent 天然离散
-- 逐 categorical 维度做 probe：每个维度对应什么物理属性（位置？速度？碰撞？）
-- 在多个 Atari 游戏上比较：同一 categorical 在不同游戏中编码同一概念吗？
+**5b. DreamerV3 — RSSM 系统性探测**
+- DR-018 确认：**从未被正式 probe 过——最大低垂果实**
+- 在 h_t (GRU 确定状态) 和 z_t (32×32 categorical) 上分别做 linear/MLP probe
+- 目标变量：位置、速度、奖励预测、对象身份
+- 用 MDL probe 区分编码 vs 随机基线
+- 因果追踪（ROME 风格）定位哪些 RSSM 单元中介奖励预测
+- 关键判据：若 z_t 线性可解码 → 因子化压缩（world model）；若只有 MLP 能解码 → 分布式压缩（state compressor）
 
-**5c. Coconut — 推理步骤追踪**
-- 每次 continuous thought 迭代，probe 能否解码推理的"当前状态"？
-- 迭代 3 vs 迭代 30 的 probe accuracy 差异 → 推理是逐步积累还是突然涌现？
+**5c. Coconut — 反事实因果探测**
+- DR-018 发现：第三方复现否定了 "BFS 叠加"（零 latent token 仍 96.6%）
+- 每个 continuous thought 位置训练中间实体 probe
+- 沿 probe 方向做反事实干预——修改思维 k 的方向，最终答案是否变？
+- 对照：零向量/随机向量占位符 → 若仍正确则 latent thought 是占位符
+- 扩展到 Huginn：每次递归迭代做相同测试
 
 **5d. CLIP — 理解 vs 模式匹配**
 - 设计对比样本："dog biting man" vs "man biting dog"（语义不同但词相同）
 - CLIP 表征能否区分？如果不能 → 只是 bag-of-words 模式匹配
+- DR-018 发现：Winoground/ARO 已证实 CLIP 组合性失败；Khajuria 2025 发现单模态内可解码但跨模态失败
 
 **5e. V-JEPA 2 — 守恒量 probing**
-- 设计视频：碰撞前后动量守恒 vs 不守恒
-- Probe 能否区分？和随机 ViT 对照
-- 注：V-JEPA 可能较难，先做其他模型
+- DR-018 发现：Joseph 2026 已证明速度/加速度可线性读出，但**守恒量从未被 probe**
+- 设计视频：两体弹性/非弹性碰撞，碰撞前后分别 probe 动量/动能
+- 关键判据：若弹性碰撞中 probe 出的"动量向量"碰撞后守恒 → 模型有动力学理解；若不守恒 → 只有运动学统计
+- 沿守恒方向做因果干预（强制守恒）→ 下游 VoE 判断是否变？
+- 对照：随机 ViT + VideoMAE-v2
+
+**5f. 跨模型统一抽象概念基准（DR-018 实验 5）**
+- 四类抽象任务：守恒 / 对称 / 反事实 / 规划
+- 应用于：V-JEPA 2, DreamerV3, OthelloGPT, Chess-GPT, CLIP, LLaMA, Coconut, Huginn
+- 统一 MDL + 选择性度量 + 同架构随机对照
+- 首次产出跨模型可比较的"抽象理解地图"
 
 ### 预期结果
-- OthelloGPT 能 probe 策略 → 不只是记棋盘，还有评估
-- DreamerV3 categorical 有清晰的物理对应 → 结构化理解
-- Coconut 逐步积累 → latent reasoning 真的在"推理"
-- CLIP 分不开 dog-biting-man → 只是模式匹配
-- 正面/反面结果都有论文价值
+- OthelloGPT 策略 probe 成功 → 不只是记棋盘，还有评估；多步前瞻 <70% → 和 Yuan 2025 一致
+- DreamerV3 z_t 线性可解码 → world model；只 MLP 可解码 → state compressor
+- Coconut 反事实干预改变答案 → 真推理；占位符 baseline 也对 → 快捷方式（和已有第三方复现一致）
+- CLIP 组合性失败 → 确认已有文献；单模态可解码 → 失败在对齐阶段
+- V-JEPA 2 守恒量守恒 → 动力学理解；不守恒 → 只有运动学
+- 跨模型基准 → 首次可比较的"抽象理解地图"
+- **所有正面/反面结果都有论文价值**
 
 ---
 

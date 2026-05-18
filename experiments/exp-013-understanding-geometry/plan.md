@@ -10,6 +10,15 @@
 - Valeriani 2023 在蛋白质 LM 中发现了 semantic plateau（中间层 ID 低谷），但在其他"理解型模型"上未验证
 - 随机/shuffle 训练的网络失去 hunchback / low-ID terminal layer → signature 是训练产物不是架构效应
 - DR-016 确认：V-JEPA 2 / DreamerV3 / Coconut / Huginn 上零几何分析数据
+- **exp-013 Phase 2 初步结果：10 模型均无 hunchback（ID 单调下降）→ hunchback 可能是 CNN 特有的，需要重新思考 signature 的定义**
+
+## DR-018 补充发现
+
+- **抽象概念探测几乎完全空白**（守恒量/对称性/反事实/规划），仅 Leela 国际象棋有 2-7 步前瞻证据
+- DreamerV3 RSSM 从未被正式 probe 过——最大的低垂果实
+- Coconut 的 "BFS 叠加" 被第三方复现否定——零 latent token 仍 96.6% 准确率
+- Joseph 2026 在 V-JEPA 2 发现"物理涌现区"（编码器 1/3 深度），但**守恒量从未被 probe**
+- OthelloGPT 策略概念（机动性、稳定边角）和多步前瞻几乎空白
 
 ## Phase 1: OthelloGPT 标定（ground truth 已知）
 
