@@ -64,10 +64,14 @@ def _get_model_layers(m):
     """Architecture-agnostic layer accessor."""
     if hasattr(m, 'gpt_neox'):
         return m.gpt_neox.layers
+    elif hasattr(m, 'backbone') and hasattr(m.backbone, 'layers'):
+        return m.backbone.layers          # Mamba
+    elif hasattr(m, 'rwkv') and hasattr(m.rwkv, 'blocks'):
+        return m.rwkv.blocks              # RWKV
     elif hasattr(m, 'model') and hasattr(m.model, 'layers'):
-        return m.model.layers
+        return m.model.layers             # Gemma, Llama, etc.
     elif hasattr(m, 'transformer') and hasattr(m.transformer, 'h'):
-        return m.transformer.h
+        return m.transformer.h            # GPT-2
     else:
         raise ValueError(f"Unknown architecture: {type(m).__name__}")
 
