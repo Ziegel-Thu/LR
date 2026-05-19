@@ -1,5 +1,29 @@
 # 进展记录
 
+## 2026-05-20
+
+- **exp-007 Pythia-2.8B probing 完成** [jiagpu4]
+  - Ghost ratio = 70.0%（vs Pythia-1.4B 70.8% — scale-invariant）
+  - 9/11 features 因果效应集中在最后一层 L31
+  - is_high_freq 100% ghost（完美编码但完全不用）
+
+- **exp-007 Gemma-2-2B probing 完成** [jiagpu4]
+  - Ghost ratio ≈ 30%（vs Pythia 70% — 架构差异 >> 规模差异）
+  - 修复架构兼容 bug（`_get_model_layers()` 支持 Pythia/GPT-2/Gemma）
+  - Gemma 特有：大量负 Δloss（删除信息反而帮助预测）
+  - 因果效应分散在多层（vs Pythia 集中在最后层）
+
+- **三模型对比分析** [jiagpu4]
+  - 核心发现：ghost info 是结构性现象，但强度受架构调控
+  - 架构差异（Pythia vs Gemma）对 ghost ratio 的影响 > 规模差异（1.4B vs 2.8B）
+
+## 2026-05-19
+
+- **exp-013 hunchback profiling 完成** [jiagpu4]
+  - 22+ 模型测试，6/6 understanding 模型有 hunchback，0/17 LLM 有
+  - 随机权重对照：无 hunchback（排除架构 bias）
+  - V-JEPA 2 是最新 understanding 模型，确认有 hunchback
+
 ## 2026-05-17 (晚)
 
 - **exp-009 Phase 3 完成** [jiagpu4] — Mamba LRH

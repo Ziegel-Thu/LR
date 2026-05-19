@@ -25,9 +25,12 @@
 - Phase 2 ✅: inter-family β=0.056 > intra β=0.025 (2.2x)
 - Phase 3 ✅: kNN vs loss r=-0.952
 
-### 任务 3: exp-007 Encoding ≠ Use 量化
+### 任务 3: exp-007 Encoding ≠ Use 量化 ✅
 - Full Run ✅: Ghost ratio = 70.8%（11 features × 24 layers, Pythia-1.4B）
-- 下一步：加语义特征（需 NLP 标注）、DAS 替代单方向 ablation
+- Pythia-2.8B ✅: Ghost ratio = 70.0%（11 features × 32 layers, scale-invariant）
+- Gemma-2-2B ✅: Ghost ratio ≈ 30%（12 features × 26 layers, architecture matters!）
+- 核心发现：ghost info 是结构性现象（不随 scale 变），但随架构显著变化
+- 下一步：加语义特征、DAS、非 Transformer 架构
 
 ### 任务 4: exp-008 SSM 上的 SAE ✅
 - Phase 1 ✅: Mamba-130M SAE, 80.3% var, 0% dead
