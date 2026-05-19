@@ -368,10 +368,12 @@ def cmd_feature(args):
             def hook_fn(module, input, output):
                 if isinstance(output, tuple):
                     h = output[0]
-                    proj = (h @ w_norm).unsqueeze(-1) * w_norm
+                    wn = w_norm.to(h.dtype)
+                    proj = (h @ wn).unsqueeze(-1) * wn
                     return (h - proj,) + output[1:]
                 else:
-                    proj = (output @ w_norm).unsqueeze(-1) * w_norm
+                    wn = w_norm.to(output.dtype)
+                    proj = (output @ wn).unsqueeze(-1) * wn
                     return output - proj
             return hook_fn
 
