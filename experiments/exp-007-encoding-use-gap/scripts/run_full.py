@@ -183,19 +183,20 @@ def cmd_cache(args):
     work_dir.mkdir(parents=True, exist_ok=True)
 
     print("Loading model...", flush=True)
+    model_id = args.model
     tokenizer = with_retry(
-        lambda: AutoTokenizer.from_pretrained(MODEL_ID, cache_dir=args.cache_dir), "tokenizer")
+        lambda: AutoTokenizer.from_pretrained(model_id, cache_dir=args.cache_dir), "tokenizer")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     model = with_retry(
         lambda: AutoModelForCausalLM.from_pretrained(
-            MODEL_ID, cache_dir=args.cache_dir,
+            model_id, cache_dir=args.cache_dir,
             torch_dtype=torch.float16, output_hidden_states=True), "model")
     model = model.to(args.device).eval()
     n_layers = model.config.num_hidden_layers
     d_model = model.config.hidden_size
-    print(f"  {n_layers} layers, d={d_model}", flush=True)
+    print(f"  {model_id}: {n_layers} layers, d={d_model}", flush=True)
 
     ds = with_retry(
         lambda: load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1",
@@ -250,7 +251,7 @@ def cmd_cache(args):
         "token_counts": dict(token_counter),
     }, work_dir / "token_info.pt")
 
-    meta = {"model": MODEL_ID, "n_layers": n_layers, "d_model": d_model,
+    meta = {"model": model_id, "n_layers": n_layers, "d_model": d_model,
             "n_tokens": len(all_token_strs), "n_sentences": len(texts)}
     with open(work_dir / "meta.json", "w") as f:
         json.dump(meta, f, indent=2)
@@ -309,14 +310,15 @@ def cmd_feature(args):
     from transformers import AutoModelForCausalLM, AutoTokenizer
     from datasets import load_dataset
 
+    model_id = args.model
     tokenizer = with_retry(
-        lambda: AutoTokenizer.from_pretrained(MODEL_ID, cache_dir=args.cache_dir), "tokenizer")
+        lambda: AutoTokenizer.from_pretrained(model_id, cache_dir=args.cache_dir), "tokenizer")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     model = with_retry(
         lambda: AutoModelForCausalLM.from_pretrained(
-            MODEL_ID, cache_dir=args.cache_dir, torch_dtype=torch.float16), "model")
+            model_id, cache_dir=args.cache_dir, torch_dtype=torch.float16), "model")
     model = model.to(args.device).eval()
 
     ds = with_retry(
@@ -515,12 +517,14 @@ def main():
     p_cache.add_argument("--cache-dir", default="/nvmessd/lifanhong/LR-env/cache/hf")
     p_cache.add_argument("--work-dir", required=True)
     p_cache.add_argument("--device", default="cuda")
+    p_cache.add_argument("--model", default=MODEL_ID, help="HuggingFace model ID")
 
     p_feat = sub.add_parser("feature", help="Run probe + ablation for one feature")
     p_feat.add_argument("--feature", required=True, choices=ALL_FEATURES)
     p_feat.add_argument("--work-dir", required=True)
     p_feat.add_argument("--cache-dir", default="/nvmessd/lifanhong/LR-env/cache/hf")
     p_feat.add_argument("--device", default="cuda")
+    p_feat.add_argument("--model", default=MODEL_ID, help="HuggingFace model ID")
 
     p_analyze = sub.add_parser("analyze", help="Aggregate results and plot")
     p_analyze.add_argument("--work-dir", required=True)
