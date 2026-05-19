@@ -139,6 +139,21 @@
 | DR-012 | 跨领域不可能性类比 | prompt 已写，未发 |
 | DR-013 | 论文地图（10 分支 overview） | ✅ 已回收 |
 
+## 🤔 待深入：Lei 2026 SRA 框架 & 机器人表征方向
+
+**Lei 2026 核心**: sim-real co-training 的效果取决于 encoder 表征空间中两域的几何关系（structured representation alignment = close but not collapsed）。
+
+**关键 gap**: Lei 所有分析都是 post-hoc 横截面分析（训完 N 个模型 → 看最终表征 → 和 success rate 做相关）。缺失的因果链条：
+- ❌ 训练前数据本身的表征结构（random/pretrained encoder 下 sim-real 表征距离）
+- ❌ 训练过程中表征对齐如何逐步形成（纵向/动态分析）
+- ❌ 为什么不同 mixing ratio 导致不同的最终表征结构
+
+**潜在方向**: 在训练过程中定期存 checkpoint，测 Wasserstein/GW/CKA，追踪对齐的形成轨迹——起点、是否有 phase transition、不同 $w$ 在哪里分叉。这直接填补 Lei 最大的 gap，且实验轻量。
+
+**状态**: 暂搁置，方向待定。详见 `literature/lei-2026-sim-real-cotraining/` 和 `deepresearch/overview-robot-repr-analysis.md`。
+
+---
+
 ## 已有探索线索
 
 ### 信号最强：跨架构柏拉图收敛 (exp-003)
