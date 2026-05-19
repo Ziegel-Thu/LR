@@ -60,6 +60,18 @@ ALL_FEATURES = [
 ]
 
 
+def _get_model_layers(m):
+    """Architecture-agnostic layer accessor."""
+    if hasattr(m, 'gpt_neox'):
+        return m.gpt_neox.layers
+    elif hasattr(m, 'model') and hasattr(m.model, 'layers'):
+        return m.model.layers
+    elif hasattr(m, 'transformer') and hasattr(m.transformer, 'h'):
+        return m.transformer.h
+    else:
+        raise ValueError(f"Unknown architecture: {type(m).__name__}")
+
+
 def with_retry(fn, label, attempts=5, sleep_s=20):
     for attempt in range(1, attempts + 1):
         try:
@@ -197,17 +209,7 @@ def cmd_cache(args):
     n_layers = model.config.num_hidden_layers
     d_model = model.config.hidden_size
 
-    # Architecture-agnostic layer accessor
-    def get_model_layers(m):
-        if hasattr(m, 'gpt_neox'):
-            return m.gpt_neox.layers
-        elif hasattr(m, 'model') and hasattr(m.model, 'layers'):
-            return m.model.layers
-        elif hasattr(m, 'transformer') and hasattr(m.transformer, 'h'):
-            return m.transformer.h
-        else:
-            raise ValueError(f"Unknown architecture: {type(m).__name__}")
-    model_layers = get_model_layers(model)
+    model_layers = _get_model_layers(model)
     print(f"  {model_id}: {n_layers} layers, d={d_model}", flush=True)
 
     ds = with_retry(
@@ -332,6 +334,7 @@ def cmd_feature(args):
         lambda: AutoModelForCausalLM.from_pretrained(
             model_id, cache_dir=args.cache_dir, torch_dtype=torch.float16), "model")
     model = model.to(args.device).eval()
+    model_layers = _get_model_layers(model)
 
     ds = with_retry(
         lambda: load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="validation",
