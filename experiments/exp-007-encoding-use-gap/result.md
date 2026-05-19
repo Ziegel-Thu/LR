@@ -247,9 +247,86 @@ Pythia 的 Δloss 绝对值较小，正负均有但幅度不大。
 
 ---
 
+## RWKV-3B 结果
+
+### 配置
+
+| 参数 | 值 |
+|------|-----|
+| 模型 | RWKV-3B (`RWKV/rwkv-4-3b-pile`), 32 layers, d=2560 |
+| 数据 | WikiText-103 validation, 176,213 tokens |
+| 节点 | jiagpu4 GPUs 2-7 |
+| 运行时间 | ~4h (含 cache + 15 features 分批并行) |
+
+### Ghost Ratio
+
+| 指标 | 值 |
+|------|-----|
+| **Ghost ratio** | **28.4%** (100/352) |
+
+### 逐 Feature 结果
+
+| Feature | Best Acc | Best Layer | Max |Δloss| | 类型 |
+|---------|----------|-----------|--------------|------|
+| is_capitalized | 1.000 | L2 | 0.3407 | Used |
+| is_high_freq | 0.965 | L24 | 0.0537 | Mixed |
+| is_numeric | 1.000 | L1 | 0.2481 | Used |
+| is_plural | 0.999 | L2 | 0.0724 | Mixed |
+| is_punctuation | 1.000 | L2 | 0.1263 | Used |
+| is_rare | 0.974 | L2 | 0.1027 | Used |
+| is_short | 1.000 | L2 | 0.2371 | Used |
+| is_stopword | 1.000 | L2 | 0.0640 | Mixed |
+| is_subword | 1.000 | L1 | 0.4406 | Used |
+| is_title_case | 1.000 | L2 | 0.3544 | Used |
+| starts_with_space | 1.000 | L1 | 0.4373 | Used |
+| ends_with_ing | — | — | — | SKIP (imbalanced) |
+| ends_with_tion | — | — | — | SKIP (imbalanced) |
+| has_prefix | — | — | — | SKIP (imbalanced) |
+| is_non_english | — | — | — | SKIP (imbalanced) |
+
+### RWKV 特征
+
+1. **Ghost ratio 极低 (28.4%)**：与 Gemma (~30%) 接近，远低于 Pythia (70%)
+2. **Probe 位置集中在浅层 (L1-L2)**：几乎所有 best probe 都在前两层
+3. **因果效应显著**：多数特征的 max |Δloss| > 0.1，说明 RWKV 确实使用了这些信息
+4. **is_subword (0.44) 和 starts_with_space (0.44)** 是因果效应最大的特征
+
+---
+
+## 四模型对比分析
+
+| 模型 | 架构 | 参数量 | Ghost Ratio | 特点 |
+|------|------|--------|-------------|------|
+| Pythia-1.4B | Transformer (GPT-NeoX) | 1.4B | **70.8%** | 高编码、低使用 |
+| Pythia-2.8B | Transformer (GPT-NeoX) | 2.8B | **70.0%** | 与 1.4B 一致，scale-invariant |
+| Gemma-2-2B | Transformer (Gemma) | 2.6B | **~30%** | 分布式使用 |
+| RWKV-3B | RNN (RWKV-4) | 3B | **28.4%** | 浅层编码、高使用率 |
+
+### 关键发现
+
+1. **架构 > 规模**：同为 Transformer 的 Pythia 1.4B→2.8B ghost ratio 不变 (70%)，但不同架构差异巨大 (28-71%)
+
+2. **两个 ghost ratio 群体**：
+   - **高 ghost (~70%)**：Pythia (GPT-NeoX)
+   - **低 ghost (~30%)**：Gemma, RWKV
+   - 等待 Mamba-2.8B 结果确认
+
+3. **编码模式的架构差异**：
+   - **Pythia**: Best probe 分散在各层
+   - **RWKV**: Best probe 集中在 L1-L2（前两层）
+   - **Gemma**: 分布在中间层
+
+4. **因果效应的架构差异**：
+   - **Pythia**: 效应集中在最后一层
+   - **RWKV**: 效应在多层都有显著贡献
+   - **Gemma**: 部分特征出现负 Δloss（删除信息反而有帮助）
+
+---
+
 ## 下一步
 
+- [ ] Mamba-2.8B 结果（进行中，预计 ~6h 后完成）
+- [ ] 五模型完整对比分析
 - [ ] 添加语义特征（NER、情感、主题）需要 NLP 标注工具
 - [ ] 用 DAS (Distributed Alignment Search) 替代单方向 ablation
 - [ ] 与 exp-008 的 SAE features 做交叉分析
-- [ ] 测试 Mamba/RWKV 等非 Transformer 架构的 ghost ratio
