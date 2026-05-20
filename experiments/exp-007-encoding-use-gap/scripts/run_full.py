@@ -60,6 +60,22 @@ ALL_FEATURES = [
 ]
 
 
+def _get_model_layers(m):
+    """Architecture-agnostic layer accessor."""
+    if hasattr(m, 'gpt_neox'):
+        return m.gpt_neox.layers
+    elif hasattr(m, 'backbone') and hasattr(m.backbone, 'layers'):
+        return m.backbone.layers          # Mamba
+    elif hasattr(m, 'rwkv') and hasattr(m.rwkv, 'blocks'):
+        return m.rwkv.blocks              # RWKV
+    elif hasattr(m, 'model') and hasattr(m.model, 'layers'):
+        return m.model.layers             # Gemma, Llama, etc.
+    elif hasattr(m, 'transformer') and hasattr(m.transformer, 'h'):
+        return m.transformer.h            # GPT-2
+    else:
+        raise ValueError(f"Unknown architecture: {type(m).__name__}")
+
+
 def with_retry(fn, label, attempts=5, sleep_s=20):
     for attempt in range(1, attempts + 1):
         try:
@@ -183,19 +199,22 @@ def cmd_cache(args):
     work_dir.mkdir(parents=True, exist_ok=True)
 
     print("Loading model...", flush=True)
+    model_id = args.model
     tokenizer = with_retry(
-        lambda: AutoTokenizer.from_pretrained(MODEL_ID, cache_dir=args.cache_dir), "tokenizer")
+        lambda: AutoTokenizer.from_pretrained(model_id, cache_dir=args.cache_dir), "tokenizer")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     model = with_retry(
         lambda: AutoModelForCausalLM.from_pretrained(
-            MODEL_ID, cache_dir=args.cache_dir,
+            model_id, cache_dir=args.cache_dir,
             torch_dtype=torch.float16, output_hidden_states=True), "model")
     model = model.to(args.device).eval()
     n_layers = model.config.num_hidden_layers
     d_model = model.config.hidden_size
-    print(f"  {n_layers} layers, d={d_model}", flush=True)
+
+    model_layers = _get_model_layers(model)
+    print(f"  {model_id}: {n_layers} layers, d={d_model}", flush=True)
 
     ds = with_retry(
         lambda: load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1",
@@ -250,7 +269,7 @@ def cmd_cache(args):
         "token_counts": dict(token_counter),
     }, work_dir / "token_info.pt")
 
-    meta = {"model": MODEL_ID, "n_layers": n_layers, "d_model": d_model,
+    meta = {"model": model_id, "n_layers": n_layers, "d_model": d_model,
             "n_tokens": len(all_token_strs), "n_sentences": len(texts)}
     with open(work_dir / "meta.json", "w") as f:
         json.dump(meta, f, indent=2)
@@ -309,15 +328,17 @@ def cmd_feature(args):
     from transformers import AutoModelForCausalLM, AutoTokenizer
     from datasets import load_dataset
 
+    model_id = args.model
     tokenizer = with_retry(
-        lambda: AutoTokenizer.from_pretrained(MODEL_ID, cache_dir=args.cache_dir), "tokenizer")
+        lambda: AutoTokenizer.from_pretrained(model_id, cache_dir=args.cache_dir), "tokenizer")
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     model = with_retry(
         lambda: AutoModelForCausalLM.from_pretrained(
-            MODEL_ID, cache_dir=args.cache_dir, torch_dtype=torch.float16), "model")
+            model_id, cache_dir=args.cache_dir, torch_dtype=torch.float16), "model")
     model = model.to(args.device).eval()
+    model_layers = _get_model_layers(model)
 
     ds = with_retry(
         lambda: load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="validation",
@@ -347,14 +368,16 @@ def cmd_feature(args):
             def hook_fn(module, input, output):
                 if isinstance(output, tuple):
                     h = output[0]
-                    proj = (h @ w_norm).unsqueeze(-1) * w_norm
+                    wn = w_norm.to(h.dtype)
+                    proj = (h @ wn).unsqueeze(-1) * wn
                     return (h - proj,) + output[1:]
                 else:
-                    proj = (output @ w_norm).unsqueeze(-1) * w_norm
+                    wn = w_norm.to(output.dtype)
+                    proj = (output @ wn).unsqueeze(-1) * wn
                     return output - proj
             return hook_fn
 
-        hook = model.gpt_neox.layers[layer_idx].register_forward_hook(make_hook(W_norm))
+        hook = model_layers[layer_idx].register_forward_hook(make_hook(W_norm))
 
         abl_losses = []
         for i in range(0, len(texts), BATCH_SIZE):
@@ -515,12 +538,14 @@ def main():
     p_cache.add_argument("--cache-dir", default="/nvmessd/lifanhong/LR-env/cache/hf")
     p_cache.add_argument("--work-dir", required=True)
     p_cache.add_argument("--device", default="cuda")
+    p_cache.add_argument("--model", default=MODEL_ID, help="HuggingFace model ID")
 
     p_feat = sub.add_parser("feature", help="Run probe + ablation for one feature")
     p_feat.add_argument("--feature", required=True, choices=ALL_FEATURES)
     p_feat.add_argument("--work-dir", required=True)
     p_feat.add_argument("--cache-dir", default="/nvmessd/lifanhong/LR-env/cache/hf")
     p_feat.add_argument("--device", default="cuda")
+    p_feat.add_argument("--model", default=MODEL_ID, help="HuggingFace model ID")
 
     p_analyze = sub.add_parser("analyze", help="Aggregate results and plot")
     p_analyze.add_argument("--work-dir", required=True)

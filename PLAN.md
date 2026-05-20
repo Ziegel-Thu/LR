@@ -20,53 +20,50 @@
 - 18 个模型已登记到 CLAUDE.md
 - 5 个缺失模型已下载（Pythia-70M/160M/1B, Mamba-130M, RWKV-169M）
 
-### 任务 2: exp-006 表征 Scaling Law
-- Phase 1 ✅: Pythia 7-scale ladder, kNN power law R²=0.90, β=0.03
-- Phase 2 ✅: inter-family β=0.056 > intra-family β=0.025 (2.2x faster)
-- Phase 3 待做: representation alignment vs validation loss
+### 任务 2: exp-006 表征 Scaling Law ✅
+- Phase 1 ✅: kNN power law R²=0.90, β=0.03
+- Phase 2 ✅: inter-family β=0.056 > intra β=0.025 (2.2x)
+- Phase 3 ✅: kNN vs loss r=-0.952
 
-### 任务 3: exp-007 Encoding ≠ Use 量化
+### 任务 3: exp-007 Encoding ≠ Use 量化 ✅
 - Full Run ✅: Ghost ratio = 70.8%（11 features × 24 layers, Pythia-1.4B）
-- 下一步：加语义特征（需 NLP 标注）、DAS 替代单方向 ablation
+- Pythia-2.8B ✅: Ghost ratio = 70.0%（11 features × 32 layers, scale-invariant）
+- Gemma-2-2B ✅: Ghost ratio ≈ 30%（12 features × 26 layers, architecture matters!）
+- 核心发现：ghost info 是结构性现象（不随 scale 变），但随架构显著变化
+- 下一步：加语义特征、DAS、非 Transformer 架构
 
-### 任务 4: exp-008 SSM 上的 SAE
-- Phase 1 ✅: Mamba-130M SAE, 80.3% var explained, 0% dead features
-- Phase 2 ✅: MMCS=0.13, Mamba/Pythia 特征完全不同
-- Phase 3 待做: 规模扩展（Mamba-370M, 1.4B）
+### 任务 4: exp-008 SSM 上的 SAE ✅
+- Phase 1 ✅: Mamba-130M SAE, 80.3% var, 0% dead
+- Phase 2 ✅: MMCS=0.13, 特征完全不同
+- Phase 3 ✅: Mamba-370M SAE, 80.5% var, 0/8192 dead
 
-### 任务 5: exp-009 LRH 系统性测试
-- 详见 `experiments/exp-009-lrh-systematic/plan.md`
-- Phase 1: 概念方向跨层一致性（Pythia-1.4B, 10 概念, 32 层）
-- Phase 2: 概念-概念角度矩阵（全局几何结构）
-- Phase 3: LRH 在 Mamba 上是否成立
-- Phase 4: 概念方向随训练演化（Pythia checkpoints）
+### 任务 5: exp-009 LRH 系统性测试 ✅
+- Phase 1-2 ✅: 跨层一致(cos=0.93), 概念不正交(cos=0.83)
+- Phase 3 ✅: Mamba↔Pythia 概念方向 cos≈0
+- Phase 4 ✅: 方向渐进涌现, step1K cos=0.37-0.63
 
-### 任务 6: exp-010 因果抽象方法论审计
-- Off-distribution intervention 量化：patching 后算 Mahalanobis distance，画 distance vs IIA 可靠性
-- Ablation baseline 对比：mean vs zero vs resample 三种 baseline 在 IOI 上的 circuit 差异
-- Trivialization baseline：随机 GPT-2 small 在 IOI 上做 circuit discovery，作为 Wang 2022 的对照
-- Circuit "暗物质"：把 MLP 纳入 circuit search，看 87% → ？如果仍有 gap → 量化 distributed computation 的比例
+### 任务 6: exp-010 因果抽象方法论审计 ✅
+- Ablation baseline ρ=0.27（zero vs mean 几乎无关）
+- Trained vs random ρ=-0.17（非 trivial）
+- Phase 4 暗物质探索未做
 
-### 任务 7: exp-011 PID 预测因果效果（小规模）
-- GPT-2 small 上选 5 个关键 neurons，PID 分解 unique/redundant/synergistic
-- 逐个 ablation，比较 unique info rank vs ablation effect rank
-- 正相关 → info 预测 causation；不相关 → PID 工具价值存疑
+### 任务 7: exp-011 PID 预测因果效果 ✅
+- MI↔causation Spearman ρ=0.36 (p=0.01)
+- 信息弱预测因果性
 
-### 任务 8: exp-012 几何量对比 + 估计器对比
-- ID vs stable rank vs effective rank vs participation ratio 在多架构多数据集上的泛化预测力对比
-- 同一组表征上跑 TwoNN / MLE(K=10/50/100/500) / GeoMLE 估计器对比
-- 训练过程中 hunchback 演化追踪（Pythia checkpoints）
+### 任务 8: exp-012 几何量对比 + 估计器对比 ✅
+- ID estimators 严重不一致（TwoNN vs MLE-500 ρ=0.11）
+- 无几何量与 loss 显著相关
+- Phase 3 训练动态 ✅: 平滑演化, 无 phase transition
 
 ### 任务 9: 不可能性定理统一 + 正面结果
-- 将 Locatello 2019 纳入五公理框架（目前只有 Bilodeau/Han/Sutter/Kleinberg）
-- 对每个不可能性，找最小公理放松下的最优正面结果
-- 推广 exp-005 的 smoothed analysis 到 Locatello 和 Sutter（三个不可能性的统一 average-case 处理）
+- 理论工作，未启动
 
 ### 任务 10: Story A —— "理解的几何学"
-- 核心问题：声称"理解"的模型（V-JEPA 2=物理、DreamerV3=世界、OthelloGPT=棋局、Coconut=推理、CLIP=跨模态），其表征几何有没有共同 signature？
-- 工具：ID profile、stable rank、hunchback 形状、probe accuracy vs ablation effect
-- 预期：如果有共同 signature → "理解"的几何定义；如果没有 → "理解"需要细分
-- 待 DR-016 回收后细化实验设计
+- exp-013 ID Atlas ✅: 10 模型均无 hunchback
+- exp-014 Phase 1+2+4 ✅: gradient≠probe, IOI lifecycle, 88-97% bleed-through
+- DR-018 新发现：DreamerV3 从未被 probe（最大低垂果实）
+- 下一步：OthelloGPT 策略 probing, DreamerV3 RSSM probing
 
 ### Probing 深层问题（待单独 brainstorm）
 
