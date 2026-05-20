@@ -293,40 +293,101 @@ Pythia 的 Δloss 绝对值较小，正负均有但幅度不大。
 
 ---
 
-## 四模型对比分析
+## Mamba-2.8B 结果
 
-| 模型 | 架构 | 参数量 | Ghost Ratio | 特点 |
-|------|------|--------|-------------|------|
-| Pythia-1.4B | Transformer (GPT-NeoX) | 1.4B | **70.8%** | 高编码、低使用 |
-| Pythia-2.8B | Transformer (GPT-NeoX) | 2.8B | **70.0%** | 与 1.4B 一致，scale-invariant |
-| Gemma-2-2B | Transformer (Gemma) | 2.6B | **~30%** | 分布式使用 |
-| RWKV-3B | RNN (RWKV-4) | 3B | **28.4%** | 浅层编码、高使用率 |
+### 配置
+
+| 参数 | 值 |
+|------|-----|
+| 模型 | Mamba-2.8B (`state-spaces/mamba-2.8b-hf`), 64 layers, d=2560 |
+| 数据 | WikiText-103 validation, 176,213 tokens |
+| 节点 | jiagpu5 GPUs 4,5,7 |
+| 运行时间 | ~12h (含 cache + 15 features 分批并行，sequential Mamba fallback) |
+
+### Ghost Ratio
+
+| 指标 | 值 |
+|------|-----|
+| **Ghost ratio** | **89.8%** (632/704) |
+
+### 逐 Feature 结果
+
+| Feature | Best Acc | Max |Δloss| | 类型 |
+|---------|----------|--------------|------|
+| is_capitalized | 0.998 | 0.0084 | Ghost |
+| is_high_freq | 0.927 | 0.0069 | Ghost |
+| is_numeric | 1.000 | 0.0133 | Mostly ghost |
+| is_plural | 0.988 | 0.0101 | Mostly ghost |
+| is_punctuation | 1.000 | 0.0127 | Mostly ghost |
+| is_rare | 0.971 | 0.0375 | Mixed |
+| is_short | 0.990 | 0.0059 | Ghost |
+| is_stopword | 0.995 | 0.0077 | Ghost |
+| is_subword | 0.999 | 0.0201 | Mostly ghost |
+| is_title_case | 0.998 | 0.0073 | Ghost |
+| starts_with_space | 0.999 | 0.0201 | Mostly ghost |
+| ends_with_ing | — | — | SKIP (imbalanced) |
+| ends_with_tion | — | — | SKIP (imbalanced) |
+| has_prefix | — | — | SKIP (imbalanced) |
+| is_non_english | — | — | SKIP (imbalanced) |
+
+### Mamba 特征
+
+1. **Ghost ratio 极高 (89.8%)**：所有模型中最高，远超 Pythia (70%)
+2. **极高编码 + 极低使用**：所有特征 probe accuracy > 0.92，但 max |Δloss| 全部 < 0.04
+3. **最高因果效应的特征是 is_rare (0.0375)**，但仍然很小
+4. **Mamba 似乎将所有信息编码在隐状态中，但几乎不依赖单个特征方向做预测**
+
+---
+
+## 五模型对比分析
+
+| 模型 | 架构 | 参数量 | 层数 | Ghost Ratio | 特点 |
+|------|------|--------|------|-------------|------|
+| Pythia-1.4B | Transformer (GPT-NeoX) | 1.4B | 24 | **70.8%** | 高编码、低使用 |
+| Pythia-2.8B | Transformer (GPT-NeoX) | 2.8B | 32 | **70.0%** | 与 1.4B 一致，scale-invariant |
+| Gemma-2-2B | Transformer (Gemma) | 2.6B | 26 | **~30%** | 分布式使用 |
+| RWKV-3B | RNN (RWKV-4) | 3B | 32 | **28.4%** | 浅层编码、高使用率 |
+| Mamba-2.8B | SSM (Mamba) | 2.8B | 64 | **89.8%** | 极高编码、极低使用 |
 
 ### 关键发现
 
-1. **架构 > 规模**：同为 Transformer 的 Pythia 1.4B→2.8B ghost ratio 不变 (70%)，但不同架构差异巨大 (28-71%)
+1. **Ghost ratio 呈现三个群体**：
+   - **极高 ghost (~90%)**：Mamba — 编码一切但不使用
+   - **高 ghost (~70%)**：Pythia (GPT-NeoX) — 编码多但使用少
+   - **低 ghost (~30%)**：Gemma, RWKV — 编码了就用
 
-2. **两个 ghost ratio 群体**：
-   - **高 ghost (~70%)**：Pythia (GPT-NeoX)
-   - **低 ghost (~30%)**：Gemma, RWKV
-   - 等待 Mamba-2.8B 结果确认
+2. **架构 >> 规模**：同架构 Pythia 1.4B→2.8B ghost ratio 不变 (70%)，但不同架构差异巨大 (28-90%)
 
-3. **编码模式的架构差异**：
+3. **Mamba 的独特模式**：
+   - 所有特征的 max |Δloss| 都极小 (< 0.04)，说明 Mamba 的预测不依赖任何单个线性特征方向
+   - 可能的解释：Mamba 的 selective state space 机制以非线性方式组合信息
+   - 64 层的深度可能导致信息在多层间高度分散，单层 ablation 效果微弱
+
+4. **RWKV vs Mamba 的对比最为有趣**：
+   - 两者都是非 Transformer 序列模型，参数量相近 (3B vs 2.8B)
+   - 但 ghost ratio 天差地别：RWKV 28.4% vs Mamba 89.8%
+   - RWKV 的浅层编码 + 高因果效应 vs Mamba 的深层编码 + 低因果效应
+   - 这暗示 SSM 和 RNN 的信息利用机制根本不同
+
+5. **编码模式的架构差异**：
    - **Pythia**: Best probe 分散在各层
    - **RWKV**: Best probe 集中在 L1-L2（前两层）
    - **Gemma**: 分布在中间层
+   - **Mamba**: 待详细分析 best probe 层分布
 
-4. **因果效应的架构差异**：
+6. **因果效应的架构差异**：
    - **Pythia**: 效应集中在最后一层
    - **RWKV**: 效应在多层都有显著贡献
    - **Gemma**: 部分特征出现负 Δloss（删除信息反而有帮助）
+   - **Mamba**: 所有层的效应都极小，无明显集中
 
 ---
 
 ## 下一步
 
-- [ ] Mamba-2.8B 结果（进行中，预计 ~6h 后完成）
-- [ ] 五模型完整对比分析
+- [x] ~~Mamba-2.8B 结果~~
+- [x] ~~五模型完整对比分析~~
 - [ ] 添加语义特征（NER、情感、主题）需要 NLP 标注工具
 - [ ] 用 DAS (Distributed Alignment Search) 替代单方向 ablation
 - [ ] 与 exp-008 的 SAE features 做交叉分析
+- [ ] 探索 Mamba 的非线性特征使用机制
