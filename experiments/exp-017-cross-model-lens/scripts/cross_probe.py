@@ -43,11 +43,12 @@ MODELS = {
         "n_layers": 32,
         "d_model": 2560,
     },
-    "Mamba-2.8B": {
-        "cache_dir": "/nvmessd/lifanhong/LR-env/exp007-mamba28b",
-        "n_layers": 64,
-        "d_model": 2560,
-    },
+    # Mamba-2.8B cache is on jiagpu5 (108GB), skip for now
+    # "Mamba-2.8B": {
+    #     "cache_dir": "/nvmessd/lifanhong/LR-env/exp007-mamba28b",
+    #     "n_layers": 64,
+    #     "d_model": 2560,
+    # },
     "RWKV-3B": {
         "cache_dir": "/nvmessd/lifanhong/LR-env/exp007-rwkv3b",
         "n_layers": 32,
@@ -385,7 +386,8 @@ def main():
 
         # Print transfer matrix for this feature
         print(f"\n  Transfer matrix for '{feat}':")
-        header = f"  {'src \\ tgt':>14s}" + "".join(
+        header_label = "src \\ tgt"
+        header = f"  {header_label:>14s}" + "".join(
             f"{m:>14s}" for m in model_names)
         print(header)
         for src in model_names:
@@ -410,7 +412,8 @@ def main():
                 avg_matrix[src][tgt].append(r["transfer_ratio"])
                 avg_acc_matrix[src][tgt].append(r["accuracy"])
 
-    header = f"  {'src \\ tgt':>14s}" + "".join(
+    header_label = "src \\ tgt"
+    header = f"  {header_label:>14s}" + "".join(
         f"{m:>14s}" for m in model_names)
     print(header)
     for src in model_names:
