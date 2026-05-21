@@ -1,5 +1,15 @@
 # 进展记录
 
+## 2026-05-22
+
+- **exp-021 SAE as empirical ICA 完成** [jiagpu4 GPU 1]
+  - Pythia-160M layer 6, TopK SAE (d_sae=4096, K=32), 5 个 L1 系数
+  - 基线: PCA (128), FastICA (128), Random (128)
+  - **核心发现: SAE 特征 MI ≈ 0.0002, 比 ICA (0.019) 低 ~80 倍**
+  - 独立性来自 TopK 稀疏约束（99.2% 零值），L1 系数几乎无影响
+  - SAE variance explained 83.6%, 0 dead features
+  - 结论: SAE 是一种比 ICA 更强的独立分解（MI 意义下），但主要因稀疏性而非直接优化独立性
+
 ## 2026-05-21
 
 - **exp-018 SSM LRH 完成** [jiagpu4 + jiagpu5]
