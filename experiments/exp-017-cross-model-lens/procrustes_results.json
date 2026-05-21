@@ -1,0 +1,256 @@
+{
+  "config": {
+    "subsample_n": 30000,
+    "test_ratio": 0.2,
+    "seed": 42
+  },
+  "features": {
+    "is_capitalized": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9996666666666667,
+        "raw_transfer_acc": 0.16283333333333333,
+        "raw_transfer_ratio": 0.16288762920973657,
+        "procrustes_acc": 0.757,
+        "procrustes_ratio": 0.7572524174724908,
+        "improvement": 0.5941666666666667
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 2,
+        "tgt_layer": 2,
+        "same_model_acc": 0.9996666666666667,
+        "raw_transfer_acc": 0.6041666666666666,
+        "raw_transfer_ratio": 0.6043681227075691,
+        "procrustes_acc": 0.8396666666666667,
+        "procrustes_ratio": 0.839946648882961,
+        "improvement": 0.23550000000000004
+      }
+    },
+    "is_plural": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 0.997,
+        "raw_transfer_acc": 0.24733333333333332,
+        "raw_transfer_ratio": 0.2480775660314276,
+        "procrustes_acc": 0.7093333333333334,
+        "procrustes_ratio": 0.7114677365429622,
+        "improvement": 0.4620000000000001
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 3,
+        "tgt_layer": 3,
+        "same_model_acc": 0.9953333333333333,
+        "raw_transfer_acc": 0.7303333333333333,
+        "raw_transfer_ratio": 0.7337575351640991,
+        "procrustes_acc": 0.9206666666666666,
+        "procrustes_ratio": 0.9249832551908909,
+        "improvement": 0.19033333333333335
+      }
+    },
+    "is_high_freq": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9658333333333333,
+        "raw_transfer_acc": 0.6558333333333334,
+        "raw_transfer_ratio": 0.6790336496980156,
+        "procrustes_acc": 0.741,
+        "procrustes_ratio": 0.7672131147540984,
+        "improvement": 0.08516666666666661
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9668333333333333,
+        "raw_transfer_acc": 0.6443333333333333,
+        "raw_transfer_ratio": 0.6664368212377176,
+        "procrustes_acc": 0.7766666666666666,
+        "procrustes_ratio": 0.803309774176866,
+        "improvement": 0.1323333333333333
+      }
+    },
+    "is_numeric": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 1.0,
+        "raw_transfer_acc": 0.9661666666666666,
+        "raw_transfer_ratio": 0.9661666666666666,
+        "procrustes_acc": 0.6925,
+        "procrustes_ratio": 0.6925,
+        "improvement": -0.2736666666666666
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9998333333333334,
+        "raw_transfer_acc": 0.45,
+        "raw_transfer_ratio": 0.4500750125020837,
+        "procrustes_acc": 0.9663333333333334,
+        "procrustes_ratio": 0.9664944157359561,
+        "improvement": 0.5163333333333333
+      }
+    },
+    "is_punctuation": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 12,
+        "tgt_layer": 12,
+        "same_model_acc": 0.9995,
+        "raw_transfer_acc": 0.8581666666666666,
+        "raw_transfer_ratio": 0.8585959646489911,
+        "procrustes_acc": 0.8906666666666667,
+        "procrustes_ratio": 0.8911122227780557,
+        "improvement": 0.032500000000000084
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9991666666666666,
+        "raw_transfer_acc": 0.36883333333333335,
+        "raw_transfer_ratio": 0.36914095079232695,
+        "procrustes_acc": 0.8581666666666666,
+        "procrustes_ratio": 0.858882402001668,
+        "improvement": 0.4893333333333333
+      }
+    },
+    "is_short": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 0.9996666666666667,
+        "raw_transfer_acc": 0.5821666666666667,
+        "raw_transfer_ratio": 0.5823607869289763,
+        "procrustes_acc": 0.9655,
+        "procrustes_ratio": 0.9658219406468823,
+        "improvement": 0.3833333333333333
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 0.9991666666666666,
+        "raw_transfer_acc": 0.5986666666666667,
+        "raw_transfer_ratio": 0.5991659716430359,
+        "procrustes_acc": 0.6243333333333333,
+        "procrustes_ratio": 0.6248540450375313,
+        "improvement": 0.025666666666666615
+      }
+    },
+    "is_stopword": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 1.0,
+        "raw_transfer_acc": 0.7405,
+        "raw_transfer_ratio": 0.7405,
+        "procrustes_acc": 0.7741666666666667,
+        "procrustes_ratio": 0.7741666666666667,
+        "improvement": 0.03366666666666662
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 2,
+        "tgt_layer": 2,
+        "same_model_acc": 0.9988333333333334,
+        "raw_transfer_acc": 0.2745,
+        "raw_transfer_ratio": 0.274820624061405,
+        "procrustes_acc": 0.7405,
+        "procrustes_ratio": 0.7413649257467045,
+        "improvement": 0.466
+      }
+    },
+    "is_rare": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 9,
+        "tgt_layer": 9,
+        "same_model_acc": 0.9575,
+        "raw_transfer_acc": 0.08266666666666667,
+        "raw_transfer_ratio": 0.08633594429939077,
+        "procrustes_acc": 0.6365,
+        "procrustes_ratio": 0.664751958224543,
+        "improvement": 0.5538333333333333
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 0,
+        "tgt_layer": 0,
+        "same_model_acc": 0.9596666666666667,
+        "raw_transfer_acc": 0.8245,
+        "raw_transfer_ratio": 0.8591524835012158,
+        "procrustes_acc": 0.9723333333333334,
+        "procrustes_ratio": 1.0131990274400835,
+        "improvement": 0.14783333333333337
+      }
+    },
+    "is_title_case": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 1.0,
+        "raw_transfer_acc": 0.1335,
+        "raw_transfer_ratio": 0.1335,
+        "procrustes_acc": 0.6811666666666667,
+        "procrustes_ratio": 0.6811666666666667,
+        "improvement": 0.5476666666666667
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 2,
+        "tgt_layer": 2,
+        "same_model_acc": 0.9995,
+        "raw_transfer_acc": 0.2941666666666667,
+        "raw_transfer_ratio": 0.2943138235784559,
+        "procrustes_acc": 0.8663333333333333,
+        "procrustes_ratio": 0.866766716691679,
+        "improvement": 0.5721666666666666
+      }
+    },
+    "starts_with_space": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 2,
+        "tgt_layer": 2,
+        "same_model_acc": 1.0,
+        "raw_transfer_acc": 0.8643333333333333,
+        "raw_transfer_ratio": 0.8643333333333333,
+        "procrustes_acc": 0.799,
+        "procrustes_ratio": 0.799,
+        "improvement": -0.06533333333333324
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 2,
+        "tgt_layer": 2,
+        "same_model_acc": 0.9996666666666667,
+        "raw_transfer_acc": 0.5763333333333334,
+        "raw_transfer_ratio": 0.5765255085028342,
+        "procrustes_acc": 0.9233333333333333,
+        "procrustes_ratio": 0.9236412137379126,
+        "improvement": 0.347
+      }
+    },
+    "is_subword": {
+      "Pythia-2.8B\u2192RWKV-3B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9998333333333334,
+        "raw_transfer_acc": 0.847,
+        "raw_transfer_ratio": 0.8471411901983663,
+        "procrustes_acc": 0.8566666666666667,
+        "procrustes_ratio": 0.8568094682447075,
+        "improvement": 0.009666666666666712
+      },
+      "RWKV-3B\u2192Pythia-2.8B": {
+        "src_layer": 1,
+        "tgt_layer": 1,
+        "same_model_acc": 0.9996666666666667,
+        "raw_transfer_acc": 0.5936666666666667,
+        "raw_transfer_ratio": 0.5938646215405134,
+        "procrustes_acc": 0.8881666666666667,
+        "procrustes_ratio": 0.8884628209403134,
+        "improvement": 0.2945
+      }
+    }
+  },
+  "aggregate": {
+    "mean_raw_ratio": 0.5541161002839163,
+    "mean_procrustes_ratio": 0.8187803380718016,
+    "mean_improvement": 0.26272727272727275
+  }
+}
