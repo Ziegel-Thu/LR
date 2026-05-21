@@ -45,7 +45,10 @@
 ### 任务 6: exp-010 因果抽象方法论审计 ✅
 - Ablation baseline ρ=0.27（zero vs mean 几乎无关）
 - Trained vs random ρ=-0.17（非 trivial）
-- Phase 4 暗物质探索未做
+- Phase 4 ✅: WikiText-2 dark matter 探索完成
+  - Layer 0 knockout 最关键（Δloss=4.71），MLP 占 60%
+  - DLA: top-3 MLP (L10/L11/L9) 解释 85% logit → "暗物质"主要是被忽略的 MLP
+  - 2 层可无损移除，5 层灾难性失败
 
 ### 任务 7: exp-011 PID 预测因果效果 ✅
 - MI↔causation Spearman ρ=0.36 (p=0.01)
