@@ -206,7 +206,8 @@ def main():
     ln_b = model.transformer.ln_f.bias.detach()      # (d,)
     W_U  = model.lm_head.weight.detach()             # (V, d)
 
-    for si in tqdm(range(n_dec), desc="Decompose"):
+    with torch.no_grad():
+      for si in tqdm(range(n_dec), desc="Decompose"):
         ids = data[si : si + 1].to(dev)
         seq_len = ids.shape[1]
 
@@ -225,14 +226,14 @@ def main():
             hooks.append(
                 model.transformer.h[l].mlp.register_forward_hook(_cm))
 
-        logits = model(ids).logits  # (1, S, V)
+        logits = model(ids).logits.detach()  # (1, S, V)
         for h in hooks:
             h.remove()
 
         # Embedding contribution
         pos_ids = torch.arange(seq_len, device=dev)
-        embed = (model.transformer.wte(ids[0])
-                 + model.transformer.wpe(pos_ids))  # (S, d)
+        embed = (model.transformer.wte(ids[0]).detach()
+                 + model.transformer.wpe(pos_ids).detach())  # (S, d)
 
         # Full residual = embed + Σ_l (attn_l + mlp_l)
         residual = embed.clone()
@@ -241,7 +242,6 @@ def main():
 
         # Targets: position p predicts token at p+1
         target_ids = ids[0, 1:]  # (S-1,)
-        # Use positions 0..S-2 (each predicts the next token)
         P = seq_len - 1
 
         # Per-position normalization stats from full residual
@@ -285,7 +285,6 @@ def main():
 
         # Top-K explained fraction per position, then average
         for k in top_k_buckets:
-            # topk along component dimension for each position
             topk_vals, _ = abs_c.topk(min(k, n_comp), dim=0)
             frac = (topk_vals.sum(dim=0) / (total_per_pos + 1e-12)).mean().item()
             top_k_buckets[k].append(frac)
