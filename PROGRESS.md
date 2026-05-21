@@ -1,5 +1,34 @@
 # 进展记录
 
+## 2026-05-21
+
+- **exp-018 SSM LRH 完成** [jiagpu4 + jiagpu5]
+  - 首次在非 Transformer 上测试线性表征假设
+  - 跨层一致性: Pythia 0.77, Mamba 0.79, RWKV 0.78（一致）
+  - 概念正交性: |cos|≈0.17（三架构相同，近正交）
+  - 方向稳定性: Mamba 0.82 > Pythia 0.76 > RWKV 0.75
+  - **核心发现: same geometry, different coordinate system — LRH 是架构无关的**
+
+- **exp-017 跨模型 lens 迁移完成** [jiagpu4]
+  - Pythia-2.8B ↔ RWKV-3B probe 迁移率 = 55%
+  - 表面特征高迁移 (空格 79%, 标点 77%)，语义特征低迁移 (稀有词 15%)
+  - 结论: 部分 Platonic 收敛，但不完全
+
+- **exp-015 OthelloGPT 策略 probing Phase 1 完成** [jiagpu4]
+  - Frontier discs 96.7% @ L4, Mobility R²=0.73 @ L6
+  - Board state 线性 probe 72%（MLP 可达 88%+, Phase 2 进行中）
+  - 战略概念可线性解码
+
+- **exp-015 Phase 2 运行中** [jiagpu4 GPU 0]
+  - MLP probe: Board state 87.7% (vs linear 72%) — 显著提升
+  - 新增: Corner occupancy 97.1%, Edge control R²=0.80
+
+- **exp-007 五模型对比完成** [jiagpu4 + jiagpu5]
+  - Mamba-2.8B ghost ratio = 89.8%（所有模型中最高）
+  - RWKV-3B ghost ratio = 28.4%（与 Gemma 接近）
+  - 三个 ghost ratio 群体: ~90% (Mamba), ~70% (Pythia), ~30% (Gemma/RWKV)
+  - 修复 dtype mismatch bug（Mamba 输出 fp32 vs probe fp16）
+
 ## 2026-05-20
 
 - **exp-007 Pythia-2.8B probing 完成** [jiagpu4]
